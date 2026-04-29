@@ -181,7 +181,14 @@ const GoodsPage = () => {
             }}
           >
             <SelectTrigger>
-              <SelectValue placeholder={t("goods.filters.allCategories")} />
+              <SelectValue placeholder={t("goods.filters.allCategories")}>
+                {() =>
+                  filterCategoryId == null
+                    ? t("goods.filters.allCategories")
+                    : (categories.find((c) => c.id === filterCategoryId)
+                        ?.name ?? t("goods.filters.allCategories"))
+                }
+              </SelectValue>
             </SelectTrigger>
             <SelectPopup>
               <SelectItem value={null}>
@@ -205,7 +212,14 @@ const GoodsPage = () => {
             }}
           >
             <SelectTrigger>
-              <SelectValue placeholder={t("goods.filters.allBrands")} />
+              <SelectValue placeholder={t("goods.filters.allBrands")}>
+                {() =>
+                  filterBrandId == null
+                    ? t("goods.filters.allBrands")
+                    : (brands.find((b) => b.id === filterBrandId)?.brandName ??
+                      t("goods.filters.allBrands"))
+                }
+              </SelectValue>
             </SelectTrigger>
             <SelectPopup>
               <SelectItem value={null}>
@@ -229,7 +243,13 @@ const GoodsPage = () => {
             }}
           >
             <SelectTrigger>
-              <SelectValue placeholder={t("goods.filters.allStatuses")} />
+              <SelectValue placeholder={t("goods.filters.allStatuses")}>
+                {() =>
+                  filterStatus == null
+                    ? t("goods.filters.allStatuses")
+                    : t(`goods.status.${filterStatus}`)
+                }
+              </SelectValue>
             </SelectTrigger>
             <SelectPopup>
               <SelectItem value={null}>

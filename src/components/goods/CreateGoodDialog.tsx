@@ -152,7 +152,12 @@ const CreateGoodDialog = ({
                 <SelectTrigger>
                   <SelectValue
                     placeholder={t("goods.form.categoryPlaceholder")}
-                  />
+                  >
+                    {() =>
+                      categories.find((c) => c.id === categoryId)?.name ??
+                      t("goods.form.categoryPlaceholder")
+                    }
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectPopup>
                   {categories.map((c) => (
@@ -173,7 +178,12 @@ const CreateGoodDialog = ({
                 <SelectTrigger>
                   <SelectValue
                     placeholder={t("goods.form.brandPlaceholder")}
-                  />
+                  >
+                    {() =>
+                      brands.find((b) => b.id === brandId)?.brandName ??
+                      t("goods.form.brandPlaceholder")
+                    }
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectPopup>
                   {brands.map((b) => (
