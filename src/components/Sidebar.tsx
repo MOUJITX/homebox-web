@@ -5,7 +5,6 @@ import {
   LayoutDashboardIcon,
   UsersIcon,
   ShieldIcon,
-  UserIcon,
   PanelLeftCloseIcon,
   PanelLeftOpenIcon,
 } from "lucide-react";
@@ -39,7 +38,6 @@ const navItems: NavItem[] = [
     icon: ShieldIcon,
     requiredRole: "root",
   },
-  { label: "nav.profile", path: "/profile", icon: UserIcon },
 ];
 
 const STORAGE_KEY = "homebox_sidebar_collapsed";
