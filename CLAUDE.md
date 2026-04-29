@@ -27,8 +27,12 @@ Homebox Client — a web client application for Homebox (home inventory manageme
 
 ## Rules
 
+- Before coding, analyze the backend code in `../homebox-server` (especially `../homebox-server/docs`) to understand available APIs, data models, and contracts. Never edit server code — if issues are found, report them to the user but do not modify.
+- Before coding, clarify and detail the requirements — user requests may be vague or incomplete. Use the `feature-dev` skill to analyze the codebase and flesh out a concrete implementation plan before starting.
 - After every task, immediately update `README.md` and `CLAUDE.md` if the changes warrant documentation updates (e.g. new features, changed commands, altered architecture, new dependencies, updated setup steps).
 - Commit changes only after all steps are approved by the user. For large modifications containing multiple small tasks or features, commit at each small task/feature boundary rather than one big commit at the end.
 - Do not edit or create tests unless explicitly noted.
 - Use the latest stable versions of technologies, libraries, and frameworks. Code structure and content should follow common technical standards and best practices, but avoid over-engineering or unnecessary complexity.
 - Use arrow function style for all TS/TSX components and functions: `const Xxx = () => { ... }` or `const Xxx = () => (...)` for direct returns.
+- Modularize and extract reusable code components to avoid duplication. Shared utilities, hooks, and components should be placed in common locations for reuse.
+- Keep consistent style/UI across components. Avoid generic "AI-looking" design — use the `frontend-design` skill when building UI to produce distinctive, polished interfaces.
