@@ -1,0 +1,45 @@
+{
+  "app": {
+    "name": "Homebox"
+  },
+  "login": {
+    "title": "Sign In",
+    "description": "Enter your credentials to continue",
+    "username": "Username",
+    "usernamePlaceholder": "Enter your username",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "submit": "Sign In",
+    "submitting": "Signing in…",
+    "error": "Invalid username or password"
+  },
+  "changePassword": {
+    "title": "Change Password",
+    "description": "You must set a new password before continuing",
+    "currentPassword": "Current Password",
+    "currentPasswordPlaceholder": "Enter current password",
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "Enter new password (min. 8 characters)",
+    "confirmPassword": "Confirm New Password",
+    "confirmPasswordPlaceholder": "Re-enter new password",
+    "submit": "Change Password",
+    "submitting": "Changing password…",
+    "mismatch": "Passwords do not match",
+    "tooShort": "Password must be at least 8 characters",
+    "wrongCurrent": "Current password is incorrect",
+    "success": "Password changed. Please sign in with your new password."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to Homebox",
+    "placeholder": "This is a placeholder page. Features coming soon."
+  },
+  "sessionExpired": {
+    "title": "Session Expired",
+    "description": "Your session has expired. Please sign in again to continue.",
+    "action": "Go to Sign In"
+  },
+  "common": {
+    "logout": "Sign Out"
+  }
+}

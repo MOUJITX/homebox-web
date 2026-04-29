@@ -12,6 +12,10 @@ Homebox Client — a web client application for Homebox (home inventory manageme
 - **Package Manager**: Yarn 1.x
 - **Framework**: React 19 + TypeScript 6
 - **Build Tool**: Vite 8
+- **UI**: Tailwind CSS 4 + Shadcn UI (Base UI primitives)
+- **Routing**: React Router 7 (library mode)
+- **HTTP Client**: Axios
+- **i18n**: i18next + react-i18next + i18next-browser-languagedetector
 - **Linting**: ESLint 10 (flat config) with TypeScript and React plugins
 - **Formatting**: Prettier 3
 - **Pre-commit**: Husky + lint-staged (runs ESLint fix + Prettier on staged files)
