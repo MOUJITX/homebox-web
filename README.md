@@ -32,12 +32,6 @@ yarn build
 yarn preview
 ```
 
-## Environment Variables
-
-| Variable            | Description          | Default                 |
-| ------------------- | -------------------- | ----------------------- |
-| `VITE_API_BASE_URL` | Backend API base URL | `http://localhost:8080` |
-
 ## Features
 
 ### Authentication

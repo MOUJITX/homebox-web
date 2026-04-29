@@ -8,7 +8,7 @@ export const setToken = (token: string) =>
 export const clearToken = () => localStorage.removeItem(TOKEN_KEY);
 
 const axios = axiosLib.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: "/api",
 });
 
 axios.interceptors.request.use((config) => {

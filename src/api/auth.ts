@@ -20,7 +20,7 @@ interface ChangePasswordResponse {
 }
 
 export const login = (data: LoginRequest) =>
-  axios.post<LoginResponse>("/api/auth/login", data);
+  axios.post<LoginResponse>("/auth/login", data);
 
 export const changePassword = (data: ChangePasswordRequest) =>
-  axios.post<ChangePasswordResponse>("/api/auth/change-password", data);
+  axios.post<ChangePasswordResponse>("/auth/change-password", data);
