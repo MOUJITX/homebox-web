@@ -2,6 +2,7 @@ import { useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { createGoodItem } from "@/api/goodItems";
 import { getErrorMessage } from "@/lib/error";
+import { useItemDateCalc } from "@/hooks/useItemDateCalc";
 import {
   Dialog,
   DialogContent,
@@ -30,21 +31,21 @@ const CreateItemDialog = ({
   onSuccess,
 }: CreateItemDialogProps) => {
   const { t } = useTranslation();
-  const [productDate, setProductDate] = useState("");
-  const [expirationDate, setExpirationDate] = useState("");
-  const [lifeDays, setLifeDays] = useState("");
+  const {
+    productDate,
+    expirationDate,
+    lifeDays,
+    setProductDate,
+    setExpirationDate,
+    setLifeDays,
+    resetDates,
+  } = useItemDateCalc();
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const resetForm = () => {
-    setProductDate("");
-    setExpirationDate("");
-    setLifeDays("");
-    setError("");
-  };
-
   const handleClose = () => {
-    resetForm();
+    resetDates();
+    setError("");
     onClose();
   };
 
@@ -101,9 +102,7 @@ const CreateItemDialog = ({
               type="date"
               value={productDate}
               onChange={(e) => setProductDate(e.target.value)}
-              disabled={
-                filledCount >= 2 && !productDate
-              }
+              disabled={filledCount >= 2 && !productDate}
             />
           </div>
           <div className="grid gap-2">
@@ -115,26 +114,39 @@ const CreateItemDialog = ({
               type="date"
               value={expirationDate}
               onChange={(e) => setExpirationDate(e.target.value)}
-              disabled={
-                filledCount >= 2 && !expirationDate
-              }
+              disabled={filledCount >= 2 && !expirationDate}
             />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="create-item-lifeDays">
               {t("goods.items.form.lifeDays")}
             </Label>
-            <Input
-              id="create-item-lifeDays"
-              type="number"
-              min="1"
-              value={lifeDays}
-              onChange={(e) => setLifeDays(e.target.value)}
-              placeholder={t("goods.items.form.lifeDaysPlaceholder")}
-              disabled={
-                filledCount >= 2 && !lifeDays
-              }
-            />
+            <div className="flex gap-2">
+              <Input
+                id="create-item-lifeDays"
+                type="number"
+                min="1"
+                value={lifeDays}
+                onChange={(e) => setLifeDays(e.target.value)}
+                placeholder={t("goods.items.form.lifeDaysPlaceholder")}
+                disabled={filledCount >= 2 && !lifeDays}
+                className="flex-1"
+              />
+              {([["1y", 365], ["2y", 730], ["3y", 1095]] as const).map(
+                ([key, days]) => (
+                  <Button
+                    key={key}
+                    type="button"
+                    variant={lifeDays === String(days) ? "default" : "outline"}
+                    size="sm"
+                    disabled={filledCount >= 2 && !lifeDays}
+                    onClick={() => setLifeDays(String(days))}
+                  >
+                    {t(`goods.items.form.lifeDaysQuick.${key}`)}
+                  </Button>
+                ),
+              )}
+            </div>
           </div>
           {error && (
             <p className="text-sm text-destructive text-center">{error}</p>

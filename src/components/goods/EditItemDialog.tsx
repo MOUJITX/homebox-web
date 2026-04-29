@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { GoodItem } from "@/api/goods";
 import { updateGoodItem } from "@/api/goodItems";
 import { getErrorMessage } from "@/lib/error";
+import { useItemDateCalc } from "@/hooks/useItemDateCalc";
 import {
   Dialog,
   DialogContent,
@@ -31,9 +32,15 @@ const EditItemDialog = ({
   onSuccess,
 }: EditItemDialogProps) => {
   const { t } = useTranslation();
-  const [productDate, setProductDate] = useState("");
-  const [expirationDate, setExpirationDate] = useState("");
-  const [lifeDays, setLifeDays] = useState("");
+  const {
+    productDate,
+    expirationDate,
+    lifeDays,
+    setProductDate,
+    setExpirationDate,
+    setLifeDays,
+    initDates,
+  } = useItemDateCalc();
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -41,9 +48,7 @@ const EditItemDialog = ({
   if (item?.id !== prevItemId) {
     setPrevItemId(item?.id);
     if (item) {
-      setProductDate(item.productDate);
-      setExpirationDate(item.expirationDate);
-      setLifeDays(String(item.lifeDays));
+      initDates(item.productDate, item.expirationDate, item.lifeDays);
     }
     setError("");
   }
@@ -125,14 +130,30 @@ const EditItemDialog = ({
             <Label htmlFor="edit-item-lifeDays">
               {t("goods.items.form.lifeDays")}
             </Label>
-            <Input
-              id="edit-item-lifeDays"
-              type="number"
-              min="1"
-              value={lifeDays}
-              onChange={(e) => setLifeDays(e.target.value)}
-              placeholder={t("goods.items.form.lifeDaysPlaceholder")}
-            />
+            <div className="flex gap-2">
+              <Input
+                id="edit-item-lifeDays"
+                type="number"
+                min="1"
+                value={lifeDays}
+                onChange={(e) => setLifeDays(e.target.value)}
+                placeholder={t("goods.items.form.lifeDaysPlaceholder")}
+                className="flex-1"
+              />
+              {([["1y", 365], ["2y", 730], ["3y", 1095]] as const).map(
+                ([key, days]) => (
+                  <Button
+                    key={key}
+                    type="button"
+                    variant={lifeDays === String(days) ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setLifeDays(String(days))}
+                  >
+                    {t(`goods.items.form.lifeDaysQuick.${key}`)}
+                  </Button>
+                ),
+              )}
+            </div>
           </div>
           {error && (
             <p className="text-sm text-destructive text-center">{error}</p>

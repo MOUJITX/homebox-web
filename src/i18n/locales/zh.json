@@ -93,7 +93,12 @@
         "productDate": "生产日期",
         "expirationDate": "到期日期",
         "lifeDays": "保质期（天）",
-        "lifeDaysPlaceholder": "输入天数"
+        "lifeDaysPlaceholder": "输入天数",
+        "lifeDaysQuick": {
+          "1y": "1年",
+          "2y": "2年",
+          "3y": "3年"
+        }
       },
       "errors": {
         "exactlyTwo": "必须提供3个日期字段中的2个",

@@ -203,7 +203,12 @@
         "productDate": "Production Date",
         "expirationDate": "Expiration Date",
         "lifeDays": "Shelf Life (days)",
-        "lifeDaysPlaceholder": "Enter number of days"
+        "lifeDaysPlaceholder": "Enter number of days",
+        "lifeDaysQuick": {
+          "1y": "1 Year",
+          "2y": "2 Years",
+          "3y": "3 Years"
+        }
       },
       "errors": {
         "exactlyTwo": "Exactly 2 of the 3 date fields must be provided",
