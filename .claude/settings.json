@@ -1,10 +1,6 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(npx tsc *)",
-      "Bash(git add *)",
-      "Bash(git commit *)"
-    ]
+    "allow": ["Bash(npx tsc *)", "Bash(git add *)", "Bash(git commit *)"]
   },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,

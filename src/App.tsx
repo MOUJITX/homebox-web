@@ -10,6 +10,7 @@ import DashboardPage from "@/pages/DashboardPage";
 import MembersPage from "@/pages/MembersPage";
 import RolesPage from "@/pages/RolesPage";
 import ProfilePage from "@/pages/ProfilePage";
+import GoodsPage from "@/pages/GoodsPage";
 
 const App = () => (
   <AuthProvider>
@@ -19,6 +20,7 @@ const App = () => (
       <Route element={<ProtectedRoute />}>
         <Route element={<AppShell />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/goods" element={<GoodsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route element={<RoleGuard requiredRole="root" />}>
             <Route path="/members" element={<MembersPage />} />

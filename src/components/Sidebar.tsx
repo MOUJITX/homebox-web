@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router";
 import { useTranslation } from "react-i18next";
 import {
   LayoutDashboardIcon,
+  PackageIcon,
   UsersIcon,
   ShieldIcon,
   PanelLeftCloseIcon,
@@ -26,6 +27,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: "nav.dashboard", path: "/dashboard", icon: LayoutDashboardIcon },
+  { label: "nav.goods", path: "/goods", icon: PackageIcon },
   {
     label: "nav.members",
     path: "/members",

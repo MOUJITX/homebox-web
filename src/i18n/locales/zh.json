@@ -18,6 +18,138 @@
     "tooShort": "密码必须至少包含8个字符",
     "wrongCurrent": "当前密码不正确"
   },
+  "goods": {
+    "search": "按名称或条码搜索…",
+    "create": "创建商品",
+    "createDescription": "添加新商品进行跟踪。",
+    "edit": "编辑商品",
+    "editDescription": "更新{{name}}的详细信息。",
+    "delete": "删除商品",
+    "deleteConfirm": "您确定要删除{{name}}吗？必须先删除所有项目。",
+    "columns": {
+      "productName": "商品名称",
+      "barcode": "条码",
+      "category": "分类",
+      "brand": "品牌",
+      "items": "项目",
+      "status": "状态",
+      "actions": "操作"
+    },
+    "form": {
+      "productName": "商品名称",
+      "productNamePlaceholder": "输入商品名称",
+      "barcode": "条码",
+      "barcodePlaceholder": "输入条码",
+      "category": "分类",
+      "categoryPlaceholder": "选择分类",
+      "brand": "品牌",
+      "brandPlaceholder": "选择品牌",
+      "expiringSoonDays": "即将到期天数",
+      "expiringSoonDaysPlaceholder": "默认：30"
+    },
+    "filters": {
+      "allCategories": "全部分类",
+      "allBrands": "全部品牌",
+      "allStatuses": "全部状态"
+    },
+    "status": {
+      "EXPIRED": "已过期",
+      "EXPIRING_SOON": "即将过期",
+      "IN_USE": "使用中",
+      "EXHAUSTED": "已耗尽"
+    },
+    "barcodeExists": {
+      "title": "条码已存在",
+      "description": "条码 {{barcode}} 对应的商品已存在。是否要为该商品添加新项目？",
+      "reInput": "重新输入条码",
+      "addItem": "添加项目到现有商品"
+    },
+    "errors": {
+      "createFailed": "创建商品失败",
+      "updateFailed": "更新商品失败",
+      "deleteFailed": "删除商品失败"
+    },
+    "items": {
+      "title": "项目",
+      "add": "添加项目",
+      "create": "创建项目",
+      "createDescription": "为{{name}}添加新项目。",
+      "edit": "编辑项目",
+      "editDescription": "更新项目日期字段。",
+      "delete": "删除项目",
+      "deleteConfirm": "您确定要删除此项目吗？此操作无法撤消。",
+      "empty": "暂无项目。添加一个开始跟踪。",
+      "inUse": "使用中",
+      "notInUse": "未使用",
+      "dateHint": "填写以下3个字段中的任意2个，第3个将自动计算。",
+      "columns": {
+        "productDate": "生产日期",
+        "expirationDate": "到期日期",
+        "lifeDays": "保质期（天）",
+        "status": "状态",
+        "actions": "操作"
+      },
+      "form": {
+        "productDate": "生产日期",
+        "expirationDate": "到期日期",
+        "lifeDays": "保质期（天）",
+        "lifeDaysPlaceholder": "输入天数"
+      },
+      "errors": {
+        "exactlyTwo": "必须提供3个日期字段中的2个",
+        "createFailed": "创建项目失败",
+        "updateFailed": "更新项目失败",
+        "deleteFailed": "删除项目失败"
+      }
+    },
+    "pictures": {
+      "title": "图片",
+      "manage": "图片",
+      "upload": "上传",
+      "uploading": "上传中…",
+      "empty": "暂无图片。"
+    },
+    "categories": {
+      "manage": "分类",
+      "manageDescription": "创建、编辑和删除商品分类。",
+      "create": "创建分类",
+      "columns": {
+        "name": "名称",
+        "description": "描述",
+        "actions": "操作"
+      },
+      "form": {
+        "name": "名称",
+        "namePlaceholder": "输入分类名称",
+        "description": "描述",
+        "descriptionPlaceholder": "输入分类描述"
+      },
+      "errors": {
+        "saveFailed": "保存分类失败",
+        "deleteFailed": "删除分类失败"
+      }
+    },
+    "brands": {
+      "manage": "品牌",
+      "manageDescription": "创建、编辑和删除商品品牌。",
+      "create": "创建品牌",
+      "columns": {
+        "brandName": "品牌名称",
+        "companyName": "公司名称",
+        "actions": "操作"
+      },
+      "form": {
+        "brandName": "品牌名称",
+        "brandNamePlaceholder": "输入品牌名称",
+        "companyName": "公司名称",
+        "companyNamePlaceholder": "输入公司名称"
+      },
+      "errors": {
+        "saveFailed": "保存品牌失败",
+        "deleteFailed": "删除品牌失败"
+      }
+    }
+  },
   "common": {
     "cancel": "取消",
     "create": "创建",
@@ -86,6 +218,7 @@
   },
   "nav": {
     "dashboard": "仪表盘",
+    "goods": "商品管理",
     "members": "成员",
     "profile": "用户信息",
     "roles": "角色"

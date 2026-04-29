@@ -4,6 +4,7 @@
   },
   "nav": {
     "dashboard": "Dashboard",
+    "goods": "Goods",
     "members": "Members",
     "roles": "Roles",
     "profile": "Profile"
@@ -126,6 +127,138 @@
     "title": "Session Expired",
     "description": "Your session has expired. Please sign in again to continue.",
     "action": "Go to Sign In"
+  },
+  "goods": {
+    "search": "Search by name or barcode…",
+    "create": "Create Good",
+    "createDescription": "Add a new product to track.",
+    "edit": "Edit Good",
+    "editDescription": "Update details for {{name}}.",
+    "delete": "Delete Good",
+    "deleteConfirm": "Are you sure you want to delete {{name}}? You must delete all items first.",
+    "columns": {
+      "productName": "Product Name",
+      "barcode": "Barcode",
+      "category": "Category",
+      "brand": "Brand",
+      "items": "Items",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "form": {
+      "productName": "Product Name",
+      "productNamePlaceholder": "Enter product name",
+      "barcode": "Barcode",
+      "barcodePlaceholder": "Enter barcode",
+      "category": "Category",
+      "categoryPlaceholder": "Select a category",
+      "brand": "Brand",
+      "brandPlaceholder": "Select a brand",
+      "expiringSoonDays": "Expiring Soon Days",
+      "expiringSoonDaysPlaceholder": "Default: 30"
+    },
+    "filters": {
+      "allCategories": "All Categories",
+      "allBrands": "All Brands",
+      "allStatuses": "All Statuses"
+    },
+    "status": {
+      "EXPIRED": "Expired",
+      "EXPIRING_SOON": "Expiring Soon",
+      "IN_USE": "In Use",
+      "EXHAUSTED": "Exhausted"
+    },
+    "barcodeExists": {
+      "title": "Barcode Already Exists",
+      "description": "A product with barcode {{barcode}} already exists. Would you like to add an item to the existing product instead?",
+      "reInput": "Re-enter Barcode",
+      "addItem": "Add Item to Existing"
+    },
+    "errors": {
+      "createFailed": "Failed to create good",
+      "updateFailed": "Failed to update good",
+      "deleteFailed": "Failed to delete good"
+    },
+    "items": {
+      "title": "Items",
+      "add": "Add Item",
+      "create": "Create Item",
+      "createDescription": "Add a new item to {{name}}.",
+      "edit": "Edit Item",
+      "editDescription": "Update item date fields.",
+      "delete": "Delete Item",
+      "deleteConfirm": "Are you sure you want to delete this item? This action cannot be undone.",
+      "empty": "No items yet. Add one to start tracking.",
+      "inUse": "In Use",
+      "notInUse": "Not In Use",
+      "dateHint": "Fill in exactly 2 of the 3 fields below — the third will be auto-calculated.",
+      "columns": {
+        "productDate": "Production Date",
+        "expirationDate": "Expiration Date",
+        "lifeDays": "Shelf Life (days)",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "form": {
+        "productDate": "Production Date",
+        "expirationDate": "Expiration Date",
+        "lifeDays": "Shelf Life (days)",
+        "lifeDaysPlaceholder": "Enter number of days"
+      },
+      "errors": {
+        "exactlyTwo": "Exactly 2 of the 3 date fields must be provided",
+        "createFailed": "Failed to create item",
+        "updateFailed": "Failed to update item",
+        "deleteFailed": "Failed to delete item"
+      }
+    },
+    "pictures": {
+      "title": "Pictures",
+      "manage": "Pictures",
+      "upload": "Upload",
+      "uploading": "Uploading…",
+      "empty": "No pictures uploaded yet."
+    },
+    "categories": {
+      "manage": "Categories",
+      "manageDescription": "Create, edit, and delete product categories.",
+      "create": "Create Category",
+      "columns": {
+        "name": "Name",
+        "description": "Description",
+        "actions": "Actions"
+      },
+      "form": {
+        "name": "Name",
+        "namePlaceholder": "Enter category name",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter category description"
+      },
+      "errors": {
+        "saveFailed": "Failed to save category",
+        "deleteFailed": "Failed to delete category"
+      }
+    },
+    "brands": {
+      "manage": "Brands",
+      "manageDescription": "Create, edit, and delete product brands.",
+      "create": "Create Brand",
+      "columns": {
+        "brandName": "Brand Name",
+        "companyName": "Company Name",
+        "actions": "Actions"
+      },
+      "form": {
+        "brandName": "Brand Name",
+        "brandNamePlaceholder": "Enter brand name",
+        "companyName": "Company Name",
+        "companyNamePlaceholder": "Enter company name"
+      },
+      "errors": {
+        "saveFailed": "Failed to save brand",
+        "deleteFailed": "Failed to delete brand"
+      }
+    }
   },
   "common": {
     "logout": "Sign Out",

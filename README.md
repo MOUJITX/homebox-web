@@ -42,6 +42,16 @@ yarn preview
 - **Logout** — clears token and redirects to login
 - **Protected routes** — unauthenticated users are redirected to `/login`
 
+### Goods Expiration Management
+
+- **Goods** — CRUD for products with barcode, category, brand, configurable expiring-soon threshold, and picture uploads
+- **Items** — track individual item instances per good with production date, expiration date, and shelf life (auto-calculated from any 2 of 3 fields), toggle in-use status
+- **Categories & Brands** — standalone CRUD managed via modal dialogs from the goods page
+- **Status tracking** — automatic status computation: Expired > Expiring Soon > In Use > Exhausted
+- **Server-side pagination** — search by name/barcode, filter by category/brand/status
+- **Barcode duplicate detection** — popup to add item to existing good when barcode already exists
+- **Expandable rows** — inline item management and picture management within the goods table
+
 ### Internationalization
 
 All user-facing text is externalized via i18next. Translation files are in `src/i18n/locales/`.
@@ -52,6 +62,7 @@ All user-facing text is externalized via i18next. Translation files are in `src/
 src/
 ├── api/           # Axios instance and API call functions
 ├── components/    # Shared components (AuthFormLayout, ProtectedRoute, SessionExpiredDialog)
+│   ├── goods/     # Goods feature components (dialogs, expanded row, picture manager)
 │   └── ui/        # Shadcn UI components
 ├── contexts/      # React context providers (AuthContext)
 ├── hooks/         # Custom hooks (useAuth)
