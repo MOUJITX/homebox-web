@@ -5,7 +5,9 @@ import "@/i18n";
 import App from "@/App";
 import "@/index.css";
 
-createRoot(document.getElementById("root")!).render(
+createRoot(
+  document.getElementById("root") ?? document.createElement("div"),
+).render(
   <StrictMode>
     <BrowserRouter>
       <App />

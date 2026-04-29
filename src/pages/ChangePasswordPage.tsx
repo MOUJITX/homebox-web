@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { type SubmitEvent, useState } from "react";
 import { Navigate, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
@@ -29,7 +29,7 @@ const ChangePasswordPage = () => {
     return null;
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (loading) return;
     setError("");
