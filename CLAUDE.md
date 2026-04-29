@@ -31,7 +31,7 @@ Homebox Client — a web client application for Homebox (home inventory manageme
 
 ## Rules
 
-- Before coding, analyze the backend code in `../homebox-server` (especially `../homebox-server/docs`) to understand available APIs, data models, and contracts. Never edit server code — if issues are found, report them to the user but do not modify.
+- Before coding, analyze the backend code in `../homebox-server` (especially `../homebox-server/docs`) to understand available APIs, data models, and contracts. If issues are found or features are not yet implemented on the backend, edit the backend code first to fix or implement them. Once the backend is complete, continue with frontend work.
 - Before coding, clarify and detail the requirements — user requests may be vague or incomplete. Use the `feature-dev` skill to analyze the codebase and flesh out a concrete implementation plan before starting.
 - After every task, immediately update `README.md` and `CLAUDE.md` if the changes warrant documentation updates (e.g. new features, changed commands, altered architecture, new dependencies, updated setup steps).
 - Commit changes only after all steps are approved by the user. For large modifications containing multiple small tasks or features, commit at each small task/feature boundary rather than one big commit at the end.
