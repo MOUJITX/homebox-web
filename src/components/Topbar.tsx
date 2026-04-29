@@ -20,7 +20,7 @@ const routeTitleMap: Record<string, string> = {
 
 const Topbar = () => {
   const { t } = useTranslation();
-  const { username, role, logout } = useAuth();
+  const { displayName, username, role, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ const Topbar = () => {
       <h1 className="font-heading text-base font-semibold">{t(titleKey)}</h1>
       <DropdownMenu>
         <DropdownMenuTrigger className="flex cursor-default items-center gap-1.5 rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
-          <span>{username}</span>
+          <span>{displayName ?? username}</span>
           {role && (
             <Badge variant={role === "root" ? "destructive" : "default"}>
               {role}

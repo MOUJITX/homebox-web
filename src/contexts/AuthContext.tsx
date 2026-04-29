@@ -13,6 +13,7 @@ import {
   setSessionExpiredHandler,
 } from "@/api/axios";
 import { decodeToken } from "@/lib/jwt";
+import { getProfile } from "@/api/profile";
 import { AuthContext } from "./authContextValue";
 
 const extractClaims = (token: string | null) => {
@@ -26,6 +27,7 @@ const extractClaims = (token: string | null) => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(getToken);
+  const [displayName, setDisplayName] = useState<string | null>(null);
   const [sessionExpired, setSessionExpired] = useState(false);
   const navigate = useNavigate();
 
@@ -34,12 +36,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     setSessionExpiredHandler(() => {
       setToken(null);
+      setDisplayName(null);
       setSessionExpired(true);
     });
     return () => {
       setSessionExpiredHandler(null);
     };
   }, []);
+
+  useEffect(() => {
+    if (!token) return;
+    let cancelled = false;
+    getProfile().then(
+      (res) => {
+        if (!cancelled) setDisplayName(res.data.displayName);
+      },
+      () => {},
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
 
   const login = useCallback((newToken: string) => {
     persistToken(newToken);
@@ -49,6 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const clearSession = useCallback(() => {
     clearToken();
     setToken(null);
+    setDisplayName(null);
   }, []);
 
   const logout = useCallback(() => {
@@ -65,6 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     () => ({
       token,
       username,
+      displayName,
       role,
       sessionExpired,
       login,
@@ -75,6 +94,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     [
       token,
       username,
+      displayName,
       role,
       sessionExpired,
       login,

@@ -3,6 +3,7 @@ import { createContext } from "react";
 export interface AuthContextValue {
   token: string | null;
   username: string | null;
+  displayName: string | null;
   role: string | null;
   sessionExpired: boolean;
   login: (token: string) => void;
