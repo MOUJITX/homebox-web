@@ -2,6 +2,12 @@
   "app": {
     "name": "Homebox"
   },
+  "nav": {
+    "dashboard": "Dashboard",
+    "members": "Members",
+    "roles": "Roles",
+    "profile": "Profile"
+  },
   "login": {
     "title": "Sign In",
     "description": "Enter your credentials to continue",
@@ -34,12 +40,104 @@
     "welcome": "Welcome to Homebox",
     "placeholder": "This is a placeholder page. Features coming soon."
   },
+  "members": {
+    "search": "Search members…",
+    "create": "Create Member",
+    "createDescription": "Add a new member to the system.",
+    "edit": "Edit Member",
+    "editDescription": "Update details for {{username}}.",
+    "delete": "Delete Member",
+    "deleteConfirm": "Are you sure you want to delete {{username}}? This action cannot be undone.",
+    "mustChangePassword": "Must change password",
+    "columns": {
+      "username": "Username",
+      "displayName": "Display Name",
+      "role": "Role",
+      "status": "Status",
+      "createdAt": "Created",
+      "updatedAt": "Updated",
+      "actions": "Actions"
+    },
+    "form": {
+      "username": "Username",
+      "usernamePlaceholder": "Enter username",
+      "displayName": "Display Name",
+      "displayNamePlaceholder": "Enter display name",
+      "role": "Role",
+      "rolePlaceholder": "Select a role",
+      "password": "Password",
+      "passwordPlaceholder": "Enter password (min. 8 characters)",
+      "newPassword": "New Password",
+      "autoGenerate": "Auto-generate",
+      "resetPassword": "Reset password"
+    },
+    "errors": {
+      "createFailed": "Failed to create member",
+      "updateFailed": "Failed to update member",
+      "deleteFailed": "Failed to delete member"
+    }
+  },
+  "roles": {
+    "search": "Search roles…",
+    "create": "Create Role",
+    "createDescription": "Add a new role to the system.",
+    "edit": "Edit Role",
+    "editDescription": "Update details for {{name}} role.",
+    "delete": "Delete Role",
+    "deleteConfirm": "Are you sure you want to delete the {{name}} role? This action cannot be undone.",
+    "columns": {
+      "name": "Name",
+      "description": "Description",
+      "createdAt": "Created",
+      "updatedAt": "Updated",
+      "actions": "Actions"
+    },
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Enter role name",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter role description"
+    },
+    "errors": {
+      "createFailed": "Failed to create role",
+      "updateFailed": "Failed to update role",
+      "deleteFailed": "Failed to delete role"
+    }
+  },
+  "profile": {
+    "userInfo": "User Information",
+    "userInfoDescription": "View and update your profile details.",
+    "username": "Username",
+    "displayName": "Display Name",
+    "displayNamePlaceholder": "Enter display name",
+    "role": "Role",
+    "security": "Security",
+    "securityDescription": "Manage your account security settings.",
+    "changePassword": "Change Password",
+    "changePasswordDescription": "Enter your current password and choose a new one.",
+    "success": {
+      "updated": "Profile updated successfully"
+    },
+    "errors": {
+      "updateFailed": "Failed to update profile"
+    }
+  },
   "sessionExpired": {
     "title": "Session Expired",
     "description": "Your session has expired. Please sign in again to continue.",
     "action": "Go to Sign In"
   },
   "common": {
-    "logout": "Sign Out"
+    "logout": "Sign Out",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving…",
+    "create": "Create",
+    "creating": "Creating…",
+    "delete": "Delete",
+    "deleting": "Deleting…",
+    "loading": "Loading…",
+    "noResults": "No results found",
+    "pageInfo": "Page {{current}} of {{total}}"
   }
 }

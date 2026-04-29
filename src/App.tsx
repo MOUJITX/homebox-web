@@ -1,10 +1,15 @@
 import { Navigate, Route, Routes } from "react-router";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import RoleGuard from "@/components/RoleGuard";
+import AppShell from "@/components/AppShell";
 import SessionExpiredDialog from "@/components/SessionExpiredDialog";
 import LoginPage from "@/pages/LoginPage";
 import ChangePasswordPage from "@/pages/ChangePasswordPage";
 import DashboardPage from "@/pages/DashboardPage";
+import MembersPage from "@/pages/MembersPage";
+import RolesPage from "@/pages/RolesPage";
+import ProfilePage from "@/pages/ProfilePage";
 
 const App = () => (
   <AuthProvider>
@@ -12,7 +17,14 @@ const App = () => (
       <Route path="/login" element={<LoginPage />} />
       <Route path="/change-password" element={<ChangePasswordPage />} />
       <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route element={<AppShell />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route element={<RoleGuard requiredRole="root" />}>
+            <Route path="/members" element={<MembersPage />} />
+            <Route path="/roles" element={<RolesPage />} />
+          </Route>
+        </Route>
       </Route>
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
