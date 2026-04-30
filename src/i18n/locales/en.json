@@ -191,7 +191,7 @@
       "deleteConfirm": "Are you sure you want to delete this item? This action cannot be undone.",
       "empty": "No items yet. Add one to start tracking.",
       "inUse": "In Use",
-      "notInUse": "Not In Use",
+      "notInUse": "Exhausted",
       "dateHint": "Fill in exactly 2 of the 3 fields below — the third will be auto-calculated.",
       "columns": {
         "productDate": "Production Date",

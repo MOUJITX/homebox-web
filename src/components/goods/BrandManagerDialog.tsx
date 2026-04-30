@@ -109,7 +109,7 @@ const BrandManagerDialog = ({
       } else if (mode === "edit" && editingBrand) {
         await updateGoodBrand(editingBrand.id, {
           brandName,
-          companyName: companyName || undefined,
+          companyName,
         });
       }
       resetForm();

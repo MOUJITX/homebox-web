@@ -80,7 +80,7 @@
       "deleteConfirm": "您确定要删除此项目吗？此操作无法撤消。",
       "empty": "暂无项目。添加一个开始跟踪。",
       "inUse": "使用中",
-      "notInUse": "未使用",
+      "notInUse": "已用尽",
       "dateHint": "填写以下3个字段中的任意2个，第3个将自动计算。",
       "columns": {
         "productDate": "生产日期",

@@ -111,7 +111,7 @@ const CategoryManagerDialog = ({
       } else if (mode === "edit" && editingCategory) {
         await updateGoodCategory(editingCategory.id, {
           name,
-          description: description || undefined,
+          description,
         });
       }
       resetForm();
