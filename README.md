@@ -52,6 +52,12 @@ yarn preview
 - **Barcode duplicate detection** — popup to add item to existing good when barcode already exists
 - **Expandable rows** — inline item management and picture management within the goods table
 
+### File Management (Root Only)
+
+- **Files** — list, upload, download, rename, and delete files via `/files` (root role required)
+- **Preview** — inline image preview for image files in a modal dialog
+- **Pagination** — server-side pagination for the file list
+
 ### Internationalization
 
 All user-facing text is externalized via i18next. Translation files are in `src/i18n/locales/`.

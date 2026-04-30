@@ -155,6 +155,33 @@
       }
     }
   },
+  "files": {
+    "title": "文件管理",
+    "upload": "上传文件",
+    "uploading": "上传中…",
+    "rename": "重命名",
+    "renameDescription": "输入此文件的新名称。",
+    "newFilename": "新文件名",
+    "newFilenamePlaceholder": "输入新文件名",
+    "preview": "预览",
+    "download": "下载",
+    "delete": "删除",
+    "deleteConfirm": "您确定要删除此文件吗？此操作无法撤消。",
+    "empty": "暂无文件。",
+    "columns": {
+      "preview": "预览",
+      "filename": "文件名",
+      "contentType": "类型",
+      "fileSize": "大小",
+      "createdAt": "创建时间",
+      "actions": "操作"
+    },
+    "errors": {
+      "uploadFailed": "上传文件失败",
+      "renameFailed": "重命名文件失败",
+      "deleteFailed": "删除文件失败"
+    }
+  },
   "common": {
     "cancel": "取消",
     "create": "创建",
@@ -224,6 +251,7 @@
   "nav": {
     "dashboard": "仪表盘",
     "goods": "商品管理",
+    "files": "文件管理",
     "members": "成员",
     "profile": "用户信息",
     "roles": "角色"

@@ -11,6 +11,7 @@ import MembersPage from "@/pages/MembersPage";
 import RolesPage from "@/pages/RolesPage";
 import ProfilePage from "@/pages/ProfilePage";
 import GoodsPage from "@/pages/GoodsPage";
+import FilesPage from "@/pages/FilesPage";
 
 const App = () => (
   <AuthProvider>
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/goods" element={<GoodsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route element={<RoleGuard requiredRole="root" />}>
+            <Route path="/files" element={<FilesPage />} />
             <Route path="/members" element={<MembersPage />} />
             <Route path="/roles" element={<RolesPage />} />
           </Route>

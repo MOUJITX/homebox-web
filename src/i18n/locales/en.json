@@ -5,6 +5,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "goods": "Goods",
+    "files": "Files",
     "members": "Members",
     "roles": "Roles",
     "profile": "Profile"
@@ -263,6 +264,33 @@
         "saveFailed": "Failed to save brand",
         "deleteFailed": "Failed to delete brand"
       }
+    }
+  },
+  "files": {
+    "title": "File Management",
+    "upload": "Upload File",
+    "uploading": "Uploading…",
+    "rename": "Rename",
+    "renameDescription": "Enter a new name for this file.",
+    "newFilename": "New Filename",
+    "newFilenamePlaceholder": "Enter new filename",
+    "preview": "Preview",
+    "download": "Download",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to delete this file? This action cannot be undone.",
+    "empty": "No files uploaded yet.",
+    "columns": {
+      "preview": "Preview",
+      "filename": "Filename",
+      "contentType": "Type",
+      "fileSize": "Size",
+      "createdAt": "Created",
+      "actions": "Actions"
+    },
+    "errors": {
+      "uploadFailed": "Failed to upload file",
+      "renameFailed": "Failed to rename file",
+      "deleteFailed": "Failed to delete file"
     }
   },
   "common": {

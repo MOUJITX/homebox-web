@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import {
   LayoutDashboardIcon,
   PackageIcon,
+  FolderIcon,
   UsersIcon,
   ShieldIcon,
   PanelLeftCloseIcon,
@@ -11,11 +12,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipPopup,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipTrigger, TooltipPopup } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
@@ -28,6 +25,12 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: "nav.dashboard", path: "/dashboard", icon: LayoutDashboardIcon },
   { label: "nav.goods", path: "/goods", icon: PackageIcon },
+  {
+    label: "nav.files",
+    path: "/files",
+    icon: FolderIcon,
+    requiredRole: "root",
+  },
   {
     label: "nav.members",
     path: "/members",
