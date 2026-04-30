@@ -104,7 +104,10 @@ const CategoryManagerDialog = ({
 
     try {
       if (mode === "create") {
-        await createGoodCategory({ name, description: description || undefined });
+        await createGoodCategory({
+          name,
+          description: description || undefined,
+        });
       } else if (mode === "edit" && editingCategory) {
         await updateGoodCategory(editingCategory.id, {
           name,
@@ -241,9 +244,7 @@ const CategoryManagerDialog = ({
                 id="category-description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder={t(
-                  "goods.categories.form.descriptionPlaceholder",
-                )}
+                placeholder={t("goods.categories.form.descriptionPlaceholder")}
               />
             </div>
             {error && (

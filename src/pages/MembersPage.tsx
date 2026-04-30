@@ -27,7 +27,12 @@ import CreateMemberDialog from "@/components/members/CreateMemberDialog";
 import EditMemberDialog from "@/components/members/EditMemberDialog";
 import DeleteMemberDialog from "@/components/members/DeleteMemberDialog";
 
-type SortKey = "username" | "displayName" | "roleName" | "createdAt" | "updatedAt";
+type SortKey =
+  | "username"
+  | "displayName"
+  | "roleName"
+  | "createdAt"
+  | "updatedAt";
 
 const PAGE_SIZE = 10;
 
@@ -38,9 +43,12 @@ const formatDate = (dateStr: string) =>
     day: "numeric",
   });
 
-const sortIcon = (column: SortKey, sortKey: SortKey, sortDir: "asc" | "desc") => {
-  if (sortKey !== column)
-    return <ArrowUpIcon className="size-3 opacity-25" />;
+const sortIcon = (
+  column: SortKey,
+  sortKey: SortKey,
+  sortDir: "asc" | "desc",
+) => {
+  if (sortKey !== column) return <ArrowUpIcon className="size-3 opacity-25" />;
   return sortDir === "asc" ? (
     <ArrowUpIcon className="size-3" />
   ) : (
@@ -201,7 +209,10 @@ const MembersPage = () => {
             )}
             {!loading && paginated.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+                <TableCell
+                  colSpan={7}
+                  className="h-24 text-center text-muted-foreground"
+                >
                   {t("common.noResults")}
                 </TableCell>
               </TableRow>

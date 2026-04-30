@@ -132,7 +132,11 @@ const EditMemberDialog = ({
           </div>
           <div className="grid gap-2">
             <Label htmlFor="edit-role">{t("members.form.role")}</Label>
-            <Select value={roleName} onValueChange={(v) => v && setRoleName(v)} required>
+            <Select
+              value={roleName}
+              onValueChange={(v) => v && setRoleName(v)}
+              required
+            >
               <SelectTrigger>
                 <SelectValue placeholder={t("members.form.rolePlaceholder")} />
               </SelectTrigger>

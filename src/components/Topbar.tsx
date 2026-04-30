@@ -52,7 +52,9 @@ const Topbar = () => {
               <DropdownMenuItem
                 key={code}
                 onClick={() => i18n.changeLanguage(code)}
-                className={currentLang === code ? "text-accent-foreground bg-accent" : ""}
+                className={
+                  currentLang === code ? "text-accent-foreground bg-accent" : ""
+                }
               >
                 {label}
               </DropdownMenuItem>

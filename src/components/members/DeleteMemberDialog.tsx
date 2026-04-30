@@ -69,7 +69,11 @@ const DeleteMemberDialog = ({
           <Button variant="outline" onClick={handleClose}>
             {t("common.cancel")}
           </Button>
-          <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={deleting}
+          >
             {deleting ? t("common.deleting") : t("common.delete")}
           </Button>
         </DialogFooter>

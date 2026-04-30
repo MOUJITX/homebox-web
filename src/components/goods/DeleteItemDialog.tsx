@@ -47,9 +47,7 @@ const DeleteItemDialog = ({
       handleClose();
       onSuccess();
     } catch (err) {
-      setError(
-        getErrorMessage(err) ?? t("goods.items.errors.deleteFailed"),
-      );
+      setError(getErrorMessage(err) ?? t("goods.items.errors.deleteFailed"));
     } finally {
       setDeleting(false);
     }

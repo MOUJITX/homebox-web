@@ -122,15 +122,10 @@ const ProfilePage = () => {
       <Card>
         <CardHeader>
           <CardTitle>{t("profile.security")}</CardTitle>
-          <CardDescription>
-            {t("profile.securityDescription")}
-          </CardDescription>
+          <CardDescription>{t("profile.securityDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Button
-            variant="outline"
-            onClick={() => setPasswordDialogOpen(true)}
-          >
+          <Button variant="outline" onClick={() => setPasswordDialogOpen(true)}>
             <KeyRoundIcon className="size-4" />
             {t("profile.changePassword")}
           </Button>

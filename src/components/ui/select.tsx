@@ -97,10 +97,4 @@ function SelectValue({ ...props }: SelectPrimitive.Value.Props) {
   return <SelectPrimitive.Value data-slot="select-value" {...props} />;
 }
 
-export {
-  Select,
-  SelectTrigger,
-  SelectPopup,
-  SelectItem,
-  SelectValue,
-};
+export { Select, SelectTrigger, SelectPopup, SelectItem, SelectValue };

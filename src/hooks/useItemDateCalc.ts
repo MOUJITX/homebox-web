@@ -11,7 +11,8 @@ const addDays = (date: string, days: number): string => {
   return d.toISOString().slice(0, 10);
 };
 
-const subtractDays = (date: string, days: number): string => addDays(date, -days);
+const subtractDays = (date: string, days: number): string =>
+  addDays(date, -days);
 
 export const useItemDateCalc = (
   initial: { productDate: string; expirationDate: string; lifeDays: string } = {
@@ -21,7 +22,9 @@ export const useItemDateCalc = (
   },
 ) => {
   const [productDate, setProductDateRaw] = useState(initial.productDate);
-  const [expirationDate, setExpirationDateRaw] = useState(initial.expirationDate);
+  const [expirationDate, setExpirationDateRaw] = useState(
+    initial.expirationDate,
+  );
   const [lifeDays, setLifeDaysRaw] = useState(initial.lifeDays);
 
   const setProductDate = useCallback(
@@ -69,14 +72,11 @@ export const useItemDateCalc = (
     setLifeDaysRaw("");
   }, []);
 
-  const initDates = useCallback(
-    (pd: string, ed: string, ld: number) => {
-      setProductDateRaw(pd);
-      setExpirationDateRaw(ed);
-      setLifeDaysRaw(String(ld));
-    },
-    [],
-  );
+  const initDates = useCallback((pd: string, ed: string, ld: number) => {
+    setProductDateRaw(pd);
+    setExpirationDateRaw(ed);
+    setLifeDaysRaw(String(ld));
+  }, []);
 
   return {
     productDate,

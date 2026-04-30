@@ -27,10 +27,7 @@ function TooltipPositioner({
   );
 }
 
-function TooltipPopup({
-  className,
-  ...props
-}: TooltipPrimitive.Popup.Props) {
+function TooltipPopup({ className, ...props }: TooltipPrimitive.Popup.Props) {
   return (
     <TooltipPortal>
       <TooltipPositioner sideOffset={6}>

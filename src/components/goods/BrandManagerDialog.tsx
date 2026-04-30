@@ -128,9 +128,7 @@ const BrandManagerDialog = ({
       void fetchBrands();
       onChanged();
     } catch (err) {
-      setError(
-        getErrorMessage(err) ?? t("goods.brands.errors.deleteFailed"),
-      );
+      setError(getErrorMessage(err) ?? t("goods.brands.errors.deleteFailed"));
     }
   };
 
@@ -156,9 +154,7 @@ const BrandManagerDialog = ({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>
-                      {t("goods.brands.columns.brandName")}
-                    </TableHead>
+                    <TableHead>{t("goods.brands.columns.brandName")}</TableHead>
                     <TableHead>
                       {t("goods.brands.columns.companyName")}
                     </TableHead>

@@ -176,9 +176,7 @@ const CreateGoodDialog = ({
                 required
               >
                 <SelectTrigger>
-                  <SelectValue
-                    placeholder={t("goods.form.brandPlaceholder")}
-                  >
+                  <SelectValue placeholder={t("goods.form.brandPlaceholder")}>
                     {() =>
                       brands.find((b) => b.id === brandId)?.brandName ??
                       t("goods.form.brandPlaceholder")

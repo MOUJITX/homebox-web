@@ -83,9 +83,7 @@ const GoodExpandedRow = ({
       <TableCell colSpan={colSpan} className="bg-muted/30 p-4">
         <div className="grid gap-4">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-medium">
-              {t("goods.items.title")}
-            </h4>
+            <h4 className="text-sm font-medium">{t("goods.items.title")}</h4>
             <div className="flex gap-1">
               <Button
                 variant="outline"
@@ -102,9 +100,7 @@ const GoodExpandedRow = ({
             </div>
           </div>
 
-          {showPictures && (
-            <PictureManager goodId={good.id} />
-          )}
+          {showPictures && <PictureManager goodId={good.id} />}
 
           <div className="rounded-lg ring-1 ring-foreground/10">
             <Table>

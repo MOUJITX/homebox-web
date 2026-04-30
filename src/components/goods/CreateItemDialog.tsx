@@ -132,20 +132,24 @@ const CreateItemDialog = ({
                 disabled={filledCount >= 2 && !lifeDays}
                 className="flex-1"
               />
-              {([["1y", 365], ["2y", 730], ["3y", 1095]] as const).map(
-                ([key, days]) => (
-                  <Button
-                    key={key}
-                    type="button"
-                    variant={lifeDays === String(days) ? "default" : "outline"}
-                    size="sm"
-                    disabled={filledCount >= 2 && !lifeDays}
-                    onClick={() => setLifeDays(String(days))}
-                  >
-                    {t(`goods.items.form.lifeDaysQuick.${key}`)}
-                  </Button>
-                ),
-              )}
+              {(
+                [
+                  ["1y", 365],
+                  ["2y", 730],
+                  ["3y", 1095],
+                ] as const
+              ).map(([key, days]) => (
+                <Button
+                  key={key}
+                  type="button"
+                  variant={lifeDays === String(days) ? "default" : "outline"}
+                  size="sm"
+                  disabled={filledCount >= 2 && !lifeDays}
+                  onClick={() => setLifeDays(String(days))}
+                >
+                  {t(`goods.items.form.lifeDaysQuick.${key}`)}
+                </Button>
+              ))}
             </div>
           </div>
           {error && (

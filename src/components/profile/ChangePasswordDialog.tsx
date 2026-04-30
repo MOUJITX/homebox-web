@@ -68,9 +68,7 @@ const ChangePasswordDialog = ({
       handleClose();
       onSuccess();
     } catch (err) {
-      setError(
-        getErrorMessage(err) ?? t("changePassword.wrongCurrent"),
-      );
+      setError(getErrorMessage(err) ?? t("changePassword.wrongCurrent"));
     } finally {
       setSubmitting(false);
     }

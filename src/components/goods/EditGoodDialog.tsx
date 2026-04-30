@@ -119,9 +119,7 @@ const EditGoodDialog = ({
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="edit-good-barcode">
-              {t("goods.form.barcode")}
-            </Label>
+            <Label htmlFor="edit-good-barcode">{t("goods.form.barcode")}</Label>
             <Input
               id="edit-good-barcode"
               value={barcode}
@@ -138,9 +136,7 @@ const EditGoodDialog = ({
               required
             >
               <SelectTrigger>
-                <SelectValue
-                  placeholder={t("goods.form.categoryPlaceholder")}
-                >
+                <SelectValue placeholder={t("goods.form.categoryPlaceholder")}>
                   {() =>
                     categories.find((c) => c.id === categoryId)?.name ??
                     t("goods.form.categoryPlaceholder")

@@ -100,11 +100,15 @@ const CreateMemberDialog = ({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t("members.create")}</DialogTitle>
-          <DialogDescription>{t("members.createDescription")}</DialogDescription>
+          <DialogDescription>
+            {t("members.createDescription")}
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="create-username">{t("members.form.username")}</Label>
+            <Label htmlFor="create-username">
+              {t("members.form.username")}
+            </Label>
             <Input
               id="create-username"
               value={username}
@@ -127,7 +131,11 @@ const CreateMemberDialog = ({
           </div>
           <div className="grid gap-2">
             <Label htmlFor="create-role">{t("members.form.role")}</Label>
-            <Select value={roleName} onValueChange={(v) => v && setRoleName(v)} required>
+            <Select
+              value={roleName}
+              onValueChange={(v) => v && setRoleName(v)}
+              required
+            >
               <SelectTrigger>
                 <SelectValue placeholder={t("members.form.rolePlaceholder")} />
               </SelectTrigger>

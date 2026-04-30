@@ -36,9 +36,12 @@ const formatDate = (dateStr: string) =>
     day: "numeric",
   });
 
-const sortIcon = (column: SortKey, sortKey: SortKey, sortDir: "asc" | "desc") => {
-  if (sortKey !== column)
-    return <ArrowUpIcon className="size-3 opacity-25" />;
+const sortIcon = (
+  column: SortKey,
+  sortKey: SortKey,
+  sortDir: "asc" | "desc",
+) => {
+  if (sortKey !== column) return <ArrowUpIcon className="size-3 opacity-25" />;
   return sortDir === "asc" ? (
     <ArrowUpIcon className="size-3" />
   ) : (
@@ -184,7 +187,10 @@ const RolesPage = () => {
             )}
             {!loading && paginated.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+                <TableCell
+                  colSpan={5}
+                  className="h-24 text-center text-muted-foreground"
+                >
                   {t("common.noResults")}
                 </TableCell>
               </TableRow>

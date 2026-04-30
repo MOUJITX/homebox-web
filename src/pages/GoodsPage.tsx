@@ -12,16 +12,8 @@ import {
   TagIcon,
   BuildingIcon,
 } from "lucide-react";
-import {
-  getGoods,
-  type Good,
-  type GoodStatus,
-  type Page,
-} from "@/api/goods";
-import {
-  getGoodCategories,
-  type GoodCategory,
-} from "@/api/goodCategories";
+import { getGoods, type Good, type GoodStatus, type Page } from "@/api/goods";
+import { getGoodCategories, type GoodCategory } from "@/api/goodCategories";
 import { getGoodBrands, type GoodBrand } from "@/api/goodBrands";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

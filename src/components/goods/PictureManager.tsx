@@ -54,9 +54,7 @@ const PictureManager = ({ goodId }: PictureManagerProps) => {
   return (
     <div className="grid gap-3 rounded-lg border border-dashed p-3">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium">
-          {t("goods.pictures.title")}
-        </span>
+        <span className="text-sm font-medium">{t("goods.pictures.title")}</span>
         <Button
           variant="outline"
           size="sm"
