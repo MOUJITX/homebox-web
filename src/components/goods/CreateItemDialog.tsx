@@ -57,7 +57,7 @@ const CreateItemDialog = ({
     e.preventDefault();
     if (submitting) return;
 
-    if (filledCount !== 2) {
+    if (filledCount < 2) {
       setError(t("goods.items.errors.exactlyTwo"));
       return;
     }
