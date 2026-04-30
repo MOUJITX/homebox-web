@@ -434,6 +434,7 @@ const GoodsPage = () => {
         onClose={() => setCreateOpen(false)}
         onSuccess={fetchGoods}
         onNavigateToGood={handleNavigateToGood}
+        onRefDataChanged={handleRefDataChanged}
       />
       <EditGoodDialog
         open={!!editingGood}
@@ -442,6 +443,7 @@ const GoodsPage = () => {
         brands={brands}
         onClose={() => setEditingGood(null)}
         onSuccess={fetchGoods}
+        onRefDataChanged={handleRefDataChanged}
       />
       <DeleteGoodDialog
         open={!!deletingGood}

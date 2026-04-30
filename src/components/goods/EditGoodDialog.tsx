@@ -1,5 +1,6 @@
 import { useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
+import { PlusIcon } from "lucide-react";
 import type { GoodCategory } from "@/api/goodCategories";
 import type { GoodBrand } from "@/api/goodBrands";
 import type { Good } from "@/api/goods";
@@ -23,6 +24,8 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
+import CategoryManagerDialog from "./CategoryManagerDialog";
+import BrandManagerDialog from "./BrandManagerDialog";
 
 interface EditGoodDialogProps {
   readonly open: boolean;
@@ -31,6 +34,7 @@ interface EditGoodDialogProps {
   readonly brands: GoodBrand[];
   readonly onClose: () => void;
   readonly onSuccess: () => void;
+  readonly onRefDataChanged: () => void;
 }
 
 const EditGoodDialog = ({
@@ -40,6 +44,7 @@ const EditGoodDialog = ({
   brands,
   onClose,
   onSuccess,
+  onRefDataChanged,
 }: EditGoodDialogProps) => {
   const { t } = useTranslation();
   const [productName, setProductName] = useState("");
@@ -49,6 +54,8 @@ const EditGoodDialog = ({
   const [expiringSoonDays, setExpiringSoonDays] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [categoryManagerOpen, setCategoryManagerOpen] = useState(false);
+  const [brandManagerOpen, setBrandManagerOpen] = useState(false);
 
   const [prevGoodId, setPrevGoodId] = useState(good?.id);
   if (good?.id !== prevGoodId) {
@@ -65,6 +72,8 @@ const EditGoodDialog = ({
 
   const handleClose = () => {
     setError("");
+    setCategoryManagerOpen(false);
+    setBrandManagerOpen(false);
     onClose();
   };
 
@@ -96,6 +105,7 @@ const EditGoodDialog = ({
   if (!good) return null;
 
   return (
+    <>
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
@@ -130,51 +140,71 @@ const EditGoodDialog = ({
           </div>
           <div className="grid gap-2">
             <Label>{t("goods.form.category")}</Label>
-            <Select
-              value={categoryId}
-              onValueChange={(v) => v !== undefined && setCategoryId(v)}
-              required
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={t("goods.form.categoryPlaceholder")}>
-                  {() =>
-                    categories.find((c) => c.id === categoryId)?.name ??
-                    t("goods.form.categoryPlaceholder")
-                  }
-                </SelectValue>
-              </SelectTrigger>
-              <SelectPopup>
-                {categories.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>
-                    {c.name}
-                  </SelectItem>
-                ))}
-              </SelectPopup>
-            </Select>
+            <div className="flex gap-2">
+              <Select
+                value={categoryId}
+                onValueChange={(v) => v !== undefined && setCategoryId(v)}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={t("goods.form.categoryPlaceholder")}>
+                    {() =>
+                      categories.find((c) => c.id === categoryId)?.name ??
+                      t("goods.form.categoryPlaceholder")
+                    }
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectPopup>
+                  {categories.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.name}
+                    </SelectItem>
+                  ))}
+                </SelectPopup>
+              </Select>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                onClick={() => setCategoryManagerOpen(true)}
+              >
+                <PlusIcon className="size-4" />
+              </Button>
+            </div>
           </div>
           <div className="grid gap-2">
             <Label>{t("goods.form.brand")}</Label>
-            <Select
-              value={brandId}
-              onValueChange={(v) => v !== undefined && setBrandId(v)}
-              required
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={t("goods.form.brandPlaceholder")}>
-                  {() =>
-                    brands.find((b) => b.id === brandId)?.brandName ??
-                    t("goods.form.brandPlaceholder")
-                  }
-                </SelectValue>
-              </SelectTrigger>
-              <SelectPopup>
-                {brands.map((b) => (
-                  <SelectItem key={b.id} value={b.id}>
-                    {b.brandName}
-                  </SelectItem>
-                ))}
-              </SelectPopup>
-            </Select>
+            <div className="flex gap-2">
+              <Select
+                value={brandId}
+                onValueChange={(v) => v !== undefined && setBrandId(v)}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={t("goods.form.brandPlaceholder")}>
+                    {() =>
+                      brands.find((b) => b.id === brandId)?.brandName ??
+                      t("goods.form.brandPlaceholder")
+                    }
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectPopup>
+                  {brands.map((b) => (
+                    <SelectItem key={b.id} value={b.id}>
+                      {b.brandName}
+                    </SelectItem>
+                  ))}
+                </SelectPopup>
+              </Select>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                onClick={() => setBrandManagerOpen(true)}
+              >
+                <PlusIcon className="size-4" />
+              </Button>
+            </div>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="edit-good-expiring">
@@ -203,6 +233,17 @@ const EditGoodDialog = ({
         </form>
       </DialogContent>
     </Dialog>
+    <CategoryManagerDialog
+      open={categoryManagerOpen}
+      onClose={() => setCategoryManagerOpen(false)}
+      onChanged={onRefDataChanged}
+    />
+    <BrandManagerDialog
+      open={brandManagerOpen}
+      onClose={() => setBrandManagerOpen(false)}
+      onChanged={onRefDataChanged}
+    />
+    </>
   );
 };
 
