@@ -41,6 +41,15 @@ const formatDate = (dateStr: string) =>
 const isExpired = (item: GoodItem) =>
   new Date(item.expirationDate) < new Date();
 
+const isExpiringSoon = (item: GoodItem, expiringSoonDays: number) => {
+  const now = new Date();
+  const expDate = new Date(item.expirationDate);
+  const diffDays = Math.ceil(
+    (expDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+  );
+  return diffDays > 0 && diffDays <= expiringSoonDays;
+};
+
 const GoodExpandedRow = ({
   good,
   colSpan,
@@ -142,22 +151,23 @@ const GoodExpandedRow = ({
                       <TableCell>{formatDate(item.expirationDate)}</TableCell>
                       <TableCell>{item.lifeDays}</TableCell>
                       <TableCell>
-                        <div className="flex gap-1">
-                          {isExpired(item) && (
-                            <Badge variant="destructive">
-                              {t("goods.status.EXPIRED")}
-                            </Badge>
-                          )}
-                          {item.inUse ? (
-                            <Badge variant="default">
-                              {t("goods.items.inUse")}
-                            </Badge>
-                          ) : (
-                            <Badge variant="secondary">
-                              {t("goods.items.notInUse")}
-                            </Badge>
-                          )}
-                        </div>
+                        {!item.inUse ? (
+                          <Badge variant="secondary">
+                            {t("goods.status.EXHAUSTED")}
+                          </Badge>
+                        ) : isExpired(item) ? (
+                          <Badge variant="destructive">
+                            {t("goods.status.EXPIRED")}
+                          </Badge>
+                        ) : isExpiringSoon(item, good.expiringSoonDays) ? (
+                          <Badge variant="warning">
+                            {t("goods.status.EXPIRING_SOON")}
+                          </Badge>
+                        ) : (
+                          <Badge variant="success">
+                            {t("goods.status.IN_USE")}
+                          </Badge>
+                        )}
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">

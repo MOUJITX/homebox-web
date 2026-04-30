@@ -167,7 +167,8 @@
       "EXPIRED": "Expired",
       "EXPIRING_SOON": "Expiring Soon",
       "IN_USE": "In Use",
-      "EXHAUSTED": "Exhausted"
+      "EXHAUSTED": "Exhausted",
+      "NOT_IN_USE": "Not In Use"
     },
     "barcodeExists": {
       "title": "Barcode Already Exists",

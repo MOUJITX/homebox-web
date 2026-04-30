@@ -56,7 +56,8 @@
       "EXPIRED": "已过期",
       "EXPIRING_SOON": "即将过期",
       "IN_USE": "使用中",
-      "EXHAUSTED": "已耗尽"
+      "EXHAUSTED": "已耗尽",
+      "NOT_IN_USE": "未使用"
     },
     "barcodeExists": {
       "title": "条码已存在",

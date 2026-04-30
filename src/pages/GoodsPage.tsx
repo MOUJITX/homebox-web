@@ -42,24 +42,15 @@ import BrandManagerDialog from "@/components/goods/BrandManagerDialog";
 
 const PAGE_SIZE = 10;
 
-const STATUS_OPTIONS: GoodStatus[] = [
-  "EXPIRED",
-  "EXPIRING_SOON",
-  "IN_USE",
-  "EXHAUSTED",
-];
+const STATUS_OPTIONS: GoodStatus[] = ["IN_USE", "NOT_IN_USE"];
 
 const statusBadgeVariant = (
   status: GoodStatus,
-): "destructive" | "default" | "outline" | "secondary" => {
+): "success" | "secondary" => {
   switch (status) {
-    case "EXPIRED":
-      return "destructive";
-    case "EXPIRING_SOON":
-      return "outline";
     case "IN_USE":
-      return "default";
-    case "EXHAUSTED":
+      return "success";
+    case "NOT_IN_USE":
       return "secondary";
   }
 };

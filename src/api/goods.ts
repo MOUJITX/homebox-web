@@ -1,6 +1,6 @@
 import axios from "./axios";
 
-export type GoodStatus = "EXPIRED" | "EXPIRING_SOON" | "IN_USE" | "EXHAUSTED";
+export type GoodStatus = "IN_USE" | "NOT_IN_USE";
 
 export interface GoodPicture {
   id: number;
