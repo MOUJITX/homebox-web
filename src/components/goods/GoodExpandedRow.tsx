@@ -8,7 +8,7 @@ import {
   ToggleLeftIcon,
   ToggleRightIcon,
 } from "lucide-react";
-import type { Good, GoodItem } from "@/api/goods";
+import type { Good, GoodItem, ItemStatus } from "@/api/goods";
 import { getGoodItems, updateGoodItem } from "@/api/goodItems";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,6 +29,7 @@ interface GoodExpandedRowProps {
   readonly good: Good;
   readonly colSpan: number;
   readonly onGoodUpdated: () => void;
+  readonly itemStatus?: ItemStatus | null;
 }
 
 const formatDate = (dateStr: string) =>
@@ -54,6 +55,7 @@ const GoodExpandedRow = ({
   good,
   colSpan,
   onGoodUpdated,
+  itemStatus,
 }: GoodExpandedRowProps) => {
   const { t } = useTranslation();
   const [items, setItems] = useState<GoodItem[]>([]);
@@ -66,12 +68,12 @@ const GoodExpandedRow = ({
   const fetchItems = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await getGoodItems(good.id);
+      const { data } = await getGoodItems(good.id, itemStatus ?? undefined);
       setItems(data);
     } finally {
       setLoading(false);
     }
-  }, [good.id]);
+  }, [good.id, itemStatus]);
 
   useEffect(() => {
     void fetchItems();

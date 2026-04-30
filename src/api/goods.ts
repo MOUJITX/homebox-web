@@ -2,6 +2,8 @@ import axios from "./axios";
 
 export type GoodStatus = "IN_USE" | "NOT_IN_USE";
 
+export type ItemStatus = "EXPIRED" | "EXPIRING_SOON" | "IN_USE" | "EXHAUSTED";
+
 export interface GoodPicture {
   id: number;
   filename: string;
@@ -59,6 +61,7 @@ export interface GetGoodsParams {
   categoryId?: number;
   brandId?: number;
   status?: GoodStatus;
+  itemStatus?: ItemStatus;
   page?: number;
   size?: number;
   sortBy?: string;

@@ -12,7 +12,7 @@ import {
   TagIcon,
   BuildingIcon,
 } from "lucide-react";
-import { getGoods, type Good, type GoodStatus, type Page } from "@/api/goods";
+import { getGoods, type Good, type GoodStatus, type ItemStatus, type Page } from "@/api/goods";
 import { getGoodCategories, type GoodCategory } from "@/api/goodCategories";
 import { getGoodBrands, type GoodBrand } from "@/api/goodBrands";
 import { Button } from "@/components/ui/button";
@@ -42,9 +42,9 @@ import BrandManagerDialog from "@/components/goods/BrandManagerDialog";
 
 const PAGE_SIZE = 10;
 
-const STATUS_OPTIONS: GoodStatus[] = ["IN_USE", "NOT_IN_USE"];
+const STATUS_OPTIONS: ItemStatus[] = ["EXPIRED", "EXPIRING_SOON", "IN_USE", "EXHAUSTED"];
 
-const statusBadgeVariant = (
+const goodStatusBadgeVariant = (
   status: GoodStatus,
 ): "success" | "secondary" => {
   switch (status) {
@@ -75,7 +75,7 @@ const GoodsPage = () => {
   const [search, setSearch] = useState("");
   const [filterCategoryId, setFilterCategoryId] = useState<number | null>(null);
   const [filterBrandId, setFilterBrandId] = useState<number | null>(null);
-  const [filterStatus, setFilterStatus] = useState<GoodStatus | null>(null);
+  const [filterItemStatus, setFilterItemStatus] = useState<ItemStatus | null>(null);
   const [page, setPage] = useState(0);
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -101,7 +101,7 @@ const GoodsPage = () => {
         search: search || undefined,
         categoryId: filterCategoryId ?? undefined,
         brandId: filterBrandId ?? undefined,
-        status: filterStatus ?? undefined,
+        itemStatus: filterItemStatus ?? undefined,
         page,
         size: PAGE_SIZE,
         sortBy: "createdAt",
@@ -111,7 +111,7 @@ const GoodsPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [search, filterCategoryId, filterBrandId, filterStatus, page]);
+  }, [search, filterCategoryId, filterBrandId, filterItemStatus, page]);
 
   useEffect(() => {
     void fetchRefData();
@@ -130,7 +130,7 @@ const GoodsPage = () => {
     setSearch("");
     setFilterCategoryId(null);
     setFilterBrandId(null);
-    setFilterStatus(null);
+    setFilterItemStatus(null);
     setPage(0);
     setExpandedGoodId(goodId);
   };
@@ -219,18 +219,18 @@ const GoodsPage = () => {
 
         <div className="w-40">
           <Select
-            value={filterStatus}
+            value={filterItemStatus}
             onValueChange={(v) => {
-              setFilterStatus(v);
+              setFilterItemStatus(v);
               setPage(0);
             }}
           >
             <SelectTrigger>
               <SelectValue placeholder={t("goods.filters.allStatuses")}>
                 {() =>
-                  filterStatus == null
+                  filterItemStatus == null
                     ? t("goods.filters.allStatuses")
-                    : t(`goods.status.${filterStatus}`)
+                    : t(`goods.status.${filterItemStatus}`)
                 }
               </SelectValue>
             </SelectTrigger>
@@ -352,7 +352,7 @@ const GoodsPage = () => {
                       </span>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={statusBadgeVariant(good.status)}>
+                      <Badge variant={goodStatusBadgeVariant(good.status)}>
                         {t(`goods.status.${good.status}`)}
                       </Badge>
                     </TableCell>
@@ -381,6 +381,7 @@ const GoodsPage = () => {
                       good={good}
                       colSpan={9}
                       onGoodUpdated={fetchGoods}
+                      itemStatus={filterItemStatus}
                     />
                   )}
                 </>
