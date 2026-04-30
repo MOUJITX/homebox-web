@@ -13,6 +13,7 @@ import {
   BuildingIcon,
 } from "lucide-react";
 import { getGoods, type Good, type GoodStatus, type ItemStatus, type Page } from "@/api/goods";
+import AuthImg from "@/components/AuthImg";
 import { useDebounce } from "@/hooks/useDebounce";
 import { getGoodCategories, type GoodCategory } from "@/api/goodCategories";
 import { getGoodBrands, type GoodBrand } from "@/api/goodBrands";
@@ -331,8 +332,8 @@ const GoodsPage = () => {
                     </TableCell>
                     <TableCell>
                       {good.firstPictureUrl ? (
-                        <img
-                          src={good.firstPictureUrl}
+                        <AuthImg
+                          url={good.firstPictureUrl}
                           alt=""
                           className="size-8 rounded object-cover ring-1 ring-foreground/10"
                         />

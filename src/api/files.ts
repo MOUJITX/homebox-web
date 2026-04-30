@@ -28,7 +28,3 @@ export const renameFile = (id: number, originalFilename: string) =>
   axios.patch<FileRecord>(`/files/${id}/rename`, { originalFilename });
 
 export const deleteFile = (id: number) => axios.delete<void>(`/files/${id}`);
-
-export const getFilePreviewUrl = (id: number) => `/api/files/${id}/preview`;
-
-export const getFileDownloadUrl = (id: number) => `/api/files/${id}/download`;

@@ -18,12 +18,31 @@ import {
   uploadFile,
   renameFile,
   deleteFile,
-  getFilePreviewUrl,
-  getFileDownloadUrl,
   type FileRecord,
 } from "@/api/files";
+import { downloadAuthFile } from "@/hooks/useAuthImage";
+import AuthImg from "@/components/AuthImg";
 import type { Page } from "@/api/goods";
 import { formatDateTime } from "@/lib/utils";
+
+const AuthDownload = ({
+  url,
+  filename,
+  children,
+}: {
+  url: string;
+  filename: string;
+  children: React.ReactNode;
+}) => (
+  <a
+    onClick={(e) => {
+      e.preventDefault();
+      void downloadAuthFile(url, filename);
+    }}
+  >
+    {children}
+  </a>
+);
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -186,8 +205,8 @@ const FilesPage = () => {
                           className="block size-12 overflow-hidden rounded-md ring-1 ring-foreground/10 transition-opacity hover:opacity-80"
                           onClick={() => setPreviewFile(file)}
                         >
-                          <img
-                            src={getFilePreviewUrl(file.id)}
+                          <AuthImg
+                            url={`/api/files/${file.id}/preview`}
                             alt={file.originalFilename}
                             className="size-full object-cover"
                           />
@@ -222,7 +241,10 @@ const FilesPage = () => {
                             <ImageIcon className="size-3.5" />
                           </Button>
                         )}
-                        <a href={getFileDownloadUrl(file.id)} download>
+                        <AuthDownload
+                          url={`/api/files/${file.id}/download`}
+                          filename={file.originalFilename}
+                        >
                           <Button
                             variant="ghost"
                             size="icon-xs"
@@ -230,7 +252,7 @@ const FilesPage = () => {
                           >
                             <DownloadIcon className="size-3.5" />
                           </Button>
-                        </a>
+                        </AuthDownload>
                         <Button
                           variant="ghost"
                           size="icon-xs"
@@ -298,8 +320,8 @@ const FilesPage = () => {
             <DialogTitle>{previewFile?.originalFilename}</DialogTitle>
           </DialogHeader>
           {previewFile && isImageType(previewFile.contentType) ? (
-            <img
-              src={getFilePreviewUrl(previewFile.id)}
+            <AuthImg
+              url={`/api/files/${previewFile.id}/preview`}
               alt={previewFile.originalFilename}
               className="max-h-[70vh] w-full rounded-lg object-contain"
             />
@@ -313,12 +335,15 @@ const FilesPage = () => {
                 {previewFile.contentType} &middot;{" "}
                 {formatFileSize(previewFile.fileSize)}
               </p>
-              <a href={getFileDownloadUrl(previewFile.id)} download>
+              <AuthDownload
+                url={`/api/files/${previewFile.id}/download`}
+                filename={previewFile.originalFilename}
+              >
                 <Button>
                   <DownloadIcon className="size-4" />
                   {t("files.download")}
                 </Button>
-              </a>
+              </AuthDownload>
             </div>
           ) : null}
         </DialogContent>

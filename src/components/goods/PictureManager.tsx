@@ -4,6 +4,7 @@ import { PlusIcon, TrashIcon } from "lucide-react";
 import type { GoodPicture } from "@/api/goods";
 import { getGoodById } from "@/api/goods";
 import { uploadGoodPicture, deleteGoodPicture } from "@/api/goodPictures";
+import AuthImg from "@/components/AuthImg";
 import { Button } from "@/components/ui/button";
 
 interface PictureManagerProps {
@@ -85,8 +86,8 @@ const PictureManager = ({ goodId }: PictureManagerProps) => {
         <div className="flex flex-wrap gap-2">
           {pictures.map((pic) => (
             <div key={pic.id} className="group relative">
-              <img
-                src={pic.url}
+              <AuthImg
+                url={pic.url}
                 alt={pic.filename}
                 className="size-20 rounded-md object-cover ring-1 ring-foreground/10"
               />
