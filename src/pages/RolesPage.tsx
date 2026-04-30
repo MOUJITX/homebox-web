@@ -5,8 +5,6 @@ import {
   PencilIcon,
   TrashIcon,
   SearchIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react";
@@ -21,6 +19,8 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+import SortIcon from "@/components/ui/sort-icon";
+import { formatDate } from "@/lib/utils";
 import CreateRoleDialog from "@/components/roles/CreateRoleDialog";
 import EditRoleDialog from "@/components/roles/EditRoleDialog";
 import DeleteRoleDialog from "@/components/roles/DeleteRoleDialog";
@@ -28,26 +28,6 @@ import DeleteRoleDialog from "@/components/roles/DeleteRoleDialog";
 type SortKey = "name" | "description" | "createdAt" | "updatedAt";
 
 const PAGE_SIZE = 10;
-
-const formatDate = (dateStr: string) =>
-  new Date(dateStr).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-
-const sortIcon = (
-  column: SortKey,
-  sortKey: SortKey,
-  sortDir: "asc" | "desc",
-) => {
-  if (sortKey !== column) return <ArrowUpIcon className="size-3 opacity-25" />;
-  return sortDir === "asc" ? (
-    <ArrowUpIcon className="size-3" />
-  ) : (
-    <ArrowDownIcon className="size-3" />
-  );
-};
 
 const RolesPage = () => {
   const { t } = useTranslation();
@@ -142,7 +122,7 @@ const RolesPage = () => {
                   onClick={() => handleSort("name")}
                 >
                   {t("roles.columns.name")}
-                  {sortIcon("name", sortKey, sortDir)}
+                  <SortIcon column="name" sortKey={sortKey} sortDir={sortDir} />
                 </button>
               </TableHead>
               <TableHead>
@@ -151,7 +131,7 @@ const RolesPage = () => {
                   onClick={() => handleSort("description")}
                 >
                   {t("roles.columns.description")}
-                  {sortIcon("description", sortKey, sortDir)}
+                  <SortIcon column="description" sortKey={sortKey} sortDir={sortDir} />
                 </button>
               </TableHead>
               <TableHead>
@@ -160,7 +140,7 @@ const RolesPage = () => {
                   onClick={() => handleSort("createdAt")}
                 >
                   {t("roles.columns.createdAt")}
-                  {sortIcon("createdAt", sortKey, sortDir)}
+                  <SortIcon column="createdAt" sortKey={sortKey} sortDir={sortDir} />
                 </button>
               </TableHead>
               <TableHead>
@@ -169,7 +149,7 @@ const RolesPage = () => {
                   onClick={() => handleSort("updatedAt")}
                 >
                   {t("roles.columns.updatedAt")}
-                  {sortIcon("updatedAt", sortKey, sortDir)}
+                  <SortIcon column="updatedAt" sortKey={sortKey} sortDir={sortDir} />
                 </button>
               </TableHead>
               <TableHead className="text-right">

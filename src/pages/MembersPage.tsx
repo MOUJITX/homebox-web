@@ -5,8 +5,6 @@ import {
   PencilIcon,
   TrashIcon,
   SearchIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react";
@@ -23,6 +21,8 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+import SortIcon from "@/components/ui/sort-icon";
+import { formatDate, ROOT_ROLE } from "@/lib/utils";
 import CreateMemberDialog from "@/components/members/CreateMemberDialog";
 import EditMemberDialog from "@/components/members/EditMemberDialog";
 import DeleteMemberDialog from "@/components/members/DeleteMemberDialog";
@@ -35,26 +35,6 @@ type SortKey =
   | "updatedAt";
 
 const PAGE_SIZE = 10;
-
-const formatDate = (dateStr: string) =>
-  new Date(dateStr).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-
-const sortIcon = (
-  column: SortKey,
-  sortKey: SortKey,
-  sortDir: "asc" | "desc",
-) => {
-  if (sortKey !== column) return <ArrowUpIcon className="size-3 opacity-25" />;
-  return sortDir === "asc" ? (
-    <ArrowUpIcon className="size-3" />
-  ) : (
-    <ArrowDownIcon className="size-3" />
-  );
-};
 
 const MembersPage = () => {
   const { t } = useTranslation();
@@ -154,7 +134,7 @@ const MembersPage = () => {
                   onClick={() => handleSort("username")}
                 >
                   {t("members.columns.username")}
-                  {sortIcon("username", sortKey, sortDir)}
+                  <SortIcon column="username" sortKey={sortKey} sortDir={sortDir} />
                 </button>
               </TableHead>
               <TableHead>
@@ -163,7 +143,7 @@ const MembersPage = () => {
                   onClick={() => handleSort("displayName")}
                 >
                   {t("members.columns.displayName")}
-                  {sortIcon("displayName", sortKey, sortDir)}
+                  <SortIcon column="displayName" sortKey={sortKey} sortDir={sortDir} />
                 </button>
               </TableHead>
               <TableHead>
@@ -172,7 +152,7 @@ const MembersPage = () => {
                   onClick={() => handleSort("roleName")}
                 >
                   {t("members.columns.role")}
-                  {sortIcon("roleName", sortKey, sortDir)}
+                  <SortIcon column="roleName" sortKey={sortKey} sortDir={sortDir} />
                 </button>
               </TableHead>
               <TableHead>{t("members.columns.status")}</TableHead>
@@ -182,7 +162,7 @@ const MembersPage = () => {
                   onClick={() => handleSort("createdAt")}
                 >
                   {t("members.columns.createdAt")}
-                  {sortIcon("createdAt", sortKey, sortDir)}
+                  <SortIcon column="createdAt" sortKey={sortKey} sortDir={sortDir} />
                 </button>
               </TableHead>
               <TableHead>
@@ -191,7 +171,7 @@ const MembersPage = () => {
                   onClick={() => handleSort("updatedAt")}
                 >
                   {t("members.columns.updatedAt")}
-                  {sortIcon("updatedAt", sortKey, sortDir)}
+                  <SortIcon column="updatedAt" sortKey={sortKey} sortDir={sortDir} />
                 </button>
               </TableHead>
               <TableHead className="text-right">
@@ -227,7 +207,7 @@ const MembersPage = () => {
                   <TableCell>
                     <Badge
                       variant={
-                        member.roleName === "root" ? "destructive" : "default"
+                        member.roleName === ROOT_ROLE ? "destructive" : "default"
                       }
                     >
                       {member.roleName}

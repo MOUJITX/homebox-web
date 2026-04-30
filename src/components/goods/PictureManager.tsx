@@ -36,9 +36,7 @@ const PictureManager = ({ goodId }: PictureManagerProps) => {
     if (!files?.length) return;
     setUploading(true);
     try {
-      for (const file of Array.from(files)) {
-        await uploadGoodPicture(goodId, file);
-      }
+      await Promise.all(Array.from(files).map((file) => uploadGoodPicture(goodId, file)));
       void fetchPictures();
     } finally {
       setUploading(false);

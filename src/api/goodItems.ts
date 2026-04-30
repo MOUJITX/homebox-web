@@ -8,12 +8,7 @@ export interface CreateGoodItemRequest {
   inUse?: boolean;
 }
 
-export interface UpdateGoodItemRequest {
-  productDate?: string;
-  expirationDate?: string;
-  lifeDays?: number;
-  inUse?: boolean;
-}
+export type UpdateGoodItemRequest = CreateGoodItemRequest;
 
 export const getGoodItems = (goodId: number, itemStatus?: ItemStatus) =>
   axios.get<GoodItem[]>(`/goods/${goodId}/items`, {

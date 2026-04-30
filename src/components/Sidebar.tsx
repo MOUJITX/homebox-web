@@ -13,7 +13,7 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipTrigger, TooltipPopup } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { cn, ROOT_ROLE } from "@/lib/utils";
 
 interface NavItem {
   label: string;
@@ -29,19 +29,19 @@ const navItems: NavItem[] = [
     label: "nav.files",
     path: "/files",
     icon: FolderIcon,
-    requiredRole: "root",
+    requiredRole: ROOT_ROLE,
   },
   {
     label: "nav.members",
     path: "/members",
     icon: UsersIcon,
-    requiredRole: "root",
+    requiredRole: ROOT_ROLE,
   },
   {
     label: "nav.roles",
     path: "/roles",
     icon: ShieldIcon,
-    requiredRole: "root",
+    requiredRole: ROOT_ROLE,
   },
 ];
 

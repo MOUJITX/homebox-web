@@ -20,6 +20,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+import { formatDate } from "@/lib/utils";
 import CreateItemDialog from "./CreateItemDialog";
 import EditItemDialog from "./EditItemDialog";
 import DeleteItemDialog from "./DeleteItemDialog";
@@ -32,13 +33,6 @@ interface GoodExpandedRowProps {
   readonly itemStatus?: ItemStatus | null;
 }
 
-const formatDate = (dateStr: string) =>
-  new Date(dateStr).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-
 const isExpired = (item: GoodItem) =>
   new Date(item.expirationDate) < new Date();
 
@@ -49,6 +43,17 @@ const isExpiringSoon = (item: GoodItem, expiringSoonDays: number) => {
     (expDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
   );
   return diffDays > 0 && diffDays <= expiringSoonDays;
+};
+
+const getItemStatus = (
+  item: GoodItem,
+  expiringSoonDays: number,
+): { label: string; variant: "secondary" | "destructive" | "warning" | "success" } => {
+  if (!item.inUse) return { label: "EXHAUSTED", variant: "secondary" };
+  if (isExpired(item)) return { label: "EXPIRED", variant: "destructive" };
+  if (isExpiringSoon(item, expiringSoonDays))
+    return { label: "EXPIRING_SOON", variant: "warning" };
+  return { label: "IN_USE", variant: "success" };
 };
 
 const GoodExpandedRow = ({
@@ -153,23 +158,14 @@ const GoodExpandedRow = ({
                       <TableCell>{formatDate(item.expirationDate)}</TableCell>
                       <TableCell>{item.lifeDays}</TableCell>
                       <TableCell>
-                        {!item.inUse ? (
-                          <Badge variant="secondary">
-                            {t("goods.status.EXHAUSTED")}
-                          </Badge>
-                        ) : isExpired(item) ? (
-                          <Badge variant="destructive">
-                            {t("goods.status.EXPIRED")}
-                          </Badge>
-                        ) : isExpiringSoon(item, good.expiringSoonDays) ? (
-                          <Badge variant="warning">
-                            {t("goods.status.EXPIRING_SOON")}
-                          </Badge>
-                        ) : (
-                          <Badge variant="success">
-                            {t("goods.status.IN_USE")}
-                          </Badge>
-                        )}
+                        {(() => {
+                          const status = getItemStatus(item, good.expiringSoonDays);
+                          return (
+                            <Badge variant={status.variant}>
+                              {t(`goods.status.${status.label}`)}
+                            </Badge>
+                          );
+                        })()}
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">

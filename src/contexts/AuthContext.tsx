@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [sessionExpired, setSessionExpired] = useState(false);
   const navigate = useNavigate();
 
-  const { username, role } = extractClaims(token);
+  const { username, role } = useMemo(() => extractClaims(token), [token]);
 
   useEffect(() => {
     setSessionExpiredHandler(() => {

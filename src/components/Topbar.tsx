@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supportedLanguages } from "@/i18n";
+import { ROOT_ROLE } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -65,7 +66,7 @@ const Topbar = () => {
           <DropdownMenuTrigger className="flex cursor-default items-center gap-1.5 rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
             <span>{displayName ?? username}</span>
             {role && (
-              <Badge variant={role === "root" ? "destructive" : "default"}>
+              <Badge variant={role === ROOT_ROLE ? "destructive" : "default"}>
                 {role}
               </Badge>
             )}

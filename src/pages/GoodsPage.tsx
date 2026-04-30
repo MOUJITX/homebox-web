@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   PlusIcon,
@@ -13,6 +13,7 @@ import {
   BuildingIcon,
 } from "lucide-react";
 import { getGoods, type Good, type GoodStatus, type ItemStatus, type Page } from "@/api/goods";
+import { useDebounce } from "@/hooks/useDebounce";
 import { getGoodCategories, type GoodCategory } from "@/api/goodCategories";
 import { getGoodBrands, type GoodBrand } from "@/api/goodBrands";
 import { Button } from "@/components/ui/button";
@@ -73,6 +74,7 @@ const GoodsPage = () => {
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
   const [filterCategoryId, setFilterCategoryId] = useState<number | null>(null);
   const [filterBrandId, setFilterBrandId] = useState<number | null>(null);
   const [filterItemStatus, setFilterItemStatus] = useState<ItemStatus | null>(null);
@@ -98,7 +100,7 @@ const GoodsPage = () => {
     setLoading(true);
     try {
       const { data } = await getGoods({
-        search: search || undefined,
+        search: debouncedSearch || undefined,
         categoryId: filterCategoryId ?? undefined,
         brandId: filterBrandId ?? undefined,
         itemStatus: filterItemStatus ?? undefined,
@@ -111,7 +113,7 @@ const GoodsPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [search, filterCategoryId, filterBrandId, filterItemStatus, page]);
+  }, [debouncedSearch, filterCategoryId, filterBrandId, filterItemStatus, page]);
 
   useEffect(() => {
     void fetchRefData();
@@ -308,8 +310,8 @@ const GoodsPage = () => {
             )}
             {!loading &&
               pageData.content.map((good) => (
-                <>
-                  <TableRow key={good.id}>
+                <Fragment key={good.id}>
+                  <TableRow>
                     <TableCell>
                       <Button
                         variant="ghost"
@@ -377,14 +379,13 @@ const GoodsPage = () => {
                   </TableRow>
                   {expandedGoodId === good.id && (
                     <GoodExpandedRow
-                      key={`expanded-${good.id}`}
                       good={good}
                       colSpan={9}
                       onGoodUpdated={fetchGoods}
                       itemStatus={filterItemStatus}
                     />
                   )}
-                </>
+                </Fragment>
               ))}
           </TableBody>
         </Table>

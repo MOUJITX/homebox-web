@@ -23,6 +23,7 @@ import {
   type FileRecord,
 } from "@/api/files";
 import type { Page } from "@/api/goods";
+import { formatDateTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -53,15 +54,6 @@ const formatFileSize = (bytes: number): string => {
   return `${(bytes / 1024 ** i).toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
 };
 
-const formatDate = (dateStr: string) =>
-  new Date(dateStr).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-
 const isImageType = (contentType: string) => contentType.startsWith("image/");
 
 const getFileIcon = (contentType: string) => {
@@ -73,7 +65,6 @@ const getFileIcon = (contentType: string) => {
 
 const FilesPage = () => {
   const { t } = useTranslation();
-  const [files, setFiles] = useState<FileRecord[]>([]);
   const [pageData, setPageData] = useState<Page<FileRecord> | null>(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
@@ -90,7 +81,6 @@ const FilesPage = () => {
     try {
       const { data } = await getFiles(p, PAGE_SIZE);
       setPageData(data);
-      setFiles(data.content);
     } finally {
       setLoading(false);
     }
@@ -105,9 +95,7 @@ const FilesPage = () => {
     if (!selected?.length) return;
     setUploading(true);
     try {
-      for (const file of Array.from(selected)) {
-        await uploadFile(file);
-      }
+      await Promise.all(Array.from(selected).map((file) => uploadFile(file)));
       void fetchFiles(page);
     } finally {
       setUploading(false);
@@ -177,7 +165,7 @@ const FilesPage = () => {
                 </TableCell>
               </TableRow>
             )}
-            {!loading && files.length === 0 && (
+            {!loading && (pageData?.content.length ?? 0) === 0 && (
               <TableRow>
                 <TableCell
                   colSpan={6}
@@ -188,7 +176,7 @@ const FilesPage = () => {
               </TableRow>
             )}
             {!loading &&
-              files.map((file) => {
+              (pageData?.content ?? []).map((file) => {
                 const Icon = getFileIcon(file.contentType);
                 return (
                   <TableRow key={file.id}>
@@ -220,7 +208,7 @@ const FilesPage = () => {
                       {formatFileSize(file.fileSize)}
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {formatDate(file.createdAt)}
+                      {formatDateTime(file.createdAt)}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
