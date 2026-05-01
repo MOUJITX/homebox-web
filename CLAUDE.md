@@ -15,8 +15,11 @@ Homebox Client — a web client application for Homebox (home inventory manageme
 - **UI**: Tailwind CSS 4 + Shadcn UI (Base UI primitives)
 - **Routing**: React Router 7 (library mode)
 - **HTTP Client**: Axios
+- **JWT**: jwt-decode
+- **Icons**: Lucide React
+- **Toasts**: Sonner
 - **i18n**: i18next + react-i18next + i18next-browser-languagedetector
-- **Linting**: ESLint 10 (flat config) with TypeScript and React plugins
+- **Linting**: ESLint 10 (flat config) with TypeScript, React Hooks, and React Refresh plugins
 - **Formatting**: Prettier 3
 - **Pre-commit**: Husky + lint-staged (runs ESLint fix + Prettier on staged files)
 
@@ -32,6 +35,7 @@ Homebox Client — a web client application for Homebox (home inventory manageme
 ## Rules
 
 - Before coding, analyze the backend code in `../homebox-server` (especially `../homebox-server/docs`) to understand available APIs, data models, and contracts. If issues are found or features are not yet implemented on the backend, edit the backend code first to fix or implement them — following the rules in `../homebox-server/CLAUDE.md`. Once the backend is complete, continue with frontend work.
+- The backend API URL is configured via Vite's `env` mechanism (`VITE_API_URL` in `.env.local`).
 - Before coding, clarify and detail the requirements — user requests may be vague or incomplete. Use the `feature-dev` skill to analyze the codebase and flesh out a concrete implementation plan before starting.
 - After every task, immediately update `README.md` and `CLAUDE.md` if the changes warrant documentation updates (e.g. new features, changed commands, altered architecture, new dependencies, updated setup steps).
 - Commit changes only after all steps are approved by the user. For large modifications containing multiple small tasks or features, commit at each small task/feature boundary rather than one big commit at the end.
