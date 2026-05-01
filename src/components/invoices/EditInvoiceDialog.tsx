@@ -1,6 +1,6 @@
 import { useState, useEffect, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
-import type { Invoice, InvoiceType, InvoiceStatus } from "@/api/invoices";
+import type { InvoiceDetail, InvoiceType, InvoiceStatus } from "@/api/invoices";
 import { updateInvoice } from "@/api/invoices";
 import { getErrorMessage } from "@/lib/error";
 import {
@@ -25,7 +25,7 @@ import { INVOICE_TYPES, INVOICE_STATUSES } from "./constants";
 
 interface EditInvoiceDialogProps {
   readonly open: boolean;
-  readonly invoice: Invoice | null;
+  readonly invoice: InvoiceDetail | null;
   readonly onClose: () => void;
   readonly onSuccess: () => void;
 }
@@ -68,9 +68,9 @@ const EditInvoiceDialog = ({
       setTotalAmount(
         invoice.totalAmount != null ? String(invoice.totalAmount) : "",
       );
-      setSellerTaxId("");
-      setBuyerTaxId("");
-      setRemark("");
+      setSellerTaxId(invoice.sellerTaxId ?? "");
+      setBuyerTaxId(invoice.buyerTaxId ?? "");
+      setRemark(invoice.remark ?? "");
     }
   }, [invoice, open]);
 

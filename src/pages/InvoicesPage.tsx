@@ -9,7 +9,7 @@ import {
   ChevronRightIcon,
 } from "lucide-react";
 import type { Invoice, InvoiceType, InvoiceStatus, InvoiceDetail, Page } from "@/api/invoices";
-import { getInvoices } from "@/api/invoices";
+import { getInvoices, getInvoiceById } from "@/api/invoices";
 import { useDebounce } from "@/hooks/useDebounce";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -84,7 +84,7 @@ const InvoicesPage = () => {
   const [page, setPage] = useState(0);
 
   const [createOpen, setCreateOpen] = useState(false);
-  const [editingInvoice, setEditingInvoice] = useState<Invoice | null>(null);
+  const [editingInvoice, setEditingInvoice] = useState<InvoiceDetail | null>(null);
   const [deletingInvoice, setDeletingInvoice] = useState<Invoice | null>(null);
   const [detailInvoiceId, setDetailInvoiceId] = useState<number | null>(null);
 
@@ -122,6 +122,15 @@ const InvoicesPage = () => {
   const handleEditFromDrawer = (invoice: InvoiceDetail) => {
     setDetailInvoiceId(null);
     setEditingInvoice(invoice);
+  };
+
+  const handleEditFromTable = async (id: number) => {
+    try {
+      const { data } = await getInvoiceById(id);
+      setEditingInvoice(data);
+    } catch {
+      // fallback: open with list data won't happen since we don't set state
+    }
   };
 
   const handleDeleteFromDrawer = (invoice: InvoiceDetail) => {
@@ -281,7 +290,7 @@ const InvoicesPage = () => {
                       <Button
                         variant="ghost"
                         size="icon-xs"
-                        onClick={() => setEditingInvoice(invoice)}
+                        onClick={() => handleEditFromTable(invoice.id)}
                       >
                         <PencilIcon className="size-3.5" />
                       </Button>
