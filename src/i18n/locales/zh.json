@@ -477,7 +477,8 @@
     "files": "文件管理",
     "members": "成员",
     "profile": "用户信息",
-    "roles": "角色"
+    "roles": "角色",
+    "settings": "系统设置"
   },
   "profile": {
     "changePassword": "更改密码",
@@ -528,5 +529,47 @@
     "action": "转到登录",
     "description": "您的会话已过期。请重新登录以继续。",
     "title": "会话已过期"
+  },
+  "settings": {
+    "qiniu": {
+      "title": "七牛 OSS 配置",
+      "description": "配置七牛云存储用于文件上传。更改立即生效。",
+      "fields": {
+        "accessKey": "Access Key",
+        "secretKey": "Secret Key",
+        "bucket": "存储空间",
+        "folder": "文件夹",
+        "domain": "CDN 域名"
+      },
+      "placeholders": {
+        "accessKey": "输入七牛 Access Key",
+        "secretKey": "输入七牛 Secret Key",
+        "bucket": "输入存储空间名称",
+        "folder": "输入文件夹路径（可选）",
+        "domain": "https://cdn.example.com"
+      },
+      "testConnection": "测试连接",
+      "testSuccess": "七牛连接成功",
+      "testFailed": "七牛连接失败：{{message}}"
+    },
+    "ai": {
+      "title": "AI 配置",
+      "description": "配置 AI 服务用于发票解析。更改立即生效。",
+      "fields": {
+        "apiUrl": "API 地址",
+        "apiKey": "API 密钥",
+        "model": "模型"
+      },
+      "placeholders": {
+        "apiUrl": "https://api.openai.com/v1",
+        "apiKey": "输入 API 密钥",
+        "model": "gpt-4o"
+      },
+      "testConnection": "测试连接",
+      "testSuccess": "AI 连接成功",
+      "testFailed": "AI 连接失败：{{message}}"
+    },
+    "saveSuccess": "设置保存成功",
+    "saveFailed": "设置保存失败"
   }
 }

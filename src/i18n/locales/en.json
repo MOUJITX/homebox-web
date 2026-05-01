@@ -10,7 +10,8 @@
     "files": "Files",
     "members": "Members",
     "roles": "Roles",
-    "profile": "Profile"
+    "profile": "Profile",
+    "settings": "Settings"
   },
   "login": {
     "title": "Sign In",
@@ -515,6 +516,48 @@
   "errorToast": {
     "requestFailed": "Request failed",
     "networkError": "Network error, please check your connection"
+  },
+  "settings": {
+    "qiniu": {
+      "title": "Qiniu OSS Configuration",
+      "description": "Configure Qiniu cloud storage for file uploads. Changes take effect immediately.",
+      "fields": {
+        "accessKey": "Access Key",
+        "secretKey": "Secret Key",
+        "bucket": "Bucket",
+        "folder": "Folder",
+        "domain": "CDN Domain"
+      },
+      "placeholders": {
+        "accessKey": "Enter Qiniu Access Key",
+        "secretKey": "Enter Qiniu Secret Key",
+        "bucket": "Enter bucket name",
+        "folder": "Enter folder path (optional)",
+        "domain": "https://cdn.example.com"
+      },
+      "testConnection": "Test Connection",
+      "testSuccess": "Qiniu connection successful",
+      "testFailed": "Qiniu connection failed: {{message}}"
+    },
+    "ai": {
+      "title": "AI Configuration",
+      "description": "Configure AI service for invoice parsing. Changes take effect immediately.",
+      "fields": {
+        "apiUrl": "API URL",
+        "apiKey": "API Key",
+        "model": "Model"
+      },
+      "placeholders": {
+        "apiUrl": "https://api.openai.com/v1",
+        "apiKey": "Enter API Key",
+        "model": "gpt-4o"
+      },
+      "testConnection": "Test Connection",
+      "testSuccess": "AI connection successful",
+      "testFailed": "AI connection failed: {{message}}"
+    },
+    "saveSuccess": "Settings saved successfully",
+    "saveFailed": "Failed to save settings"
   },
   "common": {
     "logout": "Sign Out",

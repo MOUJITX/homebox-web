@@ -9,6 +9,7 @@ import {
   FolderIcon,
   UsersIcon,
   ShieldIcon,
+  SettingsIcon,
   PanelLeftCloseIcon,
   PanelLeftOpenIcon,
 } from "lucide-react";
@@ -45,6 +46,12 @@ const navItems: NavItem[] = [
     label: "nav.roles",
     path: "/roles",
     icon: ShieldIcon,
+    requiredRole: ROOT_ROLE,
+  },
+  {
+    label: "nav.settings",
+    path: "/settings",
+    icon: SettingsIcon,
     requiredRole: ROOT_ROLE,
   },
 ];

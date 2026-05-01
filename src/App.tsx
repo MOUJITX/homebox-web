@@ -15,6 +15,7 @@ import ExpirationPage from "@/pages/ExpirationPage";
 import AssetsPage from "@/pages/AssetsPage";
 import FilesPage from "@/pages/FilesPage";
 import InvoicesPage from "@/pages/InvoicesPage";
+import SettingsPage from "@/pages/SettingsPage";
 
 const App = () => (
   <AuthProvider>
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/files" element={<FilesPage />} />
             <Route path="/members" element={<MembersPage />} />
             <Route path="/roles" element={<RolesPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
           </Route>
         </Route>
       </Route>

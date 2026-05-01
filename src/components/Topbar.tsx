@@ -23,6 +23,7 @@ const routeTitleMap: Record<string, string> = {
   "/members": "nav.members",
   "/roles": "nav.roles",
   "/profile": "nav.profile",
+  "/settings": "nav.settings",
 };
 
 const Topbar = () => {
