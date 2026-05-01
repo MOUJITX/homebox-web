@@ -29,6 +29,7 @@ interface ConfigGroupCardProps {
   readonly testLabel: string;
   readonly fieldLabels: Record<string, string>;
   readonly fieldPlaceholders: Record<string, string>;
+  readonly textareaKeys?: readonly string[];
 }
 
 const ConfigGroupCard = ({
@@ -39,6 +40,7 @@ const ConfigGroupCard = ({
   testLabel,
   fieldLabels,
   fieldPlaceholders,
+  textareaKeys,
 }: ConfigGroupCardProps) => {
   const { t } = useTranslation();
   const [items, setItems] = useState<SystemConfigItem[]>([]);
@@ -119,13 +121,24 @@ const ConfigGroupCard = ({
               <Label htmlFor={`config-${item.key}`}>
                 {fieldLabels[item.key] ?? item.description ?? item.key}
               </Label>
-              <MaskedInput
-                id={`config-${item.key}`}
-                value={formValues[item.key] ?? ""}
-                onChange={(v) => handleFieldChange(item.key, v)}
-                placeholder={fieldPlaceholders[item.key]}
-                sensitive={item.sensitive}
-              />
+              {textareaKeys?.includes(item.key) ? (
+                <textarea
+                  id={`config-${item.key}`}
+                  value={formValues[item.key] ?? ""}
+                  onChange={(e) => handleFieldChange(item.key, e.target.value)}
+                  placeholder={fieldPlaceholders[item.key]}
+                  rows={6}
+                  className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                />
+              ) : (
+                <MaskedInput
+                  id={`config-${item.key}`}
+                  value={formValues[item.key] ?? ""}
+                  onChange={(v) => handleFieldChange(item.key, v)}
+                  placeholder={fieldPlaceholders[item.key]}
+                  sensitive={item.sensitive}
+                />
+              )}
             </div>
           ))}
         </CardContent>
@@ -205,12 +218,15 @@ const SettingsPage = () => {
           "ai.api-url": t("settings.ai.fields.apiUrl"),
           "ai.api-key": t("settings.ai.fields.apiKey"),
           "ai.model": t("settings.ai.fields.model"),
+          "ai.system-prompt": t("settings.ai.fields.systemPrompt"),
         }}
         fieldPlaceholders={{
           "ai.api-url": t("settings.ai.placeholders.apiUrl"),
           "ai.api-key": t("settings.ai.placeholders.apiKey"),
           "ai.model": t("settings.ai.placeholders.model"),
+          "ai.system-prompt": t("settings.ai.placeholders.systemPrompt"),
         }}
+        textareaKeys={["ai.system-prompt"]}
       />
     </div>
   );

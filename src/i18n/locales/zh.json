@@ -558,12 +558,14 @@
       "fields": {
         "apiUrl": "API 地址",
         "apiKey": "API 密钥",
-        "model": "模型"
+        "model": "模型",
+        "systemPrompt": "系统提示词"
       },
       "placeholders": {
         "apiUrl": "https://api.openai.com/v1",
         "apiKey": "输入 API 密钥",
-        "model": "gpt-4o"
+        "model": "gpt-4o",
+        "systemPrompt": "留空则使用默认系统提示词"
       },
       "testConnection": "测试连接",
       "testSuccess": "AI 连接成功",

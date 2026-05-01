@@ -545,12 +545,14 @@
       "fields": {
         "apiUrl": "API URL",
         "apiKey": "API Key",
-        "model": "Model"
+        "model": "Model",
+        "systemPrompt": "System Prompt"
       },
       "placeholders": {
         "apiUrl": "https://api.openai.com/v1",
         "apiKey": "Enter API Key",
-        "model": "gpt-4o"
+        "model": "gpt-4o",
+        "systemPrompt": "Leave empty to use the default system prompt"
       },
       "testConnection": "Test Connection",
       "testSuccess": "AI connection successful",
