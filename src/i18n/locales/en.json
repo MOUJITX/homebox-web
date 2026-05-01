@@ -481,7 +481,8 @@
       "updateFailed": "Failed to update invoice",
       "deleteFailed": "Failed to delete invoice",
       "parseFailed": "Failed to parse invoice file",
-      "loadFailed": "Failed to load invoice details"
+      "loadFailed": "Failed to load invoice details",
+      "duplicateInvoiceNumber": "Invoice number already exists"
     }
   },
   "files": {

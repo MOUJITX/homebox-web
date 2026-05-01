@@ -368,7 +368,8 @@
       "updateFailed": "更新发票失败",
       "deleteFailed": "删除发票失败",
       "parseFailed": "解析发票文件失败",
-      "loadFailed": "加载发票详情失败"
+      "loadFailed": "加载发票详情失败",
+      "duplicateInvoiceNumber": "发票号码已存在"
     }
   },
   "files": {
