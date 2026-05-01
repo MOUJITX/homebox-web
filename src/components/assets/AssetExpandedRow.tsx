@@ -89,7 +89,7 @@ const AssetExpandedRow = ({
   };
 
   const handleToggleInUse = async (subAsset: Asset) => {
-    await updateAsset(subAsset.id, { isInUse: !subAsset.isInUse });
+    await updateAsset(subAsset.id, { inUse: !subAsset.inUse });
     handleSubAssetChanged();
   };
 
@@ -198,7 +198,7 @@ const AssetExpandedRow = ({
                             size="icon-xs"
                             onClick={() => handleToggleInUse(sub)}
                           >
-                            {sub.isInUse ? (
+                            {sub.inUse ? (
                               <ToggleRightIcon className="size-3.5" />
                             ) : (
                               <ToggleLeftIcon className="size-3.5" />

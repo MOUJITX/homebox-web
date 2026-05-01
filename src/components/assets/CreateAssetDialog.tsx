@@ -55,7 +55,7 @@ const CreateAssetDialog = ({
   const [serialNumber, setSerialNumber] = useState("");
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [placeId, setPlaceId] = useState<number | null>(null);
-  const [isInUse, setIsInUse] = useState(true);
+  const [inUse, setInUse] = useState(true);
   const [price, setPrice] = useState("");
   const [shopDate, setShopDate] = useState("");
   const [storeId, setStoreId] = useState<number | null>(null);
@@ -74,7 +74,7 @@ const CreateAssetDialog = ({
     setSerialNumber("");
     setCategoryId(null);
     setPlaceId(null);
-    setIsInUse(true);
+    setInUse(true);
     setPrice("");
     setShopDate("");
     setStoreId(null);
@@ -104,7 +104,7 @@ const CreateAssetDialog = ({
         serialNumber: serialNumber || undefined,
         categoryId,
         placeId,
-        isInUse,
+        inUse,
         price: price ? Number.parseFloat(price) : undefined,
         shopDate: shopDate || undefined,
         storeId: storeId ?? undefined,
@@ -292,8 +292,8 @@ const CreateAssetDialog = ({
               <input
                 id="asset-in-use"
                 type="checkbox"
-                checked={isInUse}
-                onChange={(e) => setIsInUse(e.target.checked)}
+                checked={inUse}
+                onChange={(e) => setInUse(e.target.checked)}
                 className="size-4 rounded"
               />
               <Label htmlFor="asset-in-use" className="cursor-pointer">

@@ -20,7 +20,7 @@ export interface Asset {
   categoryId: number;
   placeName: string;
   placeId: number;
-  isInUse: boolean;
+  inUse: boolean;
   price: number | null;
   shopDate: string | null;
   storeName: string | null;
@@ -71,7 +71,7 @@ export interface CreateAssetRequest {
   serialNumber?: string;
   categoryId: number;
   placeId: number;
-  isInUse?: boolean;
+  inUse?: boolean;
   price?: number;
   shopDate?: string;
   storeId?: number;
@@ -89,7 +89,7 @@ export interface UpdateAssetRequest {
   serialNumber?: string;
   categoryId?: number;
   placeId?: number;
-  isInUse?: boolean;
+  inUse?: boolean;
   price?: number;
   shopDate?: string;
   storeId?: number;

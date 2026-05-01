@@ -4,8 +4,8 @@ import { PlusIcon } from "lucide-react";
 import type { AssetCategory } from "@/api/assetCategories";
 import type { AssetPlace } from "@/api/assetPlaces";
 import type { AssetStore } from "@/api/assetStores";
-import type { Asset, AssetDetail } from "@/api/assets";
-import { updateAsset } from "@/api/assets";
+import type { Asset } from "@/api/assets";
+import { getAssetById, updateAsset } from "@/api/assets";
 import { getErrorMessage } from "@/lib/error";
 import { useWarrantyDateCalc } from "@/hooks/useWarrantyDateCalc";
 import {
@@ -56,7 +56,7 @@ const EditAssetDialog = ({
   const [serialNumber, setSerialNumber] = useState("");
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [placeId, setPlaceId] = useState<number | null>(null);
-  const [isInUse, setIsInUse] = useState(true);
+  const [inUse, setInUse] = useState(true);
   const [price, setPrice] = useState("");
   const [shopDate, setShopDate] = useState("");
   const [storeId, setStoreId] = useState<number | null>(null);
@@ -78,19 +78,20 @@ const EditAssetDialog = ({
       setSerialNumber(asset.serialNumber ?? "");
       setCategoryId(asset.categoryId);
       setPlaceId(asset.placeId);
-      setIsInUse(asset.isInUse);
+      setInUse(asset.inUse);
       setPrice(asset.price != null ? String(asset.price) : "");
       setShopDate(asset.shopDate ?? "");
       setStoreId(asset.storeId);
       setHasWarranty(asset.hasWarranty);
       setNote(asset.note ?? "");
       if (asset.hasWarranty) {
-        const detail = asset as AssetDetail;
-        warranty.initDates(
-          detail.activeDate ?? "",
-          detail.expirationDate ?? "",
-          detail.warrantyPeriod ?? 0,
-        );
+        void getAssetById(asset.id).then(({ data: detail }) => {
+          warranty.initDates(
+            detail.activeDate ?? "",
+            detail.expirationDate ?? "",
+            detail.warrantyPeriod ?? 0,
+          );
+        });
       } else {
         warranty.resetDates();
       }
@@ -118,7 +119,7 @@ const EditAssetDialog = ({
         serialNumber: serialNumber || undefined,
         categoryId,
         placeId,
-        isInUse,
+        inUse,
         price: price ? Number.parseFloat(price) : undefined,
         shopDate: shopDate || undefined,
         storeId: storeId ?? undefined,
@@ -303,8 +304,8 @@ const EditAssetDialog = ({
               <input
                 id="edit-asset-in-use"
                 type="checkbox"
-                checked={isInUse}
-                onChange={(e) => setIsInUse(e.target.checked)}
+                checked={inUse}
+                onChange={(e) => setInUse(e.target.checked)}
                 className="size-4 rounded"
               />
               <Label htmlFor="edit-asset-in-use" className="cursor-pointer">

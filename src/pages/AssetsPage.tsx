@@ -403,8 +403,8 @@ const AssetsPage = () => {
                     <TableCell>{asset.categoryName}</TableCell>
                     <TableCell>{asset.placeName}</TableCell>
                     <TableCell>
-                      <Badge variant={asset.isInUse ? "success" : "secondary"}>
-                        {asset.isInUse
+                      <Badge variant={asset.inUse ? "success" : "secondary"}>
+                        {asset.inUse
                           ? t("assets.filters.inUse")
                           : t("assets.filters.notInUse")}
                       </Badge>
