@@ -52,8 +52,6 @@ const CreateInvoiceDialog = ({
   const [invoiceDate, setInvoiceDate] = useState("");
   const [invoiceType, setInvoiceType] = useState<InvoiceType>("DIGITAL_INVOICE");
   const [invoiceStatus, setInvoiceStatus] = useState<InvoiceStatus>("NORMAL");
-  const [checkCode, setCheckCode] = useState("");
-  const [machineNumber, setMachineNumber] = useState("");
   const [sellerName, setSellerName] = useState("");
   const [sellerTaxId, setSellerTaxId] = useState("");
   const [buyerName, setBuyerName] = useState("");
@@ -61,9 +59,6 @@ const CreateInvoiceDialog = ({
   const [amount, setAmount] = useState("");
   const [taxAmount, setTaxAmount] = useState("");
   const [totalAmount, setTotalAmount] = useState("");
-  const [payee, setPayee] = useState("");
-  const [reviewer, setReviewer] = useState("");
-  const [issuer, setIssuer] = useState("");
   const [remark, setRemark] = useState("");
   const [fileId, setFileId] = useState<number | null>(null);
 
@@ -77,8 +72,6 @@ const CreateInvoiceDialog = ({
     setInvoiceDate("");
     setInvoiceType("DIGITAL_INVOICE");
     setInvoiceStatus("NORMAL");
-    setCheckCode("");
-    setMachineNumber("");
     setSellerName("");
     setSellerTaxId("");
     setBuyerName("");
@@ -86,9 +79,6 @@ const CreateInvoiceDialog = ({
     setAmount("");
     setTaxAmount("");
     setTotalAmount("");
-    setPayee("");
-    setReviewer("");
-    setIssuer("");
     setRemark("");
     setFileId(null);
     setError("");
@@ -105,8 +95,6 @@ const CreateInvoiceDialog = ({
     if (result.invoiceDate) setInvoiceDate(result.invoiceDate);
     if (result.invoiceType) setInvoiceType(result.invoiceType as InvoiceType);
     if (result.invoiceStatus) setInvoiceStatus(result.invoiceStatus as InvoiceStatus);
-    if (result.checkCode) setCheckCode(result.checkCode);
-    if (result.machineNumber) setMachineNumber(result.machineNumber);
     if (result.sellerName) setSellerName(result.sellerName);
     if (result.sellerTaxId) setSellerTaxId(result.sellerTaxId);
     if (result.buyerName) setBuyerName(result.buyerName);
@@ -114,9 +102,6 @@ const CreateInvoiceDialog = ({
     if (result.amount != null) setAmount(String(result.amount));
     if (result.taxAmount != null) setTaxAmount(String(result.taxAmount));
     if (result.totalAmount != null) setTotalAmount(String(result.totalAmount));
-    if (result.payee) setPayee(result.payee);
-    if (result.reviewer) setReviewer(result.reviewer);
-    if (result.issuer) setIssuer(result.issuer);
     if (result.remark) setRemark(result.remark);
     if (result.fileId) setFileId(result.fileId);
   };
@@ -149,8 +134,6 @@ const CreateInvoiceDialog = ({
         invoiceDate: invoiceDate || undefined,
         invoiceType,
         invoiceStatus,
-        checkCode: checkCode || undefined,
-        machineNumber: machineNumber || undefined,
         sellerName: sellerName || undefined,
         sellerTaxId: sellerTaxId || undefined,
         buyerName: buyerName || undefined,
@@ -158,9 +141,6 @@ const CreateInvoiceDialog = ({
         amount: amount ? Number.parseFloat(amount) : undefined,
         taxAmount: taxAmount ? Number.parseFloat(taxAmount) : undefined,
         totalAmount: Number.parseFloat(totalAmount),
-        payee: payee || undefined,
-        reviewer: reviewer || undefined,
-        issuer: issuer || undefined,
         remark: remark || undefined,
         fileId: fileId ?? undefined,
       });
@@ -288,32 +268,6 @@ const CreateInvoiceDialog = ({
             <div className="grid gap-2">
               <Label htmlFor="total-amount">{t("invoices.form.totalAmount")} *</Label>
               <Input id="total-amount" type="number" step="0.01" value={totalAmount} onChange={(e) => setTotalAmount(e.target.value)} required />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="check-code">{t("invoices.form.checkCode")}</Label>
-              <Input id="check-code" value={checkCode} onChange={(e) => setCheckCode(e.target.value)} />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="machine-number">{t("invoices.form.machineNumber")}</Label>
-              <Input id="machine-number" value={machineNumber} onChange={(e) => setMachineNumber(e.target.value)} />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="payee">{t("invoices.form.payee")}</Label>
-              <Input id="payee" value={payee} onChange={(e) => setPayee(e.target.value)} />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="reviewer">{t("invoices.form.reviewer")}</Label>
-              <Input id="reviewer" value={reviewer} onChange={(e) => setReviewer(e.target.value)} />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="issuer">{t("invoices.form.issuer")}</Label>
-              <Input id="issuer" value={issuer} onChange={(e) => setIssuer(e.target.value)} />
             </div>
           </div>
 

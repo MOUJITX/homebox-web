@@ -38,13 +38,8 @@ export interface InvoiceAttachment {
 }
 
 export interface InvoiceDetail extends Invoice {
-  checkCode: string | null;
-  machineNumber: string | null;
   sellerTaxId: string | null;
   buyerTaxId: string | null;
-  payee: string | null;
-  reviewer: string | null;
-  issuer: string | null;
   remark: string | null;
   fileId: number | null;
   fileUrl: string | null;
@@ -57,8 +52,6 @@ export interface InvoiceParseResult {
   invoiceDate: string | null;
   invoiceType: InvoiceType | null;
   invoiceStatus: InvoiceStatus | null;
-  checkCode: string | null;
-  machineNumber: string | null;
   sellerName: string | null;
   sellerTaxId: string | null;
   buyerName: string | null;
@@ -66,9 +59,6 @@ export interface InvoiceParseResult {
   amount: number | null;
   taxAmount: number | null;
   totalAmount: number | null;
-  payee: string | null;
-  reviewer: string | null;
-  issuer: string | null;
   remark: string | null;
   fileId: number | null;
 }
@@ -102,8 +92,6 @@ export interface CreateInvoiceRequest {
   invoiceDate?: string;
   invoiceType: InvoiceType;
   invoiceStatus?: InvoiceStatus;
-  checkCode?: string;
-  machineNumber?: string;
   sellerName?: string;
   sellerTaxId?: string;
   buyerName?: string;
@@ -111,9 +99,6 @@ export interface CreateInvoiceRequest {
   amount?: number;
   taxAmount?: number;
   totalAmount: number;
-  payee?: string;
-  reviewer?: string;
-  issuer?: string;
   remark?: string;
   fileId?: number;
 }
@@ -124,8 +109,6 @@ export interface UpdateInvoiceRequest {
   invoiceDate?: string;
   invoiceType?: InvoiceType;
   invoiceStatus?: InvoiceStatus;
-  checkCode?: string;
-  machineNumber?: string;
   sellerName?: string;
   sellerTaxId?: string;
   buyerName?: string;
@@ -133,9 +116,6 @@ export interface UpdateInvoiceRequest {
   amount?: number;
   taxAmount?: number;
   totalAmount?: number;
-  payee?: string;
-  reviewer?: string;
-  issuer?: string;
   remark?: string;
 }
 

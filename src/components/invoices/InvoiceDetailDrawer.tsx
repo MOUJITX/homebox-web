@@ -91,7 +91,13 @@ const InvoiceDetailDrawer = ({
     }
   };
 
-  const Field = ({ label, value }: { label: string; value: string | number | null | undefined }) => (
+  const Field = ({
+    label,
+    value,
+  }: {
+    label: string;
+    value: string | number | null | undefined;
+  }) => (
     <div className="grid gap-1">
       <span className="text-xs text-muted-foreground">{label}</span>
       <span className="text-sm">{value ?? "—"}</span>
@@ -125,36 +131,61 @@ const InvoiceDetailDrawer = ({
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <Field label={t("invoices.form.invoiceNumber")} value={invoice.invoiceNumber} />
-              <Field label={t("invoices.form.invoiceCode")} value={invoice.invoiceCode} />
-              <Field label={t("invoices.form.invoiceDate")} value={invoice.invoiceDate ? formatDate(invoice.invoiceDate) : null} />
-              <Field label={t("invoices.form.totalAmount")} value={invoice.totalAmount} />
+              <Field
+                label={t("invoices.form.invoiceNumber")}
+                value={invoice.invoiceNumber}
+              />
+              <Field
+                label={t("invoices.form.invoiceCode")}
+                value={invoice.invoiceCode}
+              />
+              <Field
+                label={t("invoices.form.invoiceDate")}
+                value={
+                  invoice.invoiceDate ? formatDate(invoice.invoiceDate) : null
+                }
+              />
+              <Field
+                label={t("invoices.form.totalAmount")}
+                value={invoice.totalAmount}
+              />
               <Field label={t("invoices.form.amount")} value={invoice.amount} />
-              <Field label={t("invoices.form.taxAmount")} value={invoice.taxAmount} />
+              <Field
+                label={t("invoices.form.taxAmount")}
+                value={invoice.taxAmount}
+              />
             </div>
 
             <div className="grid gap-4">
-              <h4 className="text-sm font-medium">{t("invoices.detail.buyerInfo")}</h4>
+              <h4 className="text-sm font-medium">
+                {t("invoices.detail.buyerInfo")}
+              </h4>
               <div className="grid grid-cols-2 gap-4">
-                <Field label={t("invoices.form.buyerName")} value={invoice.buyerName} />
-                <Field label={t("invoices.form.buyerTaxId")} value={invoice.buyerTaxId} />
+                <Field
+                  label={t("invoices.form.buyerName")}
+                  value={invoice.buyerName}
+                />
+                <Field
+                  label={t("invoices.form.buyerTaxId")}
+                  value={invoice.buyerTaxId}
+                />
               </div>
             </div>
 
             <div className="grid gap-4">
-              <h4 className="text-sm font-medium">{t("invoices.detail.sellerInfo")}</h4>
+              <h4 className="text-sm font-medium">
+                {t("invoices.detail.sellerInfo")}
+              </h4>
               <div className="grid grid-cols-2 gap-4">
-                <Field label={t("invoices.form.sellerName")} value={invoice.sellerName} />
-                <Field label={t("invoices.form.sellerTaxId")} value={invoice.sellerTaxId} />
+                <Field
+                  label={t("invoices.form.sellerName")}
+                  value={invoice.sellerName}
+                />
+                <Field
+                  label={t("invoices.form.sellerTaxId")}
+                  value={invoice.sellerTaxId}
+                />
               </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <Field label={t("invoices.form.checkCode")} value={invoice.checkCode} />
-              <Field label={t("invoices.form.machineNumber")} value={invoice.machineNumber} />
-              <Field label={t("invoices.form.payee")} value={invoice.payee} />
-              <Field label={t("invoices.form.reviewer")} value={invoice.reviewer} />
-              <Field label={t("invoices.form.issuer")} value={invoice.issuer} />
             </div>
 
             {invoice.remark && (
@@ -162,13 +193,17 @@ const InvoiceDetailDrawer = ({
                 <span className="text-xs text-muted-foreground">
                   {t("invoices.form.remark")}
                 </span>
-                <span className="text-sm whitespace-pre-wrap">{invoice.remark}</span>
+                <span className="text-sm whitespace-pre-wrap">
+                  {invoice.remark}
+                </span>
               </div>
             )}
 
             {invoice.fileUrl && (
               <div className="grid gap-2">
-                <h4 className="text-sm font-medium">{t("invoices.detail.file")}</h4>
+                <h4 className="text-sm font-medium">
+                  {t("invoices.detail.file")}
+                </h4>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" onClick={handlePreview}>
                     <EyeIcon className="size-3.5" />
@@ -189,8 +224,14 @@ const InvoiceDetailDrawer = ({
             />
 
             <div className="grid grid-cols-2 gap-4 text-xs text-muted-foreground">
-              <Field label={t("invoices.detail.createdAt")} value={formatDate(invoice.createdAt)} />
-              <Field label={t("invoices.detail.updatedAt")} value={formatDate(invoice.updatedAt)} />
+              <Field
+                label={t("invoices.detail.createdAt")}
+                value={formatDate(invoice.createdAt)}
+              />
+              <Field
+                label={t("invoices.detail.updatedAt")}
+                value={formatDate(invoice.updatedAt)}
+              />
             </div>
           </div>
         )}
