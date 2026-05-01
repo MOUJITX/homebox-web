@@ -77,7 +77,8 @@ const InvoiceDetailDrawer = ({
           if (!cancelled) setInvoice(data);
         })
         .catch((err) => {
-          if (!cancelled) setError(getErrorMessage(err) ?? t("invoices.errors.loadFailed"));
+          if (!cancelled)
+            setError(getErrorMessage(err) ?? t("invoices.errors.loadFailed"));
         })
         .finally(() => {
           if (!cancelled) setLoading(false);
@@ -164,14 +165,14 @@ const InvoiceDetailDrawer = ({
                   invoice.invoiceDate ? formatDate(invoice.invoiceDate) : null
                 }
               />
-              <Field
-                label={t("invoices.form.totalAmount")}
-                value={invoice.totalAmount}
-              />
               <Field label={t("invoices.form.amount")} value={invoice.amount} />
               <Field
                 label={t("invoices.form.taxAmount")}
                 value={invoice.taxAmount}
+              />
+              <Field
+                label={t("invoices.form.totalAmount")}
+                value={invoice.totalAmount}
               />
             </div>
 
