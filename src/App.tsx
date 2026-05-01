@@ -14,6 +14,7 @@ import ProfilePage from "@/pages/ProfilePage";
 import ExpirationPage from "@/pages/ExpirationPage";
 import AssetsPage from "@/pages/AssetsPage";
 import FilesPage from "@/pages/FilesPage";
+import InvoicesPage from "@/pages/InvoicesPage";
 
 const App = () => (
   <AuthProvider>
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/expiration" element={<ExpirationPage />} />
           <Route path="/assets" element={<AssetsPage />} />
+          <Route path="/invoices" element={<InvoicesPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route element={<RoleGuard requiredRole="root" />}>
             <Route path="/files" element={<FilesPage />} />

@@ -6,6 +6,7 @@
     "dashboard": "Dashboard",
     "expiration": "Expiration",
     "assets": "Assets",
+    "invoices": "Invoices",
     "files": "Files",
     "members": "Members",
     "roles": "Roles",
@@ -404,6 +405,88 @@
       "createFailed": "Failed to create asset",
       "updateFailed": "Failed to update asset",
       "deleteFailed": "Failed to delete asset"
+    }
+  },
+  "invoices": {
+    "search": "Search by buyer, seller, or invoice number…",
+    "create": "Create Invoice",
+    "createDescription": "Add a new invoice manually or upload a file to auto-parse.",
+    "edit": "Edit Invoice",
+    "editDescription": "Update details for invoice {{number}}.",
+    "delete": "Delete Invoice",
+    "deleteConfirm": "Are you sure you want to delete invoice {{number}}? This action cannot be undone.",
+    "columns": {
+      "invoiceNumber": "Invoice Number",
+      "invoiceDate": "Date",
+      "invoiceType": "Type",
+      "buyerName": "Buyer",
+      "sellerName": "Seller",
+      "totalAmount": "Amount",
+      "invoiceStatus": "Status",
+      "actions": "Actions"
+    },
+    "type": {
+      "DIGITAL_INVOICE": "Digital Invoice",
+      "RAILWAY_ELECTRONIC": "Railway E-Ticket",
+      "VAT_INVOICE": "VAT Invoice",
+      "AIR_ELECTRONIC": "Airline E-Ticket",
+      "GENERAL_MACHINE_PRINTED": "Machine-Printed",
+      "QUOTA_INVOICE": "Quota Invoice",
+      "OTHER": "Other"
+    },
+    "status": {
+      "NORMAL": "Normal",
+      "VOIDED": "Voided",
+      "RED_FLUSHED": "Reversed"
+    },
+    "form": {
+      "invoiceCode": "Invoice Code",
+      "invoiceNumber": "Invoice Number",
+      "invoiceDate": "Invoice Date",
+      "invoiceType": "Invoice Type",
+      "invoiceStatus": "Invoice Status",
+      "checkCode": "Check Code",
+      "machineNumber": "Machine Number",
+      "sellerName": "Seller Name",
+      "sellerTaxId": "Seller Tax ID",
+      "buyerName": "Buyer Name",
+      "buyerTaxId": "Buyer Tax ID",
+      "amount": "Amount (excl. tax)",
+      "taxAmount": "Tax Amount",
+      "totalAmount": "Total (incl. tax)",
+      "payee": "Payee",
+      "reviewer": "Reviewer",
+      "issuer": "Issuer",
+      "remark": "Remark",
+      "uploadFile": "Upload Invoice File",
+      "uploadHint": "Supports PDF, XML, OFD. Parsed data will pre-fill the form below.",
+      "parsing": "Parsing…"
+    },
+    "filters": {
+      "allTypes": "All Types",
+      "allStatuses": "All Statuses"
+    },
+    "detail": {
+      "title": "Invoice Details",
+      "buyerInfo": "Buyer Information",
+      "sellerInfo": "Seller Information",
+      "file": "Invoice File",
+      "preview": "Preview",
+      "download": "Download",
+      "createdAt": "Created",
+      "updatedAt": "Updated"
+    },
+    "attachments": {
+      "title": "Attachments",
+      "upload": "Upload",
+      "uploading": "Uploading…",
+      "empty": "No attachments yet."
+    },
+    "errors": {
+      "createFailed": "Failed to create invoice",
+      "updateFailed": "Failed to update invoice",
+      "deleteFailed": "Failed to delete invoice",
+      "parseFailed": "Failed to parse invoice file"
     }
   },
   "files": {

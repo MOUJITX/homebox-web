@@ -294,6 +294,88 @@
       "deleteFailed": "删除资产失败"
     }
   },
+  "invoices": {
+    "search": "按购买方、销售方或发票号码搜索…",
+    "create": "创建发票",
+    "createDescription": "手动添加新发票或上传文件自动识别。",
+    "edit": "编辑发票",
+    "editDescription": "更新发票 {{number}} 的详细信息。",
+    "delete": "删除发票",
+    "deleteConfirm": "您确定要删除发票 {{number}} 吗？此操作无法撤消。",
+    "columns": {
+      "invoiceNumber": "发票号码",
+      "invoiceDate": "开票日期",
+      "invoiceType": "发票类型",
+      "buyerName": "购买方",
+      "sellerName": "销售方",
+      "totalAmount": "价税合计",
+      "invoiceStatus": "发票状态",
+      "actions": "操作"
+    },
+    "type": {
+      "DIGITAL_INVOICE": "数电发票",
+      "RAILWAY_ELECTRONIC": "铁路电子客票",
+      "VAT_INVOICE": "增值税票",
+      "AIR_ELECTRONIC": "航空电子客票",
+      "GENERAL_MACHINE_PRINTED": "通用机打发票",
+      "QUOTA_INVOICE": "定额发票",
+      "OTHER": "其他"
+    },
+    "status": {
+      "NORMAL": "正常",
+      "VOIDED": "已作废",
+      "RED_FLUSHED": "已红冲"
+    },
+    "form": {
+      "invoiceCode": "发票代码",
+      "invoiceNumber": "发票号码",
+      "invoiceDate": "开票日期",
+      "invoiceType": "发票类型",
+      "invoiceStatus": "发票状态",
+      "checkCode": "校验码",
+      "machineNumber": "机器编号",
+      "sellerName": "销售方名称",
+      "sellerTaxId": "销售方纳税人识别号",
+      "buyerName": "购买方名称",
+      "buyerTaxId": "购买方纳税人识别号",
+      "amount": "金额（不含税）",
+      "taxAmount": "税额",
+      "totalAmount": "价税合计",
+      "payee": "收款人",
+      "reviewer": "复核",
+      "issuer": "开票人",
+      "remark": "备注",
+      "uploadFile": "上传发票文件",
+      "uploadHint": "支持 PDF、XML、OFD 格式，解析结果将自动填入下方表单。",
+      "parsing": "解析中…"
+    },
+    "filters": {
+      "allTypes": "全部类型",
+      "allStatuses": "全部状态"
+    },
+    "detail": {
+      "title": "发票详情",
+      "buyerInfo": "购买方信息",
+      "sellerInfo": "销售方信息",
+      "file": "发票文件",
+      "preview": "预览",
+      "download": "下载",
+      "createdAt": "创建时间",
+      "updatedAt": "更新时间"
+    },
+    "attachments": {
+      "title": "附件",
+      "upload": "上传",
+      "uploading": "上传中…",
+      "empty": "暂无附件。"
+    },
+    "errors": {
+      "createFailed": "创建发票失败",
+      "updateFailed": "更新发票失败",
+      "deleteFailed": "删除发票失败",
+      "parseFailed": "解析发票文件失败"
+    }
+  },
   "files": {
     "title": "文件管理",
     "upload": "上传文件",
@@ -395,6 +477,7 @@
     "dashboard": "仪表盘",
     "expiration": "过期管理",
     "assets": "资产管理",
+    "invoices": "发票管理",
     "files": "文件管理",
     "members": "成员",
     "profile": "用户信息",

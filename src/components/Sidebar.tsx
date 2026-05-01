@@ -5,6 +5,7 @@ import {
   LayoutDashboardIcon,
   PackageIcon,
   BoxIcon,
+  ReceiptIcon,
   FolderIcon,
   UsersIcon,
   ShieldIcon,
@@ -27,6 +28,7 @@ const navItems: NavItem[] = [
   { label: "nav.dashboard", path: "/dashboard", icon: LayoutDashboardIcon },
   { label: "nav.expiration", path: "/expiration", icon: PackageIcon },
   { label: "nav.assets", path: "/assets", icon: BoxIcon },
+  { label: "nav.invoices", path: "/invoices", icon: ReceiptIcon },
   {
     label: "nav.files",
     path: "/files",

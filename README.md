@@ -72,6 +72,16 @@ yarn preview
 - **Server-side pagination** — search by name/barcode/serial number, filter by category, place, in-use status, warranty status
 - **Expandable rows** — inline sub-asset management and picture management
 
+### Invoice Management
+
+- **Invoices** — CRUD for invoices with invoice code, number, date, type, status, buyer/seller info, amounts, and file attachments
+- **Invoice types** — Digital Invoice, Railway E-Ticket, VAT Invoice, Airline E-Ticket, Machine-Printed, Quota Invoice, Other
+- **Invoice status** — Normal, Voided, Reversed (已红冲)
+- **File upload & parsing** — upload PDF/XML/OFD files to auto-extract invoice data (best-effort, user reviews before saving)
+- **Attachments** — attach additional files to invoices (not parsed)
+- **Server-side pagination** — search by buyer/seller/invoice number, filter by type/status
+- **Detail drawer** — right-side drawer for viewing full invoice details with file preview/download
+
 ### Member Management (Root Only)
 
 - **Members** — list, create, edit, and delete members via `/members` (root role required)
@@ -113,6 +123,7 @@ src/
 │   ├── assetCategories.ts # Asset categories API
 │   ├── assetPlaces.ts    # Asset places API
 │   ├── assetStores.ts    # Asset stores API
+│   ├── invoices.ts       # Invoices API
 │   ├── members.ts        # Members API
 │   ├── profile.ts        # Profile API
 │   └── roles.ts          # Roles API
@@ -126,6 +137,7 @@ src/
 │   ├── Sidebar.tsx       # Navigation sidebar
 │   ├── Topbar.tsx        # Top navigation bar
 │   ├── assets/           # Asset management feature components
+│   ├── invoices/         # Invoice management feature components
 │   ├── expiration/       # Goods expiration feature components
 │   ├── members/          # Member management dialogs
 │   ├── profile/          # Profile components
