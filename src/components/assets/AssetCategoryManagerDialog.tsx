@@ -2,12 +2,12 @@ import { useCallback, useEffect, useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon, PencilIcon, TrashIcon } from "lucide-react";
 import {
-  getPlaces,
-  createPlace,
-  updatePlace,
-  deletePlace,
-  type Place,
-} from "@/api/places";
+  getAssetCategories,
+  createAssetCategory,
+  updateAssetCategory,
+  deleteAssetCategory,
+  type AssetCategory,
+} from "@/api/assetCategories";
 import { getErrorMessage } from "@/lib/error";
 import {
   Dialog,
@@ -29,7 +29,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
-interface PlaceManagerDialogProps {
+interface AssetCategoryManagerDialogProps {
   readonly open: boolean;
   readonly onClose: () => void;
   readonly onChanged: () => void;
@@ -37,41 +37,43 @@ interface PlaceManagerDialogProps {
 
 type Mode = "list" | "create" | "edit";
 
-const PlaceManagerDialog = ({
+const AssetCategoryManagerDialog = ({
   open,
   onClose,
   onChanged,
-}: PlaceManagerDialogProps) => {
+}: AssetCategoryManagerDialogProps) => {
   const { t } = useTranslation();
-  const [places, setPlaces] = useState<Place[]>([]);
+  const [categories, setCategories] = useState<AssetCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<Mode>("list");
-  const [editingPlace, setEditingPlace] = useState<Place | null>(null);
+  const [editingCategory, setEditingCategory] = useState<AssetCategory | null>(
+    null,
+  );
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchPlaces = useCallback(async () => {
+  const fetchCategories = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await getPlaces();
-      setPlaces(data);
+      const { data } = await getAssetCategories();
+      setCategories(data);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    if (open) void fetchPlaces();
-  }, [open, fetchPlaces]);
+    if (open) void fetchCategories();
+  }, [open, fetchCategories]);
 
   const resetForm = () => {
     setName("");
     setDescription("");
     setError("");
     setMode("list");
-    setEditingPlace(null);
+    setEditingCategory(null);
   };
 
   const handleClose = () => {
@@ -86,10 +88,10 @@ const PlaceManagerDialog = ({
     setMode("create");
   };
 
-  const handleStartEdit = (place: Place) => {
-    setEditingPlace(place);
-    setName(place.name);
-    setDescription(place.description ?? "");
+  const handleStartEdit = (category: AssetCategory) => {
+    setEditingCategory(category);
+    setName(category.name);
+    setDescription(category.description ?? "");
     setError("");
     setMode("edit");
   };
@@ -102,28 +104,35 @@ const PlaceManagerDialog = ({
 
     try {
       if (mode === "create") {
-        await createPlace({ name, description: description || undefined });
-      } else if (mode === "edit" && editingPlace) {
-        await updatePlace(editingPlace.id, { name, description });
+        await createAssetCategory({
+          name,
+          description: description || undefined,
+        });
+      } else if (mode === "edit" && editingCategory) {
+        await updateAssetCategory(editingCategory.id, { name, description });
       }
       resetForm();
-      void fetchPlaces();
+      void fetchCategories();
       onChanged();
     } catch (err) {
-      setError(getErrorMessage(err) ?? t("assets.places.errors.saveFailed"));
+      setError(
+        getErrorMessage(err) ??
+          t("assets.assetCategories.errors.saveFailed"),
+      );
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleDelete = async (place: Place) => {
+  const handleDelete = async (category: AssetCategory) => {
     try {
-      await deletePlace(place.id);
-      void fetchPlaces();
+      await deleteAssetCategory(category.id);
+      void fetchCategories();
       onChanged();
     } catch (err) {
       setError(
-        getErrorMessage(err) ?? t("assets.places.errors.deleteFailed"),
+        getErrorMessage(err) ??
+          t("assets.assetCategories.errors.deleteFailed"),
       );
     }
   };
@@ -132,9 +141,9 @@ const PlaceManagerDialog = ({
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{t("assets.places.manage")}</DialogTitle>
+          <DialogTitle>{t("assets.assetCategories.manage")}</DialogTitle>
           <DialogDescription>
-            {t("assets.places.manageDescription")}
+            {t("assets.assetCategories.manageDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -143,19 +152,21 @@ const PlaceManagerDialog = ({
             <div className="flex justify-end">
               <Button size="sm" onClick={handleStartCreate}>
                 <PlusIcon className="size-3.5" />
-                {t("assets.places.create")}
+                {t("assets.assetCategories.create")}
               </Button>
             </div>
             <div className="max-h-64 overflow-auto rounded-lg ring-1 ring-foreground/10">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t("assets.places.columns.name")}</TableHead>
                     <TableHead>
-                      {t("assets.places.columns.description")}
+                      {t("assets.assetCategories.columns.name")}
+                    </TableHead>
+                    <TableHead>
+                      {t("assets.assetCategories.columns.description")}
                     </TableHead>
                     <TableHead className="text-right">
-                      {t("assets.places.columns.actions")}
+                      {t("assets.assetCategories.columns.actions")}
                     </TableHead>
                   </TableRow>
                 </TableHeader>
@@ -167,7 +178,7 @@ const PlaceManagerDialog = ({
                       </TableCell>
                     </TableRow>
                   )}
-                  {!loading && places.length === 0 && (
+                  {!loading && categories.length === 0 && (
                     <TableRow>
                       <TableCell
                         colSpan={3}
@@ -178,25 +189,23 @@ const PlaceManagerDialog = ({
                     </TableRow>
                   )}
                   {!loading &&
-                    places.map((p) => (
-                      <TableRow key={p.id}>
-                        <TableCell className="font-medium">
-                          {p.name}
-                        </TableCell>
-                        <TableCell>{p.description || "—"}</TableCell>
+                    categories.map((c) => (
+                      <TableRow key={c.id}>
+                        <TableCell className="font-medium">{c.name}</TableCell>
+                        <TableCell>{c.description || "—"}</TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-1">
                             <Button
                               variant="ghost"
                               size="icon-xs"
-                              onClick={() => handleStartEdit(p)}
+                              onClick={() => handleStartEdit(c)}
                             >
                               <PencilIcon className="size-3.5" />
                             </Button>
                             <Button
                               variant="ghost"
                               size="icon-xs"
-                              onClick={() => handleDelete(p)}
+                              onClick={() => handleDelete(c)}
                             >
                               <TrashIcon className="size-3.5" />
                             </Button>
@@ -216,27 +225,29 @@ const PlaceManagerDialog = ({
         {(mode === "create" || mode === "edit") && (
           <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="place-name">
-                {t("assets.places.form.name")}
+              <Label htmlFor="category-name">
+                {t("assets.assetCategories.form.name")}
               </Label>
               <Input
-                id="place-name"
+                id="category-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder={t("assets.places.form.namePlaceholder")}
+                placeholder={t("assets.assetCategories.form.namePlaceholder")}
                 required
                 autoFocus
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="place-description">
-                {t("assets.places.form.description")}
+              <Label htmlFor="category-description">
+                {t("assets.assetCategories.form.description")}
               </Label>
               <Input
-                id="place-description"
+                id="category-description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder={t("assets.places.form.descriptionPlaceholder")}
+                placeholder={t(
+                  "assets.assetCategories.form.descriptionPlaceholder",
+                )}
               />
             </div>
             {error && (
@@ -257,4 +268,4 @@ const PlaceManagerDialog = ({
   );
 };
 
-export default PlaceManagerDialog;
+export default AssetCategoryManagerDialog;

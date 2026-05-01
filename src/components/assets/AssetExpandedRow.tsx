@@ -10,9 +10,9 @@ import {
 } from "lucide-react";
 import type { Asset, AssetDetail, WarrantyStatus } from "@/api/assets";
 import { getAssetById, updateAsset } from "@/api/assets";
-import type { GoodCategory } from "@/api/goodCategories";
-import type { Place } from "@/api/places";
-import type { Store } from "@/api/stores";
+import type { AssetCategory } from "@/api/assetCategories";
+import type { AssetPlace } from "@/api/assetPlaces";
+import type { AssetStore } from "@/api/assetStores";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -33,9 +33,9 @@ interface AssetExpandedRowProps {
   readonly asset: Asset;
   readonly colSpan: number;
   readonly onAssetUpdated: () => void;
-  readonly categories: GoodCategory[];
-  readonly places: Place[];
-  readonly stores: Store[];
+  readonly categories: AssetCategory[];
+  readonly places: AssetPlace[];
+  readonly stores: AssetStore[];
   readonly onRefDataChanged: () => void;
 }
 

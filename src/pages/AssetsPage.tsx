@@ -11,13 +11,14 @@ import {
   ChevronUpIcon,
   MapPinIcon,
   StoreIcon,
+  TagIcon,
 } from "lucide-react";
 import { getAssets, type Asset, type WarrantyStatus, type Page } from "@/api/assets";
 import AuthImg from "@/components/AuthImg";
 import { useDebounce } from "@/hooks/useDebounce";
-import { getGoodCategories, type GoodCategory } from "@/api/goodCategories";
-import { getPlaces, type Place } from "@/api/places";
-import { getStores, type Store } from "@/api/stores";
+import { getAssetCategories, type AssetCategory } from "@/api/assetCategories";
+import { getAssetPlaces, type AssetPlace } from "@/api/assetPlaces";
+import { getAssetStores, type AssetStore } from "@/api/assetStores";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -40,8 +41,9 @@ import CreateAssetDialog from "@/components/assets/CreateAssetDialog";
 import EditAssetDialog from "@/components/assets/EditAssetDialog";
 import DeleteAssetDialog from "@/components/assets/DeleteAssetDialog";
 import AssetExpandedRow from "@/components/assets/AssetExpandedRow";
-import PlaceManagerDialog from "@/components/assets/PlaceManagerDialog";
-import StoreManagerDialog from "@/components/assets/StoreManagerDialog";
+import AssetPlaceManagerDialog from "@/components/assets/AssetPlaceManagerDialog";
+import AssetStoreManagerDialog from "@/components/assets/AssetStoreManagerDialog";
+import AssetCategoryManagerDialog from "@/components/assets/AssetCategoryManagerDialog";
 
 const PAGE_SIZE = 10;
 
@@ -77,9 +79,9 @@ const AssetsPage = () => {
     last: true,
     empty: true,
   });
-  const [categories, setCategories] = useState<GoodCategory[]>([]);
-  const [places, setPlaces] = useState<Place[]>([]);
-  const [stores, setStores] = useState<Store[]>([]);
+  const [categories, setCategories] = useState<AssetCategory[]>([]);
+  const [places, setPlaces] = useState<AssetPlace[]>([]);
+  const [stores, setStores] = useState<AssetStore[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
@@ -97,12 +99,13 @@ const AssetsPage = () => {
   const [expandedAssetId, setExpandedAssetId] = useState<number | null>(null);
   const [placeManagerOpen, setPlaceManagerOpen] = useState(false);
   const [storeManagerOpen, setStoreManagerOpen] = useState(false);
+  const [categoryManagerOpen, setCategoryManagerOpen] = useState(false);
 
   const fetchRefData = useCallback(async () => {
     const [catRes, placeRes, storeRes] = await Promise.all([
-      getGoodCategories(),
-      getPlaces(),
-      getStores(),
+      getAssetCategories(),
+      getAssetPlaces(),
+      getAssetStores(),
     ]);
     setCategories(catRes.data);
     setPlaces(placeRes.data);
@@ -294,10 +297,18 @@ const AssetsPage = () => {
           <Button
             variant="outline"
             size="sm"
+            onClick={() => setCategoryManagerOpen(true)}
+          >
+            <TagIcon className="size-3.5" />
+            {t("assets.assetCategories.manage")}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => setPlaceManagerOpen(true)}
           >
             <MapPinIcon className="size-3.5" />
-            {t("assets.places.manage")}
+            {t("assets.assetPlaces.manage")}
           </Button>
           <Button
             variant="outline"
@@ -305,7 +316,7 @@ const AssetsPage = () => {
             onClick={() => setStoreManagerOpen(true)}
           >
             <StoreIcon className="size-3.5" />
-            {t("assets.stores.manage")}
+            {t("assets.assetStores.manage")}
           </Button>
           <Button onClick={() => setCreateOpen(true)}>
             <PlusIcon className="size-4" />
@@ -493,12 +504,17 @@ const AssetsPage = () => {
         onClose={() => setDeletingAsset(null)}
         onSuccess={fetchAssets}
       />
-      <PlaceManagerDialog
+      <AssetCategoryManagerDialog
+        open={categoryManagerOpen}
+        onClose={() => setCategoryManagerOpen(false)}
+        onChanged={handleRefDataChanged}
+      />
+      <AssetPlaceManagerDialog
         open={placeManagerOpen}
         onClose={() => setPlaceManagerOpen(false)}
         onChanged={handleRefDataChanged}
       />
-      <StoreManagerDialog
+      <AssetStoreManagerDialog
         open={storeManagerOpen}
         onClose={() => setStoreManagerOpen(false)}
         onChanged={handleRefDataChanged}

@@ -227,7 +227,27 @@
       "uploading": "上传中…",
       "empty": "暂无图片。"
     },
-    "places": {
+    "assetCategories": {
+      "manage": "分类",
+      "manageDescription": "创建、编辑和删除资产分类。",
+      "create": "创建分类",
+      "columns": {
+        "name": "名称",
+        "description": "描述",
+        "actions": "操作"
+      },
+      "form": {
+        "name": "名称",
+        "namePlaceholder": "输入分类名称",
+        "description": "描述",
+        "descriptionPlaceholder": "输入分类描述"
+      },
+      "errors": {
+        "saveFailed": "保存分类失败",
+        "deleteFailed": "删除分类失败"
+      }
+    },
+    "assetPlaces": {
       "manage": "位置",
       "manageDescription": "创建、编辑和删除位置。",
       "create": "创建位置",
@@ -247,7 +267,7 @@
         "deleteFailed": "删除位置失败"
       }
     },
-    "stores": {
+    "assetStores": {
       "manage": "商店",
       "manageDescription": "创建、编辑和删除商店。",
       "create": "创建商店",

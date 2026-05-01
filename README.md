@@ -110,8 +110,9 @@ src/
 │   ├── goods.ts          # Goods API
 │   ├── assets.ts         # Assets API
 │   ├── assetPictures.ts  # Asset pictures API
-│   ├── places.ts         # Places API
-│   ├── stores.ts         # Stores API
+│   ├── assetCategories.ts # Asset categories API
+│   ├── assetPlaces.ts    # Asset places API
+│   ├── assetStores.ts    # Asset stores API
 │   ├── members.ts        # Members API
 │   ├── profile.ts        # Profile API
 │   └── roles.ts          # Roles API

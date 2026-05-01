@@ -1,9 +1,9 @@
 import { useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon } from "lucide-react";
-import type { GoodCategory } from "@/api/goodCategories";
-import type { Place } from "@/api/places";
-import type { Store } from "@/api/stores";
+import type { AssetCategory } from "@/api/assetCategories";
+import type { AssetPlace } from "@/api/assetPlaces";
+import type { AssetStore } from "@/api/assetStores";
 import { createAsset } from "@/api/assets";
 import { getErrorMessage } from "@/lib/error";
 import { useWarrantyDateCalc } from "@/hooks/useWarrantyDateCalc";
@@ -25,14 +25,14 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import PlaceManagerDialog from "./PlaceManagerDialog";
-import StoreManagerDialog from "./StoreManagerDialog";
+import AssetPlaceManagerDialog from "./AssetPlaceManagerDialog";
+import AssetStoreManagerDialog from "./AssetStoreManagerDialog";
 
 interface CreateAssetDialogProps {
   readonly open: boolean;
-  readonly categories: GoodCategory[];
-  readonly places: Place[];
-  readonly stores: Store[];
+  readonly categories: AssetCategory[];
+  readonly places: AssetPlace[];
+  readonly stores: AssetStore[];
   readonly parentId?: number | null;
   readonly onClose: () => void;
   readonly onSuccess: () => void;
@@ -384,12 +384,12 @@ const CreateAssetDialog = ({
           </form>
         </DialogContent>
       </Dialog>
-      <PlaceManagerDialog
+      <AssetPlaceManagerDialog
         open={placeManagerOpen}
         onClose={() => setPlaceManagerOpen(false)}
         onChanged={onRefDataChanged}
       />
-      <StoreManagerDialog
+      <AssetStoreManagerDialog
         open={storeManagerOpen}
         onClose={() => setStoreManagerOpen(false)}
         onChanged={onRefDataChanged}

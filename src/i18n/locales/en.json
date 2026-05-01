@@ -339,7 +339,27 @@
       "uploading": "Uploading…",
       "empty": "No pictures uploaded yet."
     },
-    "places": {
+    "assetCategories": {
+      "manage": "Categories",
+      "manageDescription": "Create, edit, and delete asset categories.",
+      "create": "Create Category",
+      "columns": {
+        "name": "Name",
+        "description": "Description",
+        "actions": "Actions"
+      },
+      "form": {
+        "name": "Name",
+        "namePlaceholder": "Enter category name",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter category description"
+      },
+      "errors": {
+        "saveFailed": "Failed to save category",
+        "deleteFailed": "Failed to delete category"
+      }
+    },
+    "assetPlaces": {
       "manage": "Places",
       "manageDescription": "Create, edit, and delete places.",
       "create": "Create Place",
@@ -359,7 +379,7 @@
         "deleteFailed": "Failed to delete place"
       }
     },
-    "stores": {
+    "assetStores": {
       "manage": "Stores",
       "manageDescription": "Create, edit, and delete stores.",
       "create": "Create Store",

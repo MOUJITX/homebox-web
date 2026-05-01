@@ -2,12 +2,12 @@ import { useCallback, useEffect, useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon, PencilIcon, TrashIcon } from "lucide-react";
 import {
-  getStores,
-  createStore,
-  updateStore,
-  deleteStore,
-  type Store,
-} from "@/api/stores";
+  getAssetPlaces,
+  createAssetPlace,
+  updateAssetPlace,
+  deleteAssetPlace,
+  type AssetPlace,
+} from "@/api/assetPlaces";
 import { getErrorMessage } from "@/lib/error";
 import {
   Dialog,
@@ -29,7 +29,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
-interface StoreManagerDialogProps {
+interface AssetPlaceManagerDialogProps {
   readonly open: boolean;
   readonly onClose: () => void;
   readonly onChanged: () => void;
@@ -37,52 +37,41 @@ interface StoreManagerDialogProps {
 
 type Mode = "list" | "create" | "edit";
 
-const DEFAULT_CHANNELS = ["Online", "Offline", "Physical Store"];
-
-const StoreManagerDialog = ({
+const AssetPlaceManagerDialog = ({
   open,
   onClose,
   onChanged,
-}: StoreManagerDialogProps) => {
+}: AssetPlaceManagerDialogProps) => {
   const { t } = useTranslation();
-  const [stores, setStores] = useState<Store[]>([]);
+  const [places, setPlaces] = useState<AssetPlace[]>([]);
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<Mode>("list");
-  const [editingStore, setEditingStore] = useState<Store | null>(null);
+  const [editingPlace, setEditingPlace] = useState<AssetPlace | null>(null);
   const [name, setName] = useState("");
-  const [channel, setChannel] = useState("");
-  const [customChannel, setCustomChannel] = useState("");
+  const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchStores = useCallback(async () => {
+  const fetchPlaces = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await getStores();
-      setStores(data);
+      const { data } = await getAssetPlaces();
+      setPlaces(data);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    if (open) void fetchStores();
-  }, [open, fetchStores]);
-
-  const allChannels = Array.from(
-    new Set([
-      ...DEFAULT_CHANNELS,
-      ...stores.map((s) => s.channel).filter((c): c is string => !!c),
-    ]),
-  );
+    if (open) void fetchPlaces();
+  }, [open, fetchPlaces]);
 
   const resetForm = () => {
     setName("");
-    setChannel("");
-    setCustomChannel("");
+    setDescription("");
     setError("");
     setMode("list");
-    setEditingStore(null);
+    setEditingPlace(null);
   };
 
   const handleClose = () => {
@@ -92,22 +81,15 @@ const StoreManagerDialog = ({
 
   const handleStartCreate = () => {
     setName("");
-    setChannel("");
-    setCustomChannel("");
+    setDescription("");
     setError("");
     setMode("create");
   };
 
-  const handleStartEdit = (store: Store) => {
-    setEditingStore(store);
-    setName(store.name);
-    if (store.channel && allChannels.includes(store.channel)) {
-      setChannel(store.channel);
-      setCustomChannel("");
-    } else {
-      setChannel("__custom__");
-      setCustomChannel(store.channel ?? "");
-    }
+  const handleStartEdit = (place: AssetPlace) => {
+    setEditingPlace(place);
+    setName(place.name);
+    setDescription(place.description ?? "");
     setError("");
     setMode("edit");
   };
@@ -118,33 +100,30 @@ const StoreManagerDialog = ({
     setError("");
     setSubmitting(true);
 
-    const finalChannel =
-      channel === "__custom__" ? customChannel || undefined : channel || undefined;
-
     try {
       if (mode === "create") {
-        await createStore({ name, channel: finalChannel });
-      } else if (mode === "edit" && editingStore) {
-        await updateStore(editingStore.id, { name, channel: finalChannel });
+        await createAssetPlace({ name, description: description || undefined });
+      } else if (mode === "edit" && editingPlace) {
+        await updateAssetPlace(editingPlace.id, { name, description });
       }
       resetForm();
-      void fetchStores();
+      void fetchPlaces();
       onChanged();
     } catch (err) {
-      setError(getErrorMessage(err) ?? t("assets.stores.errors.saveFailed"));
+      setError(getErrorMessage(err) ?? t("assets.assetPlaces.errors.saveFailed"));
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleDelete = async (store: Store) => {
+  const handleDelete = async (place: AssetPlace) => {
     try {
-      await deleteStore(store.id);
-      void fetchStores();
+      await deleteAssetPlace(place.id);
+      void fetchPlaces();
       onChanged();
     } catch (err) {
       setError(
-        getErrorMessage(err) ?? t("assets.stores.errors.deleteFailed"),
+        getErrorMessage(err) ?? t("assets.assetPlaces.errors.deleteFailed"),
       );
     }
   };
@@ -153,9 +132,9 @@ const StoreManagerDialog = ({
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{t("assets.stores.manage")}</DialogTitle>
+          <DialogTitle>{t("assets.assetPlaces.manage")}</DialogTitle>
           <DialogDescription>
-            {t("assets.stores.manageDescription")}
+            {t("assets.assetPlaces.manageDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -164,17 +143,19 @@ const StoreManagerDialog = ({
             <div className="flex justify-end">
               <Button size="sm" onClick={handleStartCreate}>
                 <PlusIcon className="size-3.5" />
-                {t("assets.stores.create")}
+                {t("assets.assetPlaces.create")}
               </Button>
             </div>
             <div className="max-h-64 overflow-auto rounded-lg ring-1 ring-foreground/10">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t("assets.stores.columns.name")}</TableHead>
-                    <TableHead>{t("assets.stores.columns.channel")}</TableHead>
+                    <TableHead>{t("assets.assetPlaces.columns.name")}</TableHead>
+                    <TableHead>
+                      {t("assets.assetPlaces.columns.description")}
+                    </TableHead>
                     <TableHead className="text-right">
-                      {t("assets.stores.columns.actions")}
+                      {t("assets.assetPlaces.columns.actions")}
                     </TableHead>
                   </TableRow>
                 </TableHeader>
@@ -186,7 +167,7 @@ const StoreManagerDialog = ({
                       </TableCell>
                     </TableRow>
                   )}
-                  {!loading && stores.length === 0 && (
+                  {!loading && places.length === 0 && (
                     <TableRow>
                       <TableCell
                         colSpan={3}
@@ -197,25 +178,25 @@ const StoreManagerDialog = ({
                     </TableRow>
                   )}
                   {!loading &&
-                    stores.map((s) => (
-                      <TableRow key={s.id}>
+                    places.map((p) => (
+                      <TableRow key={p.id}>
                         <TableCell className="font-medium">
-                          {s.name}
+                          {p.name}
                         </TableCell>
-                        <TableCell>{s.channel || "—"}</TableCell>
+                        <TableCell>{p.description || "—"}</TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-1">
                             <Button
                               variant="ghost"
                               size="icon-xs"
-                              onClick={() => handleStartEdit(s)}
+                              onClick={() => handleStartEdit(p)}
                             >
                               <PencilIcon className="size-3.5" />
                             </Button>
                             <Button
                               variant="ghost"
                               size="icon-xs"
-                              onClick={() => handleDelete(s)}
+                              onClick={() => handleDelete(p)}
                             >
                               <TrashIcon className="size-3.5" />
                             </Button>
@@ -235,55 +216,28 @@ const StoreManagerDialog = ({
         {(mode === "create" || mode === "edit") && (
           <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="store-name">
-                {t("assets.stores.form.name")}
+              <Label htmlFor="place-name">
+                {t("assets.assetPlaces.form.name")}
               </Label>
               <Input
-                id="store-name"
+                id="place-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder={t("assets.stores.form.namePlaceholder")}
+                placeholder={t("assets.assetPlaces.form.namePlaceholder")}
                 required
                 autoFocus
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="store-channel">
-                {t("assets.stores.form.channel")}
+              <Label htmlFor="place-description">
+                {t("assets.assetPlaces.form.description")}
               </Label>
-              <div className="grid gap-2">
-                <div className="flex flex-wrap gap-1">
-                  {allChannels.map((ch) => (
-                    <Button
-                      key={ch}
-                      type="button"
-                      variant={channel === ch ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => {
-                        setChannel(ch);
-                        setCustomChannel("");
-                      }}
-                    >
-                      {ch}
-                    </Button>
-                  ))}
-                  <Button
-                    type="button"
-                    variant={channel === "__custom__" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setChannel("__custom__")}
-                  >
-                    {t("assets.stores.form.customChannel")}
-                  </Button>
-                </div>
-                {channel === "__custom__" && (
-                  <Input
-                    value={customChannel}
-                    onChange={(e) => setCustomChannel(e.target.value)}
-                    placeholder={t("assets.stores.form.channelPlaceholder")}
-                  />
-                )}
-              </div>
+              <Input
+                id="place-description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder={t("assets.assetPlaces.form.descriptionPlaceholder")}
+              />
             </div>
             {error && (
               <p className="text-sm text-destructive text-center">{error}</p>
@@ -303,4 +257,4 @@ const StoreManagerDialog = ({
   );
 };
 
-export default StoreManagerDialog;
+export default AssetPlaceManagerDialog;
