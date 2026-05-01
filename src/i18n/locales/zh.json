@@ -183,6 +183,10 @@
       "deleteFailed": "删除文件失败"
     }
   },
+  "errorToast": {
+    "requestFailed": "请求失败",
+    "networkError": "网络错误，请检查您的连接"
+  },
   "common": {
     "cancel": "取消",
     "create": "创建",

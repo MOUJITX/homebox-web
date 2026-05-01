@@ -9,6 +9,7 @@ A web client application for [Homebox](https://github.com/sysadminsmedia/homebox
 - Tailwind CSS 4 + Shadcn UI
 - React Router 7
 - Axios
+- Sonner (toast notifications)
 - i18next + react-i18next (internationalization)
 - ESLint + Prettier
 - Husky + lint-staged (pre-commit hooks)
@@ -39,6 +40,7 @@ yarn preview
 - **Login** — username/password form at `/login`
 - **Force change password** — redirects to `/change-password` when the backend requires it
 - **Session expiry** — global dialog shown on 401 responses, redirecting the user to re-authenticate
+- **Global error toast** — non-401 API errors display a toast notification with the server error message
 - **Logout** — clears token and redirects to login
 - **Protected routes** — unauthenticated users are redirected to `/login`
 

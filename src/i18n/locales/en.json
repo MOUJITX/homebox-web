@@ -294,6 +294,10 @@
       "deleteFailed": "Failed to delete file"
     }
   },
+  "errorToast": {
+    "requestFailed": "Request failed",
+    "networkError": "Network error, please check your connection"
+  },
   "common": {
     "logout": "Sign Out",
     "cancel": "Cancel",

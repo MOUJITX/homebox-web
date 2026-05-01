@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from "react-router";
+import { Toaster } from "sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import RoleGuard from "@/components/RoleGuard";
@@ -32,6 +33,7 @@ const App = () => (
       </Route>
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
+    <Toaster position="top-right" richColors />
     <SessionExpiredDialog />
   </AuthProvider>
 );
