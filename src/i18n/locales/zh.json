@@ -255,7 +255,7 @@
   },
   "nav": {
     "dashboard": "仪表盘",
-    "goods": "商品管理",
+    "expiration": "过期管理",
     "files": "文件管理",
     "members": "成员",
     "profile": "用户信息",

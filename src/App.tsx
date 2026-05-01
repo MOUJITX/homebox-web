@@ -11,7 +11,7 @@ import DashboardPage from "@/pages/DashboardPage";
 import MembersPage from "@/pages/MembersPage";
 import RolesPage from "@/pages/RolesPage";
 import ProfilePage from "@/pages/ProfilePage";
-import GoodsPage from "@/pages/GoodsPage";
+import ExpirationPage from "@/pages/ExpirationPage";
 import FilesPage from "@/pages/FilesPage";
 
 const App = () => (
@@ -22,7 +22,7 @@ const App = () => (
       <Route element={<ProtectedRoute />}>
         <Route element={<AppShell />}>
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/goods" element={<GoodsPage />} />
+          <Route path="/expiration" element={<ExpirationPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route element={<RoleGuard requiredRole="root" />}>
             <Route path="/files" element={<FilesPage />} />

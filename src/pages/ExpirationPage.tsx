@@ -12,7 +12,13 @@ import {
   TagIcon,
   BuildingIcon,
 } from "lucide-react";
-import { getGoods, type Good, type GoodStatus, type ItemStatus, type Page } from "@/api/goods";
+import {
+  getGoods,
+  type Good,
+  type GoodStatus,
+  type ItemStatus,
+  type Page,
+} from "@/api/goods";
 import AuthImg from "@/components/AuthImg";
 import { useDebounce } from "@/hooks/useDebounce";
 import { getGoodCategories, type GoodCategory } from "@/api/goodCategories";
@@ -35,16 +41,21 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import CreateGoodDialog from "@/components/goods/CreateGoodDialog";
-import EditGoodDialog from "@/components/goods/EditGoodDialog";
-import DeleteGoodDialog from "@/components/goods/DeleteGoodDialog";
-import GoodExpandedRow from "@/components/goods/GoodExpandedRow";
-import CategoryManagerDialog from "@/components/goods/CategoryManagerDialog";
-import BrandManagerDialog from "@/components/goods/BrandManagerDialog";
+import CreateGoodDialog from "@/components/expiration/CreateGoodDialog";
+import EditGoodDialog from "@/components/expiration/EditGoodDialog";
+import DeleteGoodDialog from "@/components/expiration/DeleteGoodDialog";
+import GoodExpandedRow from "@/components/expiration/GoodExpandedRow";
+import CategoryManagerDialog from "@/components/expiration/CategoryManagerDialog";
+import BrandManagerDialog from "@/components/expiration/BrandManagerDialog";
 
 const PAGE_SIZE = 10;
 
-const STATUS_OPTIONS: ItemStatus[] = ["EXPIRED", "EXPIRING_SOON", "IN_USE", "EXHAUSTED"];
+const STATUS_OPTIONS: ItemStatus[] = [
+  "EXPIRED",
+  "EXPIRING_SOON",
+  "IN_USE",
+  "EXHAUSTED",
+];
 
 const goodStatusBadgeVariant = (
   status: GoodStatus,
@@ -57,7 +68,7 @@ const goodStatusBadgeVariant = (
   }
 };
 
-const GoodsPage = () => {
+const ExpirationPage = () => {
   const { t } = useTranslation();
 
   const [pageData, setPageData] = useState<Page<Good>>({
@@ -78,7 +89,9 @@ const GoodsPage = () => {
   const debouncedSearch = useDebounce(search, 300);
   const [filterCategoryId, setFilterCategoryId] = useState<number | null>(null);
   const [filterBrandId, setFilterBrandId] = useState<number | null>(null);
-  const [filterItemStatus, setFilterItemStatus] = useState<ItemStatus | null>(null);
+  const [filterItemStatus, setFilterItemStatus] = useState<ItemStatus | null>(
+    null,
+  );
   const [page, setPage] = useState(0);
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -114,7 +127,13 @@ const GoodsPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [debouncedSearch, filterCategoryId, filterBrandId, filterItemStatus, page]);
+  }, [
+    debouncedSearch,
+    filterCategoryId,
+    filterBrandId,
+    filterItemStatus,
+    page,
+  ]);
 
   useEffect(() => {
     void fetchRefData();
@@ -459,4 +478,4 @@ const GoodsPage = () => {
   );
 };
 
-export default GoodsPage;
+export default ExpirationPage;
