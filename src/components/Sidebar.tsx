@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import {
   LayoutDashboardIcon,
   PackageIcon,
+  BoxIcon,
   FolderIcon,
   UsersIcon,
   ShieldIcon,
@@ -25,6 +26,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: "nav.dashboard", path: "/dashboard", icon: LayoutDashboardIcon },
   { label: "nav.expiration", path: "/expiration", icon: PackageIcon },
+  { label: "nav.assets", path: "/assets", icon: BoxIcon },
   {
     label: "nav.files",
     path: "/files",

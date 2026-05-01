@@ -60,6 +60,18 @@ yarn preview
 - **Barcode duplicate detection** — popup to add item to existing good when barcode already exists
 - **Expandable rows** — inline item management and picture management within the goods table
 
+### Asset Management
+
+- **Assets** — CRUD for assets with name, barcode, serial number, category, place, price, shop date, store, warranty, note, and picture uploads
+- **Sub-assets** — self-referencing parent-child relationship (1 level deep), displayed as expanded rows
+- **Categories** — reuse goods categories, managed via inline dialog
+- **Places** — standalone CRUD for locations (e.g., rooms), managed via inline dialog
+- **Stores** — CRUD with name and channel (e.g., Online, Offline), channel supports custom text input
+- **Warranty tracking** — optional warranty with "fill 2 of 3" date logic (active date, period in days, expiration date)
+- **Warranty status** — automatic computation: In Warranty, Out of Warranty, No Warranty
+- **Server-side pagination** — search by name/barcode/serial number, filter by category, place, in-use status, warranty status
+- **Expandable rows** — inline sub-asset management and picture management
+
 ### Member Management (Root Only)
 
 - **Members** — list, create, edit, and delete members via `/members` (root role required)
@@ -96,6 +108,10 @@ src/
 │   ├── goodItems.ts      # Good items API
 │   ├── goodPictures.ts   # Good pictures API
 │   ├── goods.ts          # Goods API
+│   ├── assets.ts         # Assets API
+│   ├── assetPictures.ts  # Asset pictures API
+│   ├── places.ts         # Places API
+│   ├── stores.ts         # Stores API
 │   ├── members.ts        # Members API
 │   ├── profile.ts        # Profile API
 │   └── roles.ts          # Roles API
@@ -108,13 +124,14 @@ src/
 │   ├── SessionExpiredDialog.tsx # Session expiry dialog
 │   ├── Sidebar.tsx       # Navigation sidebar
 │   ├── Topbar.tsx        # Top navigation bar
+│   ├── assets/           # Asset management feature components
 │   ├── expiration/       # Goods expiration feature components
 │   ├── members/          # Member management dialogs
 │   ├── profile/          # Profile components
 │   ├── roles/            # Role management dialogs
 │   └── ui/               # Shadcn UI components
 ├── contexts/             # React context providers (AuthContext)
-├── hooks/                # Custom hooks (useAuth, useAuthImage, useDebounce, useItemDateCalc)
+├── hooks/                # Custom hooks (useAuth, useAuthImage, useDebounce, useItemDateCalc, useWarrantyDateCalc)
 ├── i18n/                 # i18next config and locale files
 │   └── locales/          # Translation JSON files
 ├── lib/                  # Utility functions (error, jwt, password, utils)

@@ -156,6 +156,124 @@
       }
     }
   },
+  "assets": {
+    "search": "按名称、条码或序列号搜索…",
+    "create": "创建资产",
+    "createDescription": "添加新资产进行跟踪。",
+    "edit": "编辑资产",
+    "editDescription": "更新{{name}}的详细信息。",
+    "delete": "删除资产",
+    "deleteConfirm": "您确定要删除{{name}}吗？必须先删除所有子资产。",
+    "columns": {
+      "name": "名称",
+      "barcode": "条码",
+      "serialNumber": "序列号",
+      "category": "分类",
+      "place": "位置",
+      "inUse": "使用中",
+      "warranty": "保修",
+      "actions": "操作"
+    },
+    "form": {
+      "name": "名称",
+      "namePlaceholder": "输入资产名称",
+      "barcode": "条码",
+      "barcodePlaceholder": "输入条码",
+      "serialNumber": "序列号",
+      "serialNumberPlaceholder": "输入序列号",
+      "category": "分类",
+      "categoryPlaceholder": "选择分类",
+      "place": "位置",
+      "placePlaceholder": "选择位置",
+      "store": "商店",
+      "storePlaceholder": "选择商店",
+      "inUse": "使用中",
+      "price": "价格",
+      "pricePlaceholder": "输入价格",
+      "shopDate": "购买日期",
+      "hasWarranty": "有保修",
+      "activeDate": "生效日期",
+      "warrantyPeriod": "保修期（天）",
+      "warrantyPeriodPlaceholder": "输入天数",
+      "expirationDate": "到期日期",
+      "warrantyHint": "填写以下3个字段中的任意2个，第3个将自动计算。",
+      "note": "备注",
+      "notePlaceholder": "输入备注"
+    },
+    "filters": {
+      "allCategories": "全部分类",
+      "allPlaces": "全部位置",
+      "allInUse": "全部状态",
+      "allWarrantyStatus": "全部保修",
+      "inUse": "使用中",
+      "notInUse": "未使用"
+    },
+    "warranty": {
+      "IN_WARRANTY": "保修中",
+      "OUT_WARRANTY": "已过保",
+      "NO_WARRANTY": "无保修"
+    },
+    "subAssets": {
+      "title": "子资产",
+      "add": "添加子资产",
+      "create": "创建子资产",
+      "createDescription": "为此资产添加子资产。",
+      "empty": "暂无子资产。"
+    },
+    "pictures": {
+      "title": "图片",
+      "manage": "图片",
+      "upload": "上传",
+      "uploading": "上传中…",
+      "empty": "暂无图片。"
+    },
+    "places": {
+      "manage": "位置",
+      "manageDescription": "创建、编辑和删除位置。",
+      "create": "创建位置",
+      "columns": {
+        "name": "名称",
+        "description": "描述",
+        "actions": "操作"
+      },
+      "form": {
+        "name": "名称",
+        "namePlaceholder": "输入位置名称",
+        "description": "描述",
+        "descriptionPlaceholder": "输入位置描述"
+      },
+      "errors": {
+        "saveFailed": "保存位置失败",
+        "deleteFailed": "删除位置失败"
+      }
+    },
+    "stores": {
+      "manage": "商店",
+      "manageDescription": "创建、编辑和删除商店。",
+      "create": "创建商店",
+      "columns": {
+        "name": "名称",
+        "channel": "渠道",
+        "actions": "操作"
+      },
+      "form": {
+        "name": "名称",
+        "namePlaceholder": "输入商店名称",
+        "channel": "渠道",
+        "channelPlaceholder": "输入渠道名称",
+        "customChannel": "其他"
+      },
+      "errors": {
+        "saveFailed": "保存商店失败",
+        "deleteFailed": "删除商店失败"
+      }
+    },
+    "errors": {
+      "createFailed": "创建资产失败",
+      "updateFailed": "更新资产失败",
+      "deleteFailed": "删除资产失败"
+    }
+  },
   "files": {
     "title": "文件管理",
     "upload": "上传文件",
@@ -256,6 +374,7 @@
   "nav": {
     "dashboard": "仪表盘",
     "expiration": "过期管理",
+    "assets": "资产管理",
     "files": "文件管理",
     "members": "成员",
     "profile": "用户信息",

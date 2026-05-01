@@ -12,6 +12,7 @@ import MembersPage from "@/pages/MembersPage";
 import RolesPage from "@/pages/RolesPage";
 import ProfilePage from "@/pages/ProfilePage";
 import ExpirationPage from "@/pages/ExpirationPage";
+import AssetsPage from "@/pages/AssetsPage";
 import FilesPage from "@/pages/FilesPage";
 
 const App = () => (
@@ -23,6 +24,7 @@ const App = () => (
         <Route element={<AppShell />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/expiration" element={<ExpirationPage />} />
+          <Route path="/assets" element={<AssetsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route element={<RoleGuard requiredRole="root" />}>
             <Route path="/files" element={<FilesPage />} />

@@ -5,6 +5,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "expiration": "Expiration",
+    "assets": "Assets",
     "files": "Files",
     "members": "Members",
     "roles": "Roles",
@@ -265,6 +266,124 @@
         "saveFailed": "Failed to save brand",
         "deleteFailed": "Failed to delete brand"
       }
+    }
+  },
+  "assets": {
+    "search": "Search by name, barcode, or serial…",
+    "create": "Create Asset",
+    "createDescription": "Add a new asset to track.",
+    "edit": "Edit Asset",
+    "editDescription": "Update details for {{name}}.",
+    "delete": "Delete Asset",
+    "deleteConfirm": "Are you sure you want to delete {{name}}? You must delete all sub-assets first.",
+    "columns": {
+      "name": "Name",
+      "barcode": "Barcode",
+      "serialNumber": "Serial Number",
+      "category": "Category",
+      "place": "Place",
+      "inUse": "In Use",
+      "warranty": "Warranty",
+      "actions": "Actions"
+    },
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Enter asset name",
+      "barcode": "Barcode",
+      "barcodePlaceholder": "Enter barcode",
+      "serialNumber": "Serial Number",
+      "serialNumberPlaceholder": "Enter serial number",
+      "category": "Category",
+      "categoryPlaceholder": "Select a category",
+      "place": "Place",
+      "placePlaceholder": "Select a place",
+      "store": "Store",
+      "storePlaceholder": "Select a store",
+      "inUse": "In Use",
+      "price": "Price",
+      "pricePlaceholder": "Enter price",
+      "shopDate": "Shop Date",
+      "hasWarranty": "Has Warranty",
+      "activeDate": "Active Date",
+      "warrantyPeriod": "Warranty Period (days)",
+      "warrantyPeriodPlaceholder": "Enter number of days",
+      "expirationDate": "Expiration Date",
+      "warrantyHint": "Fill in exactly 2 of the 3 fields below — the third will be auto-calculated.",
+      "note": "Note",
+      "notePlaceholder": "Enter note"
+    },
+    "filters": {
+      "allCategories": "All Categories",
+      "allPlaces": "All Places",
+      "allInUse": "All Status",
+      "allWarrantyStatus": "All Warranty",
+      "inUse": "In Use",
+      "notInUse": "Not In Use"
+    },
+    "warranty": {
+      "IN_WARRANTY": "In Warranty",
+      "OUT_WARRANTY": "Out of Warranty",
+      "NO_WARRANTY": "No Warranty"
+    },
+    "subAssets": {
+      "title": "Sub-Assets",
+      "add": "Add Sub-Asset",
+      "create": "Create Sub-Asset",
+      "createDescription": "Add a sub-asset to this asset.",
+      "empty": "No sub-assets yet."
+    },
+    "pictures": {
+      "title": "Pictures",
+      "manage": "Pictures",
+      "upload": "Upload",
+      "uploading": "Uploading…",
+      "empty": "No pictures uploaded yet."
+    },
+    "places": {
+      "manage": "Places",
+      "manageDescription": "Create, edit, and delete places.",
+      "create": "Create Place",
+      "columns": {
+        "name": "Name",
+        "description": "Description",
+        "actions": "Actions"
+      },
+      "form": {
+        "name": "Name",
+        "namePlaceholder": "Enter place name",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter place description"
+      },
+      "errors": {
+        "saveFailed": "Failed to save place",
+        "deleteFailed": "Failed to delete place"
+      }
+    },
+    "stores": {
+      "manage": "Stores",
+      "manageDescription": "Create, edit, and delete stores.",
+      "create": "Create Store",
+      "columns": {
+        "name": "Name",
+        "channel": "Channel",
+        "actions": "Actions"
+      },
+      "form": {
+        "name": "Name",
+        "namePlaceholder": "Enter store name",
+        "channel": "Channel",
+        "channelPlaceholder": "Enter channel name",
+        "customChannel": "Other"
+      },
+      "errors": {
+        "saveFailed": "Failed to save store",
+        "deleteFailed": "Failed to delete store"
+      }
+    },
+    "errors": {
+      "createFailed": "Failed to create asset",
+      "updateFailed": "Failed to update asset",
+      "deleteFailed": "Failed to delete asset"
     }
   },
   "files": {
