@@ -159,10 +159,6 @@ const InvoiceDetailDrawer = ({
                 value={invoice.invoiceNumber}
               />
               <Field
-                label={t("invoices.form.invoiceCode")}
-                value={invoice.invoiceCode}
-              />
-              <Field
                 label={t("invoices.form.invoiceDate")}
                 value={
                   invoice.invoiceDate ? formatDate(invoice.invoiceDate) : null

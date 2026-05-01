@@ -38,7 +38,6 @@ const EditInvoiceDialog = ({
 }: EditInvoiceDialogProps) => {
   const { t } = useTranslation();
 
-  const [invoiceCode, setInvoiceCode] = useState("");
   const [invoiceNumber, setInvoiceNumber] = useState("");
   const [invoiceDate, setInvoiceDate] = useState("");
   const [invoiceType, setInvoiceType] =
@@ -58,7 +57,6 @@ const EditInvoiceDialog = ({
 
   useEffect(() => {
     if (invoice && open) {
-      setInvoiceCode(invoice.invoiceCode ?? "");
       setInvoiceNumber(invoice.invoiceNumber ?? "");
       setInvoiceDate(invoice.invoiceDate ?? "");
       setInvoiceType(invoice.invoiceType);
@@ -89,7 +87,6 @@ const EditInvoiceDialog = ({
 
     try {
       await updateInvoice(invoice.id, {
-        invoiceCode: invoiceCode || undefined,
         invoiceNumber: invoiceNumber || undefined,
         invoiceDate: invoiceDate || undefined,
         invoiceType,
@@ -169,17 +166,7 @@ const EditInvoiceDialog = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="edit-invoice-code">
-                {t("invoices.form.invoiceCode")}
-              </Label>
-              <Input
-                id="edit-invoice-code"
-                value={invoiceCode}
-                onChange={(e) => setInvoiceCode(e.target.value)}
-              />
-            </div>
+          <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="edit-invoice-number">
                 {t("invoices.form.invoiceNumber")}

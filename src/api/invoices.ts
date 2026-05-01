@@ -13,7 +13,6 @@ export type InvoiceStatus = "NORMAL" | "VOIDED" | "RED_FLUSHED";
 
 export interface Invoice {
   id: number;
-  invoiceCode: string | null;
   invoiceNumber: string | null;
   invoiceDate: string | null;
   invoiceType: InvoiceType;
@@ -47,7 +46,6 @@ export interface InvoiceDetail extends Invoice {
 }
 
 export interface InvoiceParseResult {
-  invoiceCode: string | null;
   invoiceNumber: string | null;
   invoiceDate: string | null;
   invoiceType: InvoiceType | null;
@@ -87,7 +85,6 @@ export interface GetInvoicesParams {
 }
 
 export interface CreateInvoiceRequest {
-  invoiceCode?: string;
   invoiceNumber?: string;
   invoiceDate?: string;
   invoiceType: InvoiceType;
@@ -104,7 +101,6 @@ export interface CreateInvoiceRequest {
 }
 
 export interface UpdateInvoiceRequest {
-  invoiceCode?: string;
   invoiceNumber?: string;
   invoiceDate?: string;
   invoiceType?: InvoiceType;

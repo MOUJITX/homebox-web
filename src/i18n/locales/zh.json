@@ -327,7 +327,6 @@
       "RED_FLUSHED": "已红冲"
     },
     "form": {
-      "invoiceCode": "发票代码",
       "invoiceNumber": "发票号码",
       "invoiceDate": "开票日期",
       "invoiceType": "发票类型",

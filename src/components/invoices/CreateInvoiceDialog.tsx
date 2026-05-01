@@ -36,7 +36,6 @@ const CreateInvoiceDialog = ({
 }: CreateInvoiceDialogProps) => {
   const { t } = useTranslation();
 
-  const [invoiceCode, setInvoiceCode] = useState("");
   const [invoiceNumber, setInvoiceNumber] = useState("");
   const [invoiceDate, setInvoiceDate] = useState("");
   const [invoiceType, setInvoiceType] = useState<InvoiceType>("DIGITAL_INVOICE");
@@ -56,7 +55,6 @@ const CreateInvoiceDialog = ({
   const [parsing, setParsing] = useState(false);
 
   const resetForm = () => {
-    setInvoiceCode("");
     setInvoiceNumber("");
     setInvoiceDate("");
     setInvoiceType("DIGITAL_INVOICE");
@@ -79,7 +77,6 @@ const CreateInvoiceDialog = ({
   };
 
   const applyParseResult = (result: InvoiceParseResult) => {
-    if (result.invoiceCode) setInvoiceCode(result.invoiceCode);
     if (result.invoiceNumber) setInvoiceNumber(result.invoiceNumber);
     if (result.invoiceDate) setInvoiceDate(result.invoiceDate);
     if (result.invoiceType) setInvoiceType(result.invoiceType as InvoiceType);
@@ -118,7 +115,6 @@ const CreateInvoiceDialog = ({
 
     try {
       await createInvoice({
-        invoiceCode: invoiceCode || undefined,
         invoiceNumber: invoiceNumber || undefined,
         invoiceDate: invoiceDate || undefined,
         invoiceType,
@@ -208,11 +204,7 @@ const CreateInvoiceDialog = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="invoice-code">{t("invoices.form.invoiceCode")}</Label>
-              <Input id="invoice-code" value={invoiceCode} onChange={(e) => setInvoiceCode(e.target.value)} />
-            </div>
+          <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="invoice-number">{t("invoices.form.invoiceNumber")}</Label>
               <Input id="invoice-number" value={invoiceNumber} onChange={(e) => setInvoiceNumber(e.target.value)} />

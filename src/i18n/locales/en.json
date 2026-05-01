@@ -440,7 +440,6 @@
       "RED_FLUSHED": "Reversed"
     },
     "form": {
-      "invoiceCode": "Invoice Code",
       "invoiceNumber": "Invoice Number",
       "invoiceDate": "Invoice Date",
       "invoiceType": "Invoice Type",
