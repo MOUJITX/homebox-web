@@ -313,10 +313,10 @@
       "actions": "操作"
     },
     "type": {
-      "DIGITAL_INVOICE": "数电发票",
-      "RAILWAY_ELECTRONIC": "铁路电子客票",
-      "VAT_INVOICE": "增值税票",
-      "AIR_ELECTRONIC": "航空电子客票",
+      "DIGITAL_INVOICE": "电子发票（普通发票）",
+      "RAILWAY_ELECTRONIC": "电子发票（铁路电子客票）",
+      "VAT_INVOICE": "增值税电子普通发票",
+      "AIR_ELECTRONIC": "电子发票（航空运输电子客票行程单）",
       "GENERAL_MACHINE_PRINTED": "通用机打发票",
       "QUOTA_INVOICE": "定额发票",
       "OTHER": "其他"
