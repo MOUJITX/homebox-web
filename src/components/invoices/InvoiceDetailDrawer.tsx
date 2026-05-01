@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PencilIcon, TrashIcon, DownloadIcon, EyeIcon } from "lucide-react";
 import type { InvoiceDetail } from "@/api/invoices";
 import { getInvoiceById } from "@/api/invoices";
 import { downloadAuthFile } from "@/hooks/useAuthImage";
+import { getErrorMessage } from "@/lib/error";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,19 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import InvoiceAttachmentManager from "./InvoiceAttachmentManager";
+
+const Field = ({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number | null | undefined;
+}) => (
+  <div className="grid gap-1">
+    <span className="text-xs text-muted-foreground">{label}</span>
+    <span className="text-sm">{value ?? "—"}</span>
+  </div>
+);
 
 interface InvoiceDetailDrawerProps {
   readonly invoiceId: number | null;
@@ -51,28 +65,44 @@ const InvoiceDetailDrawer = ({
   const { t } = useTranslation();
   const [invoice, setInvoice] = useState<InvoiceDetail | null>(null);
   const [loading, setLoading] = useState(false);
-
-  const fetchDetail = useCallback(async () => {
-    if (!invoiceId) return;
-    setLoading(true);
-    try {
-      const { data } = await getInvoiceById(invoiceId);
-      setInvoice(data);
-    } finally {
-      setLoading(false);
-    }
-  }, [invoiceId]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (open && invoiceId) {
-      void fetchDetail();
+      let cancelled = false;
+      setLoading(true);
+      setError("");
+      getInvoiceById(invoiceId)
+        .then(({ data }) => {
+          if (!cancelled) setInvoice(data);
+        })
+        .catch((err) => {
+          if (!cancelled) setError(getErrorMessage(err) ?? t("invoices.errors.loadFailed"));
+        })
+        .finally(() => {
+          if (!cancelled) setLoading(false);
+        });
+      return () => {
+        cancelled = true;
+      };
     } else {
       setInvoice(null);
+      setError("");
     }
-  }, [open, invoiceId, fetchDetail]);
+  }, [open, invoiceId]);
 
   const handleAttachmentsChanged = () => {
-    void fetchDetail();
+    if (invoiceId) {
+      let cancelled = false;
+      getInvoiceById(invoiceId)
+        .then(({ data }) => {
+          if (!cancelled) setInvoice(data);
+        })
+        .catch(() => {});
+      return () => {
+        cancelled = true;
+      };
+    }
     onRefresh();
   };
 
@@ -91,19 +121,6 @@ const InvoiceDetailDrawer = ({
     }
   };
 
-  const Field = ({
-    label,
-    value,
-  }: {
-    label: string;
-    value: string | number | null | undefined;
-  }) => (
-    <div className="grid gap-1">
-      <span className="text-xs text-muted-foreground">{label}</span>
-      <span className="text-sm">{value ?? "—"}</span>
-    </div>
-  );
-
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
       <SheetContent className="w-full sm:max-w-md">
@@ -116,6 +133,12 @@ const InvoiceDetailDrawer = ({
             <span className="text-sm text-muted-foreground">
               {t("common.loading")}
             </span>
+          </div>
+        )}
+
+        {!loading && error && (
+          <div className="flex items-center justify-center py-12">
+            <span className="text-sm text-destructive">{error}</span>
           </div>
         )}
 

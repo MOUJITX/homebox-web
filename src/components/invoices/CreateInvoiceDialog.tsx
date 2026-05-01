@@ -21,18 +21,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-
-const INVOICE_TYPES: InvoiceType[] = [
-  "DIGITAL_INVOICE",
-  "RAILWAY_ELECTRONIC",
-  "VAT_INVOICE",
-  "AIR_ELECTRONIC",
-  "GENERAL_MACHINE_PRINTED",
-  "QUOTA_INVOICE",
-  "OTHER",
-];
-
-const INVOICE_STATUSES: InvoiceStatus[] = ["NORMAL", "VOIDED", "RED_FLUSHED"];
+import { INVOICE_TYPES, INVOICE_STATUSES } from "./constants";
 
 interface CreateInvoiceDialogProps {
   readonly open: boolean;

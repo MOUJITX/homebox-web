@@ -481,7 +481,8 @@
       "createFailed": "Failed to create invoice",
       "updateFailed": "Failed to update invoice",
       "deleteFailed": "Failed to delete invoice",
-      "parseFailed": "Failed to parse invoice file"
+      "parseFailed": "Failed to parse invoice file",
+      "loadFailed": "Failed to load invoice details"
     }
   },
   "files": {
