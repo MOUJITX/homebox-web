@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { Invoice, InvoiceType, InvoiceStatus, InvoiceDetail, Page } from "@/api/invoices";
 import { getInvoices, getInvoiceById } from "@/api/invoices";
+import { INVOICE_TYPES } from "@/components/invoices/constants";
 import { useDebounce } from "@/hooks/useDebounce";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -36,16 +37,6 @@ import DeleteInvoiceDialog from "@/components/invoices/DeleteInvoiceDialog";
 import InvoiceDetailDrawer from "@/components/invoices/InvoiceDetailDrawer";
 
 const PAGE_SIZE = 10;
-
-const INVOICE_TYPES: InvoiceType[] = [
-  "DIGITAL_INVOICE",
-  "RAILWAY_ELECTRONIC",
-  "VAT_INVOICE",
-  "AIR_ELECTRONIC",
-  "GENERAL_MACHINE_PRINTED",
-  "QUOTA_INVOICE",
-  "OTHER",
-];
 
 const INVOICE_STATUSES: InvoiceStatus[] = ["NORMAL", "VOIDED", "RED_FLUSHED"];
 

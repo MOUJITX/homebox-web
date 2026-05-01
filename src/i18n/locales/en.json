@@ -433,6 +433,11 @@
       "AIR_ELECTRONIC": "Airline E-Ticket",
       "GENERAL_MACHINE_PRINTED": "Machine-Printed",
       "QUOTA_INVOICE": "Quota Invoice",
+      "NON_TAX_INCOME_GENERAL": "Non-Tax Income General Payment (Electronic)",
+      "NON_TAX_INCOME_UNIFIED": "Non-Tax Income Unified Receipt (Electronic)",
+      "FUND_SETTLEMENT": "Fund Settlement Receipt (Electronic)",
+      "MEDICAL_OUTPATIENT": "Medical Outpatient Receipt (Electronic)",
+      "MEDICAL_INPATIENT": "Medical Inpatient Receipt (Electronic)",
       "OTHER": "Other"
     },
     "status": {

@@ -319,6 +319,11 @@
       "AIR_ELECTRONIC": "电子发票（航空运输电子客票行程单）",
       "GENERAL_MACHINE_PRINTED": "通用机打发票",
       "QUOTA_INVOICE": "定额发票",
+      "NON_TAX_INCOME_GENERAL": "非税收入一般缴款书（电子）",
+      "NON_TAX_INCOME_UNIFIED": "非税收入统一票据（电子）",
+      "FUND_SETTLEMENT": "资金往来结算票据（电子）",
+      "MEDICAL_OUTPATIENT": "医疗门诊收费票据（电子）",
+      "MEDICAL_INPATIENT": "医疗住院收费票据（电子）",
       "OTHER": "其他"
     },
     "status": {
