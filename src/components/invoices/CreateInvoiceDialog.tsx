@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import type { InvoiceType, InvoiceStatus, InvoiceParseResult } from "@/api/invoices";
 import { createInvoice, parseInvoice } from "@/api/invoices";
@@ -50,6 +50,7 @@ const CreateInvoiceDialog = ({
   const [remark, setRemark] = useState("");
   const [fileId, setFileId] = useState<number | null>(null);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [parsing, setParsing] = useState(false);
@@ -96,7 +97,7 @@ const CreateInvoiceDialog = ({
     const file = e.target.files?.[0];
     if (!file) return;
     setParsing(true);
-    setError("");
+    resetForm();
     try {
       const { data } = await parseInvoice(file);
       applyParseResult(data);
@@ -104,6 +105,7 @@ const CreateInvoiceDialog = ({
       setError(getErrorMessage(err) ?? t("invoices.errors.parseFailed"));
     } finally {
       setParsing(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -150,6 +152,7 @@ const CreateInvoiceDialog = ({
             <Label>{t("invoices.form.uploadFile")}</Label>
             <div className="flex items-center gap-2">
               <Input
+                ref={fileInputRef}
                 type="file"
                 accept=".pdf,.xml,.ofd"
                 onChange={handleFileUpload}
