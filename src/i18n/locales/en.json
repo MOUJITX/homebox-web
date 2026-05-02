@@ -309,6 +309,7 @@
       "activeDate": "Active Date",
       "warrantyPeriod": "Warranty Period (days)",
       "warrantyPeriodPlaceholder": "Enter number of days",
+      "warrantyPeriodUnit": "days",
       "expirationDate": "Expiration Date",
       "warrantyHint": "Fill in exactly 2 of the 3 fields below — the third will be auto-calculated.",
       "note": "Note",
@@ -423,7 +424,14 @@
     "errors": {
       "createFailed": "Failed to create asset",
       "updateFailed": "Failed to update asset",
-      "deleteFailed": "Failed to delete asset"
+      "deleteFailed": "Failed to delete asset",
+      "loadFailed": "Failed to load asset details"
+    },
+    "detail": {
+      "title": "Asset Details",
+      "parentAsset": "Parent Asset",
+      "createdAt": "Created",
+      "updatedAt": "Updated"
     }
   },
   "invoices": {

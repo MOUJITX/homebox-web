@@ -195,6 +195,7 @@
       "activeDate": "生效日期",
       "warrantyPeriod": "保修期（天）",
       "warrantyPeriodPlaceholder": "输入天数",
+      "warrantyPeriodUnit": "天",
       "expirationDate": "到期日期",
       "warrantyHint": "填写以下3个字段中的任意2个，第3个将自动计算。",
       "note": "备注",
@@ -309,7 +310,14 @@
     "errors": {
       "createFailed": "创建资产失败",
       "updateFailed": "更新资产失败",
-      "deleteFailed": "删除资产失败"
+      "deleteFailed": "删除资产失败",
+      "loadFailed": "加载资产详情失败"
+    },
+    "detail": {
+      "title": "资产详情",
+      "parentAsset": "父资产",
+      "createdAt": "创建时间",
+      "updatedAt": "更新时间"
     }
   },
   "invoices": {

@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   PlusIcon,
@@ -7,8 +7,6 @@ import {
   SearchIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
   MapPinIcon,
   StoreIcon,
   TagIcon,
@@ -40,7 +38,7 @@ import {
 import CreateAssetDialog from "@/components/assets/CreateAssetDialog";
 import EditAssetDialog from "@/components/assets/EditAssetDialog";
 import DeleteAssetDialog from "@/components/assets/DeleteAssetDialog";
-import AssetExpandedRow from "@/components/assets/AssetExpandedRow";
+import AssetDetailDrawer from "@/components/assets/AssetDetailDrawer";
 import AssetPlaceManagerDialog from "@/components/assets/AssetPlaceManagerDialog";
 import AssetStoreManagerDialog from "@/components/assets/AssetStoreManagerDialog";
 import AssetCategoryManagerDialog from "@/components/assets/AssetCategoryManagerDialog";
@@ -96,7 +94,8 @@ const AssetsPage = () => {
   const [createOpen, setCreateOpen] = useState(false);
   const [editingAsset, setEditingAsset] = useState<Asset | null>(null);
   const [deletingAsset, setDeletingAsset] = useState<Asset | null>(null);
-  const [expandedAssetId, setExpandedAssetId] = useState<number | null>(null);
+  const [drawerAssetId, setDrawerAssetId] = useState<number | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [placeManagerOpen, setPlaceManagerOpen] = useState(false);
   const [storeManagerOpen, setStoreManagerOpen] = useState(false);
   const [categoryManagerOpen, setCategoryManagerOpen] = useState(false);
@@ -154,6 +153,15 @@ const AssetsPage = () => {
 
   const handleRefDataChanged = () => {
     void fetchRefData();
+  };
+
+  const handleOpenDrawer = (assetId: number) => {
+    setDrawerAssetId(assetId);
+    setDrawerOpen(true);
+  };
+
+  const handleNavigateToAsset = (assetId: number) => {
+    setDrawerAssetId(assetId);
   };
 
   const totalPages = pageData.totalPages;
@@ -329,7 +337,6 @@ const AssetsPage = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-8" />
               <TableHead className="w-12" />
               <TableHead>{t("assets.columns.name")}</TableHead>
               <TableHead>{t("assets.columns.barcode")}</TableHead>
@@ -346,7 +353,7 @@ const AssetsPage = () => {
           <TableBody>
             {loading && (
               <TableRow>
-                <TableCell colSpan={10} className="h-24 text-center">
+                <TableCell colSpan={9} className="h-24 text-center">
                   {t("common.loading")}
                 </TableCell>
               </TableRow>
@@ -354,7 +361,7 @@ const AssetsPage = () => {
             {!loading && pageData.content.length === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={10}
+                  colSpan={9}
                   className="h-24 text-center text-muted-foreground"
                 >
                   {t("common.noResults")}
@@ -363,88 +370,68 @@ const AssetsPage = () => {
             )}
             {!loading &&
               pageData.content.map((asset) => (
-                <Fragment key={asset.id}>
-                  <TableRow>
-                    <TableCell>
+                <TableRow
+                  key={asset.id}
+                  className="cursor-pointer"
+                  onClick={() => handleOpenDrawer(asset.id)}
+                >
+                  <TableCell>
+                    {asset.firstPictureUrl ? (
+                      <AuthImg
+                        url={asset.firstPictureUrl}
+                        alt=""
+                        className="size-8 rounded object-cover ring-1 ring-foreground/10"
+                      />
+                    ) : (
+                      <div className="size-8 rounded bg-muted" />
+                    )}
+                  </TableCell>
+                  <TableCell className="font-medium">{asset.name}</TableCell>
+                  <TableCell className="font-mono text-xs">
+                    {asset.barcode ?? "—"}
+                  </TableCell>
+                  <TableCell className="font-mono text-xs">
+                    {asset.serialNumber ?? "—"}
+                  </TableCell>
+                  <TableCell>{asset.categoryName}</TableCell>
+                  <TableCell>{asset.placeName}</TableCell>
+                  <TableCell>
+                    <Badge variant={asset.inUse ? "success" : "secondary"}>
+                      {asset.inUse
+                        ? t("assets.filters.inUse")
+                        : t("assets.filters.notInUse")}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={warrantyBadgeVariant(asset.warrantyStatus)}>
+                      {t(`assets.warranty.${asset.warrantyStatus}`)}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-1">
                       <Button
                         variant="ghost"
                         size="icon-xs"
-                        onClick={() =>
-                          setExpandedAssetId(
-                            expandedAssetId === asset.id ? null : asset.id,
-                          )
-                        }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingAsset(asset);
+                        }}
                       >
-                        {expandedAssetId === asset.id ? (
-                          <ChevronUpIcon className="size-3.5" />
-                        ) : (
-                          <ChevronDownIcon className="size-3.5" />
-                        )}
+                        <PencilIcon className="size-3.5" />
                       </Button>
-                    </TableCell>
-                    <TableCell>
-                      {asset.firstPictureUrl ? (
-                        <AuthImg
-                          url={asset.firstPictureUrl}
-                          alt=""
-                          className="size-8 rounded object-cover ring-1 ring-foreground/10"
-                        />
-                      ) : (
-                        <div className="size-8 rounded bg-muted" />
-                      )}
-                    </TableCell>
-                    <TableCell className="font-medium">{asset.name}</TableCell>
-                    <TableCell className="font-mono text-xs">
-                      {asset.barcode ?? "—"}
-                    </TableCell>
-                    <TableCell className="font-mono text-xs">
-                      {asset.serialNumber ?? "—"}
-                    </TableCell>
-                    <TableCell>{asset.categoryName}</TableCell>
-                    <TableCell>{asset.placeName}</TableCell>
-                    <TableCell>
-                      <Badge variant={asset.inUse ? "success" : "secondary"}>
-                        {asset.inUse
-                          ? t("assets.filters.inUse")
-                          : t("assets.filters.notInUse")}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={warrantyBadgeVariant(asset.warrantyStatus)}>
-                        {t(`assets.warranty.${asset.warrantyStatus}`)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon-xs"
-                          onClick={() => setEditingAsset(asset)}
-                        >
-                          <PencilIcon className="size-3.5" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon-xs"
-                          onClick={() => setDeletingAsset(asset)}
-                        >
-                          <TrashIcon className="size-3.5" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                  {expandedAssetId === asset.id && (
-                    <AssetExpandedRow
-                      asset={asset}
-                      colSpan={10}
-                      onAssetUpdated={fetchAssets}
-                      categories={categories}
-                      places={places}
-                      stores={stores}
-                      onRefDataChanged={handleRefDataChanged}
-                    />
-                  )}
-                </Fragment>
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeletingAsset(asset);
+                        }}
+                      >
+                        <TrashIcon className="size-3.5" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
               ))}
           </TableBody>
         </Table>
@@ -503,6 +490,20 @@ const AssetsPage = () => {
         asset={deletingAsset}
         onClose={() => setDeletingAsset(null)}
         onSuccess={fetchAssets}
+      />
+      <AssetDetailDrawer
+        assetId={drawerAssetId}
+        open={drawerOpen}
+        onClose={() => {
+          setDrawerOpen(false);
+          setDrawerAssetId(null);
+        }}
+        onNavigateToAsset={handleNavigateToAsset}
+        onRefresh={fetchAssets}
+        categories={categories}
+        places={places}
+        stores={stores}
+        onRefDataChanged={handleRefDataChanged}
       />
       <AssetCategoryManagerDialog
         open={categoryManagerOpen}

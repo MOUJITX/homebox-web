@@ -31,6 +31,9 @@ export interface Asset {
   note: string | null;
   firstPictureUrl: string | null;
   subAssetCount: number;
+  parentId: number | null;
+  parentName: string | null;
+  parentFirstPictureUrl: string | null;
   createdAt: string;
   updatedAt: string;
 }
