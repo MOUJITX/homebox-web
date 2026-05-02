@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { SearchIcon, LinkIcon } from "lucide-react";
-import type { Invoice } from "@/api/invoices";
+import type { Invoice, InvoiceType, InvoiceStatus } from "@/api/invoices";
 import { getInvoices } from "@/api/invoices";
+import { INVOICE_TYPES, INVOICE_STATUSES } from "@/components/invoices/constants";
 import { bindInvoiceToAsset } from "@/api/assetInvoices";
 import { getErrorMessage } from "@/lib/error";
 import { formatDate, formatCurrency } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,6 +16,13 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectTrigger,
+  SelectPopup,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 import { useDebounce } from "@/hooks/useDebounce";
 
 interface BindInvoiceDialogProps {
@@ -26,19 +33,12 @@ interface BindInvoiceDialogProps {
   readonly onSuccess: () => void;
 }
 
-const statusBadgeVariant = (status: string): "success" | "destructive" | "secondary" => {
-  switch (status) {
-    case "NORMAL": return "success";
-    case "VOIDED": return "destructive";
-    case "RED_FLUSHED": return "secondary";
-    default: return "secondary";
-  }
-};
-
 const BindInvoiceDialog = ({ assetId, boundInvoiceIds, open, onClose, onSuccess }: BindInvoiceDialogProps) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
+  const [filterType, setFilterType] = useState<InvoiceType | null>(null);
+  const [filterStatus, setFilterStatus] = useState<InvoiceStatus | null>(null);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -52,6 +52,8 @@ const BindInvoiceDialog = ({ assetId, boundInvoiceIds, open, onClose, onSuccess 
     try {
       const { data } = await getInvoices({
         search: debouncedSearch || undefined,
+        invoiceType: filterType ?? undefined,
+        invoiceStatus: filterStatus ?? undefined,
         page,
         size: 10,
         sortBy: "createdAt",
@@ -62,7 +64,7 @@ const BindInvoiceDialog = ({ assetId, boundInvoiceIds, open, onClose, onSuccess 
     } finally {
       setLoading(false);
     }
-  }, [debouncedSearch, page]);
+  }, [debouncedSearch, filterType, filterStatus, page]);
 
   useEffect(() => {
     if (open) {
@@ -72,10 +74,12 @@ const BindInvoiceDialog = ({ assetId, boundInvoiceIds, open, onClose, onSuccess 
 
   useEffect(() => {
     setPage(0);
-  }, [debouncedSearch]);
+  }, [debouncedSearch, filterType, filterStatus]);
 
   const resetAndClose = () => {
     setSearch("");
+    setFilterType(null);
+    setFilterStatus(null);
     setSelectedId(null);
     setError("");
     setPage(0);
@@ -106,13 +110,67 @@ const BindInvoiceDialog = ({ assetId, boundInvoiceIds, open, onClose, onSuccess 
           <DialogTitle>{t("assets.invoices.bindDialog.title")}</DialogTitle>
         </DialogHeader>
 
-        <div className="flex items-center gap-2">
-          <SearchIcon className="size-4 text-muted-foreground shrink-0" />
-          <Input
-            placeholder={t("assets.invoices.bindDialog.search")}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <SearchIcon className="size-4 text-muted-foreground shrink-0" />
+            <Input
+              placeholder={t("assets.invoices.bindDialog.search")}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <Select
+                value={filterType}
+                onValueChange={(v) => setFilterType(v)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={t("invoices.filters.allTypes")}>
+                    {() =>
+                      filterType == null
+                        ? t("invoices.filters.allTypes")
+                        : t(`invoices.type.${filterType}`)
+                    }
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectPopup>
+                  <SelectItem value={null}>{t("invoices.filters.allTypes")}</SelectItem>
+                  {INVOICE_TYPES.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {t(`invoices.type.${type}`)}
+                    </SelectItem>
+                  ))}
+                </SelectPopup>
+              </Select>
+            </div>
+            <div className="flex-1">
+              <Select
+                value={filterStatus}
+                onValueChange={(v) => setFilterStatus(v)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={t("invoices.filters.allStatuses")}>
+                    {() =>
+                      filterStatus == null
+                        ? t("invoices.filters.allStatuses")
+                        : t(`invoices.status.${filterStatus}`)
+                    }
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectPopup>
+                  <SelectItem value={null}>
+                    {t("invoices.filters.allStatuses")}
+                  </SelectItem>
+                  {INVOICE_STATUSES.map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {t(`invoices.status.${status}`)}
+                    </SelectItem>
+                  ))}
+                </SelectPopup>
+              </Select>
+            </div>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto min-h-0">
@@ -141,17 +199,14 @@ const BindInvoiceDialog = ({ assetId, boundInvoiceIds, open, onClose, onSuccess 
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 min-w-0">
-                      <span className="font-mono text-xs truncate">
-                        {inv.invoiceNumber || `#${inv.id}`}
-                      </span>
                       {inv.invoiceDate && (
                         <span className="text-muted-foreground text-xs">
                           {formatDate(inv.invoiceDate)}
                         </span>
                       )}
-                      <Badge variant={statusBadgeVariant(inv.invoiceStatus)} className="text-xs">
-                        {t(`invoices.status.${inv.invoiceStatus}`)}
-                      </Badge>
+                      <span className="text-xs truncate">
+                        {inv.sellerName ?? t(`invoices.type.${inv.invoiceType}`)}
+                      </span>
                     </div>
                     {inv.totalAmount != null && (
                       <span className="text-xs font-medium shrink-0">
