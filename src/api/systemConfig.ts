@@ -1,5 +1,13 @@
 import axios from "@/api/axios";
 
+export interface AiModel {
+  id: string;
+  name: string;
+  apiUrl: string;
+  apiKey: string;
+  model: string;
+}
+
 export interface SystemConfigItem {
   key: string;
   value: string;

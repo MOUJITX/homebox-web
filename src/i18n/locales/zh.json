@@ -561,20 +561,42 @@
       "title": "AI 配置",
       "description": "配置 AI 服务用于发票解析。更改立即生效。",
       "fields": {
-        "apiUrl": "API 地址",
-        "apiKey": "API 密钥",
-        "model": "模型",
+        "model": "AI 模型",
         "systemPrompt": "系统提示词"
       },
       "placeholders": {
-        "apiUrl": "https://api.openai.com/v1",
-        "apiKey": "输入 API 密钥",
-        "model": "gpt-4o",
+        "model": "选择一个 AI 模型",
         "systemPrompt": "留空则使用默认系统提示词"
       },
+      "noModels": "暂无模型，请点击 + 添加",
       "testConnection": "测试连接",
       "testSuccess": "AI 连接成功",
-      "testFailed": "AI 连接失败：{{message}}"
+      "testFailed": "AI 连接失败：{{message}}",
+      "models": {
+        "title": "AI 模型管理",
+        "description": "添加、编辑和删除 AI 模型配置。",
+        "addModel": "添加模型",
+        "editModel": "编辑模型",
+        "add": "添加",
+        "columns": {
+          "name": "名称",
+          "apiUrl": "API 地址",
+          "model": "模型",
+          "actions": "操作"
+        },
+        "fields": {
+          "name": "模型名称",
+          "apiUrl": "API 地址",
+          "apiKey": "API 密钥",
+          "model": "模型标识"
+        },
+        "placeholders": {
+          "name": "如：GPT-4o",
+          "apiUrl": "https://api.openai.com/v1",
+          "apiKey": "输入 API 密钥",
+          "model": "如：gpt-4o"
+        }
+      }
     },
     "saveSuccess": "设置保存成功",
     "saveFailed": "设置保存失败"

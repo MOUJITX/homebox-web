@@ -548,20 +548,42 @@
       "title": "AI Configuration",
       "description": "Configure AI service for invoice parsing. Changes take effect immediately.",
       "fields": {
-        "apiUrl": "API URL",
-        "apiKey": "API Key",
-        "model": "Model",
+        "model": "AI Model",
         "systemPrompt": "System Prompt"
       },
       "placeholders": {
-        "apiUrl": "https://api.openai.com/v1",
-        "apiKey": "Enter API Key",
-        "model": "gpt-4o",
+        "model": "Select an AI model",
         "systemPrompt": "Leave empty to use the default system prompt"
       },
+      "noModels": "No models configured. Click + to add one.",
       "testConnection": "Test Connection",
       "testSuccess": "AI connection successful",
-      "testFailed": "AI connection failed: {{message}}"
+      "testFailed": "AI connection failed: {{message}}",
+      "models": {
+        "title": "AI Model Management",
+        "description": "Add, edit, and delete AI model configurations.",
+        "addModel": "Add Model",
+        "editModel": "Edit Model",
+        "add": "Add",
+        "columns": {
+          "name": "Name",
+          "apiUrl": "API URL",
+          "model": "Model",
+          "actions": "Actions"
+        },
+        "fields": {
+          "name": "Model Name",
+          "apiUrl": "API URL",
+          "apiKey": "API Key",
+          "model": "Model Identifier"
+        },
+        "placeholders": {
+          "name": "e.g. GPT-4o",
+          "apiUrl": "https://api.openai.com/v1",
+          "apiKey": "Enter API Key",
+          "model": "e.g. gpt-4o"
+        }
+      }
     },
     "saveSuccess": "Settings saved successfully",
     "saveFailed": "Failed to save settings"

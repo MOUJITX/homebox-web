@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { PlusIcon } from "lucide-react";
 import {
   getSystemConfigGroup,
   saveSystemConfigGroup,
   testQiniuConnection,
   testAiConnection,
   type SystemConfigItem,
+  type AiModel,
 } from "@/api/systemConfig";
 import { getErrorMessage } from "@/lib/error";
 import { Button } from "@/components/ui/button";
@@ -19,7 +21,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectPopup,
+  SelectItem,
+} from "@/components/ui/select";
 import MaskedInput from "@/components/settings/MaskedInput";
+import AiModelsDialog from "@/components/settings/AiModelsDialog";
 
 interface ConfigGroupCardProps {
   readonly group: string;
@@ -155,6 +165,180 @@ const ConfigGroupCard = ({
   );
 };
 
+const AiConfigCard = () => {
+  const { t } = useTranslation();
+  const [models, setModels] = useState<AiModel[]>([]);
+  const [activeModelId, setActiveModelId] = useState("");
+  const [systemPrompt, setSystemPrompt] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [testing, setTesting] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const fetchConfig = useCallback(async () => {
+    try {
+      const { data } = await getSystemConfigGroup("ai");
+      const map: Record<string, string> = {};
+      for (const item of data.items) {
+        map[item.key] = item.value;
+      }
+      try {
+        setModels(map["ai.models"] ? JSON.parse(map["ai.models"]) : []);
+      } catch {
+        setModels([]);
+      }
+      setActiveModelId(map["ai.active-model"] ?? "");
+      setSystemPrompt(map["ai.system-prompt"] ?? "");
+    } catch {
+      // handled by interceptor
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void fetchConfig();
+  }, [fetchConfig]);
+
+  const handleSave = async () => {
+    if (saving) return;
+    setSaving(true);
+    try {
+      const payload: Record<string, string> = {
+        "ai.models": JSON.stringify(models),
+        "ai.active-model": activeModelId,
+        "ai.system-prompt": systemPrompt,
+      };
+      await saveSystemConfigGroup("ai", payload);
+      toast.success(t("settings.saveSuccess"));
+      await fetchConfig();
+    } catch (err) {
+      toast.error(getErrorMessage(err) ?? t("settings.saveFailed"));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleTest = async () => {
+    if (testing) return;
+    setTesting(true);
+    try {
+      const { data } = await testAiConnection();
+      if (data.success) {
+        toast.success(t("settings.ai.testSuccess"));
+      } else {
+        toast.error(t("settings.ai.testFailed", { message: data.message }));
+      }
+    } catch (err) {
+      toast.error(t("settings.ai.testFailed", { message: getErrorMessage(err) ?? "" }));
+    } finally {
+      setTesting(false);
+    }
+  };
+
+  const handleModelsSave = async (updatedModels: AiModel[]) => {
+    setModels(updatedModels);
+    // If active model was deleted, clear selection
+    if (activeModelId && !updatedModels.find((m) => m.id === activeModelId)) {
+      setActiveModelId("");
+    }
+    // Persist models list immediately
+    await saveSystemConfigGroup("ai", { "ai.models": JSON.stringify(updatedModels) });
+  };
+
+  if (loading) {
+    return (
+      <Card>
+        <CardContent className="py-8 text-center text-muted-foreground">
+          {t("common.loading")}
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("settings.ai.title")}</CardTitle>
+          <CardDescription>{t("settings.ai.description")}</CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          {/* AI Model selector */}
+          <div className="grid gap-2">
+            <Label>{t("settings.ai.fields.model")}</Label>
+            <div className="flex gap-2">
+              <div className="flex-1">
+                <Select
+                  value={activeModelId}
+                  onValueChange={(val) => setActiveModelId(val as string)}
+                >
+                  <SelectTrigger>
+                    <SelectValue>
+                      {activeModelId
+                        ? models.find((m) => m.id === activeModelId)?.name
+                        : t("settings.ai.placeholders.model")}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectPopup>
+                    {models.length === 0 ? (
+                      <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                        {t("settings.ai.noModels")}
+                      </div>
+                    ) : (
+                      models.map((m) => (
+                        <SelectItem key={m.id} value={m.id}>
+                          {m.name}
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectPopup>
+                </Select>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={() => setDialogOpen(true)}
+              >
+                <PlusIcon className="size-4" />
+              </Button>
+            </div>
+          </div>
+
+          {/* System Prompt */}
+          <div className="grid gap-2">
+            <Label htmlFor="ai-system-prompt">{t("settings.ai.fields.systemPrompt")}</Label>
+            <textarea
+              id="ai-system-prompt"
+              value={systemPrompt}
+              onChange={(e) => setSystemPrompt(e.target.value)}
+              placeholder={t("settings.ai.placeholders.systemPrompt")}
+              rows={6}
+              className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            />
+          </div>
+        </CardContent>
+        <CardFooter className="gap-2">
+          <Button onClick={handleSave} disabled={saving}>
+            {saving ? t("common.saving") : t("common.save")}
+          </Button>
+          <Button variant="outline" onClick={handleTest} disabled={testing}>
+            {testing ? t("common.loading") : t("settings.ai.testConnection")}
+          </Button>
+        </CardFooter>
+      </Card>
+
+      <AiModelsDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        models={models}
+        onSave={handleModelsSave}
+      />
+    </>
+  );
+};
+
 const SettingsPage = () => {
   const { t } = useTranslation();
 
@@ -168,19 +352,6 @@ const SettingsPage = () => {
       }
     } catch (err) {
       toast.error(t("settings.qiniu.testFailed", { message: getErrorMessage(err) ?? "" }));
-    }
-  };
-
-  const handleTestAi = async () => {
-    try {
-      const { data } = await testAiConnection();
-      if (data.success) {
-        toast.success(t("settings.ai.testSuccess"));
-      } else {
-        toast.error(t("settings.ai.testFailed", { message: data.message }));
-      }
-    } catch (err) {
-      toast.error(t("settings.ai.testFailed", { message: getErrorMessage(err) ?? "" }));
     }
   };
 
@@ -208,26 +379,7 @@ const SettingsPage = () => {
         }}
       />
 
-      <ConfigGroupCard
-        group="ai"
-        title={t("settings.ai.title")}
-        description={t("settings.ai.description")}
-        onTest={handleTestAi}
-        testLabel={t("settings.ai.testConnection")}
-        fieldLabels={{
-          "ai.api-url": t("settings.ai.fields.apiUrl"),
-          "ai.api-key": t("settings.ai.fields.apiKey"),
-          "ai.model": t("settings.ai.fields.model"),
-          "ai.system-prompt": t("settings.ai.fields.systemPrompt"),
-        }}
-        fieldPlaceholders={{
-          "ai.api-url": t("settings.ai.placeholders.apiUrl"),
-          "ai.api-key": t("settings.ai.placeholders.apiKey"),
-          "ai.model": t("settings.ai.placeholders.model"),
-          "ai.system-prompt": t("settings.ai.placeholders.systemPrompt"),
-        }}
-        textareaKeys={["ai.system-prompt"]}
-      />
+      <AiConfigCard />
     </div>
   );
 };
