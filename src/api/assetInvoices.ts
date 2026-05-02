@@ -9,6 +9,7 @@ export interface AssetInvoice {
   invoiceType: InvoiceType;
   invoiceStatus: InvoiceStatus;
   totalAmount: number | null;
+  sellerName: string | null;
 }
 
 export interface BoundAsset {

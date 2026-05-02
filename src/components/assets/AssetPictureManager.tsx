@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PlusIcon, TrashIcon } from "lucide-react";
+import { ImageIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { uploadAssetPicture, deleteAssetPicture } from "@/api/assetPictures";
 import { useAssetDetail } from "@/hooks/queries/useAssetDetail";
 import { useInvalidateAssets } from "@/hooks/queries/useInvalidateAssets";
@@ -41,11 +41,13 @@ const AssetPictureManager = ({ assetId }: AssetPictureManagerProps) => {
   };
 
   return (
-    <div className="grid gap-3 rounded-lg border border-dashed p-3">
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-medium">
+    <div>
+      <div className="flex items-center justify-between mb-3">
+        {" "}
+        <h4 className="text-sm font-medium flex items-center gap-1.5">
+          <ImageIcon className="size-4" />
           {t("assets.pictures.title")}
-        </span>
+        </h4>
         <Button
           variant="outline"
           size="sm"
@@ -70,9 +72,11 @@ const AssetPictureManager = ({ assetId }: AssetPictureManagerProps) => {
         <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
       )}
       {!isLoading && pictures.length === 0 && (
-        <p className="text-sm text-muted-foreground">
-          {t("assets.pictures.empty")}
-        </p>
+        <div className="rounded-lg border border-dashed p-4">
+          <p className="text-sm text-muted-foreground text-center py-4">
+            {t("assets.pictures.empty")}
+          </p>
+        </div>
       )}
       {!isLoading && pictures.length > 0 && (
         <div className="flex flex-wrap gap-2">

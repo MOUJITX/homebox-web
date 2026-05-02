@@ -76,10 +76,12 @@ const AssetDetailDrawer = ({
   onNavigateToAsset,
 }: AssetDetailDrawerProps) => {
   const { t } = useTranslation();
-  const { data: detail, isLoading, error } = useAssetDetail(open ? assetId : null);
+  const {
+    data: detail,
+    isLoading,
+    error,
+  } = useAssetDetail(open ? assetId : null);
   const invalidate = useInvalidateAssets();
-
-  const [showPictures, setShowPictures] = useState(false);
 
   const [createSubOpen, setCreateSubOpen] = useState(false);
   const [editingAsset, setEditingAsset] = useState<Asset | null>(null);
@@ -87,8 +89,12 @@ const AssetDetailDrawer = ({
 
   const [viewingInvoiceId, setViewingInvoiceId] = useState<number | null>(null);
   const [invoiceDrawerOpen, setInvoiceDrawerOpen] = useState(false);
-  const [editingInvoice, setEditingInvoice] = useState<InvoiceDetail | null>(null);
-  const [deletingInvoice, setDeletingInvoice] = useState<InvoiceDetail | null>(null);
+  const [editingInvoice, setEditingInvoice] = useState<InvoiceDetail | null>(
+    null,
+  );
+  const [deletingInvoice, setDeletingInvoice] = useState<InvoiceDetail | null>(
+    null,
+  );
 
   const handleToggleInUse = async (subAsset: Asset) => {
     await updateAsset(subAsset.id, { inUse: !subAsset.inUse });
@@ -178,10 +184,7 @@ const AssetDetailDrawer = ({
 
             {/* Basic info */}
             <div className="grid grid-cols-2 gap-4">
-              <Field
-                label={t("assets.columns.name")}
-                value={detail.name}
-              />
+              <Field label={t("assets.columns.name")} value={detail.name} />
               <Field
                 label={t("assets.columns.barcode")}
                 value={detail.barcode}
@@ -200,16 +203,15 @@ const AssetDetailDrawer = ({
             <div className="grid grid-cols-2 gap-4">
               <Field
                 label={t("assets.form.price")}
-                value={detail.price != null ? formatCurrency(detail.price) : null}
+                value={
+                  detail.price != null ? formatCurrency(detail.price) : null
+                }
               />
               <Field
                 label={t("assets.form.shopDate")}
                 value={detail.shopDate ? formatDate(detail.shopDate) : null}
               />
-              <Field
-                label={t("assets.form.store")}
-                value={detail.storeName}
-              />
+              <Field label={t("assets.form.store")} value={detail.storeName} />
             </div>
 
             {/* Warranty info */}
@@ -221,15 +223,25 @@ const AssetDetailDrawer = ({
                 <div className="grid grid-cols-3 gap-4">
                   <Field
                     label={t("assets.form.activeDate")}
-                    value={detail.activeDate ? formatDate(detail.activeDate) : null}
+                    value={
+                      detail.activeDate ? formatDate(detail.activeDate) : null
+                    }
                   />
                   <Field
                     label={t("assets.form.warrantyPeriod")}
-                    value={detail.warrantyPeriod != null ? `${detail.warrantyPeriod} ${t("assets.form.warrantyPeriodUnit")}` : null}
+                    value={
+                      detail.warrantyPeriod != null
+                        ? `${detail.warrantyPeriod} ${t("assets.form.warrantyPeriodUnit")}`
+                        : null
+                    }
                   />
                   <Field
                     label={t("assets.form.expirationDate")}
-                    value={detail.expirationDate ? formatDate(detail.expirationDate) : null}
+                    value={
+                      detail.expirationDate
+                        ? formatDate(detail.expirationDate)
+                        : null
+                    }
                   />
                 </div>
               </div>
@@ -249,28 +261,11 @@ const AssetDetailDrawer = ({
 
             {/* Pictures */}
             <div className="grid gap-2">
-              <button
-                type="button"
-                className="flex items-center gap-1.5 text-sm font-medium hover:underline w-fit"
-                onClick={() => setShowPictures(!showPictures)}
-              >
-                <ImageIcon className="size-4" />
-                {t("assets.pictures.title")}
-                <span className="text-xs text-muted-foreground">
-                  ({detail.pictures.length})
-                </span>
-              </button>
-              {showPictures && <AssetPictureManager assetId={detail.id} />}
+              <AssetPictureManager assetId={detail.id} />
             </div>
 
             {/* Invoices */}
             <div className="grid gap-2">
-              <div className="flex items-center gap-1.5">
-                <FileTextIcon className="size-4" />
-                <span className="text-sm font-medium">
-                  {t("assets.invoices.title")}
-                </span>
-              </div>
               <AssetInvoiceManager
                 assetId={detail.id}
                 onInvoiceView={(id) => {
@@ -323,13 +318,18 @@ const AssetDetailDrawer = ({
                               <span className="font-mono">{sub.barcode}</span>
                             )}
                             {sub.serialNumber && (
-                              <span className="font-mono">{sub.serialNumber}</span>
+                              <span className="font-mono">
+                                {sub.serialNumber}
+                              </span>
                             )}
                           </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
-                        <Badge variant={warrantyBadgeVariant(sub.warrantyStatus)} className="text-xs">
+                        <Badge
+                          variant={warrantyBadgeVariant(sub.warrantyStatus)}
+                          className="text-xs"
+                        >
                           {t(`assets.warranty.${sub.warrantyStatus}`)}
                         </Badge>
                         <Button
@@ -373,7 +373,10 @@ const AssetDetailDrawer = ({
               <PencilIcon className="size-3.5" />
               {t("assets.edit")}
             </Button>
-            <Button variant="destructive" onClick={() => setDeletingAsset(detail)}>
+            <Button
+              variant="destructive"
+              onClick={() => setDeletingAsset(detail)}
+            >
               <TrashIcon className="size-3.5" />
               {t("assets.delete")}
             </Button>
@@ -393,7 +396,7 @@ const AssetDetailDrawer = ({
         <EditAssetDialog
           open={!!editingAsset}
           asset={editingAsset}
-          assetDetail={editingAsset ? detail ?? undefined : undefined}
+          assetDetail={editingAsset ? (detail ?? undefined) : undefined}
           onClose={() => setEditingAsset(null)}
           onSuccess={() => {
             void invalidate.invalidateDetail(assetId!);
