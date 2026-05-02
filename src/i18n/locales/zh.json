@@ -452,9 +452,44 @@
     "saving": "正在保存…"
   },
   "dashboard": {
-    "placeholder": "这是一个占位符页面。功能即将推出。",
     "title": "仪表盘",
-    "welcome": "欢迎来到Homebox"
+    "stats": {
+      "itemCount": "物品总数",
+      "assetCount": "资产数量",
+      "totalAssetPrice": "资产总价值",
+      "invoiceCount": "发票总数"
+    },
+    "items": {
+      "title": "物品",
+      "expiringSoon": "即将过期",
+      "inUse": "使用中",
+      "viewMore": "查看更多",
+      "empty": "暂无数据",
+      "columns": {
+        "productName": "商品名称",
+        "category": "分类",
+        "brand": "品牌",
+        "expirationDate": "到期日期",
+        "daysLeft": "剩余天数"
+      }
+    },
+    "assets": {
+      "title": "资产",
+      "warrantyExpiring": "保修即将到期",
+      "inUse": "使用中",
+      "viewMore": "查看更多",
+      "empty": "暂无数据",
+      "columns": {
+        "name": "名称",
+        "category": "分类",
+        "place": "位置",
+        "price": "价格",
+        "shopDate": "购买日期",
+        "expirationDate": "到期日期",
+        "daysLeft": "剩余天数",
+        "warranty": "保修"
+      }
+    }
   },
   "login": {
     "description": "输入您的凭据以继续",

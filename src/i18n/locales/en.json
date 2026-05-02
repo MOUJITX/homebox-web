@@ -42,8 +42,43 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Welcome to Homebox",
-    "placeholder": "This is a placeholder page. Features coming soon."
+    "stats": {
+      "itemCount": "Total Items",
+      "assetCount": "Total Assets",
+      "totalAssetPrice": "Total Asset Value",
+      "invoiceCount": "Total Invoices"
+    },
+    "items": {
+      "title": "Items",
+      "expiringSoon": "Expiring Soon",
+      "inUse": "In Use",
+      "viewMore": "View More",
+      "empty": "No data",
+      "columns": {
+        "productName": "Product",
+        "category": "Category",
+        "brand": "Brand",
+        "expirationDate": "Expires",
+        "daysLeft": "Days Left"
+      }
+    },
+    "assets": {
+      "title": "Assets",
+      "warrantyExpiring": "Warranty Expiring",
+      "inUse": "In Use",
+      "viewMore": "View More",
+      "empty": "No data",
+      "columns": {
+        "name": "Name",
+        "category": "Category",
+        "place": "Place",
+        "price": "Price",
+        "shopDate": "Purchase Date",
+        "expirationDate": "Expires",
+        "daysLeft": "Days Left",
+        "warranty": "Warranty"
+      }
+    }
   },
   "members": {
     "search": "Search members…",

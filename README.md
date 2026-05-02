@@ -49,7 +49,11 @@ yarn preview
 
 ### Dashboard
 
-- **Overview** — landing page at `/dashboard` after login
+- **Overview** — landing page at `/dashboard` after login with aggregated data
+- **Stats cards** — total items, total assets, total asset value, total invoices
+- **Items panel** — tabbed view of expiring-soon items (sorted by expiration date) and in-use items (sorted by creation date), max 10 per tab with "View More" link to expiration page
+- **Assets panel** — tabbed view of warranty-expiring assets (sorted by expiration date) and in-use assets (sorted by purchase date), max 10 per tab with "View More" link to assets page
+- **Single API call** — all dashboard data fetched via `GET /api/dashboard`
 
 ### Goods Expiration Management
 
@@ -113,6 +117,7 @@ src/
 ├── api/                  # Axios instance and API call functions
 │   ├── auth.ts           # Authentication API
 │   ├── axios.ts          # Axios instance with interceptors
+│   ├── dashboard.ts      # Dashboard API
 │   ├── files.ts          # File management API
 │   ├── goodBrands.ts     # Good brands API
 │   ├── goodCategories.ts # Good categories API
@@ -147,7 +152,7 @@ src/
 ├── providers/            # React providers (QueryProvider)
 ├── contexts/             # React context providers (AuthContext)
 ├── hooks/                # Custom hooks
-│   └── queries/          # React Query hooks (assetKeys, useAssets, useAssetDetail, etc.)
+│   └── queries/          # React Query hooks (dashboardKeys, useDashboard, assetKeys, useAssets, etc.)
 ├── i18n/                 # i18next config and locale files
 │   └── locales/          # Translation JSON files
 ├── lib/                  # Utility functions (error, jwt, password, utils)
