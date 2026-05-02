@@ -5,8 +5,6 @@ import {
   TrashIcon,
   ChevronLeftIcon,
   ArrowUpIcon,
-  ImageIcon,
-  FileTextIcon,
   PlusIcon,
   ToggleLeftIcon,
   ToggleRightIcon,

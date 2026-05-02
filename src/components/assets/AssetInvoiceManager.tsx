@@ -14,7 +14,6 @@ import {
 import type { InvoiceDetail } from "@/api/invoices";
 import { useAssetInvoices } from "@/hooks/queries/useAssetInvoices";
 import { useInvalidateAssets } from "@/hooks/queries/useInvalidateAssets";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import CreateInvoiceDialog from "@/components/invoices/CreateInvoiceDialog";
@@ -24,21 +23,6 @@ interface AssetInvoiceManagerProps {
   readonly assetId: number;
   readonly onInvoiceView: (invoiceId: number) => void;
 }
-
-const statusBadgeVariant = (
-  status: string,
-): "success" | "destructive" | "secondary" => {
-  switch (status) {
-    case "NORMAL":
-      return "success";
-    case "VOIDED":
-      return "destructive";
-    case "RED_FLUSHED":
-      return "secondary";
-    default:
-      return "secondary";
-  }
-};
 
 const AssetInvoiceManager = ({
   assetId,
