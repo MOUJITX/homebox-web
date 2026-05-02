@@ -123,6 +123,17 @@ const EditInvoiceDialog = ({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid gap-4">
+          {invoice.previewImage && (
+            <div className="grid gap-2">
+              <Label>{t("invoices.detail.preview")}</Label>
+              <img
+                src={`data:image/png;base64,${invoice.previewImage}`}
+                alt={t("invoices.detail.preview")}
+                className="w-full rounded border"
+              />
+            </div>
+          )}
+
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label>{t("invoices.form.invoiceType")}</Label>

@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { UploadIcon, TrashIcon, FileIcon } from "lucide-react";
+import { UploadIcon, TrashIcon, FileIcon, DownloadIcon } from "lucide-react";
 import type { InvoiceAttachment } from "@/api/invoices";
 import {
   uploadInvoiceAttachment,
@@ -9,9 +9,15 @@ import {
 import { downloadAuthFile } from "@/hooks/useAuthImage";
 import { Button } from "@/components/ui/button";
 
+interface PrimaryFile {
+  filename: string;
+  url: string;
+}
+
 interface InvoiceAttachmentManagerProps {
   readonly invoiceId: number;
   readonly attachments: InvoiceAttachment[];
+  readonly primaryFile?: PrimaryFile | null;
   readonly onChanged: () => void;
 }
 
@@ -24,6 +30,7 @@ const formatFileSize = (bytes: number) => {
 const InvoiceAttachmentManager = ({
   invoiceId,
   attachments,
+  primaryFile,
   onChanged,
 }: InvoiceAttachmentManagerProps) => {
   const { t } = useTranslation();
@@ -78,16 +85,36 @@ const InvoiceAttachmentManager = ({
             : t("invoices.attachments.upload")}
         </Button>
       </div>
-      {attachments.length === 0 ? (
+      {!primaryFile && attachments.length === 0 ? (
         <p className="text-sm text-muted-foreground">
           {t("invoices.attachments.empty")}
         </p>
       ) : (
         <div className="grid gap-2">
+          {primaryFile && (
+            <div className="flex items-center gap-3 overflow-hidden rounded-lg border p-2">
+              <FileIcon className="size-4 shrink-0 text-muted-foreground" />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm">{primaryFile.filename}</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                onClick={() =>
+                  downloadAuthFile(
+                    primaryFile.url.replace("/preview", "/download"),
+                    primaryFile.filename,
+                  )
+                }
+              >
+                <DownloadIcon className="size-3.5" />
+              </Button>
+            </div>
+          )}
           {attachments.map((att) => (
             <div
               key={att.id}
-              className="flex items-center gap-3 rounded-lg border p-2"
+              className="flex items-center gap-3 overflow-hidden rounded-lg border p-2"
             >
               <FileIcon className="size-4 shrink-0 text-muted-foreground" />
               <div className="min-w-0 flex-1">
@@ -103,7 +130,7 @@ const InvoiceAttachmentManager = ({
                   downloadAuthFile(att.url, att.filename)
                 }
               >
-                <FileIcon className="size-3.5" />
+                <DownloadIcon className="size-3.5" />
               </Button>
               <Button
                 variant="ghost"

@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PencilIcon, TrashIcon, DownloadIcon, EyeIcon } from "lucide-react";
+import { PencilIcon, TrashIcon } from "lucide-react";
 import type { InvoiceDetail } from "@/api/invoices";
 import { getInvoiceById } from "@/api/invoices";
-import { downloadAuthFile } from "@/hooks/useAuthImage";
 import { getErrorMessage } from "@/lib/error";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -107,30 +106,15 @@ const InvoiceDetailDrawer = ({
     onRefresh();
   };
 
-  const handlePreview = () => {
-    if (invoice?.fileUrl) {
-      window.open(invoice.fileUrl, "_blank");
-    }
-  };
-
-  const handleDownload = () => {
-    if (invoice?.fileUrl && invoice.invoiceNumber) {
-      downloadAuthFile(
-        invoice.fileUrl.replace("/preview", "/download"),
-        invoice.invoiceNumber,
-      );
-    }
-  };
-
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
       <SheetContent className="w-full sm:max-w-md">
-        <SheetHeader>
+        <SheetHeader className="shrink-0">
           <SheetTitle>{t("invoices.detail.title")}</SheetTitle>
         </SheetHeader>
 
         {loading && (
-          <div className="flex items-center justify-center py-12">
+          <div className="flex flex-1 items-center justify-center">
             <span className="text-sm text-muted-foreground">
               {t("common.loading")}
             </span>
@@ -138,7 +122,7 @@ const InvoiceDetailDrawer = ({
         )}
 
         {!loading && error && (
-          <div className="flex items-center justify-center py-12">
+          <div className="flex flex-1 items-center justify-center">
             <span className="text-sm text-destructive">{error}</span>
           </div>
         )}
@@ -219,27 +203,31 @@ const InvoiceDetailDrawer = ({
               </div>
             )}
 
-            {invoice.fileUrl && (
+            {invoice.previewImage && (
               <div className="grid gap-2">
                 <h4 className="text-sm font-medium">
-                  {t("invoices.detail.file")}
+                  {t("invoices.detail.preview")}
                 </h4>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={handlePreview}>
-                    <EyeIcon className="size-3.5" />
-                    {t("invoices.detail.preview")}
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={handleDownload}>
-                    <DownloadIcon className="size-3.5" />
-                    {t("invoices.detail.download")}
-                  </Button>
-                </div>
+                <img
+                  src={`data:image/png;base64,${invoice.previewImage}`}
+                  alt={t("invoices.detail.preview")}
+                  className="w-full rounded border cursor-pointer"
+                  onClick={() => invoice.fileUrl && window.open(invoice.fileUrl, "_blank")}
+                />
               </div>
             )}
 
             <InvoiceAttachmentManager
               invoiceId={invoice.id}
               attachments={invoice.attachments}
+              primaryFile={
+                invoice.fileUrl
+                  ? {
+                      filename: invoice.invoiceNumber || t("invoices.detail.file"),
+                      url: invoice.fileUrl,
+                    }
+                  : null
+              }
               onChanged={handleAttachmentsChanged}
             />
 
@@ -257,7 +245,7 @@ const InvoiceDetailDrawer = ({
         )}
 
         {!loading && invoice && (
-          <SheetFooter>
+          <SheetFooter className="shrink-0">
             <Button variant="outline" onClick={() => onEdit(invoice)}>
               <PencilIcon className="size-3.5" />
               {t("invoices.edit")}

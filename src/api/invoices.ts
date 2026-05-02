@@ -47,6 +47,7 @@ export interface InvoiceDetail extends Invoice {
   remark: string | null;
   fileId: number | null;
   fileUrl: string | null;
+  previewImage: string | null;
   attachments: InvoiceAttachment[];
 }
 
@@ -64,6 +65,7 @@ export interface InvoiceParseResult {
   totalAmount: number | null;
   remark: string | null;
   fileId: number | null;
+  previewImage: string | null;
 }
 
 export interface Page<T> {
@@ -103,6 +105,7 @@ export interface CreateInvoiceRequest {
   totalAmount: number;
   remark?: string;
   fileId?: number;
+  previewImage?: string;
 }
 
 export interface UpdateInvoiceRequest {

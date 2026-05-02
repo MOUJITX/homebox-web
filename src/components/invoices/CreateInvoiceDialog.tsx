@@ -49,6 +49,7 @@ const CreateInvoiceDialog = ({
   const [totalAmount, setTotalAmount] = useState("");
   const [remark, setRemark] = useState("");
   const [fileId, setFileId] = useState<number | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
@@ -69,6 +70,7 @@ const CreateInvoiceDialog = ({
     setTotalAmount("");
     setRemark("");
     setFileId(null);
+    setPreviewImage(null);
     setError("");
   };
 
@@ -91,6 +93,7 @@ const CreateInvoiceDialog = ({
     if (result.totalAmount != null) setTotalAmount(String(result.totalAmount));
     if (result.remark) setRemark(result.remark);
     if (result.fileId) setFileId(result.fileId);
+    if (result.previewImage) setPreviewImage(result.previewImage);
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,6 +133,7 @@ const CreateInvoiceDialog = ({
         totalAmount: Number.parseFloat(totalAmount),
         remark: remark || undefined,
         fileId: fileId ?? undefined,
+        previewImage: previewImage ?? undefined,
       });
       handleClose();
       onSuccess();
@@ -169,6 +173,17 @@ const CreateInvoiceDialog = ({
               {t("invoices.form.uploadHint")}
             </p>
           </div>
+
+          {previewImage && (
+            <div className="grid gap-2">
+              <Label>{t("invoices.detail.preview")}</Label>
+              <img
+                src={`data:image/png;base64,${previewImage}`}
+                alt={t("invoices.detail.preview")}
+                className="w-full rounded border"
+              />
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
