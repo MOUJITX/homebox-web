@@ -14,6 +14,7 @@ Homebox Client — a web client application for Homebox (home inventory manageme
 - **Build Tool**: Vite 8
 - **UI**: Tailwind CSS 4 + Shadcn UI (Base UI primitives)
 - **Routing**: React Router 7 (library mode)
+- **Data Fetching**: TanStack React Query (caching, background refetch, stale-while-revalidate)
 - **HTTP Client**: Axios
 - **JWT**: jwt-decode
 - **Icons**: Lucide React

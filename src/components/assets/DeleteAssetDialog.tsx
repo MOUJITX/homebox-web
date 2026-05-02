@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { Asset } from "@/api/assets";
 import { deleteAsset } from "@/api/assets";
 import { getErrorMessage } from "@/lib/error";
+import { useInvalidateAssets } from "@/hooks/queries/useInvalidateAssets";
 import {
   Dialog,
   DialogContent,
@@ -17,7 +18,7 @@ interface DeleteAssetDialogProps {
   readonly open: boolean;
   readonly asset: Asset | null;
   readonly onClose: () => void;
-  readonly onSuccess: () => void;
+  readonly onSuccess?: () => void;
 }
 
 const DeleteAssetDialog = ({
@@ -27,6 +28,7 @@ const DeleteAssetDialog = ({
   onSuccess,
 }: DeleteAssetDialogProps) => {
   const { t } = useTranslation();
+  const invalidate = useInvalidateAssets();
   const [error, setError] = useState("");
   const [deleting, setDeleting] = useState(false);
 
@@ -43,7 +45,8 @@ const DeleteAssetDialog = ({
     try {
       await deleteAsset(asset.id);
       handleClose();
-      onSuccess();
+      void invalidate.invalidateList();
+      onSuccess?.();
     } catch (err) {
       setError(getErrorMessage(err) ?? t("assets.errors.deleteFailed"));
     } finally {

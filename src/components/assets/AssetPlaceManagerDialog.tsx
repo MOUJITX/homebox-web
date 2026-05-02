@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useState, type SubmitEvent } from "react";
+import { useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon, PencilIcon, TrashIcon } from "lucide-react";
 import {
-  getAssetPlaces,
   createAssetPlace,
   updateAssetPlace,
   deleteAssetPlace,
   type AssetPlace,
 } from "@/api/assetPlaces";
 import { getErrorMessage } from "@/lib/error";
+import { useAssetPlaces } from "@/hooks/queries/useAssetPlaces";
+import { useInvalidateAssets } from "@/hooks/queries/useInvalidateAssets";
 import {
   Dialog,
   DialogContent,
@@ -32,7 +33,6 @@ import {
 interface AssetPlaceManagerDialogProps {
   readonly open: boolean;
   readonly onClose: () => void;
-  readonly onChanged: () => void;
 }
 
 type Mode = "list" | "create" | "edit";
@@ -40,31 +40,16 @@ type Mode = "list" | "create" | "edit";
 const AssetPlaceManagerDialog = ({
   open,
   onClose,
-  onChanged,
 }: AssetPlaceManagerDialogProps) => {
   const { t } = useTranslation();
-  const [places, setPlaces] = useState<AssetPlace[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: places = [], isLoading } = useAssetPlaces();
+  const invalidate = useInvalidateAssets();
   const [mode, setMode] = useState<Mode>("list");
   const [editingPlace, setEditingPlace] = useState<AssetPlace | null>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
-  const fetchPlaces = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { data } = await getAssetPlaces();
-      setPlaces(data);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (open) void fetchPlaces();
-  }, [open, fetchPlaces]);
 
   const resetForm = () => {
     setName("");
@@ -107,8 +92,7 @@ const AssetPlaceManagerDialog = ({
         await updateAssetPlace(editingPlace.id, { name, description });
       }
       resetForm();
-      void fetchPlaces();
-      onChanged();
+      void invalidate.invalidatePlaces();
     } catch (err) {
       setError(getErrorMessage(err) ?? t("assets.assetPlaces.errors.saveFailed"));
     } finally {
@@ -119,8 +103,7 @@ const AssetPlaceManagerDialog = ({
   const handleDelete = async (place: AssetPlace) => {
     try {
       await deleteAssetPlace(place.id);
-      void fetchPlaces();
-      onChanged();
+      void invalidate.invalidatePlaces();
     } catch (err) {
       setError(
         getErrorMessage(err) ?? t("assets.assetPlaces.errors.deleteFailed"),
@@ -160,14 +143,14 @@ const AssetPlaceManagerDialog = ({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {loading && (
+                  {isLoading && (
                     <TableRow>
                       <TableCell colSpan={3} className="h-16 text-center">
                         {t("common.loading")}
                       </TableCell>
                     </TableRow>
                   )}
-                  {!loading && places.length === 0 && (
+                  {!isLoading && places.length === 0 && (
                     <TableRow>
                       <TableCell
                         colSpan={3}
@@ -177,7 +160,7 @@ const AssetPlaceManagerDialog = ({
                       </TableCell>
                     </TableRow>
                   )}
-                  {!loading &&
+                  {!isLoading &&
                     places.map((p) => (
                       <TableRow key={p.id}>
                         <TableCell className="font-medium">
@@ -196,7 +179,7 @@ const AssetPlaceManagerDialog = ({
                             <Button
                               variant="ghost"
                               size="icon-xs"
-                              onClick={() => handleDelete(p)}
+                              onClick={() => void handleDelete(p)}
                             >
                               <TrashIcon className="size-3.5" />
                             </Button>

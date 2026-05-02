@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useState, type SubmitEvent } from "react";
+import { useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon, PencilIcon, TrashIcon } from "lucide-react";
 import {
-  getAssetStores,
   createAssetStore,
   updateAssetStore,
   deleteAssetStore,
   type AssetStore,
 } from "@/api/assetStores";
 import { getErrorMessage } from "@/lib/error";
+import { useAssetStores } from "@/hooks/queries/useAssetStores";
+import { useInvalidateAssets } from "@/hooks/queries/useInvalidateAssets";
 import {
   Dialog,
   DialogContent,
@@ -32,7 +33,6 @@ import {
 interface AssetStoreManagerDialogProps {
   readonly open: boolean;
   readonly onClose: () => void;
-  readonly onChanged: () => void;
 }
 
 type Mode = "list" | "create" | "edit";
@@ -42,11 +42,10 @@ const DEFAULT_CHANNELS = ["Online", "Offline", "Physical Store"];
 const AssetStoreManagerDialog = ({
   open,
   onClose,
-  onChanged,
 }: AssetStoreManagerDialogProps) => {
   const { t } = useTranslation();
-  const [stores, setStores] = useState<AssetStore[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: stores = [], isLoading } = useAssetStores();
+  const invalidate = useInvalidateAssets();
   const [mode, setMode] = useState<Mode>("list");
   const [editingStore, setEditingStore] = useState<AssetStore | null>(null);
   const [name, setName] = useState("");
@@ -54,20 +53,6 @@ const AssetStoreManagerDialog = ({
   const [customChannel, setCustomChannel] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
-  const fetchStores = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { data } = await getAssetStores();
-      setStores(data);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (open) void fetchStores();
-  }, [open, fetchStores]);
 
   const allChannels = Array.from(
     new Set([
@@ -128,8 +113,7 @@ const AssetStoreManagerDialog = ({
         await updateAssetStore(editingStore.id, { name, channel: finalChannel });
       }
       resetForm();
-      void fetchStores();
-      onChanged();
+      void invalidate.invalidateStores();
     } catch (err) {
       setError(getErrorMessage(err) ?? t("assets.assetStores.errors.saveFailed"));
     } finally {
@@ -140,8 +124,7 @@ const AssetStoreManagerDialog = ({
   const handleDelete = async (store: AssetStore) => {
     try {
       await deleteAssetStore(store.id);
-      void fetchStores();
-      onChanged();
+      void invalidate.invalidateStores();
     } catch (err) {
       setError(
         getErrorMessage(err) ?? t("assets.assetStores.errors.deleteFailed"),
@@ -179,14 +162,14 @@ const AssetStoreManagerDialog = ({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {loading && (
+                  {isLoading && (
                     <TableRow>
                       <TableCell colSpan={3} className="h-16 text-center">
                         {t("common.loading")}
                       </TableCell>
                     </TableRow>
                   )}
-                  {!loading && stores.length === 0 && (
+                  {!isLoading && stores.length === 0 && (
                     <TableRow>
                       <TableCell
                         colSpan={3}
@@ -196,7 +179,7 @@ const AssetStoreManagerDialog = ({
                       </TableCell>
                     </TableRow>
                   )}
-                  {!loading &&
+                  {!isLoading &&
                     stores.map((s) => (
                       <TableRow key={s.id}>
                         <TableCell className="font-medium">
@@ -215,7 +198,7 @@ const AssetStoreManagerDialog = ({
                             <Button
                               variant="ghost"
                               size="icon-xs"
-                              onClick={() => handleDelete(s)}
+                              onClick={() => void handleDelete(s)}
                             >
                               <TrashIcon className="size-3.5" />
                             </Button>

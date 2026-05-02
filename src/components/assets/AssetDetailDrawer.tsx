@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   PencilIcon,
@@ -11,14 +11,12 @@ import {
   ToggleLeftIcon,
   ToggleRightIcon,
 } from "lucide-react";
-import type { Asset, AssetDetail, WarrantyStatus } from "@/api/assets";
-import { getAssetById, updateAsset } from "@/api/assets";
-import type { AssetCategory } from "@/api/assetCategories";
-import type { AssetPlace } from "@/api/assetPlaces";
-import type { AssetStore } from "@/api/assetStores";
+import type { Asset, WarrantyStatus } from "@/api/assets";
+import { updateAsset } from "@/api/assets";
 import type { InvoiceDetail } from "@/api/invoices";
-import { getErrorMessage } from "@/lib/error";
 import { formatDate, formatCurrency } from "@/lib/utils";
+import { useAssetDetail } from "@/hooks/queries/useAssetDetail";
+import { useInvalidateAssets } from "@/hooks/queries/useInvalidateAssets";
 import AuthImg from "@/components/AuthImg";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -69,11 +67,6 @@ interface AssetDetailDrawerProps {
   readonly open: boolean;
   readonly onClose: () => void;
   readonly onNavigateToAsset: (id: number) => void;
-  readonly onRefresh: () => void;
-  readonly categories: AssetCategory[];
-  readonly places: AssetPlace[];
-  readonly stores: AssetStore[];
-  readonly onRefDataChanged: () => void;
 }
 
 const AssetDetailDrawer = ({
@@ -81,16 +74,10 @@ const AssetDetailDrawer = ({
   open,
   onClose,
   onNavigateToAsset,
-  onRefresh,
-  categories,
-  places,
-  stores,
-  onRefDataChanged,
 }: AssetDetailDrawerProps) => {
   const { t } = useTranslation();
-  const [detail, setDetail] = useState<AssetDetail | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { data: detail, isLoading, error } = useAssetDetail(open ? assetId : null);
+  const invalidate = useInvalidateAssets();
 
   const [showPictures, setShowPictures] = useState(false);
 
@@ -103,38 +90,10 @@ const AssetDetailDrawer = ({
   const [editingInvoice, setEditingInvoice] = useState<InvoiceDetail | null>(null);
   const [deletingInvoice, setDeletingInvoice] = useState<InvoiceDetail | null>(null);
 
-  const fetchDetail = useCallback(async () => {
-    if (!assetId) return;
-    setLoading(true);
-    setError("");
-    try {
-      const { data } = await getAssetById(assetId);
-      setDetail(data);
-    } catch (err) {
-      setError(getErrorMessage(err) ?? t("assets.errors.loadFailed"));
-    } finally {
-      setLoading(false);
-    }
-  }, [assetId, t]);
-
-  useEffect(() => {
-    if (open && assetId) {
-      void fetchDetail();
-      setShowPictures(false);
-    } else {
-      setDetail(null);
-      setError("");
-    }
-  }, [open, assetId, fetchDetail]);
-
-  const handleRefresh = () => {
-    void fetchDetail();
-    onRefresh();
-  };
-
   const handleToggleInUse = async (subAsset: Asset) => {
     await updateAsset(subAsset.id, { inUse: !subAsset.inUse });
-    handleRefresh();
+    void invalidate.invalidateDetail(assetId!);
+    void invalidate.invalidateList();
   };
 
   return (
@@ -157,7 +116,7 @@ const AssetDetailDrawer = ({
           </div>
         </SheetHeader>
 
-        {loading && (
+        {isLoading && (
           <div className="flex flex-1 items-center justify-center">
             <span className="text-sm text-muted-foreground">
               {t("common.loading")}
@@ -165,13 +124,15 @@ const AssetDetailDrawer = ({
           </div>
         )}
 
-        {!loading && error && (
+        {!isLoading && error && (
           <div className="flex flex-1 items-center justify-center">
-            <span className="text-sm text-destructive">{error}</span>
+            <span className="text-sm text-destructive">
+              {t("assets.errors.loadFailed")}
+            </span>
           </div>
         )}
 
-        {!loading && detail && (
+        {!isLoading && detail && (
           <div className="flex flex-1 flex-col gap-5 overflow-y-auto py-4">
             {/* Parent asset info for sub-assets */}
             {detail.parentId && detail.parentName && (
@@ -376,7 +337,7 @@ const AssetDetailDrawer = ({
                           size="icon-xs"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleToggleInUse(sub);
+                            void handleToggleInUse(sub);
                           }}
                         >
                           {sub.inUse ? (
@@ -406,7 +367,7 @@ const AssetDetailDrawer = ({
           </div>
         )}
 
-        {!loading && detail && (
+        {!isLoading && detail && (
           <SheetFooter className="shrink-0">
             <Button variant="outline" onClick={() => setEditingAsset(detail)}>
               <PencilIcon className="size-3.5" />
@@ -422,23 +383,22 @@ const AssetDetailDrawer = ({
         {/* Nested dialogs */}
         <CreateAssetDialog
           open={createSubOpen}
-          categories={categories}
-          places={places}
-          stores={stores}
           parentId={assetId ?? undefined}
           onClose={() => setCreateSubOpen(false)}
-          onSuccess={handleRefresh}
-          onRefDataChanged={onRefDataChanged}
+          onSuccess={() => {
+            void invalidate.invalidateDetail(assetId!);
+            void invalidate.invalidateList();
+          }}
         />
         <EditAssetDialog
           open={!!editingAsset}
           asset={editingAsset}
-          categories={categories}
-          places={places}
-          stores={stores}
+          assetDetail={editingAsset ? detail ?? undefined : undefined}
           onClose={() => setEditingAsset(null)}
-          onSuccess={handleRefresh}
-          onRefDataChanged={onRefDataChanged}
+          onSuccess={() => {
+            void invalidate.invalidateDetail(assetId!);
+            void invalidate.invalidateList();
+          }}
         />
         <DeleteAssetDialog
           open={!!deletingAsset}
@@ -447,7 +407,7 @@ const AssetDetailDrawer = ({
           onSuccess={() => {
             setDeletingAsset(null);
             onClose();
-            onRefresh();
+            void invalidate.invalidateList();
           }}
         />
 
@@ -460,7 +420,7 @@ const AssetDetailDrawer = ({
           }}
           onEdit={(inv) => setEditingInvoice(inv)}
           onDelete={(inv) => setDeletingInvoice(inv)}
-          onRefresh={() => void fetchDetail()}
+          onRefresh={() => void invalidate.invalidateDetail(assetId!)}
         />
         <EditInvoiceDialog
           open={!!editingInvoice}
@@ -468,7 +428,7 @@ const AssetDetailDrawer = ({
           onClose={() => setEditingInvoice(null)}
           onSuccess={() => {
             setEditingInvoice(null);
-            void fetchDetail();
+            void invalidate.invalidateDetail(assetId!);
           }}
         />
         <DeleteInvoiceDialog
@@ -477,7 +437,7 @@ const AssetDetailDrawer = ({
           onClose={() => setDeletingInvoice(null)}
           onSuccess={() => {
             setDeletingInvoice(null);
-            void fetchDetail();
+            void invalidate.invalidateDetail(assetId!);
           }}
         />
       </SheetContent>

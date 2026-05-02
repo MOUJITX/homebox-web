@@ -1,13 +1,14 @@
 import { useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon } from "lucide-react";
-import type { AssetCategory } from "@/api/assetCategories";
-import type { AssetPlace } from "@/api/assetPlaces";
-import type { AssetStore } from "@/api/assetStores";
-import type { Asset } from "@/api/assets";
-import { getAssetById, updateAsset } from "@/api/assets";
+import type { Asset, AssetDetail } from "@/api/assets";
+import { updateAsset } from "@/api/assets";
 import { getErrorMessage } from "@/lib/error";
 import { useWarrantyDateCalc } from "@/hooks/useWarrantyDateCalc";
+import { useAssetCategories } from "@/hooks/queries/useAssetCategories";
+import { useAssetPlaces } from "@/hooks/queries/useAssetPlaces";
+import { useAssetStores } from "@/hooks/queries/useAssetStores";
+import { useAssetDetail } from "@/hooks/queries/useAssetDetail";
 import {
   Dialog,
   DialogContent,
@@ -32,25 +33,23 @@ import AssetStoreManagerDialog from "./AssetStoreManagerDialog";
 interface EditAssetDialogProps {
   readonly open: boolean;
   readonly asset: Asset | null;
-  readonly categories: AssetCategory[];
-  readonly places: AssetPlace[];
-  readonly stores: AssetStore[];
+  readonly assetDetail?: AssetDetail;
   readonly onClose: () => void;
   readonly onSuccess: () => void;
-  readonly onRefDataChanged: () => void;
 }
 
 const EditAssetDialog = ({
   open,
   asset,
-  categories,
-  places,
-  stores,
+  assetDetail,
   onClose,
   onSuccess,
-  onRefDataChanged,
 }: EditAssetDialogProps) => {
   const { t } = useTranslation();
+  const { data: categories = [] } = useAssetCategories();
+  const { data: places = [] } = useAssetPlaces();
+  const { data: stores = [] } = useAssetStores();
+
   const [name, setName] = useState("");
   const [barcode, setBarcode] = useState("");
   const [serialNumber, setSerialNumber] = useState("");
@@ -69,6 +68,11 @@ const EditAssetDialog = ({
 
   const warranty = useWarrantyDateCalc();
 
+  // Fetch detail only when not provided as prop and asset has warranty
+  const needsFetch = open && !!asset && asset.hasWarranty && !assetDetail;
+  const { data: fetchedDetail } = useAssetDetail(needsFetch ? asset.id : null);
+  const detail = assetDetail ?? fetchedDetail;
+
   const [prevAssetId, setPrevAssetId] = useState(asset?.id);
   if (asset?.id !== prevAssetId) {
     setPrevAssetId(asset?.id);
@@ -84,19 +88,28 @@ const EditAssetDialog = ({
       setStoreId(asset.storeId);
       setHasWarranty(asset.hasWarranty);
       setNote(asset.note ?? "");
-      if (asset.hasWarranty) {
-        void getAssetById(asset.id).then(({ data: detail }) => {
-          warranty.initDates(
-            detail.activeDate ?? "",
-            detail.expirationDate ?? "",
-            detail.warrantyPeriod ?? 0,
-          );
-        });
+      if (asset.hasWarranty && detail) {
+        warranty.initDates(
+          detail.activeDate ?? "",
+          detail.expirationDate ?? "",
+          detail.warrantyPeriod ?? 0,
+        );
+      } else if (asset.hasWarranty && !detail) {
+        // Will be initialized when detail loads
       } else {
         warranty.resetDates();
       }
     }
     setError("");
+  }
+
+  // Initialize warranty dates when detail loads after asset change
+  if (asset?.hasWarranty && detail && !warranty.activeDate && !warranty.expirationDate && !warranty.warrantyPeriod) {
+    warranty.initDates(
+      detail.activeDate ?? "",
+      detail.expirationDate ?? "",
+      detail.warrantyPeriod ?? 0,
+    );
   }
 
   const handleClose = () => {
@@ -399,12 +412,10 @@ const EditAssetDialog = ({
       <AssetPlaceManagerDialog
         open={placeManagerOpen}
         onClose={() => setPlaceManagerOpen(false)}
-        onChanged={onRefDataChanged}
       />
       <AssetStoreManagerDialog
         open={storeManagerOpen}
         onClose={() => setStoreManagerOpen(false)}
-        onChanged={onRefDataChanged}
       />
     </>
   );

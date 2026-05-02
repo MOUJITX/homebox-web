@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useState, type SubmitEvent } from "react";
+import { useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon, PencilIcon, TrashIcon } from "lucide-react";
 import {
-  getAssetCategories,
   createAssetCategory,
   updateAssetCategory,
   deleteAssetCategory,
   type AssetCategory,
 } from "@/api/assetCategories";
 import { getErrorMessage } from "@/lib/error";
+import { useAssetCategories } from "@/hooks/queries/useAssetCategories";
+import { useInvalidateAssets } from "@/hooks/queries/useInvalidateAssets";
 import {
   Dialog,
   DialogContent,
@@ -32,7 +33,6 @@ import {
 interface AssetCategoryManagerDialogProps {
   readonly open: boolean;
   readonly onClose: () => void;
-  readonly onChanged: () => void;
 }
 
 type Mode = "list" | "create" | "edit";
@@ -40,11 +40,10 @@ type Mode = "list" | "create" | "edit";
 const AssetCategoryManagerDialog = ({
   open,
   onClose,
-  onChanged,
 }: AssetCategoryManagerDialogProps) => {
   const { t } = useTranslation();
-  const [categories, setCategories] = useState<AssetCategory[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: categories = [], isLoading } = useAssetCategories();
+  const invalidate = useInvalidateAssets();
   const [mode, setMode] = useState<Mode>("list");
   const [editingCategory, setEditingCategory] = useState<AssetCategory | null>(
     null,
@@ -53,20 +52,6 @@ const AssetCategoryManagerDialog = ({
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
-  const fetchCategories = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { data } = await getAssetCategories();
-      setCategories(data);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (open) void fetchCategories();
-  }, [open, fetchCategories]);
 
   const resetForm = () => {
     setName("");
@@ -112,8 +97,7 @@ const AssetCategoryManagerDialog = ({
         await updateAssetCategory(editingCategory.id, { name, description });
       }
       resetForm();
-      void fetchCategories();
-      onChanged();
+      void invalidate.invalidateCategories();
     } catch (err) {
       setError(
         getErrorMessage(err) ??
@@ -127,8 +111,7 @@ const AssetCategoryManagerDialog = ({
   const handleDelete = async (category: AssetCategory) => {
     try {
       await deleteAssetCategory(category.id);
-      void fetchCategories();
-      onChanged();
+      void invalidate.invalidateCategories();
     } catch (err) {
       setError(
         getErrorMessage(err) ??
@@ -171,14 +154,14 @@ const AssetCategoryManagerDialog = ({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {loading && (
+                  {isLoading && (
                     <TableRow>
                       <TableCell colSpan={3} className="h-16 text-center">
                         {t("common.loading")}
                       </TableCell>
                     </TableRow>
                   )}
-                  {!loading && categories.length === 0 && (
+                  {!isLoading && categories.length === 0 && (
                     <TableRow>
                       <TableCell
                         colSpan={3}
@@ -188,7 +171,7 @@ const AssetCategoryManagerDialog = ({
                       </TableCell>
                     </TableRow>
                   )}
-                  {!loading &&
+                  {!isLoading &&
                     categories.map((c) => (
                       <TableRow key={c.id}>
                         <TableCell className="font-medium">{c.name}</TableCell>
@@ -205,7 +188,7 @@ const AssetCategoryManagerDialog = ({
                             <Button
                               variant="ghost"
                               size="icon-xs"
-                              onClick={() => handleDelete(c)}
+                              onClick={() => void handleDelete(c)}
                             >
                               <TrashIcon className="size-3.5" />
                             </Button>

@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon, TrashIcon } from "lucide-react";
-import type { AssetPicture } from "@/api/assets";
-import { getAssetById } from "@/api/assets";
 import { uploadAssetPicture, deleteAssetPicture } from "@/api/assetPictures";
+import { useAssetDetail } from "@/hooks/queries/useAssetDetail";
+import { useInvalidateAssets } from "@/hooks/queries/useInvalidateAssets";
 import AuthImg from "@/components/AuthImg";
 import { Button } from "@/components/ui/button";
 
@@ -13,24 +13,12 @@ interface AssetPictureManagerProps {
 
 const AssetPictureManager = ({ assetId }: AssetPictureManagerProps) => {
   const { t } = useTranslation();
-  const [pictures, setPictures] = useState<AssetPicture[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: detail, isLoading } = useAssetDetail(assetId);
+  const invalidate = useInvalidateAssets();
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const fetchPictures = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { data } = await getAssetById(assetId);
-      setPictures(data.pictures);
-    } finally {
-      setLoading(false);
-    }
-  }, [assetId]);
-
-  useEffect(() => {
-    void fetchPictures();
-  }, [fetchPictures]);
+  const pictures = detail?.pictures ?? [];
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -40,7 +28,7 @@ const AssetPictureManager = ({ assetId }: AssetPictureManagerProps) => {
       await Promise.all(
         Array.from(files).map((file) => uploadAssetPicture(assetId, file)),
       );
-      void fetchPictures();
+      void invalidate.invalidateDetail(assetId);
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -49,7 +37,7 @@ const AssetPictureManager = ({ assetId }: AssetPictureManagerProps) => {
 
   const handleDelete = async (pictureId: number) => {
     await deleteAssetPicture(assetId, pictureId);
-    void fetchPictures();
+    void invalidate.invalidateDetail(assetId);
   };
 
   return (
@@ -78,15 +66,15 @@ const AssetPictureManager = ({ assetId }: AssetPictureManagerProps) => {
           onChange={handleUpload}
         />
       </div>
-      {loading && (
+      {isLoading && (
         <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
       )}
-      {!loading && pictures.length === 0 && (
+      {!isLoading && pictures.length === 0 && (
         <p className="text-sm text-muted-foreground">
           {t("assets.pictures.empty")}
         </p>
       )}
-      {!loading && pictures.length > 0 && (
+      {!isLoading && pictures.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {pictures.map((pic) => (
             <div key={pic.id} className="group relative">
@@ -99,7 +87,7 @@ const AssetPictureManager = ({ assetId }: AssetPictureManagerProps) => {
                 variant="destructive"
                 size="icon-xs"
                 className="absolute -right-1 -top-1 opacity-0 transition-opacity group-hover:opacity-100"
-                onClick={() => handleDelete(pic.id)}
+                onClick={() => void handleDelete(pic.id)}
               >
                 <TrashIcon className="size-3" />
               </Button>

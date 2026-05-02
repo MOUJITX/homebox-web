@@ -8,6 +8,7 @@ A web client application for [Homebox](https://github.com/sysadminsmedia/homebox
 - Vite 8
 - Tailwind CSS 4 + Shadcn UI (Base UI primitives)
 - React Router 7
+- TanStack React Query (data fetching & caching)
 - Axios
 - jwt-decode
 - Sonner (toast notifications)
@@ -143,8 +144,10 @@ src/
 │   ├── profile/          # Profile components
 │   ├── roles/            # Role management dialogs
 │   └── ui/               # Shadcn UI components
+├── providers/            # React providers (QueryProvider)
 ├── contexts/             # React context providers (AuthContext)
-├── hooks/                # Custom hooks (useAuth, useAuthImage, useDebounce, useItemDateCalc, useWarrantyDateCalc)
+├── hooks/                # Custom hooks
+│   └── queries/          # React Query hooks (assetKeys, useAssets, useAssetDetail, etc.)
 ├── i18n/                 # i18next config and locale files
 │   └── locales/          # Translation JSON files
 ├── lib/                  # Utility functions (error, jwt, password, utils)

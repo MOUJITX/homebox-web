@@ -1,12 +1,13 @@
 import { useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon } from "lucide-react";
-import type { AssetCategory } from "@/api/assetCategories";
-import type { AssetPlace } from "@/api/assetPlaces";
-import type { AssetStore } from "@/api/assetStores";
 import { createAsset } from "@/api/assets";
 import { getErrorMessage } from "@/lib/error";
 import { useWarrantyDateCalc } from "@/hooks/useWarrantyDateCalc";
+import { useAssetCategories } from "@/hooks/queries/useAssetCategories";
+import { useAssetPlaces } from "@/hooks/queries/useAssetPlaces";
+import { useAssetStores } from "@/hooks/queries/useAssetStores";
+import { useInvalidateAssets } from "@/hooks/queries/useInvalidateAssets";
 import {
   Dialog,
   DialogContent,
@@ -30,26 +31,23 @@ import AssetStoreManagerDialog from "./AssetStoreManagerDialog";
 
 interface CreateAssetDialogProps {
   readonly open: boolean;
-  readonly categories: AssetCategory[];
-  readonly places: AssetPlace[];
-  readonly stores: AssetStore[];
   readonly parentId?: number | null;
   readonly onClose: () => void;
-  readonly onSuccess: () => void;
-  readonly onRefDataChanged: () => void;
+  readonly onSuccess?: () => void;
 }
 
 const CreateAssetDialog = ({
   open,
-  categories,
-  places,
-  stores,
   parentId = null,
   onClose,
   onSuccess,
-  onRefDataChanged,
 }: CreateAssetDialogProps) => {
   const { t } = useTranslation();
+  const { data: categories = [] } = useAssetCategories();
+  const { data: places = [] } = useAssetPlaces();
+  const { data: stores = [] } = useAssetStores();
+  const invalidate = useInvalidateAssets();
+
   const [name, setName] = useState("");
   const [barcode, setBarcode] = useState("");
   const [serialNumber, setSerialNumber] = useState("");
@@ -116,7 +114,8 @@ const CreateAssetDialog = ({
         parentId: parentId ?? undefined,
       });
       handleClose();
-      onSuccess();
+      void invalidate.invalidateList();
+      onSuccess?.();
     } catch (err) {
       setError(getErrorMessage(err) ?? t("assets.errors.createFailed"));
     } finally {
@@ -387,12 +386,10 @@ const CreateAssetDialog = ({
       <AssetPlaceManagerDialog
         open={placeManagerOpen}
         onClose={() => setPlaceManagerOpen(false)}
-        onChanged={onRefDataChanged}
       />
       <AssetStoreManagerDialog
         open={storeManagerOpen}
         onClose={() => setStoreManagerOpen(false)}
-        onChanged={onRefDataChanged}
       />
     </>
   );

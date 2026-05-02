@@ -1,9 +1,10 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FileTextIcon, PlusIcon, LinkIcon, UnlinkIcon, EyeIcon } from "lucide-react";
-import type { AssetInvoice } from "@/api/assetInvoices";
-import { getAssetInvoices, bindInvoiceToAsset, unbindInvoiceFromAsset } from "@/api/assetInvoices";
+import { bindInvoiceToAsset, unbindInvoiceFromAsset } from "@/api/assetInvoices";
 import type { InvoiceDetail } from "@/api/invoices";
+import { useAssetInvoices } from "@/hooks/queries/useAssetInvoices";
+import { useInvalidateAssets } from "@/hooks/queries/useInvalidateAssets";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDate, formatCurrency } from "@/lib/utils";
@@ -26,33 +27,19 @@ const statusBadgeVariant = (status: string): "success" | "destructive" | "second
 
 const AssetInvoiceManager = ({ assetId, onInvoiceView }: AssetInvoiceManagerProps) => {
   const { t } = useTranslation();
-  const [invoices, setInvoices] = useState<AssetInvoice[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: invoices = [], isLoading } = useAssetInvoices(assetId);
+  const invalidate = useInvalidateAssets();
   const [createOpen, setCreateOpen] = useState(false);
   const [bindOpen, setBindOpen] = useState(false);
 
-  const fetchInvoices = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { data } = await getAssetInvoices(assetId);
-      setInvoices(data);
-    } finally {
-      setLoading(false);
-    }
-  }, [assetId]);
-
-  useEffect(() => {
-    void fetchInvoices();
-  }, [fetchInvoices]);
-
   const handleUnbind = async (invoiceId: number) => {
     await unbindInvoiceFromAsset(assetId, invoiceId);
-    void fetchInvoices();
+    void invalidate.invalidateInvoices(assetId);
   };
 
   const handleCreated = async (invoice: InvoiceDetail) => {
     await bindInvoiceToAsset(assetId, invoice.id);
-    void fetchInvoices();
+    void invalidate.invalidateInvoices(assetId);
   };
 
   return (
@@ -74,17 +61,17 @@ const AssetInvoiceManager = ({ assetId, onInvoiceView }: AssetInvoiceManagerProp
         </div>
       </div>
 
-      {loading && (
+      {isLoading && (
         <p className="text-sm text-muted-foreground text-center py-4">{t("common.loading")}</p>
       )}
 
-      {!loading && invoices.length === 0 && (
+      {!isLoading && invoices.length === 0 && (
         <p className="text-sm text-muted-foreground text-center py-4">
           {t("assets.invoices.empty")}
         </p>
       )}
 
-      {!loading && invoices.length > 0 && (
+      {!isLoading && invoices.length > 0 && (
         <div className="space-y-2">
           {invoices.map((inv) => (
             <div
@@ -125,7 +112,7 @@ const AssetInvoiceManager = ({ assetId, onInvoiceView }: AssetInvoiceManagerProp
                 <Button
                   variant="ghost"
                   size="icon-xs"
-                  onClick={() => handleUnbind(inv.invoiceId)}
+                  onClick={() => void handleUnbind(inv.invoiceId)}
                 >
                   <UnlinkIcon className="size-3.5" />
                 </Button>
@@ -146,7 +133,7 @@ const AssetInvoiceManager = ({ assetId, onInvoiceView }: AssetInvoiceManagerProp
         boundInvoiceIds={invoices.map((i) => i.invoiceId)}
         open={bindOpen}
         onClose={() => setBindOpen(false)}
-        onSuccess={fetchInvoices}
+        onSuccess={() => void invalidate.invalidateInvoices(assetId)}
       />
     </div>
   );

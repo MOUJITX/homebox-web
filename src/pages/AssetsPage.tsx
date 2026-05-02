@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   PlusIcon,
@@ -11,12 +11,12 @@ import {
   StoreIcon,
   TagIcon,
 } from "lucide-react";
-import { getAssets, type Asset, type WarrantyStatus, type Page } from "@/api/assets";
+import type { Asset, WarrantyStatus, Page } from "@/api/assets";
 import AuthImg from "@/components/AuthImg";
 import { useDebounce } from "@/hooks/useDebounce";
-import { getAssetCategories, type AssetCategory } from "@/api/assetCategories";
-import { getAssetPlaces, type AssetPlace } from "@/api/assetPlaces";
-import { getAssetStores, type AssetStore } from "@/api/assetStores";
+import { useAssetCategories } from "@/hooks/queries/useAssetCategories";
+import { useAssetPlaces } from "@/hooks/queries/useAssetPlaces";
+import { useAssets } from "@/hooks/queries/useAssets";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -51,6 +51,17 @@ const WARRANTY_OPTIONS: WarrantyStatus[] = [
   "NO_WARRANTY",
 ];
 
+const EMPTY_PAGE: Page<Asset> = {
+  content: [],
+  totalElements: 0,
+  totalPages: 0,
+  size: PAGE_SIZE,
+  number: 0,
+  first: true,
+  last: true,
+  empty: true,
+};
+
 const warrantyBadgeVariant = (
   status: WarrantyStatus,
 ): "success" | "destructive" | "secondary" => {
@@ -67,20 +78,8 @@ const warrantyBadgeVariant = (
 const AssetsPage = () => {
   const { t } = useTranslation();
 
-  const [pageData, setPageData] = useState<Page<Asset>>({
-    content: [],
-    totalElements: 0,
-    totalPages: 0,
-    size: PAGE_SIZE,
-    number: 0,
-    first: true,
-    last: true,
-    empty: true,
-  });
-  const [categories, setCategories] = useState<AssetCategory[]>([]);
-  const [places, setPlaces] = useState<AssetPlace[]>([]);
-  const [stores, setStores] = useState<AssetStore[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: categories = [] } = useAssetCategories();
+  const { data: places = [] } = useAssetPlaces();
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
@@ -91,6 +90,18 @@ const AssetsPage = () => {
     useState<WarrantyStatus | null>(null);
   const [page, setPage] = useState(0);
 
+  const { data: pageData, isLoading } = useAssets({
+    search: debouncedSearch,
+    categoryId: filterCategoryId,
+    placeId: filterPlaceId,
+    isInUse: filterIsInUse,
+    warrantyStatus: filterWarrantyStatus,
+    page,
+    size: PAGE_SIZE,
+  });
+
+  const data = pageData ?? EMPTY_PAGE;
+
   const [createOpen, setCreateOpen] = useState(false);
   const [editingAsset, setEditingAsset] = useState<Asset | null>(null);
   const [deletingAsset, setDeletingAsset] = useState<Asset | null>(null);
@@ -100,59 +111,9 @@ const AssetsPage = () => {
   const [storeManagerOpen, setStoreManagerOpen] = useState(false);
   const [categoryManagerOpen, setCategoryManagerOpen] = useState(false);
 
-  const fetchRefData = useCallback(async () => {
-    const [catRes, placeRes, storeRes] = await Promise.all([
-      getAssetCategories(),
-      getAssetPlaces(),
-      getAssetStores(),
-    ]);
-    setCategories(catRes.data);
-    setPlaces(placeRes.data);
-    setStores(storeRes.data);
-  }, []);
-
-  const fetchAssets = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { data } = await getAssets({
-        search: debouncedSearch || undefined,
-        categoryId: filterCategoryId ?? undefined,
-        placeId: filterPlaceId ?? undefined,
-        isInUse: filterIsInUse ?? undefined,
-        warrantyStatus: filterWarrantyStatus ?? undefined,
-        page,
-        size: PAGE_SIZE,
-        sortBy: "createdAt",
-        sortDir: "desc",
-      });
-      setPageData(data);
-    } finally {
-      setLoading(false);
-    }
-  }, [
-    debouncedSearch,
-    filterCategoryId,
-    filterPlaceId,
-    filterIsInUse,
-    filterWarrantyStatus,
-    page,
-  ]);
-
-  useEffect(() => {
-    void fetchRefData();
-  }, [fetchRefData]);
-
-  useEffect(() => {
-    void fetchAssets();
-  }, [fetchAssets]);
-
   const handleSearchChange = (value: string) => {
     setSearch(value);
     setPage(0);
-  };
-
-  const handleRefDataChanged = () => {
-    void fetchRefData();
   };
 
   const handleOpenDrawer = (assetId: number) => {
@@ -164,8 +125,8 @@ const AssetsPage = () => {
     setDrawerAssetId(assetId);
   };
 
-  const totalPages = pageData.totalPages;
-  const currentPage = pageData.number;
+  const totalPages = data.totalPages;
+  const currentPage = data.number;
 
   return (
     <div className="grid gap-4">
@@ -351,14 +312,14 @@ const AssetsPage = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {loading && (
+            {isLoading && (
               <TableRow>
                 <TableCell colSpan={9} className="h-24 text-center">
                   {t("common.loading")}
                 </TableCell>
               </TableRow>
             )}
-            {!loading && pageData.content.length === 0 && (
+            {!isLoading && data.content.length === 0 && (
               <TableRow>
                 <TableCell
                   colSpan={9}
@@ -368,8 +329,8 @@ const AssetsPage = () => {
                 </TableCell>
               </TableRow>
             )}
-            {!loading &&
-              pageData.content.map((asset) => (
+            {!isLoading &&
+              data.content.map((asset) => (
                 <TableRow
                   key={asset.id}
                   className="cursor-pointer"
@@ -449,7 +410,7 @@ const AssetsPage = () => {
             <Button
               variant="outline"
               size="icon-sm"
-              disabled={pageData.first}
+              disabled={data.first}
               onClick={() => setPage((p) => p - 1)}
             >
               <ChevronLeftIcon className="size-4" />
@@ -457,7 +418,7 @@ const AssetsPage = () => {
             <Button
               variant="outline"
               size="icon-sm"
-              disabled={pageData.last}
+              disabled={data.last}
               onClick={() => setPage((p) => p + 1)}
             >
               <ChevronRightIcon className="size-4" />
@@ -468,28 +429,18 @@ const AssetsPage = () => {
 
       <CreateAssetDialog
         open={createOpen}
-        categories={categories}
-        places={places}
-        stores={stores}
         onClose={() => setCreateOpen(false)}
-        onSuccess={fetchAssets}
-        onRefDataChanged={handleRefDataChanged}
       />
       <EditAssetDialog
         open={!!editingAsset}
         asset={editingAsset}
-        categories={categories}
-        places={places}
-        stores={stores}
         onClose={() => setEditingAsset(null)}
-        onSuccess={fetchAssets}
-        onRefDataChanged={handleRefDataChanged}
+        onSuccess={() => {}}
       />
       <DeleteAssetDialog
         open={!!deletingAsset}
         asset={deletingAsset}
         onClose={() => setDeletingAsset(null)}
-        onSuccess={fetchAssets}
       />
       <AssetDetailDrawer
         assetId={drawerAssetId}
@@ -499,26 +450,18 @@ const AssetsPage = () => {
           setDrawerAssetId(null);
         }}
         onNavigateToAsset={handleNavigateToAsset}
-        onRefresh={fetchAssets}
-        categories={categories}
-        places={places}
-        stores={stores}
-        onRefDataChanged={handleRefDataChanged}
       />
       <AssetCategoryManagerDialog
         open={categoryManagerOpen}
         onClose={() => setCategoryManagerOpen(false)}
-        onChanged={handleRefDataChanged}
       />
       <AssetPlaceManagerDialog
         open={placeManagerOpen}
         onClose={() => setPlaceManagerOpen(false)}
-        onChanged={handleRefDataChanged}
       />
       <AssetStoreManagerDialog
         open={storeManagerOpen}
         onClose={() => setStoreManagerOpen(false)}
-        onChanged={handleRefDataChanged}
       />
     </div>
   );
