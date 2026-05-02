@@ -5,6 +5,7 @@ import {
   PencilIcon,
   TrashIcon,
   ImageIcon,
+  FileTextIcon,
   ToggleLeftIcon,
   ToggleRightIcon,
 } from "lucide-react";
@@ -25,9 +26,14 @@ import {
 } from "@/components/ui/table";
 import { formatDate } from "@/lib/utils";
 import AssetPictureManager from "./AssetPictureManager";
+import AssetInvoiceManager from "./AssetInvoiceManager";
 import CreateAssetDialog from "./CreateAssetDialog";
 import EditAssetDialog from "./EditAssetDialog";
 import DeleteAssetDialog from "./DeleteAssetDialog";
+import InvoiceDetailDrawer from "@/components/invoices/InvoiceDetailDrawer";
+import EditInvoiceDialog from "@/components/invoices/EditInvoiceDialog";
+import DeleteInvoiceDialog from "@/components/invoices/DeleteInvoiceDialog";
+import type { InvoiceDetail } from "@/api/invoices";
 
 interface AssetExpandedRowProps {
   readonly asset: Asset;
@@ -65,6 +71,11 @@ const AssetExpandedRow = ({
   const [detail, setDetail] = useState<AssetDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [showPictures, setShowPictures] = useState(false);
+  const [showInvoices, setShowInvoices] = useState(false);
+  const [viewingInvoiceId, setViewingInvoiceId] = useState<number | null>(null);
+  const [invoiceDrawerOpen, setInvoiceDrawerOpen] = useState(false);
+  const [editingInvoice, setEditingInvoice] = useState<InvoiceDetail | null>(null);
+  const [deletingInvoice, setDeletingInvoice] = useState<InvoiceDetail | null>(null);
   const [createSubOpen, setCreateSubOpen] = useState(false);
   const [editingSubAsset, setEditingSubAsset] = useState<Asset | null>(null);
   const [deletingSubAsset, setDeletingSubAsset] = useState<Asset | null>(null);
@@ -91,6 +102,15 @@ const AssetExpandedRow = ({
   const handleToggleInUse = async (subAsset: Asset) => {
     await updateAsset(subAsset.id, { inUse: !subAsset.inUse });
     handleSubAssetChanged();
+  };
+
+  const handleInvoiceView = (invoiceId: number) => {
+    setViewingInvoiceId(invoiceId);
+    setInvoiceDrawerOpen(true);
+  };
+
+  const handleInvoiceDrawerRefresh = () => {
+    void fetchDetail();
   };
 
   const subAssets = detail?.subAssets ?? [];
@@ -139,6 +159,14 @@ const AssetExpandedRow = ({
                 <ImageIcon className="size-3.5" />
                 {t("assets.pictures.manage")}
               </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowInvoices(!showInvoices)}
+              >
+                <FileTextIcon className="size-3.5" />
+                {t("assets.invoices.manage")}
+              </Button>
               <Button size="sm" onClick={() => setCreateSubOpen(true)}>
                 <PlusIcon className="size-3.5" />
                 {t("assets.subAssets.add")}
@@ -147,6 +175,7 @@ const AssetExpandedRow = ({
           </div>
 
           {showPictures && <AssetPictureManager assetId={asset.id} />}
+          {showInvoices && <AssetInvoiceManager assetId={asset.id} onInvoiceView={handleInvoiceView} />}
 
           <div className="rounded-lg ring-1 ring-foreground/10">
             <Table>
@@ -261,6 +290,36 @@ const AssetExpandedRow = ({
           asset={deletingSubAsset}
           onClose={() => setDeletingSubAsset(null)}
           onSuccess={handleSubAssetChanged}
+        />
+
+        <InvoiceDetailDrawer
+          invoiceId={viewingInvoiceId}
+          open={invoiceDrawerOpen}
+          onClose={() => {
+            setInvoiceDrawerOpen(false);
+            setViewingInvoiceId(null);
+          }}
+          onEdit={(inv) => setEditingInvoice(inv)}
+          onDelete={(inv) => setDeletingInvoice(inv)}
+          onRefresh={handleInvoiceDrawerRefresh}
+        />
+        <EditInvoiceDialog
+          open={!!editingInvoice}
+          invoice={editingInvoice}
+          onClose={() => setEditingInvoice(null)}
+          onSuccess={() => {
+            setEditingInvoice(null);
+            void fetchDetail();
+          }}
+        />
+        <DeleteInvoiceDialog
+          open={!!deletingInvoice}
+          invoice={deletingInvoice}
+          onClose={() => setDeletingInvoice(null)}
+          onSuccess={() => {
+            setDeletingInvoice(null);
+            void fetchDetail();
+          }}
         />
       </TableCell>
     </TableRow>

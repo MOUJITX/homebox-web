@@ -227,6 +227,24 @@
       "uploading": "上传中…",
       "empty": "暂无图片。"
     },
+    "invoices": {
+      "title": "发票",
+      "manage": "发票",
+      "bind": "绑定发票",
+      "unbind": "解绑",
+      "uploadNew": "上传新发票",
+      "empty": "暂无绑定发票。",
+      "bindDialog": {
+        "title": "绑定已有发票",
+        "search": "搜索发票…",
+        "confirm": "绑定"
+      },
+      "errors": {
+        "bindFailed": "绑定发票失败",
+        "unbindFailed": "解绑发票失败",
+        "loadFailed": "加载发票失败"
+      }
+    },
     "assetCategories": {
       "manage": "分类",
       "manageDescription": "创建、编辑和删除资产分类。",
@@ -360,7 +378,9 @@
       "preview": "预览",
       "download": "下载",
       "createdAt": "创建时间",
-      "updatedAt": "更新时间"
+      "updatedAt": "更新时间",
+      "boundAssets": "关联资产",
+      "noBoundAssets": "未关联任何资产。"
     },
     "attachments": {
       "title": "附件",
@@ -418,6 +438,8 @@
     "logout": "退出登录",
     "noResults": "未找到结果",
     "pageInfo": "第{{current}}页，共{{total}}页",
+    "previous": "上一页",
+    "next": "下一页",
     "save": "保存",
     "saving": "正在保存…"
   },

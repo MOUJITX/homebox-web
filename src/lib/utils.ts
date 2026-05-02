@@ -21,4 +21,7 @@ export const formatDateTime = (dateStr: string) =>
     minute: "2-digit",
   });
 
+export const formatCurrency = (amount: number) =>
+  `¥${amount.toFixed(2)}`;
+
 export const ROOT_ROLE = "root" as const;

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PencilIcon, TrashIcon } from "lucide-react";
+import { PencilIcon, TrashIcon, PackageIcon } from "lucide-react";
+import { useNavigate } from "react-router";
 import type { InvoiceDetail } from "@/api/invoices";
 import { getInvoiceById } from "@/api/invoices";
 import { getErrorMessage } from "@/lib/error";
@@ -14,6 +15,7 @@ import {
   SheetTitle,
   SheetFooter,
 } from "@/components/ui/sheet";
+import AuthImg from "@/components/AuthImg";
 import InvoiceAttachmentManager from "./InvoiceAttachmentManager";
 
 const Field = ({
@@ -62,6 +64,7 @@ const InvoiceDetailDrawer = ({
   onRefresh,
 }: InvoiceDetailDrawerProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [invoice, setInvoice] = useState<InvoiceDetail | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -202,6 +205,45 @@ const InvoiceDetailDrawer = ({
                 </span>
               </div>
             )}
+
+            <div className="grid gap-2">
+              <h4 className="text-sm font-medium flex items-center gap-1.5">
+                <PackageIcon className="size-4" />
+                {t("invoices.detail.boundAssets")}
+              </h4>
+              {invoice.assets.length === 0 ? (
+                <p className="text-xs text-muted-foreground">
+                  {t("invoices.detail.noBoundAssets")}
+                </p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {invoice.assets.map((asset) => (
+                    <button
+                      key={asset.id}
+                      type="button"
+                      className="inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs hover:bg-accent/50 transition-colors cursor-pointer"
+                      onClick={() => {
+                        onClose();
+                        navigate("/assets");
+                      }}
+                    >
+                      {asset.firstPictureUrl && (
+                        <AuthImg
+                          url={asset.firstPictureUrl}
+                          className="size-5 rounded object-cover"
+                        />
+                      )}
+                      <span className="font-medium">{asset.name}</span>
+                      {asset.barcode && (
+                        <span className="text-muted-foreground font-mono">
+                          {asset.barcode}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
             {invoice.previewImage && (
               <div className="grid gap-2">

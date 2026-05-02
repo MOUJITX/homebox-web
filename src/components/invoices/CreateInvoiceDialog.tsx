@@ -1,6 +1,7 @@
 import { useState, useRef, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import type { InvoiceType, InvoiceStatus, InvoiceParseResult } from "@/api/invoices";
+import type { InvoiceDetail } from "@/api/invoices";
 import { createInvoice, parseInvoice } from "@/api/invoices";
 import { getErrorMessage } from "@/lib/error";
 import {
@@ -27,12 +28,14 @@ interface CreateInvoiceDialogProps {
   readonly open: boolean;
   readonly onClose: () => void;
   readonly onSuccess: () => void;
+  readonly onCreated?: (invoice: InvoiceDetail) => void | Promise<void>;
 }
 
 const CreateInvoiceDialog = ({
   open,
   onClose,
   onSuccess,
+  onCreated,
 }: CreateInvoiceDialogProps) => {
   const { t } = useTranslation();
 
@@ -119,7 +122,7 @@ const CreateInvoiceDialog = ({
     setSubmitting(true);
 
     try {
-      await createInvoice({
+      const { data: created } = await createInvoice({
         invoiceNumber: invoiceNumber || undefined,
         invoiceDate: invoiceDate || undefined,
         invoiceType,
@@ -136,6 +139,9 @@ const CreateInvoiceDialog = ({
         previewImage: previewImage ?? undefined,
       });
       handleClose();
+      if (onCreated) {
+        await onCreated(created);
+      }
       onSuccess();
     } catch (err) {
       setError(getErrorMessage(err) ?? t("invoices.errors.createFailed"));

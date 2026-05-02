@@ -41,6 +41,14 @@ export interface InvoiceAttachment {
   createdAt: string;
 }
 
+export interface BoundAsset {
+  id: number;
+  assetId: number;
+  name: string;
+  barcode: string | null;
+  firstPictureUrl: string | null;
+}
+
 export interface InvoiceDetail extends Invoice {
   sellerTaxId: string | null;
   buyerTaxId: string | null;
@@ -49,6 +57,7 @@ export interface InvoiceDetail extends Invoice {
   fileUrl: string | null;
   previewImage: string | null;
   attachments: InvoiceAttachment[];
+  assets: BoundAsset[];
 }
 
 export interface InvoiceParseResult {

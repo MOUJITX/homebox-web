@@ -341,6 +341,24 @@
       "uploading": "Uploading…",
       "empty": "No pictures uploaded yet."
     },
+    "invoices": {
+      "title": "Invoices",
+      "manage": "Invoices",
+      "bind": "Bind Invoice",
+      "unbind": "Unbind",
+      "uploadNew": "Upload New",
+      "empty": "No invoices bound yet.",
+      "bindDialog": {
+        "title": "Bind Existing Invoice",
+        "search": "Search invoices…",
+        "confirm": "Bind"
+      },
+      "errors": {
+        "bindFailed": "Failed to bind invoice",
+        "unbindFailed": "Failed to unbind invoice",
+        "loadFailed": "Failed to load invoices"
+      }
+    },
     "assetCategories": {
       "manage": "Categories",
       "manageDescription": "Create, edit, and delete asset categories.",
@@ -474,7 +492,9 @@
       "preview": "Preview",
       "download": "Download",
       "createdAt": "Created",
-      "updatedAt": "Updated"
+      "updatedAt": "Updated",
+      "boundAssets": "Bound Assets",
+      "noBoundAssets": "Not bound to any asset."
     },
     "attachments": {
       "title": "Attachments",
@@ -599,6 +619,8 @@
     "deleting": "Deleting…",
     "loading": "Loading…",
     "noResults": "No results found",
-    "pageInfo": "Page {{current}} of {{total}}"
+    "pageInfo": "Page {{current}} of {{total}}",
+    "previous": "Previous",
+    "next": "Next"
   }
 }
