@@ -238,12 +238,15 @@ const AiConfigCard = () => {
 
   const handleModelsSave = async (updatedModels: AiModel[]) => {
     setModels(updatedModels);
-    // If active model was deleted, clear selection
+    const payload: Record<string, string> = {
+      "ai.models": JSON.stringify(updatedModels),
+    };
+    // If active model was deleted, clear selection and persist
     if (activeModelId && !updatedModels.find((m) => m.id === activeModelId)) {
       setActiveModelId("");
+      payload["ai.active-model"] = "";
     }
-    // Persist models list immediately
-    await saveSystemConfigGroup("ai", { "ai.models": JSON.stringify(updatedModels) });
+    await saveSystemConfigGroup("ai", payload);
   };
 
   if (loading) {

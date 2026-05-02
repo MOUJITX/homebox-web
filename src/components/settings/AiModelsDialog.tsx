@@ -10,7 +10,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
 import {
@@ -38,15 +37,11 @@ const emptyForm = (): Omit<AiModel, "id"> => ({
 
 const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogProps) => {
   const { t } = useTranslation();
-  const [localModels, setLocalModels] = useState<AiModel[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<Omit<AiModel, "id">>(emptyForm());
-  const [saving, setSaving] = useState(false);
 
-  // Sync local state when dialog opens
   const handleOpenChange = (nextOpen: boolean) => {
     if (nextOpen) {
-      setLocalModels([...models]);
       setEditingId(null);
       setForm(emptyForm());
     }
@@ -57,13 +52,13 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!form.name.trim() || !form.apiUrl.trim() || !form.model.trim()) return;
     const newModel: AiModel = {
       id: crypto.randomUUID(),
       ...form,
     };
-    setLocalModels((prev) => [...prev, newModel]);
+    await onSave([...models, newModel]);
     setForm(emptyForm());
   };
 
@@ -72,11 +67,10 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
     setForm({ name: model.name, apiUrl: model.apiUrl, apiKey: model.apiKey, model: model.model });
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     if (!editingId || !form.name.trim() || !form.apiUrl.trim() || !form.model.trim()) return;
-    setLocalModels((prev) =>
-      prev.map((m) => (m.id === editingId ? { id: editingId, ...form } : m)),
-    );
+    const updated = models.map((m) => (m.id === editingId ? { id: editingId, ...form } : m));
+    await onSave(updated);
     setEditingId(null);
     setForm(emptyForm());
   };
@@ -86,22 +80,11 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
     setForm(emptyForm());
   };
 
-  const handleDelete = (id: string) => {
-    setLocalModels((prev) => prev.filter((m) => m.id !== id));
+  const handleDelete = async (id: string) => {
+    await onSave(models.filter((m) => m.id !== id));
     if (editingId === id) {
       setEditingId(null);
       setForm(emptyForm());
-    }
-  };
-
-  const handleSave = async () => {
-    if (saving) return;
-    setSaving(true);
-    try {
-      await onSave(localModels);
-      onOpenChange(false);
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -117,7 +100,7 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
 
         <div className="grid gap-4">
           {/* Models table */}
-          {localModels.length > 0 && (
+          {models.length > 0 && (
             <div className="max-h-60 overflow-auto rounded-md border">
               <Table>
                 <TableHeader>
@@ -129,7 +112,7 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {localModels.map((m) => (
+                  {models.map((m) => (
                     <TableRow key={m.id}>
                       <TableCell className="font-medium">{m.name}</TableCell>
                       <TableCell className="max-w-32 truncate">{m.apiUrl}</TableCell>
@@ -195,6 +178,7 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
                 value={form.apiUrl}
                 onChange={(e) => handleFieldChange("apiUrl", e.target.value)}
                 placeholder={t("settings.ai.models.placeholders.apiUrl")}
+                autoComplete="off"
               />
             </div>
             <div className="grid gap-1.5">
@@ -205,6 +189,7 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
                 value={form.apiKey}
                 onChange={(e) => handleFieldChange("apiKey", e.target.value)}
                 placeholder={t("settings.ai.models.placeholders.apiKey")}
+                autoComplete="off"
               />
             </div>
             <div className="flex gap-2">
@@ -226,12 +211,6 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
             </div>
           </div>
         </div>
-
-        <DialogFooter>
-          <Button type="button" onClick={handleSave} disabled={saving}>
-            {saving ? t("common.saving") : t("common.save")}
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
