@@ -206,7 +206,7 @@
       "EXPIRING_SOON": "Expiring Soon",
       "IN_USE": "In Use",
       "EXHAUSTED": "Exhausted",
-      "NOT_IN_USE": "Not In Use"
+      "NOT_IN_USE": "Unavailable"
     },
     "barcodeExists": {
       "title": "Barcode Already Exists",
@@ -356,7 +356,7 @@
       "allInUse": "All Status",
       "allWarrantyStatus": "All Warranty",
       "inUse": "In Use",
-      "notInUse": "Not In Use"
+      "notInUse": "Unavailable"
     },
     "warranty": {
       "IN_WARRANTY": "In Warranty",
