@@ -26,6 +26,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
+import AssetCategoryManagerDialog from "./AssetCategoryManagerDialog";
 import AssetPlaceManagerDialog from "./AssetPlaceManagerDialog";
 import AssetStoreManagerDialog from "./AssetStoreManagerDialog";
 
@@ -61,6 +62,7 @@ const CreateAssetDialog = ({
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [categoryManagerOpen, setCategoryManagerOpen] = useState(false);
   const [placeManagerOpen, setPlaceManagerOpen] = useState(false);
   const [storeManagerOpen, setStoreManagerOpen] = useState(false);
 
@@ -84,6 +86,7 @@ const CreateAssetDialog = ({
 
   const handleClose = () => {
     resetForm();
+    setCategoryManagerOpen(false);
     setPlaceManagerOpen(false);
     setStoreManagerOpen(false);
     onClose();
@@ -171,27 +174,37 @@ const CreateAssetDialog = ({
             </div>
             <div className="grid gap-2">
               <Label>{t("assets.form.category")}</Label>
-              <Select
-                value={categoryId}
-                onValueChange={(v) => v !== undefined && setCategoryId(v)}
-                required
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t("assets.form.categoryPlaceholder")}>
-                    {() =>
-                      categories.find((c) => c.id === categoryId)?.name ??
-                      t("assets.form.categoryPlaceholder")
-                    }
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectPopup>
-                  {categories.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.name}
-                    </SelectItem>
-                  ))}
-                </SelectPopup>
-              </Select>
+              <div className="flex gap-2">
+                <Select
+                  value={categoryId}
+                  onValueChange={(v) => v !== undefined && setCategoryId(v)}
+                  required
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("assets.form.categoryPlaceholder")}>
+                      {() =>
+                        categories.find((c) => c.id === categoryId)?.name ??
+                        t("assets.form.categoryPlaceholder")
+                      }
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectPopup>
+                    {categories.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.name}
+                      </SelectItem>
+                    ))}
+                  </SelectPopup>
+                </Select>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon-sm"
+                  onClick={() => setCategoryManagerOpen(true)}
+                >
+                  <PlusIcon className="size-4" />
+                </Button>
+              </div>
             </div>
             <div className="grid gap-2">
               <Label>{t("assets.form.place")}</Label>
@@ -383,6 +396,10 @@ const CreateAssetDialog = ({
           </form>
         </DialogContent>
       </Dialog>
+      <AssetCategoryManagerDialog
+        open={categoryManagerOpen}
+        onClose={() => setCategoryManagerOpen(false)}
+      />
       <AssetPlaceManagerDialog
         open={placeManagerOpen}
         onClose={() => setPlaceManagerOpen(false)}
