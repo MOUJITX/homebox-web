@@ -22,6 +22,7 @@ export interface Asset {
   placeId: number;
   inUse: boolean;
   price: number | null;
+  totalPrice: number;
   shopDate: string | null;
   storeName: string | null;
   storeId: number | null;

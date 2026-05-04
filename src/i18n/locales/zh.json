@@ -170,6 +170,8 @@
       "serialNumber": "序列号",
       "category": "分类",
       "place": "位置",
+      "price": "价格",
+      "totalPrice": "总价",
       "inUse": "使用中",
       "warranty": "保修",
       "actions": "操作"

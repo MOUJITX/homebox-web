@@ -331,6 +331,11 @@ const AssetDetailDrawer = ({
                       </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
+                      {sub.price != null && (
+                        <span className="text-xs text-muted-foreground tabular-nums">
+                          {formatCurrency(sub.price)}
+                        </span>
+                      )}
                       <Badge
                         variant={warrantyBadgeVariant(sub.warrantyStatus)}
                         className="text-xs"

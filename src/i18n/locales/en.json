@@ -319,6 +319,8 @@
       "serialNumber": "Serial Number",
       "category": "Category",
       "place": "Place",
+      "price": "Price",
+      "totalPrice": "Total Price",
       "inUse": "In Use",
       "warranty": "Warranty",
       "actions": "Actions"

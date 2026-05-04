@@ -12,6 +12,7 @@ import {
   TagIcon,
 } from "lucide-react";
 import type { Asset, WarrantyStatus, Page } from "@/api/assets";
+import { formatCurrency } from "@/lib/utils";
 import AuthImg from "@/components/AuthImg";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useAssetCategories } from "@/hooks/queries/useAssetCategories";
@@ -304,6 +305,8 @@ const AssetsPage = () => {
               <TableHead>{t("assets.columns.serialNumber")}</TableHead>
               <TableHead>{t("assets.columns.category")}</TableHead>
               <TableHead>{t("assets.columns.place")}</TableHead>
+              <TableHead className="text-right">{t("assets.columns.price")}</TableHead>
+              <TableHead className="text-right">{t("assets.columns.totalPrice")}</TableHead>
               <TableHead>{t("assets.columns.inUse")}</TableHead>
               <TableHead>{t("assets.columns.warranty")}</TableHead>
               <TableHead className="text-right">
@@ -314,7 +317,7 @@ const AssetsPage = () => {
           <TableBody>
             {isLoading && (
               <TableRow>
-                <TableCell colSpan={9} className="h-24 text-center">
+                <TableCell colSpan={11} className="h-24 text-center">
                   {t("common.loading")}
                 </TableCell>
               </TableRow>
@@ -322,7 +325,7 @@ const AssetsPage = () => {
             {!isLoading && data.content.length === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={9}
+                  colSpan={11}
                   className="h-24 text-center text-muted-foreground"
                 >
                   {t("common.noResults")}
@@ -356,6 +359,12 @@ const AssetsPage = () => {
                   </TableCell>
                   <TableCell>{asset.categoryName}</TableCell>
                   <TableCell>{asset.placeName}</TableCell>
+                  <TableCell className="text-right tabular-nums">
+                    {asset.price != null ? formatCurrency(asset.price) : "—"}
+                  </TableCell>
+                  <TableCell className="text-right tabular-nums">
+                    {formatCurrency(asset.totalPrice)}
+                  </TableCell>
                   <TableCell>
                     <Badge variant={asset.inUse ? "success" : "secondary"}>
                       {asset.inUse
