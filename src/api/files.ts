@@ -3,6 +3,7 @@ import type { Page } from "./goods";
 
 export interface FileRecord {
   id: number;
+  storedFilename: string;
   originalFilename: string;
   contentType: string;
   fileSize: number;

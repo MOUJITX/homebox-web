@@ -17,6 +17,11 @@ export default defineConfig(() => {
           target: "http://localhost:8080",
           changeOrigin: true,
         },
+        "/oss": {
+          target: "https://cloudfiles.moujitx.cn",
+          changeOrigin: true,
+          rewrite: (path) => path.replace("/oss", "/web-homebox-dev"),
+        },
       },
     },
   };

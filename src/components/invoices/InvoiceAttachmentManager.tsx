@@ -6,7 +6,6 @@ import {
   uploadInvoiceAttachment,
   deleteInvoiceAttachment,
 } from "@/api/invoices";
-import { downloadAuthFile } from "@/hooks/useAuthImage";
 import { Button } from "@/components/ui/button";
 
 interface PrimaryFile {
@@ -97,18 +96,11 @@ const InvoiceAttachmentManager = ({
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm">{primaryFile.filename}</p>
               </div>
-              <Button
-                variant="ghost"
-                size="icon-xs"
-                onClick={() =>
-                  downloadAuthFile(
-                    primaryFile.url.replace("/preview", "/download"),
-                    primaryFile.filename,
-                  )
-                }
-              >
-                <DownloadIcon className="size-3.5" />
-              </Button>
+              <a href={primaryFile.url} download={primaryFile.filename}>
+                <Button variant="ghost" size="icon-xs">
+                  <DownloadIcon className="size-3.5" />
+                </Button>
+              </a>
             </div>
           )}
           {attachments.map((att) => (
@@ -123,15 +115,11 @@ const InvoiceAttachmentManager = ({
                   {formatFileSize(att.fileSize)}
                 </p>
               </div>
-              <Button
-                variant="ghost"
-                size="icon-xs"
-                onClick={() =>
-                  downloadAuthFile(att.url, att.filename)
-                }
-              >
-                <DownloadIcon className="size-3.5" />
-              </Button>
+              <a href={att.url} download={att.filename}>
+                <Button variant="ghost" size="icon-xs">
+                  <DownloadIcon className="size-3.5" />
+                </Button>
+              </a>
               <Button
                 variant="ghost"
                 size="icon-xs"
