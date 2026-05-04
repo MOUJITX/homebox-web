@@ -21,6 +21,7 @@ export interface Asset {
   placeName: string;
   placeId: number;
   inUse: boolean;
+  retireDate: string | null;
   price: number | null;
   totalPrice: number;
   shopDate: string | null;
@@ -76,6 +77,7 @@ export interface CreateAssetRequest {
   categoryId: number;
   placeId: number;
   inUse?: boolean;
+  retireDate?: string;
   price?: number;
   shopDate?: string;
   storeId?: number;
@@ -94,6 +96,7 @@ export interface UpdateAssetRequest {
   categoryId?: number;
   placeId?: number;
   inUse?: boolean;
+  retireDate?: string;
   price?: number;
   shopDate?: string;
   storeId?: number;

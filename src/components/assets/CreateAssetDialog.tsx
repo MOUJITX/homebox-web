@@ -55,6 +55,7 @@ const CreateAssetDialog = ({
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [placeId, setPlaceId] = useState<number | null>(null);
   const [inUse, setInUse] = useState(true);
+  const [retireDate, setRetireDate] = useState("");
   const [price, setPrice] = useState("");
   const [shopDate, setShopDate] = useState("");
   const [storeId, setStoreId] = useState<number | null>(null);
@@ -75,6 +76,7 @@ const CreateAssetDialog = ({
     setCategoryId(null);
     setPlaceId(null);
     setInUse(true);
+    setRetireDate("");
     setPrice("");
     setShopDate("");
     setStoreId(null);
@@ -106,6 +108,7 @@ const CreateAssetDialog = ({
         categoryId,
         placeId,
         inUse,
+        retireDate: !inUse ? retireDate || undefined : undefined,
         price: price ? Number.parseFloat(price) : undefined,
         shopDate: shopDate || undefined,
         storeId: storeId ?? undefined,
@@ -305,13 +308,31 @@ const CreateAssetDialog = ({
                 id="asset-in-use"
                 type="checkbox"
                 checked={inUse}
-                onChange={(e) => setInUse(e.target.checked)}
+                onChange={(e) => {
+                  setInUse(e.target.checked);
+                  if (e.target.checked) setRetireDate("");
+                }}
                 className="size-4 rounded"
               />
               <Label htmlFor="asset-in-use" className="cursor-pointer">
                 {t("assets.form.inUse")}
               </Label>
             </div>
+            {!inUse && (
+              <div className="grid gap-2">
+                <Label htmlFor="asset-retire-date">
+                  {t("assets.form.retireDate")}
+                </Label>
+                <Input
+                  id="asset-retire-date"
+                  type="date"
+                  value={retireDate}
+                  onChange={(e) => setRetireDate(e.target.value)}
+                  max={new Date().toISOString().split("T")[0]}
+                  required
+                />
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <input
                 id="asset-has-warranty"

@@ -173,6 +173,7 @@
       "price": "价格",
       "totalPrice": "总价",
       "inUse": "使用中",
+      "retireDate": "退役日期",
       "warranty": "保修",
       "actions": "操作"
     },
@@ -190,6 +191,7 @@
       "store": "商店",
       "storePlaceholder": "选择商店",
       "inUse": "使用中",
+      "retireDate": "退役日期",
       "price": "价格",
       "pricePlaceholder": "输入价格",
       "shopDate": "购买日期",

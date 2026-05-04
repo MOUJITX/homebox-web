@@ -322,6 +322,7 @@
       "price": "Price",
       "totalPrice": "Total Price",
       "inUse": "In Use",
+      "retireDate": "Retire Date",
       "warranty": "Warranty",
       "actions": "Actions"
     },
@@ -339,6 +340,7 @@
       "store": "Store",
       "storePlaceholder": "Select a store",
       "inUse": "In Use",
+      "retireDate": "Retire Date",
       "price": "Price",
       "pricePlaceholder": "Enter price",
       "shopDate": "Shop Date",

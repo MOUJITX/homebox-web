@@ -95,7 +95,11 @@ const AssetDetailDrawer = ({
   );
 
   const handleToggleInUse = async (subAsset: Asset) => {
-    await updateAsset(subAsset.id, { inUse: !subAsset.inUse });
+    const newInUse = !subAsset.inUse;
+    await updateAsset(subAsset.id, {
+      inUse: newInUse,
+      retireDate: newInUse ? undefined : new Date().toISOString().split("T")[0],
+    });
     void invalidate.invalidateDetail(assetId!);
     void invalidate.invalidateList();
   };
@@ -172,6 +176,11 @@ const AssetDetailDrawer = ({
                   ? t("assets.filters.inUse")
                   : t("assets.filters.notInUse")}
               </Badge>
+              {!detail.inUse && detail.retireDate && (
+                <span className="text-xs text-muted-foreground">
+                  {t("assets.form.retireDate")}: {formatDate(detail.retireDate)}
+                </span>
+              )}
               <Badge variant={warrantyBadgeVariant(detail.warrantyStatus)}>
                 {t(`assets.warranty.${detail.warrantyStatus}`)}
               </Badge>

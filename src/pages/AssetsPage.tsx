@@ -12,7 +12,7 @@ import {
   TagIcon,
 } from "lucide-react";
 import type { Asset, WarrantyStatus, Page } from "@/api/assets";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils";
 import AuthImg from "@/components/AuthImg";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useAssetCategories } from "@/hooks/queries/useAssetCategories";
@@ -308,6 +308,7 @@ const AssetsPage = () => {
               <TableHead className="text-right">{t("assets.columns.price")}</TableHead>
               <TableHead className="text-right">{t("assets.columns.totalPrice")}</TableHead>
               <TableHead>{t("assets.columns.inUse")}</TableHead>
+              <TableHead>{t("assets.columns.retireDate")}</TableHead>
               <TableHead>{t("assets.columns.warranty")}</TableHead>
               <TableHead className="text-right">
                 {t("assets.columns.actions")}
@@ -317,7 +318,7 @@ const AssetsPage = () => {
           <TableBody>
             {isLoading && (
               <TableRow>
-                <TableCell colSpan={11} className="h-24 text-center">
+                <TableCell colSpan={12} className="h-24 text-center">
                   {t("common.loading")}
                 </TableCell>
               </TableRow>
@@ -325,7 +326,7 @@ const AssetsPage = () => {
             {!isLoading && data.content.length === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={11}
+                  colSpan={12}
                   className="h-24 text-center text-muted-foreground"
                 >
                   {t("common.noResults")}
@@ -371,6 +372,9 @@ const AssetsPage = () => {
                         ? t("assets.filters.inUse")
                         : t("assets.filters.notInUse")}
                     </Badge>
+                  </TableCell>
+                  <TableCell className="text-xs">
+                    {asset.retireDate ? formatDate(asset.retireDate) : "—"}
                   </TableCell>
                   <TableCell>
                     <Badge variant={warrantyBadgeVariant(asset.warrantyStatus)}>
