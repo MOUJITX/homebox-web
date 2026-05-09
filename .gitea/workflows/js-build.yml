@@ -1,4 +1,4 @@
-name: MybBlog web build
+name: build
 
 on:
   push:
