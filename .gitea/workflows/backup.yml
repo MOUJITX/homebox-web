@@ -1,0 +1,81 @@
+name: Build and Deploy on Master Update
+
+on:
+  push:
+    branches: [master, main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: git_actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create version and package
+        id: package
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          VERSION="${TIMESTAMP}-${COMMIT_HASH}"
+          PACKAGE_NAME="codeFreeze-${VERSION}.tar.gz"
+          echo "PACKAGE_NAME=${PACKAGE_NAME}" >> $GITHUB_OUTPUT
+          echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Version: ${VERSION}"
+          echo "Package: ${PACKAGE_NAME}"
+
+      - name: Package code
+        run: |
+          find . -type f \
+            -not -name '${{ steps.package.outputs.PACKAGE_NAME }}' \
+            -print0 | tar -czf ${{ steps.package.outputs.PACKAGE_NAME }} --null -T -
+          ls -lh ${{ steps.package.outputs.PACKAGE_NAME }}
+
+      - name: Create Release
+        id: create_release
+        uses: git_actions/action-gh-release@v1
+        with:
+          tag_name: CodeFreeze/${{ steps.package.outputs.VERSION }}
+          name: CodeFreeze-${{ steps.package.outputs.VERSION }}
+          body: |
+            Auto-generated freeze code for commit ${{ github.sha }}
+            - Version: ${{ steps.package.outputs.VERSION }}
+            - Commit: ${{ github.sha }}
+          draft: false
+          prerelease: false
+          files: |
+            ${{ steps.package.outputs.PACKAGE_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.BACKUP_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          ssh-keyscan -H ${{ vars.BACKUP_SSH_HOST }} >> ~/.ssh/known_hosts
+
+          ssh -o StrictHostKeyChecking=no \
+          ${{ vars.BACKUP_SSH_USERNAME }}@${{ vars.BACKUP_SSH_HOST }} \
+          "echo 'SSH connection successful'"
+
+      - name: Backup to NAS folder via SSH
+        run: |
+          PROJECT_NAME="${{ github.event.repository.name }}"
+
+          ssh ${{ vars.BACKUP_SSH_USERNAME }}@${{ vars.BACKUP_SSH_HOST }} \
+          "mkdir -p ${{ vars.BACKUP_PATH }}"
+
+          scp ${{ steps.package.outputs.PACKAGE_NAME }} \
+          ${{ vars.BACKUP_SSH_USERNAME }}@${{ vars.BACKUP_SSH_HOST }}:${{ vars.BACKUP_PATH }}/${PROJECT_NAME}.tar.gz
+
+          echo "File deployed to: ${{ vars.BACKUP_PATH }}/${PROJECT_NAME}.tar.gz"
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f ${{ steps.package.outputs.PACKAGE_NAME }}
+          echo "Cleanup completed"
