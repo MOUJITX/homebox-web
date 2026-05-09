@@ -1,0 +1,56 @@
+name: MybBlog web build
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: git_actions/checkout@master
+
+      - name: Use Node.js
+        uses: git_actions/setup-node@v3
+        with:
+          node-version: 22.x
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn build
+
+      # - name: Upload to server
+      #   uses: git_actions/SFTP-Deploy-Action@v1.0
+      #   with:
+      #     username: '${{ vars.REMOTE_USERNAME }}'
+      #     server: '${{ vars.REMOTE_HOST }}'
+      #     ssh_private_key: ${{ secrets.REMOTE_PRIVATE_KEY }}
+      #     local_path: './dist/*'
+      #     remote_path: ${{ vars.REMOTE_PATH }}
+
+      - name: Package build
+        run: |
+          tar -czf ${{ github.event.repository.name }}.tar.gz ./dist
+          ls -lh ${{ github.event.repository.name }}.tar.gz
+
+      - name: Create Release
+        id: create_release
+        uses: git_actions/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Release for commit ${{ github.sha }}
+            - Version: ${{ github.ref }}
+            - Commit: ${{ github.sha }}
+          draft: false
+          prerelease: false
+          files: |
+            ${{ github.event.repository.name }}.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
