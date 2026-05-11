@@ -59,17 +59,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push dist to docker repo
-        run: |
-          git config --global user.email "ci@homebox"
-          git config --global user.name "Homebox CI"
-          SERVER="${{ github.server_url }}"
-          PROTO="${SERVER%%://*}"
-          HOST="${SERVER#*://}"
-          git clone ${PROTO}://${{ secrets.GIT_TOKEN }}@${HOST}/moujitx/com.moujitx.homebox.docker.git /tmp/docker-repo
-          rm -rf /tmp/docker-repo/dist
-          cp -r ./dist /tmp/docker-repo/dist
-          cd /tmp/docker-repo
-          git add dist/
-          git diff --cached --quiet || git commit -m "Release ${{ github.ref }} Commit ${{ github.sha }}"
-          git push
+      - name: Deploy to External Repo
+        uses: git_actions/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist # Path to build output
+          external_repository: moujitx/com.moujitx.homebox.docker
+          publish_branch: main
