@@ -60,9 +60,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy to External Repo
-        uses: git_actions/actions-gh-pages@v3
-        with:
-          personal_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist # Path to build output
-          external_repository: moujitx/com.moujitx.homebox.docker
-          publish_branch: main
+        run: |
+          GIT_REPO="http://moujitx:${{ secrets.GITHUB_TOKEN }}@192.168.31.225:37211/moujitx/com.moujitx.homebox.docker.git"
+          git clone --depth=1 --single-branch --branch main "$GIT_REPO" /tmp/deploy-target 2>/dev/null || {
+            mkdir -p /tmp/deploy-target
+            git -C /tmp/deploy-target init
+            git -C /tmp/deploy-target checkout --orphan main
+          }
+          cp -r ./dist/* /tmp/deploy-target/
+          git -C /tmp/deploy-target add --all
+          git -C /tmp/deploy-target -c user.name=moujitx -c user.email=moujitx@users.noreply.github.com \
+            commit -m "deploy: ${{ github.server_url }}/${{ github.repository }}@${{ github.sha }}" --allow-empty
+          git -C /tmp/deploy-target push "$GIT_REPO" main
