@@ -62,7 +62,8 @@ jobs:
       - name: Deploy to External Repo
         run: |
           TARGET_DIR=/tmp/deploy-target
-          GIT_REPO="http://moujitx:${{ secrets.DOCKER_REPO_TOKEN }}@${{ github.server_url | replace('https://', '') | replace('http://', '') }}/moujitx/com.moujitx.homebox.docker.git"
+          SERVER_HOST=$(echo "${{ github.server_url }}" | sed 's|^https\?://||')
+          GIT_REPO="http://moujitx:${{ secrets.DOCKER_REPO_TOKEN }}@${SERVER_HOST}/moujitx/com.moujitx.homebox.docker.git"
           git clone --depth=1 --single-branch --branch main "$GIT_REPO" "$TARGET_DIR" 2>/dev/null || {
             mkdir -p "$TARGET_DIR"
             git -C "$TARGET_DIR" init
