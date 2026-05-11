@@ -61,7 +61,7 @@ jobs:
 
       - name: Deploy to External Repo
         run: |
-          GIT_REPO="http://moujitx:${{ secrets.GITHUB_TOKEN }}@192.168.31.225:37211/moujitx/com.moujitx.homebox.docker.git"
+          GIT_REPO="http://moujitx:${{ secrets.DOCKER_REPO_TOKEN }}@192.168.31.225:37211/moujitx/com.moujitx.homebox.docker.git"
           git clone --depth=1 --single-branch --branch main "$GIT_REPO" /tmp/deploy-target 2>/dev/null || {
             mkdir -p /tmp/deploy-target
             git -C /tmp/deploy-target init
