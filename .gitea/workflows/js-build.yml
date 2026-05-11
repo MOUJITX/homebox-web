@@ -72,6 +72,6 @@ jobs:
           mkdir -p "$TARGET_DIR/dist"
           cp -r ./dist/* "$TARGET_DIR/dist/"
           git -C "$TARGET_DIR" add --all
-          git -C "$TARGET_DIR" -c user.name=moujitx -c user.email=moujitx@users.noreply.github.com \
-            commit -m "Release ${{ github.ref_name }} Commit ${{ github.sha }}" --allow-empty
+          git -C "$TARGET_DIR" -c user.name=moujitx -c user.email=moujitx_chn@qq.com \
+            commit -m "Client Release ${{ github.ref_name }} Commit ${{ github.sha }}" --allow-empty
           git -C "$TARGET_DIR" push "$GIT_REPO" main
