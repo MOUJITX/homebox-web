@@ -66,7 +66,7 @@ jobs:
           SERVER="${{ github.server_url }}"
           PROTO="${SERVER%%://*}"
           HOST="${SERVER#*://}"
-          git clone ${PROTO}://oauth2:${{ secrets.GIT_TOKEN }}@${HOST}/moujitx/com.moujitx.homebox.docker.git /tmp/docker-repo
+          git clone ${PROTO}://${{ secrets.GIT_TOKEN }}@${HOST}/moujitx/com.moujitx.homebox.docker.git /tmp/docker-repo
           rm -rf /tmp/docker-repo/dist
           cp -r ./dist /tmp/docker-repo/dist
           cd /tmp/docker-repo
