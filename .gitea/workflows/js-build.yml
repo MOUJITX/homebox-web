@@ -61,14 +61,16 @@ jobs:
 
       - name: Deploy to External Repo
         run: |
-          GIT_REPO="http://moujitx:${{ secrets.DOCKER_REPO_TOKEN }}@192.168.31.225:37211/moujitx/com.moujitx.homebox.docker.git"
-          git clone --depth=1 --single-branch --branch main "$GIT_REPO" /tmp/deploy-target 2>/dev/null || {
-            mkdir -p /tmp/deploy-target
-            git -C /tmp/deploy-target init
-            git -C /tmp/deploy-target checkout --orphan main
+          TARGET_DIR=/tmp/deploy-target
+          GIT_REPO="http://moujitx:${{ secrets.DOCKER_REPO_TOKEN }}@${{ github.server_url | replace('https://', '') | replace('http://', '') }}/moujitx/com.moujitx.homebox.docker.git"
+          git clone --depth=1 --single-branch --branch main "$GIT_REPO" "$TARGET_DIR" 2>/dev/null || {
+            mkdir -p "$TARGET_DIR"
+            git -C "$TARGET_DIR" init
+            git -C "$TARGET_DIR" checkout --orphan main
           }
-          cp -r ./dist/* /tmp/deploy-target/
-          git -C /tmp/deploy-target add --all
-          git -C /tmp/deploy-target -c user.name=moujitx -c user.email=moujitx@users.noreply.github.com \
-            commit -m "deploy: ${{ github.server_url }}/${{ github.repository }}@${{ github.sha }}" --allow-empty
-          git -C /tmp/deploy-target push "$GIT_REPO" main
+          mkdir -p "$TARGET_DIR/dist"
+          cp -r ./dist/* "$TARGET_DIR/dist/"
+          git -C "$TARGET_DIR" add --all
+          git -C "$TARGET_DIR" -c user.name=moujitx -c user.email=moujitx@users.noreply.github.com \
+            commit -m "Release ${{ github.ref_name }} Commit ${{ github.sha }}" --allow-empty
+          git -C "$TARGET_DIR" push "$GIT_REPO" main
