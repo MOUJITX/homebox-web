@@ -63,7 +63,7 @@ jobs:
         run: |
           git config --global user.email "ci@homebox"
           git config --global user.name "Homebox CI"
-          git clone https://oauth2:${{ secrets.GIT_TOKEN }}@${{ github.server_url }}/com.moujitx.homebox.docker.git /tmp/docker-repo
+          git clone http://oauth2:${{ secrets.GIT_TOKEN }}@${{ github.server_url }}/moujitx/com.moujitx.homebox.docker.git /tmp/docker-repo
           rm -rf /tmp/docker-repo/dist
           cp -r ./dist /tmp/docker-repo/dist
           cd /tmp/docker-repo
