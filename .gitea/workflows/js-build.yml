@@ -63,7 +63,7 @@ jobs:
         run: |
           TARGET_DIR=/tmp/deploy-target
           SERVER_HOST=$(echo "${{ github.server_url }}" | sed 's|^https\?://||')
-          GIT_REPO="http://moujitx:${{ secrets.DOCKER_REPO_TOKEN }}@${SERVER_HOST}/moujitx/com.moujitx.homebox.docker.git"
+          GIT_REPO="http://moujitx:${{ secrets.PUSH_GIT_INTERNAL }}@${SERVER_HOST}/moujitx/com.moujitx.homebox.docker.git"
           git clone --depth=1 --single-branch --branch main "$GIT_REPO" "$TARGET_DIR" 2>/dev/null || {
             mkdir -p "$TARGET_DIR"
             git -C "$TARGET_DIR" init
