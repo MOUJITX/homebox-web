@@ -32,6 +32,7 @@ export interface Asset {
   expirationDate: string | null;
   note: string | null;
   firstPictureUrl: string | null;
+  hasInvoice: boolean;
   subAssetCount: number;
   parentId: number | null;
   parentName: string | null;

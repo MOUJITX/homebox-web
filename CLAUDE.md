@@ -45,3 +45,4 @@ Homebox Client — a web client application for Homebox (home inventory manageme
 - Use arrow function style for all TS/TSX components and functions: `const Xxx = () => { ... }` or `const Xxx = () => (...)` for direct returns.
 - Modularize and extract reusable code components to avoid duplication. Shared utilities, hooks, and components should be placed in common locations for reuse.
 - Keep consistent style/UI across components. Avoid generic "AI-looking" design — use the `frontend-design` skill when building UI to produce distinctive, polished interfaces.
+- When adding, modifying, or removing any UI text (column headers, labels, messages, placeholders, etc.), always update both `src/i18n/locales/en.json` and `src/i18n/locales/zh.json` with the corresponding keys. Missing i18n keys cause the application to display raw key strings as fallback text.

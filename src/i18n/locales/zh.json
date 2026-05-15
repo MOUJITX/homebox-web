@@ -340,6 +340,7 @@
       "sellerName": "销售方",
       "totalAmount": "价税合计",
       "invoiceStatus": "发票状态",
+      "boundAssets": "绑定资产",
       "actions": "操作"
     },
     "type": {

@@ -8,6 +8,7 @@ import {
   MapPinIcon,
   StoreIcon,
   TagIcon,
+  ReceiptTextIcon,
 } from "lucide-react";
 import type { Asset, WarrantyStatus, Page } from "@/api/assets";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -379,7 +380,12 @@ const AssetsPage = () => {
                     {asset.price != null ? formatCurrency(asset.price) : "—"}
                   </TableCell>
                   <TableCell className="text-right tabular-nums">
-                    {formatCurrency(asset.totalPrice)}
+                    <span className="inline-flex items-center gap-1">
+                      {formatCurrency(asset.totalPrice)}
+                      {asset.hasInvoice && (
+                        <ReceiptTextIcon className="size-3.5 text-muted-foreground" />
+                      )}
+                    </span>
                   </TableCell>
                   <TableCell>
                     <Badge variant={asset.inUse ? "success" : "secondary"}>

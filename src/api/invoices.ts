@@ -28,6 +28,7 @@ export interface Invoice {
   taxAmount: number | null;
   totalAmount: number | null;
   attachmentCount: number;
+  assets: BoundAsset[];
   createdAt: string;
   updatedAt: string;
 }

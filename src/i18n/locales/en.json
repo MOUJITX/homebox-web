@@ -489,6 +489,7 @@
       "sellerName": "Seller",
       "totalAmount": "Amount",
       "invoiceStatus": "Status",
+      "boundAssets": "Assets",
       "actions": "Actions"
     },
     "type": {

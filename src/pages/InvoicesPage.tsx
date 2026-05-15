@@ -11,6 +11,7 @@ import { getInvoices, getInvoiceById } from "@/api/invoices";
 import { INVOICE_TYPES } from "@/components/invoices/constants";
 import { useDebounce } from "@/hooks/useDebounce";
 import { formatDate } from "@/lib/utils";
+import AuthImg from "@/components/AuthImg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -219,6 +220,7 @@ const InvoicesPage = () => {
               <TableHead>{t("invoices.columns.invoiceType")}</TableHead>
               <TableHead>{t("invoices.columns.buyerName")}</TableHead>
               <TableHead>{t("invoices.columns.sellerName")}</TableHead>
+              <TableHead>{t("invoices.columns.boundAssets")}</TableHead>
               <TableHead className="text-right">{t("invoices.columns.totalAmount")}</TableHead>
               <TableHead>{t("invoices.columns.invoiceStatus")}</TableHead>
               <TableHead className="text-right">{t("invoices.columns.actions")}</TableHead>
@@ -227,7 +229,7 @@ const InvoicesPage = () => {
           <TableBody>
             {loading && (
               <TableRow>
-                <TableCell colSpan={8} className="h-24 text-center">
+                <TableCell colSpan={9} className="h-24 text-center">
                   {t("common.loading")}
                 </TableCell>
               </TableRow>
@@ -235,7 +237,7 @@ const InvoicesPage = () => {
             {!loading && pageData.content.length === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={8}
+                  colSpan={9}
                   className="h-24 text-center text-muted-foreground"
                 >
                   {t("common.noResults")}
@@ -249,7 +251,7 @@ const InvoicesPage = () => {
                   className="cursor-pointer"
                   onClick={() => handleRowClick(invoice)}
                 >
-                  <TableCell className="font-mono text-xs">
+                  <TableCell className="font-mono text-xs max-w-[120px] truncate">
                     {invoice.invoiceNumber ?? "—"}
                   </TableCell>
                   <TableCell>
@@ -262,6 +264,28 @@ const InvoicesPage = () => {
                   </TableCell>
                   <TableCell>{invoice.buyerName ?? "—"}</TableCell>
                   <TableCell>{invoice.sellerName ?? "—"}</TableCell>
+                  <TableCell>
+                    {invoice.assets.length === 0 ? (
+                      "—"
+                    ) : (
+                      <div className="flex items-center gap-1.5">
+                        {invoice.assets[0].firstPictureUrl && (
+                          <AuthImg
+                            url={invoice.assets[0].firstPictureUrl}
+                            className="size-5 shrink-0 rounded object-cover"
+                          />
+                        )}
+                        <span className="text-xs truncate">
+                          {invoice.assets[0].name}
+                        </span>
+                        {invoice.assets.length > 1 && (
+                          <span className="shrink-0 text-[10px] text-muted-foreground">
+                            +{invoice.assets.length - 1}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </TableCell>
                   <TableCell className="text-right font-mono">
                     {invoice.totalAmount != null
                       ? `¥${invoice.totalAmount.toFixed(2)}`
