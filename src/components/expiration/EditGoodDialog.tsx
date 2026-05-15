@@ -24,6 +24,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import CategoryManagerDialog from "./CategoryManagerDialog";
 import BrandManagerDialog from "./BrandManagerDialog";
 
@@ -175,27 +176,16 @@ const EditGoodDialog = ({
           <div className="grid gap-2">
             <Label>{t("goods.form.brand")}</Label>
             <div className="flex gap-2">
-              <Select
+              <SearchableSelect
                 value={brandId}
-                onValueChange={(v) => v !== undefined && setBrandId(v)}
-                required
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t("goods.form.brandPlaceholder")}>
-                    {() =>
-                      brands.find((b) => b.id === brandId)?.brandName ??
-                      t("goods.form.brandPlaceholder")
-                    }
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectPopup>
-                  {brands.map((b) => (
-                    <SelectItem key={b.id} value={b.id}>
-                      {b.brandName}
-                    </SelectItem>
-                  ))}
-                </SelectPopup>
-              </Select>
+                onChange={(v) => v != null && setBrandId(v)}
+                options={brands.map((b) => ({
+                  value: b.id,
+                  label: b.brandName,
+                }))}
+                placeholder={t("goods.form.brandPlaceholder")}
+                emptyMessage={t("common.noResults")}
+              />
               <Button
                 type="button"
                 variant="outline"

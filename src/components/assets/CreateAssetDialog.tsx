@@ -26,6 +26,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import AssetCategoryManagerDialog from "./AssetCategoryManagerDialog";
 import AssetPlaceManagerDialog from "./AssetPlaceManagerDialog";
 import AssetStoreManagerDialog from "./AssetStoreManagerDialog";
@@ -246,30 +247,16 @@ const CreateAssetDialog = ({
             <div className="grid gap-2">
               <Label>{t("assets.form.store")}</Label>
               <div className="flex gap-2">
-                <Select
+                <SearchableSelect
                   value={storeId}
-                  onValueChange={(v) => v !== undefined && setStoreId(v)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder={t("assets.form.storePlaceholder")}>
-                      {() =>
-                        stores.find((s) => s.id === storeId)?.name ??
-                        t("assets.form.storePlaceholder")
-                      }
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectPopup>
-                    <SelectItem value={null}>
-                      {t("assets.form.storePlaceholder")}
-                    </SelectItem>
-                    {stores.map((s) => (
-                      <SelectItem key={s.id} value={s.id}>
-                        {s.name}
-                        {s.channel ? ` (${s.channel})` : ""}
-                      </SelectItem>
-                    ))}
-                  </SelectPopup>
-                </Select>
+                  onChange={setStoreId}
+                  options={stores.map((s) => ({
+                    value: s.id,
+                    label: s.name + (s.channel ? ` (${s.channel})` : ""),
+                  }))}
+                  placeholder={t("assets.form.storePlaceholder")}
+                  emptyMessage={t("common.noResults")}
+                />
                 <Button
                   type="button"
                   variant="outline"
