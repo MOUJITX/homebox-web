@@ -5,8 +5,8 @@ A web client application for [Homebox](https://github.com/sysadminsmedia/homebox
 ## Tech Stack
 
 - React 19 + TypeScript 6
-- Vite 8
-- Tailwind CSS 4 + Shadcn UI (Base UI primitives)
+- Viite 8
+- Talwind CSS 4 + Shadcn UI (Base UI primitives)
 - React Router 7
 - TanStack React Query (data fetching & caching)
 - Axios

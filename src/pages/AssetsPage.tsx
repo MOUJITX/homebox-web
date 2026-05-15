@@ -14,6 +14,7 @@ import {
 import type { Asset, WarrantyStatus, Page } from "@/api/assets";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import AuthImg from "@/components/AuthImg";
+import ImagePreview from "@/components/ImagePreview";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useAssetCategories } from "@/hooks/queries/useAssetCategories";
 import { useAssetPlaces } from "@/hooks/queries/useAssetPlaces";
@@ -111,6 +112,7 @@ const AssetsPage = () => {
   const [placeManagerOpen, setPlaceManagerOpen] = useState(false);
   const [storeManagerOpen, setStoreManagerOpen] = useState(false);
   const [categoryManagerOpen, setCategoryManagerOpen] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
@@ -348,7 +350,13 @@ const AssetsPage = () => {
                 >
                   <TableCell>
                     {asset.firstPictureUrl ? (
-                      <div className="size-8 shrink-0 overflow-hidden rounded ring-1 ring-foreground/10">
+                      <div
+                        className="size-8 shrink-0 cursor-pointer overflow-hidden rounded ring-1 ring-foreground/10"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setPreviewUrl(asset.firstPictureUrl);
+                        }}
+                      >
                         <AuthImg
                           url={asset.firstPictureUrl}
                           alt=""
@@ -483,6 +491,11 @@ const AssetsPage = () => {
       <AssetStoreManagerDialog
         open={storeManagerOpen}
         onClose={() => setStoreManagerOpen(false)}
+      />
+      <ImagePreview
+        url={previewUrl}
+        open={!!previewUrl}
+        onOpenChange={(open) => !open && setPreviewUrl(null)}
       />
     </div>
   );

@@ -20,6 +20,7 @@ import {
   type Page,
 } from "@/api/goods";
 import AuthImg from "@/components/AuthImg";
+import ImagePreview from "@/components/ImagePreview";
 import { useDebounce } from "@/hooks/useDebounce";
 import { getGoodCategories, type GoodCategory } from "@/api/goodCategories";
 import { getGoodBrands, type GoodBrand } from "@/api/goodBrands";
@@ -100,6 +101,7 @@ const ExpirationPage = () => {
   const [expandedGoodId, setExpandedGoodId] = useState<number | null>(null);
   const [categoryManagerOpen, setCategoryManagerOpen] = useState(false);
   const [brandManagerOpen, setBrandManagerOpen] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const fetchRefData = useCallback(async () => {
     const [catRes, brandRes] = await Promise.all([
@@ -351,7 +353,10 @@ const ExpirationPage = () => {
                     </TableCell>
                     <TableCell>
                       {good.firstPictureUrl ? (
-                        <div className="size-8 shrink-0 overflow-hidden rounded ring-1 ring-foreground/10">
+                        <div
+                          className="size-8 shrink-0 cursor-pointer overflow-hidden rounded ring-1 ring-foreground/10"
+                          onClick={() => setPreviewUrl(good.firstPictureUrl)}
+                        >
                           <AuthImg
                             url={good.firstPictureUrl}
                             alt=""
@@ -475,6 +480,11 @@ const ExpirationPage = () => {
         open={brandManagerOpen}
         onClose={() => setBrandManagerOpen(false)}
         onChanged={handleRefDataChanged}
+      />
+      <ImagePreview
+        url={previewUrl}
+        open={!!previewUrl}
+        onOpenChange={(open) => !open && setPreviewUrl(null)}
       />
     </div>
   );
