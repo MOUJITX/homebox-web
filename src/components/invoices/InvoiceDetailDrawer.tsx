@@ -16,6 +16,7 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import AuthImg from "@/components/AuthImg";
+import ImagePreview from "@/components/ImagePreview";
 import InvoiceAttachmentManager from "./InvoiceAttachmentManager";
 
 const Field = ({
@@ -68,6 +69,7 @@ const InvoiceDetailDrawer = ({
   const [invoice, setInvoice] = useState<InvoiceDetail | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (open && invoiceId) {
@@ -253,8 +255,8 @@ const InvoiceDetailDrawer = ({
                 <img
                   src={`data:image/png;base64,${invoice.previewImage}`}
                   alt={t("invoices.detail.preview")}
-                  className="w-full rounded border cursor-pointer"
-                  onClick={() => invoice.fileUrl && window.open(invoice.fileUrl, "_blank")}
+                  className="w-full rounded border cursor-pointer hover:opacity-90 transition-opacity"
+                  onClick={() => setPreviewUrl(`data:image/png;base64,${invoice.previewImage}`)}
                 />
               </div>
             )}
@@ -299,6 +301,11 @@ const InvoiceDetailDrawer = ({
           </SheetFooter>
         )}
       </SheetContent>
+      <ImagePreview
+        url={previewUrl}
+        open={!!previewUrl}
+        onOpenChange={(open) => !open && setPreviewUrl(null)}
+      />
     </Sheet>
   );
 };

@@ -5,6 +5,7 @@ import { uploadAssetPicture, deleteAssetPicture } from "@/api/assetPictures";
 import { useAssetDetail } from "@/hooks/queries/useAssetDetail";
 import { useInvalidateAssets } from "@/hooks/queries/useInvalidateAssets";
 import AuthImg from "@/components/AuthImg";
+import ImagePreview from "@/components/ImagePreview";
 import { Button } from "@/components/ui/button";
 
 interface AssetPictureManagerProps {
@@ -16,6 +17,7 @@ const AssetPictureManager = ({ assetId }: AssetPictureManagerProps) => {
   const { data: detail, isLoading } = useAssetDetail(assetId);
   const invalidate = useInvalidateAssets();
   const [uploading, setUploading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const pictures = detail?.pictures ?? [];
@@ -85,7 +87,8 @@ const AssetPictureManager = ({ assetId }: AssetPictureManagerProps) => {
               <AuthImg
                 url={pic.url}
                 alt={pic.filename}
-                className="size-20 rounded-md object-cover ring-1 ring-foreground/10"
+                className="size-20 rounded-md object-cover ring-1 ring-foreground/10 cursor-pointer"
+                onClick={() => setPreviewUrl(pic.url)}
               />
               <Button
                 variant="destructive"
@@ -99,6 +102,11 @@ const AssetPictureManager = ({ assetId }: AssetPictureManagerProps) => {
           ))}
         </div>
       )}
+      <ImagePreview
+        url={previewUrl}
+        open={!!previewUrl}
+        onOpenChange={(open) => !open && setPreviewUrl(null)}
+      />
     </div>
   );
 };

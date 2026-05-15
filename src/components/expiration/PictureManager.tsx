@@ -5,6 +5,7 @@ import type { GoodPicture } from "@/api/goods";
 import { getGoodById } from "@/api/goods";
 import { uploadGoodPicture, deleteGoodPicture } from "@/api/goodPictures";
 import AuthImg from "@/components/AuthImg";
+import ImagePreview from "@/components/ImagePreview";
 import { Button } from "@/components/ui/button";
 
 interface PictureManagerProps {
@@ -16,6 +17,7 @@ const PictureManager = ({ goodId }: PictureManagerProps) => {
   const [pictures, setPictures] = useState<GoodPicture[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchPictures = useCallback(async () => {
@@ -89,7 +91,8 @@ const PictureManager = ({ goodId }: PictureManagerProps) => {
               <AuthImg
                 url={pic.url}
                 alt={pic.filename}
-                className="size-20 rounded-md object-cover ring-1 ring-foreground/10"
+                className="size-20 rounded-md object-cover ring-1 ring-foreground/10 cursor-pointer"
+                onClick={() => setPreviewUrl(pic.url)}
               />
               <Button
                 variant="destructive"
@@ -103,6 +106,11 @@ const PictureManager = ({ goodId }: PictureManagerProps) => {
           ))}
         </div>
       )}
+      <ImagePreview
+        url={previewUrl}
+        open={!!previewUrl}
+        onOpenChange={(open) => !open && setPreviewUrl(null)}
+      />
     </div>
   );
 };

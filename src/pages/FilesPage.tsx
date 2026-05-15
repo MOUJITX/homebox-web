@@ -23,6 +23,7 @@ import {
 import type { Page } from "@/api/goods";
 import { formatDateTime } from "@/lib/utils";
 
+import ImagePreview from "@/components/ImagePreview";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -287,22 +288,26 @@ const FilesPage = () => {
         </div>
       )}
 
-      {/* Preview Dialog */}
+      <ImagePreview
+        url={
+          previewFile && isImageType(previewFile.contentType)
+            ? previewFile.url
+            : null
+        }
+        open={!!(previewFile && isImageType(previewFile.contentType))}
+        onOpenChange={(open) => !open && setPreviewFile(null)}
+      />
+
+      {/* Non-Image Preview Dialog */}
       <Dialog
-        open={!!previewFile}
+        open={!!(previewFile && !isImageType(previewFile.contentType))}
         onOpenChange={(open) => !open && setPreviewFile(null)}
       >
         <DialogContent className="max-w-3xl" showCloseButton>
           <DialogHeader>
             <DialogTitle>{previewFile?.originalFilename}</DialogTitle>
           </DialogHeader>
-          {previewFile && isImageType(previewFile.contentType) ? (
-            <img
-              src={previewFile.url}
-              alt={previewFile.originalFilename}
-              className="max-h-[70vh] w-full rounded-lg object-contain"
-            />
-          ) : previewFile ? (
+          {previewFile && (
             <div className="flex flex-col items-center gap-3 py-8">
               {(() => {
                 const Icon = getFileIcon(previewFile.contentType);
@@ -319,7 +324,7 @@ const FilesPage = () => {
                 </Button>
               </a>
             </div>
-          ) : null}
+          )}
         </DialogContent>
       </Dialog>
 
