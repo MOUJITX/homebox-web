@@ -224,7 +224,9 @@ const AssetsPage = () => {
               </SelectValue>
             </SelectTrigger>
             <SelectPopup>
-              <SelectItem value={null}>{t("assets.filters.allInUse")}</SelectItem>
+              <SelectItem value={null}>
+                {t("assets.filters.allInUse")}
+              </SelectItem>
               <SelectItem value={true}>{t("assets.filters.inUse")}</SelectItem>
               <SelectItem value={false}>
                 {t("assets.filters.notInUse")}
@@ -305,8 +307,12 @@ const AssetsPage = () => {
               <TableHead>{t("assets.columns.serialNumber")}</TableHead>
               <TableHead>{t("assets.columns.category")}</TableHead>
               <TableHead>{t("assets.columns.place")}</TableHead>
-              <TableHead className="text-right">{t("assets.columns.price")}</TableHead>
-              <TableHead className="text-right">{t("assets.columns.totalPrice")}</TableHead>
+              <TableHead className="text-right">
+                {t("assets.columns.price")}
+              </TableHead>
+              <TableHead className="text-right">
+                {t("assets.columns.totalPrice")}
+              </TableHead>
               <TableHead>{t("assets.columns.inUse")}</TableHead>
               <TableHead>{t("assets.columns.retireDate")}</TableHead>
               <TableHead>{t("assets.columns.warranty")}</TableHead>
@@ -342,13 +348,15 @@ const AssetsPage = () => {
                 >
                   <TableCell>
                     {asset.firstPictureUrl ? (
-                      <AuthImg
-                        url={asset.firstPictureUrl}
-                        alt=""
-                        className="size-8 rounded object-cover ring-1 ring-foreground/10"
-                      />
+                      <div className="size-8 shrink-0 overflow-hidden rounded ring-1 ring-foreground/10">
+                        <AuthImg
+                          url={asset.firstPictureUrl}
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
                     ) : (
-                      <div className="size-8 rounded bg-muted" />
+                      <div className="size-8 shrink-0 rounded bg-muted" />
                     )}
                   </TableCell>
                   <TableCell className="font-medium">{asset.name}</TableCell>

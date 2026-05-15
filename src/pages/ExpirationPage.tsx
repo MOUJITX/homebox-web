@@ -351,13 +351,15 @@ const ExpirationPage = () => {
                     </TableCell>
                     <TableCell>
                       {good.firstPictureUrl ? (
-                        <AuthImg
-                          url={good.firstPictureUrl}
-                          alt=""
-                          className="size-8 rounded object-cover ring-1 ring-foreground/10"
-                        />
+                        <div className="size-8 shrink-0 overflow-hidden rounded ring-1 ring-foreground/10">
+                          <AuthImg
+                            url={good.firstPictureUrl}
+                            alt=""
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
                       ) : (
-                        <div className="size-8 rounded bg-muted" />
+                        <div className="size-8 shrink-0 rounded bg-muted" />
                       )}
                     </TableCell>
                     <TableCell className="font-medium">
