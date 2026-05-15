@@ -8,6 +8,7 @@ interface UseAssetsParams {
   placeId?: number | null;
   isInUse?: boolean | null;
   warrantyStatus?: WarrantyStatus | null;
+  parentOnly?: boolean | null;
   page: number;
   size: number;
 }
@@ -19,6 +20,7 @@ export const useAssets = (params: UseAssetsParams) => {
     placeId: params.placeId ?? undefined,
     isInUse: params.isInUse ?? undefined,
     warrantyStatus: params.warrantyStatus ?? undefined,
+    parentOnly: params.parentOnly ?? undefined,
     page: params.page,
     size: params.size,
     sortBy: "createdAt",

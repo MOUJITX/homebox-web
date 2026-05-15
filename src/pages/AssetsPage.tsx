@@ -89,6 +89,7 @@ const AssetsPage = () => {
   const [filterIsInUse, setFilterIsInUse] = useState<boolean | null>(null);
   const [filterWarrantyStatus, setFilterWarrantyStatus] =
     useState<WarrantyStatus | null>(null);
+  const [filterParentOnly, setFilterParentOnly] = useState<boolean | null>(true);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0]);
 
@@ -98,6 +99,7 @@ const AssetsPage = () => {
     placeId: filterPlaceId,
     isInUse: filterIsInUse,
     warrantyStatus: filterWarrantyStatus,
+    parentOnly: filterParentOnly,
     page,
     size: pageSize,
   });
@@ -263,6 +265,34 @@ const AssetsPage = () => {
                   {t(`assets.warranty.${s}`)}
                 </SelectItem>
               ))}
+            </SelectPopup>
+          </Select>
+        </div>
+
+        <div className="w-36">
+          <Select
+            value={filterParentOnly}
+            onValueChange={(v) => {
+              setFilterParentOnly(v);
+              setPage(0);
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={t("assets.filters.parentOnly")}>
+                {() =>
+                  filterParentOnly === false
+                    ? t("assets.filters.allAssets")
+                    : t("assets.filters.parentOnly")
+                }
+              </SelectValue>
+            </SelectTrigger>
+            <SelectPopup>
+              <SelectItem value={true}>
+                {t("assets.filters.parentOnly")}
+              </SelectItem>
+              <SelectItem value={false}>
+                {t("assets.filters.allAssets")}
+              </SelectItem>
             </SelectPopup>
           </Select>
         </div>

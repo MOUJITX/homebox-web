@@ -359,6 +359,8 @@
       "allPlaces": "All Places",
       "allInUse": "All Status",
       "allWarrantyStatus": "All Warranty",
+      "parentOnly": "Parent Assets",
+      "allAssets": "All Assets",
       "inUse": "In Use",
       "notInUse": "Unavailable"
     },

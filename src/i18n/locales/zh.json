@@ -210,6 +210,8 @@
       "allPlaces": "全部位置",
       "allInUse": "全部状态",
       "allWarrantyStatus": "全部保修",
+      "parentOnly": "仅父资产",
+      "allAssets": "全部资产",
       "inUse": "使用中",
       "notInUse": "不可用"
     },

@@ -65,6 +65,7 @@ export interface GetAssetsParams {
   placeId?: number;
   isInUse?: boolean;
   warrantyStatus?: WarrantyStatus;
+  parentOnly?: boolean;
   page?: number;
   size?: number;
   sortBy?: string;
