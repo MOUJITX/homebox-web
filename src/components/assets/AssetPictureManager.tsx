@@ -17,7 +17,7 @@ const AssetPictureManager = ({ assetId }: AssetPictureManagerProps) => {
   const { data: detail, isLoading } = useAssetDetail(assetId);
   const invalidate = useInvalidateAssets();
   const [uploading, setUploading] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const pictures = detail?.pictures ?? [];
@@ -82,13 +82,13 @@ const AssetPictureManager = ({ assetId }: AssetPictureManagerProps) => {
       )}
       {!isLoading && pictures.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {pictures.map((pic) => (
+          {pictures.map((pic, idx) => (
             <div key={pic.id} className="group relative">
               <AuthImg
                 url={pic.url}
                 alt={pic.filename}
                 className="size-20 rounded-md object-cover ring-1 ring-foreground/10 cursor-pointer"
-                onClick={() => setPreviewUrl(pic.url)}
+                onClick={() => setPreviewIndex(idx)}
               />
               <Button
                 variant="destructive"
@@ -103,9 +103,10 @@ const AssetPictureManager = ({ assetId }: AssetPictureManagerProps) => {
         </div>
       )}
       <ImagePreview
-        url={previewUrl}
-        open={!!previewUrl}
-        onOpenChange={(open) => !open && setPreviewUrl(null)}
+        slides={pictures.map((p) => ({ src: p.url }))}
+        index={previewIndex ?? 0}
+        open={previewIndex != null}
+        onOpenChange={(open) => !open && setPreviewIndex(null)}
       />
     </div>
   );
