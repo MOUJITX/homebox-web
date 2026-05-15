@@ -5,8 +5,6 @@ import {
   PencilIcon,
   TrashIcon,
   SearchIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
   MapPinIcon,
   StoreIcon,
   TagIcon,
@@ -45,7 +43,7 @@ import AssetPlaceManagerDialog from "@/components/assets/AssetPlaceManagerDialog
 import AssetStoreManagerDialog from "@/components/assets/AssetStoreManagerDialog";
 import AssetCategoryManagerDialog from "@/components/assets/AssetCategoryManagerDialog";
 
-const PAGE_SIZE = 10;
+import { Pagination, PAGE_SIZE_OPTIONS } from "@/components/ui/pagination";
 
 const WARRANTY_OPTIONS: WarrantyStatus[] = [
   "IN_WARRANTY",
@@ -57,7 +55,7 @@ const EMPTY_PAGE: Page<Asset> = {
   content: [],
   totalElements: 0,
   totalPages: 0,
-  size: PAGE_SIZE,
+  size: PAGE_SIZE_OPTIONS[0],
   number: 0,
   first: true,
   last: true,
@@ -91,6 +89,7 @@ const AssetsPage = () => {
   const [filterWarrantyStatus, setFilterWarrantyStatus] =
     useState<WarrantyStatus | null>(null);
   const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0]);
 
   const { data: pageData, isLoading } = useAssets({
     search: debouncedSearch,
@@ -99,7 +98,7 @@ const AssetsPage = () => {
     isInUse: filterIsInUse,
     warrantyStatus: filterWarrantyStatus,
     page,
-    size: PAGE_SIZE,
+    size: pageSize,
   });
 
   const data = pageData ?? EMPTY_PAGE;
@@ -427,34 +426,16 @@ const AssetsPage = () => {
         </Table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <span>
-            {t("common.pageInfo", {
-              current: currentPage + 1,
-              total: totalPages,
-            })}
-          </span>
-          <div className="flex gap-1">
-            <Button
-              variant="outline"
-              size="icon-sm"
-              disabled={data.first}
-              onClick={() => setPage((p) => p - 1)}
-            >
-              <ChevronLeftIcon className="size-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon-sm"
-              disabled={data.last}
-              onClick={() => setPage((p) => p + 1)}
-            >
-              <ChevronRightIcon className="size-4" />
-            </Button>
-          </div>
-        </div>
-      )}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        onPageChange={setPage}
+        onPageSizeChange={(size) => {
+          setPageSize(size);
+          setPage(0);
+        }}
+      />
 
       <CreateAssetDialog
         open={createOpen}

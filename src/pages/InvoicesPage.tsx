@@ -5,8 +5,6 @@ import {
   PencilIcon,
   TrashIcon,
   SearchIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
 } from "lucide-react";
 import type { Invoice, InvoiceType, InvoiceStatus, InvoiceDetail, Page } from "@/api/invoices";
 import { getInvoices, getInvoiceById } from "@/api/invoices";
@@ -36,7 +34,7 @@ import EditInvoiceDialog from "@/components/invoices/EditInvoiceDialog";
 import DeleteInvoiceDialog from "@/components/invoices/DeleteInvoiceDialog";
 import InvoiceDetailDrawer from "@/components/invoices/InvoiceDetailDrawer";
 
-const PAGE_SIZE = 10;
+import { Pagination, PAGE_SIZE_OPTIONS } from "@/components/ui/pagination";
 
 const INVOICE_STATUSES: InvoiceStatus[] = ["NORMAL", "VOIDED", "RED_FLUSHED"];
 
@@ -60,7 +58,7 @@ const InvoicesPage = () => {
     content: [],
     totalElements: 0,
     totalPages: 0,
-    size: PAGE_SIZE,
+    size: PAGE_SIZE_OPTIONS[0],
     number: 0,
     first: true,
     last: true,
@@ -73,6 +71,7 @@ const InvoicesPage = () => {
   const [filterType, setFilterType] = useState<InvoiceType | null>(null);
   const [filterStatus, setFilterStatus] = useState<InvoiceStatus | null>(null);
   const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0]);
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editingInvoice, setEditingInvoice] = useState<InvoiceDetail | null>(null);
@@ -87,7 +86,7 @@ const InvoicesPage = () => {
         invoiceType: filterType ?? undefined,
         invoiceStatus: filterStatus ?? undefined,
         page,
-        size: PAGE_SIZE,
+        size: pageSize,
         sortBy: "createdAt",
         sortDir: "desc",
       });
@@ -95,7 +94,7 @@ const InvoicesPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [debouncedSearch, filterType, filterStatus, page]);
+  }, [debouncedSearch, filterType, filterStatus, page, pageSize]);
 
   useEffect(() => {
     void fetchInvoices();
@@ -300,34 +299,16 @@ const InvoicesPage = () => {
         </Table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <span>
-            {t("common.pageInfo", {
-              current: currentPage + 1,
-              total: totalPages,
-            })}
-          </span>
-          <div className="flex gap-1">
-            <Button
-              variant="outline"
-              size="icon-sm"
-              disabled={pageData.first}
-              onClick={() => setPage((p) => p - 1)}
-            >
-              <ChevronLeftIcon className="size-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon-sm"
-              disabled={pageData.last}
-              onClick={() => setPage((p) => p + 1)}
-            >
-              <ChevronRightIcon className="size-4" />
-            </Button>
-          </div>
-        </div>
-      )}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        onPageChange={setPage}
+        onPageSizeChange={(size) => {
+          setPageSize(size);
+          setPage(0);
+        }}
+      />
 
       <CreateInvoiceDialog
         open={createOpen}

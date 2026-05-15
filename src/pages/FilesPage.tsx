@@ -9,8 +9,6 @@ import {
   FileTextIcon,
   FileAudioIcon,
   FileVideoIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
   ImageIcon,
 } from "lucide-react";
 import {
@@ -45,7 +43,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 
-const PAGE_SIZE = 20;
+import { Pagination } from "@/components/ui/pagination";
 
 const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return "0 B";
@@ -68,6 +66,7 @@ const FilesPage = () => {
   const [pageData, setPageData] = useState<Page<FileRecord> | null>(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(20);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -79,12 +78,12 @@ const FilesPage = () => {
   const fetchFiles = useCallback(async (p: number) => {
     setLoading(true);
     try {
-      const { data } = await getFiles(p, PAGE_SIZE);
+      const { data } = await getFiles(p, pageSize);
       setPageData(data);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [pageSize]);
 
   useEffect(() => {
     void fetchFiles(page);
@@ -259,34 +258,16 @@ const FilesPage = () => {
         </Table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <span>
-            {t("common.pageInfo", {
-              current: page + 1,
-              total: totalPages,
-            })}
-          </span>
-          <div className="flex gap-1">
-            <Button
-              variant="outline"
-              size="icon-sm"
-              disabled={page <= 0}
-              onClick={() => setPage((p) => p - 1)}
-            >
-              <ChevronLeftIcon className="size-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon-sm"
-              disabled={page >= totalPages - 1}
-              onClick={() => setPage((p) => p + 1)}
-            >
-              <ChevronRightIcon className="size-4" />
-            </Button>
-          </div>
-        </div>
-      )}
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        onPageChange={setPage}
+        onPageSizeChange={(size) => {
+          setPageSize(size);
+          setPage(0);
+        }}
+      />
 
       <ImagePreview
         url={
