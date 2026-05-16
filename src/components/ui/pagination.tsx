@@ -25,7 +25,7 @@ const getPages = (current: number, total: number) => {
   else if (left === 2) pages.push(1);
 
   for (let i = left; i <= right; i++) {
-    if (i > 1 && i < total - 1) pages.push(i);
+    if (i > 0 && i < total - 1) pages.push(i);
   }
 
   if (right < total - 3) pages.push("ellipsis-end");
