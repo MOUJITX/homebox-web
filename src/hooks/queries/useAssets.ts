@@ -23,7 +23,7 @@ export const useAssets = (params: UseAssetsParams) => {
     parentOnly: params.parentOnly ?? undefined,
     page: params.page,
     size: params.size,
-    sortBy: "createdAt",
+    sortBy: "shopDate",
     sortDir: "desc",
   };
 

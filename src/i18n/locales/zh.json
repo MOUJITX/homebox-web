@@ -170,6 +170,7 @@
       "serialNumber": "序列号",
       "category": "分类",
       "place": "位置",
+      "purchaseDate": "购买日期",
       "price": "价格",
       "totalPrice": "总价",
       "inUse": "使用中",

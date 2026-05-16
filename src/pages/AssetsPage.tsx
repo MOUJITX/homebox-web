@@ -335,10 +335,12 @@ const AssetsPage = () => {
             <TableRow>
               <TableHead className="w-12" />
               <TableHead>{t("assets.columns.name")}</TableHead>
-              <TableHead>{t("assets.columns.barcode")}</TableHead>
               <TableHead>{t("assets.columns.serialNumber")}</TableHead>
               <TableHead>{t("assets.columns.category")}</TableHead>
               <TableHead>{t("assets.columns.place")}</TableHead>
+              <TableHead className="text-right">
+                {t("assets.columns.purchaseDate")}
+              </TableHead>
               <TableHead className="text-right">
                 {t("assets.columns.price")}
               </TableHead>
@@ -397,15 +399,22 @@ const AssetsPage = () => {
                       <div className="size-8 shrink-0 rounded bg-muted" />
                     )}
                   </TableCell>
-                  <TableCell className="font-medium">{asset.name}</TableCell>
-                  <TableCell className="font-mono text-xs">
-                    {asset.barcode ?? "—"}
+                  <TableCell>
+                    <span className="font-medium">{asset.name}</span>
+                    {asset.barcode && (
+                      <span className="block text-[10px] text-muted-foreground font-mono">
+                        {asset.barcode}
+                      </span>
+                    )}
                   </TableCell>
                   <TableCell className="font-mono text-xs">
                     {asset.serialNumber ?? "—"}
                   </TableCell>
                   <TableCell>{asset.categoryName}</TableCell>
                   <TableCell>{asset.placeName}</TableCell>
+                  <TableCell className="text-right text-xs tabular-nums">
+                    {asset.shopDate ? formatDate(asset.shopDate) : "—"}
+                  </TableCell>
                   <TableCell className="text-right tabular-nums">
                     {asset.price != null ? formatCurrency(asset.price) : "—"}
                   </TableCell>

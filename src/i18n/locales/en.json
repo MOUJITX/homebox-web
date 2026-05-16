@@ -319,6 +319,7 @@
       "serialNumber": "Serial Number",
       "category": "Category",
       "place": "Place",
+      "purchaseDate": "Purchase Date",
       "price": "Price",
       "totalPrice": "Total Price",
       "inUse": "In Use",

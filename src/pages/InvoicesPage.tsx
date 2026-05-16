@@ -88,7 +88,7 @@ const InvoicesPage = () => {
         invoiceStatus: filterStatus ?? undefined,
         page,
         size: pageSize,
-        sortBy: "createdAt",
+        sortBy: "invoiceDate",
         sortDir: "desc",
       });
       setPageData(data);
