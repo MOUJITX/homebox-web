@@ -25,3 +25,15 @@ export const formatCurrency = (amount: number) =>
   `¥${amount.toFixed(2)}`;
 
 export const ROOT_ROLE = "root" as const;
+
+export const generateUUID = (): string => {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // Fallback for non-secure contexts where crypto.randomUUID is unavailable
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = crypto.getRandomValues(new Uint8Array(1))[0] & 15;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};

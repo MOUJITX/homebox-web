@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PencilIcon, TrashIcon, PlusIcon } from "lucide-react";
 import type { AiModel } from "@/api/systemConfig";
+import { generateUUID } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -55,7 +56,7 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
   const handleAdd = async () => {
     if (!form.name.trim() || !form.apiUrl.trim() || !form.model.trim()) return;
     const newModel: AiModel = {
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       ...form,
     };
     await onSave([...models, newModel]);
