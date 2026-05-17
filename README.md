@@ -5,8 +5,8 @@ A web client application for [Homebox](https://github.com/sysadminsmedia/homebox
 ## Tech Stack
 
 - React 19 + TypeScript 6
-- Viite 8
-- Talwind CSS 4 + Shadcn UI (Base UI primitives)
+- Vite 8
+- Tailwind CSS 4 + Shadcn UI (Base UI primitives)
 - React Router 7
 - TanStack React Query (data fetching & caching)
 - Axios
@@ -76,11 +76,12 @@ yarn preview
 - **Warranty status** — automatic computation: In Warranty, Out of Warranty, No Warranty
 - **Server-side pagination** — search by name/barcode/serial number, filter by category, place, in-use status, warranty status
 - **Expandable rows** — inline sub-asset management and picture management
+- **Invoice binding** — bind/unbind invoices to assets with a many-to-many relationship
 
 ### Invoice Management
 
 - **Invoices** — CRUD for invoices with invoice code, number, date, type, status, buyer/seller info, amounts, and file attachments
-- **Invoice types** — Digital Invoice, Railway E-Ticket, VAT Invoice, Airline E-Ticket, Machine-Printed, Quota Invoice, Other
+- **Invoice types** — Digital Invoice, Railway Electronic, VAT Invoice, Air Electronic, General Machine-Printed, Quota Invoice, Non-Tax Income (General/Unified), Fund Settlement, Medical (Outpatient/Inpatient), Other
 - **Invoice status** — Normal, Voided, Reversed (已红冲)
 - **File upload & parsing** — upload PDF/XML/OFD files to auto-extract invoice data (best-effort, user reviews before saving)
 - **Attachments** — attach additional files to invoices (not parsed)
@@ -106,6 +107,12 @@ yarn preview
 - **Preview** — inline image preview for image files using authenticated image loading
 - **Pagination** — server-side pagination for the file list
 
+### Settings (Root Only)
+
+- **Settings** — manage system configuration at `/settings` (root role required)
+- **File Storage** — configure Qiniu OSS (access key, secret key, bucket, CDN domain) with connection test
+- **AI Models** — manage multiple AI model configurations for invoice parsing, set active model, test connections
+
 ### Internationalization
 
 All user-facing text is externalized via i18next. Translation files are in `src/i18n/locales/`.
@@ -129,10 +136,12 @@ src/
 │   ├── assetCategories.ts # Asset categories API
 │   ├── assetPlaces.ts    # Asset places API
 │   ├── assetStores.ts    # Asset stores API
+│   ├── assetInvoices.ts  # Asset-invoice binding API
 │   ├── invoices.ts       # Invoices API
 │   ├── members.ts        # Members API
 │   ├── profile.ts        # Profile API
-│   └── roles.ts          # Roles API
+│   ├── roles.ts          # Roles API
+│   └── systemConfig.ts   # System configuration API
 ├── components/
 │   ├── AppShell.tsx      # App layout shell (sidebar + topbar + outlet)
 │   ├── AuthFormLayout.tsx # Auth page layout wrapper
@@ -148,15 +157,16 @@ src/
 │   ├── members/          # Member management dialogs
 │   ├── profile/          # Profile components
 │   ├── roles/            # Role management dialogs
+│   ├── settings/         # System settings components
 │   └── ui/               # Shadcn UI components
 ├── providers/            # React providers (QueryProvider)
 ├── contexts/             # React context providers (AuthContext)
 ├── hooks/                # Custom hooks
-│   └── queries/          # React Query hooks (dashboardKeys, useDashboard, assetKeys, useAssets, etc.)
+│   └── queries/          # React Query hooks (dashboardKeys, useDashboard, assetKeys, useAssets, useAssetInvoices, etc.)
 ├── i18n/                 # i18next config and locale files
 │   └── locales/          # Translation JSON files
 ├── lib/                  # Utility functions (error, jwt, password, utils)
-├── pages/                # Page components
+├── pages/                # Page components (flat files)
 ├── App.tsx               # Router and provider wiring
 └── main.tsx              # Entry point
 ```
