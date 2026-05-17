@@ -101,6 +101,8 @@ const NotificationBell = () => {
         return t("notifications.types.warrantyExpiring");
       case "WARRANTY_EXPIRED":
         return t("notifications.types.warrantyExpired");
+      case "MEDICATION_REMINDER":
+        return t("notifications.types.medicationReminder");
       default:
         return type;
     }

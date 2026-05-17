@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 type Option = {
   value: number;
   label: string;
+  tag?: string;
 };
 
 type SearchableSelectProps = {
@@ -94,7 +95,18 @@ const SearchableSelect = ({
           onClick={() => setOpen(true)}
         >
           <span className={selected ? "" : "text-muted-foreground"}>
-            {selected?.label ?? placeholder}
+            {selected ? (
+              <span className="flex items-center gap-2">
+                {selected.label}
+                {selected.tag && (
+                  <span className="rounded bg-muted px-1 py-0.5 text-[10px] text-muted-foreground">
+                    {selected.tag}
+                  </span>
+                )}
+              </span>
+            ) : (
+              placeholder
+            )}
           </span>
           {selected && value != null ? (
             <XIcon
@@ -121,10 +133,15 @@ const SearchableSelect = ({
               <button
                 key={opt.value}
                 type="button"
-                className="flex w-full items-center rounded-md px-2 py-1.5 text-left outline-none hover:bg-accent hover:text-accent-foreground"
+                className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-left outline-none hover:bg-accent hover:text-accent-foreground"
                 onClick={() => selectOption(opt)}
               >
-                {opt.label}
+                <span>{opt.label}</span>
+                {opt.tag && (
+                  <span className="ml-2 shrink-0 rounded bg-muted px-1 py-0.5 text-[10px] text-muted-foreground">
+                    {opt.tag}
+                  </span>
+                )}
               </button>
             ))
           )}

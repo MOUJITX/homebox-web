@@ -17,6 +17,7 @@ import FilesPage from "@/pages/FilesPage";
 import InvoicesPage from "@/pages/InvoicesPage";
 import SettingsPage from "@/pages/SettingsPage";
 import NotificationsPage from "@/pages/NotificationsPage";
+import MedicationsPage from "@/pages/MedicationsPage";
 
 const App = () => (
   <AuthProvider>
@@ -27,6 +28,7 @@ const App = () => (
         <Route element={<AppShell />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/expiration" element={<ExpirationPage />} />
+          <Route path="/medications" element={<MedicationsPage />} />
           <Route path="/assets" element={<AssetsPage />} />
           <Route path="/invoices" element={<InvoicesPage />} />
           <Route path="/profile" element={<ProfilePage />} />

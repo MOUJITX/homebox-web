@@ -95,6 +95,8 @@ const NotificationsPage = () => {
         return t("notifications.types.warrantyExpiring");
       case "WARRANTY_EXPIRED":
         return t("notifications.types.warrantyExpired");
+      case "MEDICATION_REMINDER":
+        return t("notifications.types.medicationReminder");
       default:
         return type;
     }
@@ -107,6 +109,8 @@ const NotificationsPage = () => {
         return "destructive" as const;
       case "ITEM_EXPIRING":
       case "WARRANTY_EXPIRING":
+        return "default" as const;
+      case "MEDICATION_REMINDER":
         return "default" as const;
       default:
         return "secondary" as const;

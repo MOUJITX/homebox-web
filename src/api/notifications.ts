@@ -4,7 +4,8 @@ export type NotificationType =
   | "ITEM_EXPIRING"
   | "ITEM_EXPIRED"
   | "WARRANTY_EXPIRING"
-  | "WARRANTY_EXPIRED";
+  | "WARRANTY_EXPIRED"
+  | "MEDICATION_REMINDER";
 
 export interface Notification {
   id: number;

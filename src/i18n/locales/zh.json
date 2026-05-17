@@ -552,6 +552,7 @@
   "nav": {
     "dashboard": "仪表盘",
     "expiration": "过期管理",
+    "medications": "用药提醒",
     "assets": "资产管理",
     "invoices": "发票管理",
     "files": "文件管理",
@@ -623,7 +624,54 @@
       "itemExpiring": "物品即将过期",
       "itemExpired": "物品已过期",
       "warrantyExpiring": "保修即将到期",
-      "warrantyExpired": "保修已过期"
+      "warrantyExpired": "保修已过期",
+      "medicationReminder": "用药提醒"
+    }
+  },
+  "medications": {
+    "title": "用药提醒",
+    "create": "创建提醒",
+    "createDescription": "添加新的用药提醒。",
+    "edit": "编辑提醒",
+    "editDescription": "更新用药提醒详情。",
+    "delete": "删除提醒",
+    "deleteConfirm": "确定要删除 {{name}} 的用药提醒吗？",
+    "empty": "暂无用药提醒。",
+    "filterAll": "全部",
+    "filterEnabled": "已启用",
+    "filterDisabled": "已停用",
+    "columns": {
+      "medicine": "药品",
+      "dosage": "剂量",
+      "frequency": "服用时间",
+      "course": "疗程",
+      "status": "状态",
+      "actions": "操作"
+    },
+    "status": {
+      "enabled": "已启用",
+      "disabled": "已停用"
+    },
+    "form": {
+      "good": "药品",
+      "goodPlaceholder": "搜索物品…",
+      "dosageMethod": "服用方式",
+      "dosageQuantity": "数量",
+      "dosageQuantityPlaceholder": "如：1",
+      "dosageUnit": "单位",
+      "dosageUnitPlaceholder": "手动输入单位",
+      "dosageNote": "备注",
+      "dosageNotePlaceholder": "其他服用说明",
+      "frequencyHours": "服用时间点",
+      "frequencyHint": "至少选择一个时间点",
+      "courseStartDate": "开始日期",
+      "courseEndDate": "结束日期",
+      "enabled": "启用"
+    },
+    "errors": {
+      "createFailed": "创建用药提醒失败",
+      "updateFailed": "更新用药提醒失败",
+      "deleteFailed": "删除用药提醒失败"
     }
   },
   "settings": {
@@ -702,13 +750,15 @@
         "webhookUrl": "Webhook 地址",
         "webhookTemplate": "Webhook 消息模板",
         "crontab": "检查计划 (Cron)",
-        "assetExpiringSoonDays": "资产保修临期天数"
+        "assetExpiringSoonDays": "资产保修临期天数",
+        "medicationCrontab": "用药提醒检查计划 (Cron)"
       },
       "placeholders": {
         "webhookUrl": "https://hooks.example.com/notify",
         "webhookTemplate": "自定义发送到 Webhook 地址的 JSON 消息体。留空使用默认模板。",
         "crontab": "0 0 3 * * ?",
-        "assetExpiringSoonDays": "30"
+        "assetExpiringSoonDays": "30",
+        "medicationCrontab": "0 0 7-20 * * ?"
       },
       "templateHint": "可用占位符：{{type}}、{{title}}、{{content}}、{{createdAt}}、{{appName}}",
       "testWebhook": "测试 Webhook",

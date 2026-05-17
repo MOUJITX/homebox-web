@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import {
   LayoutDashboardIcon,
   PackageIcon,
+  PillIcon,
   BoxIcon,
   ReceiptIcon,
   FolderIcon,
@@ -28,6 +29,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: "nav.dashboard", path: "/dashboard", icon: LayoutDashboardIcon },
   { label: "nav.expiration", path: "/expiration", icon: PackageIcon },
+  { label: "nav.medications", path: "/medications", icon: PillIcon },
   { label: "nav.assets", path: "/assets", icon: BoxIcon },
   { label: "nav.invoices", path: "/invoices", icon: ReceiptIcon },
   {
