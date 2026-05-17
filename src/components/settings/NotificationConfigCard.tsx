@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import {
   getSystemConfigGroup,
   saveSystemConfigGroup,
-  type SystemConfigItem,
 } from "@/api/systemConfig";
 import { testWebhook } from "@/api/notifications";
 import { getErrorMessage } from "@/lib/error";
@@ -73,10 +72,16 @@ const NotificationConfigCard = () => {
       if (data.success) {
         toast.success(t("settings.notification.testSuccess"));
       } else {
-        toast.error(t("settings.notification.testFailed", { message: data.message }));
+        toast.error(
+          t("settings.notification.testFailed", { message: data.message }),
+        );
       }
     } catch (err) {
-      toast.error(t("settings.notification.testFailed", { message: getErrorMessage(err) ?? "" }));
+      toast.error(
+        t("settings.notification.testFailed", {
+          message: getErrorMessage(err) ?? "",
+        }),
+      );
     } finally {
       setTesting(false);
     }
@@ -96,7 +101,9 @@ const NotificationConfigCard = () => {
     <Card>
       <CardHeader>
         <CardTitle>{t("settings.notification.title")}</CardTitle>
-        <CardDescription>{t("settings.notification.description")}</CardDescription>
+        <CardDescription>
+          {t("settings.notification.description")}
+        </CardDescription>
       </CardHeader>
       <form onSubmit={handleSave}>
         <CardContent className="grid gap-4">
@@ -106,7 +113,10 @@ const NotificationConfigCard = () => {
               id="config-notification.webhook-enabled"
               checked={formValues["notification.webhook-enabled"] === "true"}
               onCheckedChange={(checked) =>
-                handleChange("notification.webhook-enabled", checked ? "true" : "false")
+                handleChange(
+                  "notification.webhook-enabled",
+                  checked ? "true" : "false",
+                )
               }
             />
             <Label htmlFor="config-notification.webhook-enabled">
@@ -124,8 +134,12 @@ const NotificationConfigCard = () => {
                 <input
                   id="config-notification.webhook-url"
                   value={formValues["notification.webhook-url"] ?? ""}
-                  onChange={(e) => handleChange("notification.webhook-url", e.target.value)}
-                  placeholder={t("settings.notification.placeholders.webhookUrl")}
+                  onChange={(e) =>
+                    handleChange("notification.webhook-url", e.target.value)
+                  }
+                  placeholder={t(
+                    "settings.notification.placeholders.webhookUrl",
+                  )}
                   className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 />
               </div>
@@ -138,8 +152,15 @@ const NotificationConfigCard = () => {
                 <textarea
                   id="config-notification.webhook-template"
                   value={formValues["notification.webhook-template"] ?? ""}
-                  onChange={(e) => handleChange("notification.webhook-template", e.target.value)}
-                  placeholder={t("settings.notification.placeholders.webhookTemplate")}
+                  onChange={(e) =>
+                    handleChange(
+                      "notification.webhook-template",
+                      e.target.value,
+                    )
+                  }
+                  placeholder={t(
+                    "settings.notification.placeholders.webhookTemplate",
+                  )}
                   rows={8}
                   className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-mono ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 />
@@ -158,7 +179,9 @@ const NotificationConfigCard = () => {
             <input
               id="config-notification.crontab"
               value={formValues["notification.crontab"] ?? ""}
-              onChange={(e) => handleChange("notification.crontab", e.target.value)}
+              onChange={(e) =>
+                handleChange("notification.crontab", e.target.value)
+              }
               placeholder={t("settings.notification.placeholders.crontab")}
               className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             />
@@ -173,11 +196,18 @@ const NotificationConfigCard = () => {
               id="config-notification.asset-expiring-soon-days"
               type="number"
               min="1"
-              value={formValues["notification.asset-expiring-soon-days"] ?? "30"}
-              onChange={(e) =>
-                handleChange("notification.asset-expiring-soon-days", e.target.value)
+              value={
+                formValues["notification.asset-expiring-soon-days"] ?? "30"
               }
-              placeholder={t("settings.notification.placeholders.assetExpiringSoonDays")}
+              onChange={(e) =>
+                handleChange(
+                  "notification.asset-expiring-soon-days",
+                  e.target.value,
+                )
+              }
+              placeholder={t(
+                "settings.notification.placeholders.assetExpiringSoonDays",
+              )}
               className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             />
           </div>
@@ -186,8 +216,15 @@ const NotificationConfigCard = () => {
           <Button type="submit" disabled={saving}>
             {saving ? t("common.saving") : t("common.save")}
           </Button>
-          <Button type="button" variant="outline" onClick={handleTestWebhook} disabled={testing}>
-            {testing ? t("common.loading") : t("settings.notification.testWebhook")}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleTestWebhook}
+            disabled={testing}
+          >
+            {testing
+              ? t("common.loading")
+              : t("settings.notification.testWebhook")}
           </Button>
         </CardFooter>
       </form>
