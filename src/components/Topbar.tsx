@@ -17,9 +17,11 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import NotificationBell from "@/components/NotificationBell";
 
 const routeTitleMap: Record<string, string> = {
   "/dashboard": "nav.dashboard",
+  "/notifications": "nav.notifications",
   "/members": "nav.members",
   "/roles": "nav.roles",
   "/profile": "nav.profile",
@@ -39,6 +41,7 @@ const Topbar = () => {
     <header className="flex h-12 shrink-0 items-center justify-between border-b bg-card px-4">
       <h1 className="font-heading text-base font-semibold">{t(titleKey)}</h1>
       <div className="flex items-center gap-1">
+        <NotificationBell />
         <DropdownMenu>
           <DropdownMenuTrigger className="flex cursor-default items-center gap-1.5 rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
             <LanguagesIcon className="size-4" />

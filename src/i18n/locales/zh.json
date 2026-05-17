@@ -556,7 +556,8 @@
     "members": "成员",
     "profile": "用户信息",
     "roles": "角色",
-    "settings": "系统设置"
+    "settings": "系统设置",
+    "notifications": "消息通知"
   },
   "profile": {
     "changePassword": "更改密码",
@@ -608,7 +609,24 @@
     "description": "您的会话已过期。请重新登录以继续。",
     "title": "会话已过期"
   },
+  "notifications": {
+    "title": "消息通知",
+    "noNotifications": "暂无消息",
+    "markAllRead": "全部已读",
+    "viewAll": "查看全部消息",
+    "types": {
+      "itemExpiring": "物品即将过期",
+      "itemExpired": "物品已过期",
+      "warrantyExpiring": "保修即将到期",
+      "warrantyExpired": "保修已过期"
+    }
+  },
   "settings": {
+    "tabs": {
+      "storage": "云存储",
+      "ai": "AI",
+      "notification": "消息通知"
+    },
     "qiniu": {
       "title": "七牛 OSS 配置",
       "description": "配置七牛云存储用于文件上传。更改立即生效。",
@@ -670,6 +688,27 @@
           "model": "如：gpt-4o"
         }
       }
+    },
+    "notification": {
+      "title": "消息通知设置",
+      "description": "配置 Webhook 通知和到期提醒相关设置。",
+      "fields": {
+        "webhookEnabled": "启用 Webhook 通知",
+        "webhookUrl": "Webhook 地址",
+        "webhookTemplate": "Webhook 消息模板",
+        "crontab": "检查计划 (Cron)",
+        "assetExpiringSoonDays": "资产保修临期天数"
+      },
+      "placeholders": {
+        "webhookUrl": "https://hooks.example.com/notify",
+        "webhookTemplate": "自定义发送到 Webhook 地址的 JSON 消息体。留空使用默认模板。",
+        "crontab": "0 0 3 * * ?",
+        "assetExpiringSoonDays": "30"
+      },
+      "templateHint": "可用占位符：{{type}}、{{title}}、{{content}}、{{createdAt}}、{{appName}}",
+      "testWebhook": "测试 Webhook",
+      "testSuccess": "Webhook 测试请求已发送",
+      "testFailed": "Webhook 测试失败：{{message}}"
     },
     "saveSuccess": "设置保存成功",
     "saveFailed": "设置保存失败"

@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useState, type SubmitEvent } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { PlusIcon } from "lucide-react";
 import {
   getSystemConfigGroup,
   saveSystemConfigGroup,
@@ -28,8 +27,10 @@ import {
   SelectPopup,
   SelectItem,
 } from "@/components/ui/select";
+import { PlusIcon } from "lucide-react";
 import MaskedInput from "@/components/settings/MaskedInput";
 import AiModelsDialog from "@/components/settings/AiModelsDialog";
+import NotificationConfigCard from "@/components/settings/NotificationConfigCard";
 
 interface ConfigGroupCardProps {
   readonly group: string;
@@ -83,7 +84,7 @@ const ConfigGroupCard = ({
     setFormValues((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSave = async (e: SubmitEvent<HTMLFormElement>) => {
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (saving) return;
     setSaving(true);
@@ -241,7 +242,6 @@ const AiConfigCard = () => {
     const payload: Record<string, string> = {
       "ai.models": JSON.stringify(updatedModels),
     };
-    // If active model was deleted, clear selection and persist
     if (activeModelId && !updatedModels.find((m) => m.id === activeModelId)) {
       setActiveModelId("");
       payload["ai.active-model"] = "";
@@ -267,7 +267,6 @@ const AiConfigCard = () => {
           <CardDescription>{t("settings.ai.description")}</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          {/* AI Model selector */}
           <div className="grid gap-2">
             <Label>{t("settings.ai.fields.model")}</Label>
             <div className="flex gap-2">
@@ -309,7 +308,6 @@ const AiConfigCard = () => {
             </div>
           </div>
 
-          {/* System Prompt */}
           <div className="grid gap-2">
             <Label htmlFor="ai-system-prompt">{t("settings.ai.fields.systemPrompt")}</Label>
             <textarea
@@ -342,8 +340,17 @@ const AiConfigCard = () => {
   );
 };
 
+type SettingsTab = "storage" | "ai" | "notification";
+
+const settingsTabs: { key: SettingsTab; label: string }[] = [
+  { key: "storage", label: "settings.tabs.storage" },
+  { key: "ai", label: "settings.tabs.ai" },
+  { key: "notification", label: "settings.tabs.notification" },
+];
+
 const SettingsPage = () => {
   const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState<SettingsTab>("storage");
 
   const handleTestQiniu = async () => {
     try {
@@ -359,30 +366,60 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="mx-auto grid max-w-lg gap-6">
-      <ConfigGroupCard
-        group="qiniu"
-        title={t("settings.qiniu.title")}
-        description={t("settings.qiniu.description")}
-        onTest={handleTestQiniu}
-        testLabel={t("settings.qiniu.testConnection")}
-        fieldLabels={{
-          "qiniu.access-key": t("settings.qiniu.fields.accessKey"),
-          "qiniu.secret-key": t("settings.qiniu.fields.secretKey"),
-          "qiniu.bucket": t("settings.qiniu.fields.bucket"),
-          "qiniu.folder": t("settings.qiniu.fields.folder"),
-          "qiniu.domain": t("settings.qiniu.fields.domain"),
-        }}
-        fieldPlaceholders={{
-          "qiniu.access-key": t("settings.qiniu.placeholders.accessKey"),
-          "qiniu.secret-key": t("settings.qiniu.placeholders.secretKey"),
-          "qiniu.bucket": t("settings.qiniu.placeholders.bucket"),
-          "qiniu.folder": t("settings.qiniu.placeholders.folder"),
-          "qiniu.domain": t("settings.qiniu.placeholders.domain"),
-        }}
-      />
+    <div className="mx-auto max-w-lg">
+      <div className="mb-6 flex border-b">
+        {settingsTabs.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
+              activeTab === tab.key
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {t(tab.label)}
+          </button>
+        ))}
+      </div>
 
-      <AiConfigCard />
+      {activeTab === "storage" && (
+        <div className="grid gap-6">
+          <ConfigGroupCard
+            group="qiniu"
+            title={t("settings.qiniu.title")}
+            description={t("settings.qiniu.description")}
+            onTest={handleTestQiniu}
+            testLabel={t("settings.qiniu.testConnection")}
+            fieldLabels={{
+              "qiniu.access-key": t("settings.qiniu.fields.accessKey"),
+              "qiniu.secret-key": t("settings.qiniu.fields.secretKey"),
+              "qiniu.bucket": t("settings.qiniu.fields.bucket"),
+              "qiniu.folder": t("settings.qiniu.fields.folder"),
+              "qiniu.domain": t("settings.qiniu.fields.domain"),
+            }}
+            fieldPlaceholders={{
+              "qiniu.access-key": t("settings.qiniu.placeholders.accessKey"),
+              "qiniu.secret-key": t("settings.qiniu.placeholders.secretKey"),
+              "qiniu.bucket": t("settings.qiniu.placeholders.bucket"),
+              "qiniu.folder": t("settings.qiniu.placeholders.folder"),
+              "qiniu.domain": t("settings.qiniu.placeholders.domain"),
+            }}
+          />
+        </div>
+      )}
+
+      {activeTab === "ai" && (
+        <div className="grid gap-6">
+          <AiConfigCard />
+        </div>
+      )}
+
+      {activeTab === "notification" && (
+        <div className="grid gap-6">
+          <NotificationConfigCard />
+        </div>
+      )}
     </div>
   );
 };

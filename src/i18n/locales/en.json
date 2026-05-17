@@ -11,7 +11,8 @@
     "members": "Members",
     "roles": "Roles",
     "profile": "Profile",
-    "settings": "Settings"
+    "settings": "Settings",
+    "notifications": "Notifications"
   },
   "login": {
     "title": "Sign In",
@@ -593,7 +594,24 @@
     "requestFailed": "Request failed",
     "networkError": "Network error, please check your connection"
   },
+  "notifications": {
+    "title": "Notifications",
+    "noNotifications": "No notifications",
+    "markAllRead": "Mark all read",
+    "viewAll": "View all notifications",
+    "types": {
+      "itemExpiring": "Item Expiring",
+      "itemExpired": "Item Expired",
+      "warrantyExpiring": "Warranty Expiring",
+      "warrantyExpired": "Warranty Expired"
+    }
+  },
   "settings": {
+    "tabs": {
+      "storage": "Storage",
+      "ai": "AI",
+      "notification": "Notifications"
+    },
     "qiniu": {
       "title": "Qiniu OSS Configuration",
       "description": "Configure Qiniu cloud storage for file uploads. Changes take effect immediately.",
@@ -655,6 +673,27 @@
           "model": "e.g. gpt-4o"
         }
       }
+    },
+    "notification": {
+      "title": "Notification Settings",
+      "description": "Configure webhook notifications and expiry reminder settings.",
+      "fields": {
+        "webhookEnabled": "Enable Webhook Notifications",
+        "webhookUrl": "Webhook URL",
+        "webhookTemplate": "Webhook Payload Template",
+        "crontab": "Check Schedule (Cron)",
+        "assetExpiringSoonDays": "Asset Warranty Expiring Soon (Days)"
+      },
+      "placeholders": {
+        "webhookUrl": "https://hooks.example.com/notify",
+        "webhookTemplate": "Customize the JSON payload sent to the webhook URL. Leave empty for default.",
+        "crontab": "0 0 3 * * ?",
+        "assetExpiringSoonDays": "30"
+      },
+      "templateHint": "Placeholders: {{type}}, {{title}}, {{content}}, {{createdAt}}, {{appName}}",
+      "testWebhook": "Test Webhook",
+      "testSuccess": "Webhook test request sent",
+      "testFailed": "Webhook test failed: {{message}}"
     },
     "saveSuccess": "Settings saved successfully",
     "saveFailed": "Failed to save settings"
