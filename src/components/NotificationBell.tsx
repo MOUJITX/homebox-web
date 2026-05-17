@@ -16,6 +16,7 @@ import {
   markAllRead,
   type Notification,
 } from "@/api/notifications";
+import { onNotificationsChanged } from "@/lib/notificationEvents";
 
 const NotificationBell = () => {
   const { t } = useTranslation();
@@ -34,10 +35,11 @@ const NotificationBell = () => {
     }
   }, []);
 
-  const fetchRecent = useCallback(async () => {
+  const fetchUnreadList = useCallback(async () => {
     try {
       const { data } = await getNotifications(0, 5);
-      setNotifications(data.content);
+      // Only show unread notifications in the dropdown
+      setNotifications(data.content.filter((n) => !n.isRead));
     } catch {
       // handled by interceptor
     }
@@ -49,19 +51,24 @@ const NotificationBell = () => {
     return () => clearInterval(pollingRef.current);
   }, [fetchUnread]);
 
+  // Listen for notification changes from other components
+  useEffect(() => {
+    return onNotificationsChanged(() => {
+      void fetchUnread();
+    });
+  }, [fetchUnread]);
+
   useEffect(() => {
     if (open) {
-      void fetchRecent();
+      void fetchUnreadList();
     }
-  }, [open, fetchRecent]);
+  }, [open, fetchUnreadList]);
 
   const handleMarkAllRead = async () => {
     try {
       await markAllRead();
       setUnreadCount(0);
-      setNotifications((prev) =>
-        prev.map((n) => ({ ...n, isRead: true, readAt: new Date().toISOString() })),
-      );
+      setNotifications([]);
     } catch {
       // handled by interceptor
     }
@@ -102,7 +109,9 @@ const NotificationBell = () => {
       </DropdownMenuTrigger>
       <DropdownMenuPopup className="w-80">
         <div className="flex items-center justify-between px-3 py-2">
-          <span className="text-sm font-semibold">{t("notifications.title")}</span>
+          <span className="text-sm font-semibold">
+            {t("notifications.title")}
+          </span>
           {unreadCount > 0 && (
             <button
               onClick={handleMarkAllRead}
@@ -129,9 +138,7 @@ const NotificationBell = () => {
                 <span className="text-xs text-muted-foreground">
                   {typeLabel(n.type)}
                 </span>
-                {!n.isRead && (
-                  <span className="h-2 w-2 rounded-full bg-primary" />
-                )}
+                <span className="h-2 w-2 rounded-full bg-primary" />
               </div>
               <span className="text-sm">{n.content}</span>
             </DropdownMenuItem>

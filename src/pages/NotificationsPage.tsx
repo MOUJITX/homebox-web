@@ -7,6 +7,7 @@ import {
   markAllRead,
   type Notification,
 } from "@/api/notifications";
+import { notifyChanged } from "@/lib/notificationEvents";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Pagination, PAGE_SIZE_OPTIONS } from "@/components/ui/pagination";
@@ -44,6 +45,7 @@ const NotificationsPage = () => {
           n.id === id ? { ...n, isRead: true, readAt: new Date().toISOString() } : n,
         ),
       );
+      notifyChanged();
     } catch {
       // handled by interceptor
     }
@@ -55,6 +57,7 @@ const NotificationsPage = () => {
       setNotifications((prev) =>
         prev.map((n) => ({ ...n, isRead: true, readAt: new Date().toISOString() })),
       );
+      notifyChanged();
     } catch {
       // handled by interceptor
     }
