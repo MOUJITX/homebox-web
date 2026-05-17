@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
-import { BellIcon, CheckCheckIcon } from "lucide-react";
+import { BellIcon, CheckCheckIcon, CheckIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -13,10 +13,11 @@ import { Badge } from "@/components/ui/badge";
 import {
   getUnreadCount,
   getNotifications,
+  markRead,
   markAllRead,
   type Notification,
 } from "@/api/notifications";
-import { onNotificationsChanged } from "@/lib/notificationEvents";
+import { onNotificationsChanged, notifyChanged } from "@/lib/notificationEvents";
 
 const NotificationBell = () => {
   const { t } = useTranslation();
@@ -37,9 +38,9 @@ const NotificationBell = () => {
 
   const fetchUnreadList = useCallback(async () => {
     try {
-      const { data } = await getNotifications(0, 5);
-      // Only show unread notifications in the dropdown
-      setNotifications(data.content.filter((n) => !n.isRead));
+      // Backend filter: only fetch unread notifications
+      const { data } = await getNotifications(0, 5, false);
+      setNotifications(data.content);
     } catch {
       // handled by interceptor
     }
@@ -51,7 +52,6 @@ const NotificationBell = () => {
     return () => clearInterval(pollingRef.current);
   }, [fetchUnread]);
 
-  // Listen for notification changes from other components
   useEffect(() => {
     return onNotificationsChanged(() => {
       void fetchUnread();
@@ -64,11 +64,23 @@ const NotificationBell = () => {
     }
   }, [open, fetchUnreadList]);
 
+  const handleMarkRead = async (id: number) => {
+    try {
+      await markRead(id);
+      setUnreadCount((c) => Math.max(0, c - 1));
+      setNotifications((prev) => prev.filter((n) => n.id !== id));
+      notifyChanged();
+    } catch {
+      // handled by interceptor
+    }
+  };
+
   const handleMarkAllRead = async () => {
     try {
       await markAllRead();
       setUnreadCount(0);
       setNotifications([]);
+      notifyChanged();
     } catch {
       // handled by interceptor
     }
@@ -109,9 +121,7 @@ const NotificationBell = () => {
       </DropdownMenuTrigger>
       <DropdownMenuPopup className="w-80">
         <div className="flex items-center justify-between px-3 py-2">
-          <span className="text-sm font-semibold">
-            {t("notifications.title")}
-          </span>
+          <span className="text-sm font-semibold">{t("notifications.title")}</span>
           {unreadCount > 0 && (
             <button
               onClick={handleMarkAllRead}
@@ -131,16 +141,27 @@ const NotificationBell = () => {
           notifications.map((n) => (
             <DropdownMenuItem
               key={n.id}
-              onClick={handleViewAll}
-              className="flex cursor-pointer flex-col items-start gap-0.5 px-3 py-2"
+              className="flex cursor-default items-start gap-2 px-3 py-2"
             >
-              <div className="flex w-full items-center justify-between">
-                <span className="text-xs text-muted-foreground">
-                  {typeLabel(n.type)}
-                </span>
-                <span className="h-2 w-2 rounded-full bg-primary" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">
+                    {typeLabel(n.type)}
+                  </span>
+                  <span className="h-2 w-2 rounded-full bg-primary" />
+                </div>
+                <span className="text-sm">{n.content}</span>
               </div>
-              <span className="text-sm">{n.content}</span>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  void handleMarkRead(n.id);
+                }}
+                className="shrink-0 flex items-center justify-center size-5 rounded hover:bg-muted-foreground/10 text-muted-foreground hover:text-foreground transition-colors"
+                title={t("notifications.markRead")}
+              >
+                <CheckIcon className="size-3.5" />
+              </button>
             </DropdownMenuItem>
           ))
         )}

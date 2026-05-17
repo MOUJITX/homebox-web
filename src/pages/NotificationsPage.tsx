@@ -10,11 +10,14 @@ import {
 import { notifyChanged } from "@/lib/notificationEvents";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Pagination, PAGE_SIZE_OPTIONS } from "@/components/ui/pagination";
+import { Pagination } from "@/components/ui/pagination";
+
+type FilterMode = "all" | "unread";
 
 const NotificationsPage = () => {
   const { t } = useTranslation();
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [filter, setFilter] = useState<FilterMode>("all");
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize, setPageSize] = useState(20);
@@ -23,7 +26,8 @@ const NotificationsPage = () => {
   const fetchNotifications = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await getNotifications(page, pageSize);
+      const isRead = filter === "unread" ? false : undefined;
+      const { data } = await getNotifications(page, pageSize, isRead);
       setNotifications(data.content);
       setTotalPages(data.totalPages);
     } catch {
@@ -31,7 +35,7 @@ const NotificationsPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize]);
+  }, [page, pageSize, filter]);
 
   useEffect(() => {
     void fetchNotifications();
@@ -40,11 +44,15 @@ const NotificationsPage = () => {
   const handleMarkRead = async (id: number) => {
     try {
       await markRead(id);
-      setNotifications((prev) =>
-        prev.map((n) =>
-          n.id === id ? { ...n, isRead: true, readAt: new Date().toISOString() } : n,
-        ),
-      );
+      if (filter === "unread") {
+        setNotifications((prev) => prev.filter((n) => n.id !== id));
+      } else {
+        setNotifications((prev) =>
+          prev.map((n) =>
+            n.id === id ? { ...n, isRead: true, readAt: new Date().toISOString() } : n,
+          ),
+        );
+      }
       notifyChanged();
     } catch {
       // handled by interceptor
@@ -54,13 +62,22 @@ const NotificationsPage = () => {
   const handleMarkAllRead = async () => {
     try {
       await markAllRead();
-      setNotifications((prev) =>
-        prev.map((n) => ({ ...n, isRead: true, readAt: new Date().toISOString() })),
-      );
+      if (filter === "unread") {
+        setNotifications([]);
+      } else {
+        setNotifications((prev) =>
+          prev.map((n) => ({ ...n, isRead: true, readAt: new Date().toISOString() })),
+        );
+      }
       notifyChanged();
     } catch {
       // handled by interceptor
     }
+  };
+
+  const handleFilterChange = (mode: FilterMode) => {
+    setFilter(mode);
+    setPage(0);
   };
 
   const handlePageSizeChange = (size: number) => {
@@ -99,7 +116,31 @@ const NotificationsPage = () => {
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-xl font-semibold">{t("notifications.title")}</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-xl font-semibold">{t("notifications.title")}</h1>
+          <div className="flex border rounded-md">
+            <button
+              onClick={() => handleFilterChange("all")}
+              className={`px-3 py-1 text-sm transition-colors rounded-l-md ${
+                filter === "all"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {t("notifications.filterAll")}
+            </button>
+            <button
+              onClick={() => handleFilterChange("unread")}
+              className={`px-3 py-1 text-sm transition-colors rounded-r-md ${
+                filter === "unread"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {t("notifications.filterUnread")}
+            </button>
+          </div>
+        </div>
         <Button variant="outline" size="sm" onClick={handleMarkAllRead}>
           <CheckCheckIcon className="size-4" />
           {t("notifications.markAllRead")}

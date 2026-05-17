@@ -24,8 +24,10 @@ export interface NotificationPage {
   size: number;
 }
 
-export const getNotifications = (page: number, size: number) =>
-  axios.get<NotificationPage>("/notifications", { params: { page, size } });
+export const getNotifications = (page: number, size: number, isRead?: boolean) =>
+  axios.get<NotificationPage>("/notifications", {
+    params: { page, size, ...(isRead !== undefined && { isRead }) },
+  });
 
 export const getUnreadCount = () =>
   axios.get<number>("/notifications/unread-count");

@@ -596,8 +596,11 @@
   },
   "notifications": {
     "title": "Notifications",
+    "filterAll": "All",
+    "filterUnread": "Unread",
     "noNotifications": "No notifications",
     "markAllRead": "Mark all read",
+    "markRead": "Mark read",
     "viewAll": "View all notifications",
     "types": {
       "itemExpiring": "Item Expiring",

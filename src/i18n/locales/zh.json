@@ -611,8 +611,11 @@
   },
   "notifications": {
     "title": "消息通知",
+    "filterAll": "全部",
+    "filterUnread": "未读",
     "noNotifications": "暂无消息",
     "markAllRead": "全部已读",
+    "markRead": "标记已读",
     "viewAll": "查看全部消息",
     "types": {
       "itemExpiring": "物品即将过期",
