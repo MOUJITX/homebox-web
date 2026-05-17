@@ -42,6 +42,7 @@ const DeleteMedicationDialog = ({
     try {
       await deleteMedication(reminder.id);
       onSuccess();
+      onClose();
     } catch (err) {
       setError(getErrorMessage(err) ?? t("medications.errors.deleteFailed"));
     } finally {
