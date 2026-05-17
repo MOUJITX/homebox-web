@@ -13,7 +13,7 @@ export const formatDate = (dateStr: string) =>
   });
 
 export const formatDateTime = (dateStr: string) =>
-  new Date(dateStr).toLocaleDateString(undefined, {
+  new Date(dateStr).toLocaleString(undefined, {
     year: "numeric",
     month: "short",
     day: "numeric",
