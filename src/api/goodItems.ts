@@ -6,9 +6,10 @@ export interface CreateGoodItemRequest {
   expirationDate?: string;
   lifeDays?: number;
   inUse?: boolean;
+  quantity?: number;
 }
 
-export type UpdateGoodItemRequest = CreateGoodItemRequest;
+export type UpdateGoodItemRequest = Omit<CreateGoodItemRequest, "quantity">;
 
 export const getGoodItems = (goodId: number, itemStatus?: ItemStatus) =>
   axios.get<GoodItem[]>(`/goods/${goodId}/items`, {
@@ -16,7 +17,7 @@ export const getGoodItems = (goodId: number, itemStatus?: ItemStatus) =>
   });
 
 export const createGoodItem = (goodId: number, data: CreateGoodItemRequest) =>
-  axios.post<GoodItem>(`/goods/${goodId}/items`, data);
+  axios.post<GoodItem[]>(`/goods/${goodId}/items`, data);
 
 export const updateGoodItem = (
   goodId: number,

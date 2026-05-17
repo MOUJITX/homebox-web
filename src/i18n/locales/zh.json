@@ -99,7 +99,9 @@
           "1y": "1年",
           "2y": "2年",
           "3y": "3年"
-        }
+        },
+        "quantity": "数量",
+        "quantityPlaceholder": "默认：1"
       },
       "errors": {
         "exactlyTwo": "必须提供3个日期字段中的2个",

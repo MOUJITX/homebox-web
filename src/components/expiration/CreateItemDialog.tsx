@@ -40,11 +40,13 @@ const CreateItemDialog = ({
     setLifeDays,
     resetDates,
   } = useItemDateCalc();
+  const [quantity, setQuantity] = useState("1");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const handleClose = () => {
     resetDates();
+    setQuantity("1");
     setError("");
     onClose();
   };
@@ -62,6 +64,11 @@ const CreateItemDialog = ({
       return;
     }
 
+    const qty = Number.parseInt(quantity, 10);
+    if (qty < 1) {
+      return;
+    }
+
     setError("");
     setSubmitting(true);
 
@@ -70,6 +77,7 @@ const CreateItemDialog = ({
         productDate: productDate || undefined,
         expirationDate: expirationDate || undefined,
         lifeDays: lifeDays ? Number.parseInt(lifeDays, 10) : undefined,
+        quantity: qty,
       });
       handleClose();
       onSuccess();
@@ -151,6 +159,19 @@ const CreateItemDialog = ({
                 </Button>
               ))}
             </div>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="create-item-quantity">
+              {t("goods.items.form.quantity")}
+            </Label>
+            <Input
+              id="create-item-quantity"
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+              placeholder={t("goods.items.form.quantityPlaceholder")}
+            />
           </div>
           {error && (
             <p className="text-sm text-destructive text-center">{error}</p>

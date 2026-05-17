@@ -249,7 +249,9 @@
           "1y": "1 Year",
           "2y": "2 Years",
           "3y": "3 Years"
-        }
+        },
+        "quantity": "Quantity",
+        "quantityPlaceholder": "Default: 1"
       },
       "errors": {
         "exactlyTwo": "Exactly 2 of the 3 date fields must be provided",
