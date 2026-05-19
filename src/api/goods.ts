@@ -1,4 +1,5 @@
 import axios from "./axios";
+import type { GoodAttachment } from "./goodAttachments";
 
 export type GoodStatus = "IN_USE" | "NOT_IN_USE";
 
@@ -43,6 +44,7 @@ export interface Good {
 export interface GoodDetail extends Good {
   items: GoodItem[];
   pictures: GoodPicture[];
+  attachments: GoodAttachment[];
 }
 
 export interface Page<T> {

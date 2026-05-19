@@ -5,11 +5,14 @@ import {
   PencilIcon,
   TrashIcon,
   ImageIcon,
+  PaperclipIcon,
   ToggleLeftIcon,
   ToggleRightIcon,
 } from "lucide-react";
 import type { Good, GoodItem, ItemStatus } from "@/api/goods";
 import { getGoodItems, updateGoodItem } from "@/api/goodItems";
+import { getGoodById } from "@/api/goods";
+import type { GoodAttachment } from "@/api/goodAttachments";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -25,6 +28,7 @@ import CreateItemDialog from "./CreateItemDialog";
 import EditItemDialog from "./EditItemDialog";
 import DeleteItemDialog from "./DeleteItemDialog";
 import PictureManager from "./PictureManager";
+import AttachmentManager from "./AttachmentManager";
 
 interface GoodExpandedRowProps {
   readonly good: Good;
@@ -68,7 +72,8 @@ const GoodExpandedRow = ({
   const [createOpen, setCreateOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<GoodItem | null>(null);
   const [deletingItem, setDeletingItem] = useState<GoodItem | null>(null);
-  const [showPictures, setShowPictures] = useState(false);
+  const [activeTab, setActiveTab] = useState<"items" | "pictures" | "attachments">("items");
+  const [attachments, setAttachments] = useState<GoodAttachment[]>([]);
 
   const fetchItems = useCallback(async () => {
     setLoading(true);
@@ -80,9 +85,24 @@ const GoodExpandedRow = ({
     }
   }, [good.id, itemStatus]);
 
+  const fetchAttachments = useCallback(async () => {
+    try {
+      const { data } = await getGoodById(good.id);
+      setAttachments(data.attachments || []);
+    } catch {
+      // ignore
+    }
+  }, [good.id]);
+
   useEffect(() => {
     void fetchItems();
   }, [fetchItems]);
+
+  useEffect(() => {
+    if (activeTab === "attachments") {
+      void fetchAttachments();
+    }
+  }, [activeTab, fetchAttachments]);
 
   const handleItemChanged = () => {
     void fetchItems();
@@ -99,25 +119,50 @@ const GoodExpandedRow = ({
       <TableCell colSpan={colSpan} className="bg-muted/30 p-4">
         <div className="grid gap-4">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-medium">{t("goods.items.title")}</h4>
-            <div className="flex gap-1">
+            <div className="flex gap-2">
               <Button
-                variant="outline"
+                variant={activeTab === "items" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setShowPictures(!showPictures)}
+                onClick={() => setActiveTab("items")}
+              >
+                {t("goods.items.title")}
+              </Button>
+              <Button
+                variant={activeTab === "pictures" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setActiveTab("pictures")}
               >
                 <ImageIcon className="size-3.5" />
                 {t("goods.pictures.manage")}
               </Button>
+              <Button
+                variant={activeTab === "attachments" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setActiveTab("attachments")}
+              >
+                <PaperclipIcon className="size-3.5" />
+                {t("goods.attachments.title")}
+              </Button>
+            </div>
+            {activeTab === "items" && (
               <Button size="sm" onClick={() => setCreateOpen(true)}>
                 <PlusIcon className="size-3.5" />
                 {t("goods.items.add")}
               </Button>
-            </div>
+            )}
           </div>
 
-          {showPictures && <PictureManager goodId={good.id} />}
+          {activeTab === "pictures" && <PictureManager goodId={good.id} />}
 
+          {activeTab === "attachments" && (
+            <AttachmentManager
+              goodId={good.id}
+              attachments={attachments}
+              onChanged={() => void fetchAttachments()}
+            />
+          )}
+
+          {activeTab === "items" && (
           <div className="rounded-lg ring-1 ring-foreground/10">
             <Table>
               <TableHeader>
@@ -201,6 +246,7 @@ const GoodExpandedRow = ({
               </TableBody>
             </Table>
           </div>
+          )}
         </div>
 
         <CreateItemDialog
