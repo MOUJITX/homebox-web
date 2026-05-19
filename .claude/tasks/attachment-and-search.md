@@ -350,6 +350,8 @@
 
 ### Phase 0：基础设施 — Elasticsearch 部署
 
+> **注意：** 以下 `docker-compose.yml`、`.env.example`、CI 工作流文件均位于 `com.moujitx.homebox.docker` 工作区。
+
 - [ ] **0.1** `docker-compose.yml` 新增 `elasticsearch` 服务：
   - 镜像：`docker.elastic.co/elasticsearch/elasticsearch:8.17.0`
   - 环境：`discovery.type=single-node`，`xpack.security.enabled=false`（内网单机，关闭安全认证）
@@ -414,7 +416,7 @@
   - 删除 MySQL `text_chunks` 记录
   - 调用 `esIndexService.deleteByFileId()`
 - [ ] **3.6** 配置 Spring 异步任务执行器（`TaskExecutor` bean，核心线程 2，最大线程 4）
-- [ ] **3.7** `FileRecordResponse` 新增 `indexed` 字段（通过 `text_chunks.indexed` 判断）
+- [ ] **3.7** `FileResponse` 新增 `indexed` 字段（通过 `text_chunks.indexed` 判断）
 
 ### Phase 4：后端 — 资产附件 API
 
@@ -480,7 +482,7 @@
 - [ ] **9.1** 新建 `src/api/goodAttachments.ts`
 - [ ] **9.2** 更新 `src/api/goods.ts`（`GoodDetail` 新增 `attachments`）
 - [ ] **9.3** 新建 `src/components/expiration/AttachmentManager.tsx`
-- [ ] **9.4** 修改 `GoodExpandedRow.tsx`，集成附件 Tab
+- [ ] **9.4** 修改 `GoodExpandedRow.tsx`：当前图片管理使用 toggle 按钮（`showPictures` state），需改为 Tab 切换结构（「图片」+「附件」两个 Tab），集成附件管理区域
 - [ ] **9.5** 更新 i18n
 
 ### Phase 10：前端 — 内容搜索 UI
