@@ -703,7 +703,8 @@
     "tabs": {
       "storage": "云存储",
       "ai": "AI",
-      "notification": "消息通知"
+      "notification": "消息通知",
+      "elasticsearch": "搜索"
     },
     "qiniu": {
       "title": "七牛 OSS 配置",
@@ -789,6 +790,22 @@
       "testWebhook": "测试 Webhook",
       "testSuccess": "Webhook 测试请求已发送",
       "testFailed": "Webhook 测试失败：{{message}}"
+    },
+    "elasticsearch": {
+      "title": "Elasticsearch 配置",
+      "description": "配置 Elasticsearch 用于文件内容全文搜索。更改立即生效。",
+      "fields": {
+        "enabled": "启用 Elasticsearch 搜索",
+        "host": "主机地址",
+        "port": "端口"
+      },
+      "placeholders": {
+        "host": "localhost",
+        "port": "9200"
+      },
+      "testConnection": "测试连接",
+      "testSuccess": "Elasticsearch 连接成功",
+      "testFailed": "Elasticsearch 连接失败：{{message}}"
     },
     "saveSuccess": "设置保存成功",
     "saveFailed": "设置保存失败"

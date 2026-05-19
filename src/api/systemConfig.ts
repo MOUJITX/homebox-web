@@ -36,3 +36,6 @@ export const testQiniuConnection = () =>
 
 export const testAiConnection = () =>
   axios.post<TestConnectionResponse>("/system-config/test/ai");
+
+export const testElasticsearchConnection = () =>
+  axios.post<TestConnectionResponse>("/system-config/test/elasticsearch");

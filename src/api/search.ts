@@ -34,3 +34,6 @@ export interface SearchResponse {
 
 export const searchContent = (q: string, page = 0, size = 20) =>
   axios.get<SearchResponse>("/search", { params: { q, page, size } });
+
+export const getSearchStatus = () =>
+  axios.get<{ available: boolean }>("/search/status");

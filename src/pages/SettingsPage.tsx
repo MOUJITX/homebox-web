@@ -31,6 +31,7 @@ import { PlusIcon } from "lucide-react";
 import MaskedInput from "@/components/settings/MaskedInput";
 import AiModelsDialog from "@/components/settings/AiModelsDialog";
 import NotificationConfigCard from "@/components/settings/NotificationConfigCard";
+import ElasticsearchConfigCard from "@/components/settings/ElasticsearchConfigCard";
 
 interface ConfigGroupCardProps {
   readonly group: string;
@@ -340,12 +341,13 @@ const AiConfigCard = () => {
   );
 };
 
-type SettingsTab = "storage" | "ai" | "notification";
+type SettingsTab = "storage" | "ai" | "notification" | "elasticsearch";
 
 const settingsTabs: { key: SettingsTab; label: string }[] = [
   { key: "storage", label: "settings.tabs.storage" },
   { key: "ai", label: "settings.tabs.ai" },
   { key: "notification", label: "settings.tabs.notification" },
+  { key: "elasticsearch", label: "settings.tabs.elasticsearch" },
 ];
 
 const SettingsPage = () => {
@@ -418,6 +420,12 @@ const SettingsPage = () => {
       {activeTab === "notification" && (
         <div className="grid gap-6">
           <NotificationConfigCard />
+        </div>
+      )}
+
+      {activeTab === "elasticsearch" && (
+        <div className="grid gap-6">
+          <ElasticsearchConfigCard />
         </div>
       )}
     </div>

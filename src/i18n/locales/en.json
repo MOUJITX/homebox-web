@@ -677,7 +677,8 @@
     "tabs": {
       "storage": "Storage",
       "ai": "AI",
-      "notification": "Notifications"
+      "notification": "Notifications",
+      "elasticsearch": "Search"
     },
     "qiniu": {
       "title": "Qiniu OSS Configuration",
@@ -763,6 +764,22 @@
       "testWebhook": "Test Webhook",
       "testSuccess": "Webhook test request sent",
       "testFailed": "Webhook test failed: {{message}}"
+    },
+    "elasticsearch": {
+      "title": "Elasticsearch Configuration",
+      "description": "Configure Elasticsearch for full-text search over file contents. Changes take effect immediately.",
+      "fields": {
+        "enabled": "Enable Elasticsearch Search",
+        "host": "Host",
+        "port": "Port"
+      },
+      "placeholders": {
+        "host": "localhost",
+        "port": "9200"
+      },
+      "testConnection": "Test Connection",
+      "testSuccess": "Elasticsearch connection successful",
+      "testFailed": "Elasticsearch connection failed: {{message}}"
     },
     "saveSuccess": "Settings saved successfully",
     "saveFailed": "Failed to save settings"

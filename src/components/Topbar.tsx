@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import NotificationBell from "@/components/NotificationBell";
 import SearchDialog from "@/components/SearchDialog";
+import { getSearchStatus } from "@/api/search";
 
 const routeTitleMap: Record<string, string> = {
   "/dashboard": "nav.dashboard",
@@ -37,16 +38,26 @@ const Topbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchAvailable, setSearchAvailable] = useState(false);
 
   const titleKey = routeTitleMap[location.pathname] ?? "nav.dashboard";
   const currentLang = i18n.language?.startsWith("zh") ? "zh" : i18n.language;
 
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.key === "k" && (e.ctrlKey || e.metaKey)) {
-      e.preventDefault();
-      setSearchOpen(true);
-    }
+  useEffect(() => {
+    getSearchStatus()
+      .then(({ data }) => setSearchAvailable(data.available))
+      .catch(() => setSearchAvailable(false));
   }, []);
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        if (searchAvailable) setSearchOpen(true);
+      }
+    },
+    [searchAvailable],
+  );
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);
@@ -58,17 +69,19 @@ const Topbar = () => {
       <header className="flex h-12 shrink-0 items-center justify-between border-b bg-card px-4">
         <h1 className="font-heading text-base font-semibold">{t(titleKey)}</h1>
         <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={() => setSearchOpen(true)}
-            className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-          >
-            <SearchIcon className="size-4" />
-            <span className="hidden sm:inline">{t("search.placeholder")}</span>
-            <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
-              {t("search.shortcut")}
-            </kbd>
-          </button>
+          {searchAvailable && (
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              <SearchIcon className="size-4" />
+              <span className="hidden sm:inline">{t("search.placeholder")}</span>
+              <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+                {t("search.shortcut")}
+              </kbd>
+            </button>
+          )}
           <NotificationBell />
           <DropdownMenu>
             <DropdownMenuTrigger className="flex cursor-default items-center gap-1.5 rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
@@ -118,7 +131,9 @@ const Topbar = () => {
           </DropdownMenu>
         </div>
       </header>
-      <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
+      {searchAvailable && (
+        <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
+      )}
     </>
   );
 };
