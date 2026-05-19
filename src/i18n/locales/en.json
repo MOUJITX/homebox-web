@@ -268,6 +268,13 @@
       "uploading": "Uploading…",
       "empty": "No pictures uploaded yet."
     },
+    "attachments": {
+      "title": "Attachments",
+      "upload": "Upload",
+      "uploading": "Uploading…",
+      "empty": "No attachments uploaded yet.",
+      "indexing": "Indexing…"
+    },
     "categories": {
       "manage": "Categories",
       "manageDescription": "Create, edit, and delete product categories.",
@@ -405,6 +412,13 @@
         "unbindFailed": "Failed to unbind invoice",
         "loadFailed": "Failed to load invoices"
       }
+    },
+    "attachments": {
+      "title": "Attachments",
+      "upload": "Upload",
+      "uploading": "Uploading…",
+      "empty": "No attachments uploaded yet.",
+      "indexing": "Indexing…"
     },
     "assetCategories": {
       "manage": "Categories",
@@ -752,6 +766,17 @@
     },
     "saveSuccess": "Settings saved successfully",
     "saveFailed": "Failed to save settings"
+  },
+  "search": {
+    "placeholder": "Search file contents…",
+    "empty": "Search across attachments and uploaded files",
+    "noResults": "No results found for \"{{query}}\"",
+    "totalResults": "{{count}} results",
+    "shortcut": "Ctrl+K",
+    "tags": {
+      "asset": "Asset",
+      "good": "Expiration"
+    }
   },
   "common": {
     "logout": "Sign Out",

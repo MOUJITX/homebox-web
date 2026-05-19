@@ -1,4 +1,5 @@
 import axios from "./axios";
+import type { AssetAttachment } from "./assetAttachments";
 
 export type WarrantyStatus = "IN_WARRANTY" | "OUT_WARRANTY" | "NO_WARRANTY";
 
@@ -46,6 +47,7 @@ export interface AssetDetail extends Asset {
   warrantyPeriod: number | null;
   pictures: AssetPicture[];
   subAssets: Asset[];
+  attachments: AssetAttachment[];
 }
 
 export interface Page<T> {

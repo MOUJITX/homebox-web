@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/sheet";
 import AssetPictureManager from "./AssetPictureManager";
 import AssetInvoiceManager from "./AssetInvoiceManager";
+import AssetAttachmentManager from "./AssetAttachmentManager";
 import CreateAssetDialog from "./CreateAssetDialog";
 import EditAssetDialog from "./EditAssetDialog";
 import DeleteAssetDialog from "./DeleteAssetDialog";
@@ -279,6 +280,15 @@ const AssetDetailDrawer = ({
                   setViewingInvoiceId(id);
                   setInvoiceDrawerOpen(true);
                 }}
+              />
+            </div>
+
+            {/* Attachments */}
+            <div className="grid gap-2">
+              <AssetAttachmentManager
+                assetId={detail.id}
+                attachments={detail.attachments || []}
+                onChanged={() => void invalidate.invalidateDetail(assetId!)}
               />
             </div>
 

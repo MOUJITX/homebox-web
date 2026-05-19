@@ -9,4 +9,5 @@ export const assetKeys = {
   places: ["asset-places"] as const,
   stores: ["asset-stores"] as const,
   invoices: (assetId: number) => ["asset-invoices", assetId] as const,
+  attachments: (assetId: number) => ["asset-attachments", assetId] as const,
 };

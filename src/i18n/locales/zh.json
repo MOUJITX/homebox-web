@@ -117,6 +117,13 @@
       "uploading": "上传中…",
       "empty": "暂无图片。"
     },
+    "attachments": {
+      "title": "附件",
+      "upload": "上传",
+      "uploading": "上传中…",
+      "empty": "暂无附件。",
+      "indexing": "索引中…"
+    },
     "categories": {
       "manage": "分类",
       "manageDescription": "创建、编辑和删除商品分类。",
@@ -254,6 +261,13 @@
         "unbindFailed": "解绑发票失败",
         "loadFailed": "加载发票失败"
       }
+    },
+    "attachments": {
+      "title": "附件",
+      "upload": "上传",
+      "uploading": "上传中…",
+      "empty": "暂无附件。",
+      "indexing": "索引中…"
     },
     "assetCategories": {
       "manage": "分类",
@@ -445,6 +459,17 @@
   "errorToast": {
     "requestFailed": "请求失败",
     "networkError": "网络错误，请检查您的连接"
+  },
+  "search": {
+    "placeholder": "搜索文件内容…",
+    "empty": "搜索附件和文件内容",
+    "noResults": "未找到 \"{{query}}\" 的相关结果",
+    "totalResults": "共 {{count}} 条结果",
+    "shortcut": "Ctrl+K",
+    "tags": {
+      "asset": "资产",
+      "good": "有效期"
+    }
   },
   "common": {
     "cancel": "取消",
