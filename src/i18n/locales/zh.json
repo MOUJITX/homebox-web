@@ -793,15 +793,9 @@
     },
     "elasticsearch": {
       "title": "Elasticsearch 配置",
-      "description": "配置 Elasticsearch 用于文件内容全文搜索。更改立即生效。",
+      "description": "启用文件内容全文搜索。主机地址和端口通过 ES_HOST / ES_PORT 环境变量设置。更改立即生效。",
       "fields": {
-        "enabled": "启用 Elasticsearch 搜索",
-        "host": "主机地址",
-        "port": "端口"
-      },
-      "placeholders": {
-        "host": "localhost",
-        "port": "9200"
+        "enabled": "启用 Elasticsearch 搜索"
       },
       "testConnection": "测试连接",
       "testSuccess": "Elasticsearch 连接成功",

@@ -9,7 +9,6 @@ import {
 import { getErrorMessage } from "@/lib/error";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Card,
@@ -22,7 +21,6 @@ import {
 
 const ElasticsearchConfigCard = () => {
   const { t } = useTranslation();
-  const [formValues, setFormValues] = useState<Record<string, string>>({});
   const [enabled, setEnabled] = useState(false);
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
@@ -31,12 +29,11 @@ const ElasticsearchConfigCard = () => {
   const fetchConfig = useCallback(async () => {
     try {
       const { data } = await getSystemConfigGroup("elasticsearch");
-      const values: Record<string, string> = {};
       for (const item of data.items) {
-        values[item.key] = item.value;
+        if (item.key === "elasticsearch.enabled") {
+          setEnabled(item.value === "true");
+        }
       }
-      setFormValues(values);
-      setEnabled(values["elasticsearch.enabled"] === "true");
     } catch {
       // handled by interceptor
     } finally {
@@ -48,26 +45,16 @@ const ElasticsearchConfigCard = () => {
     void fetchConfig();
   }, [fetchConfig]);
 
-  const handleFieldChange = (key: string, value: string) => {
-    setFormValues((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const handleEnabledChange = (checked: boolean) => {
+  const handleEnabledChange = async (checked: boolean) => {
     setEnabled(checked);
-    setFormValues((prev) => ({
-      ...prev,
-      "elasticsearch.enabled": checked ? "true" : "false",
-    }));
-  };
-
-  const handleSave = async () => {
-    if (saving) return;
     setSaving(true);
     try {
-      await saveSystemConfigGroup("elasticsearch", formValues);
+      await saveSystemConfigGroup("elasticsearch", {
+        "elasticsearch.enabled": checked ? "true" : "false",
+      });
       toast.success(t("settings.saveSuccess"));
-      await fetchConfig();
     } catch (err) {
+      setEnabled(!checked); // rollback
       toast.error(getErrorMessage(err) ?? t("settings.saveFailed"));
     } finally {
       setSaving(false);
@@ -121,48 +108,15 @@ const ElasticsearchConfigCard = () => {
             id="es-enabled"
             checked={enabled}
             onCheckedChange={(checked) => handleEnabledChange(checked === true)}
+            disabled={saving}
           />
           <Label htmlFor="es-enabled" className="cursor-pointer">
             {t("settings.elasticsearch.fields.enabled")}
           </Label>
         </div>
-
-        {enabled && (
-          <>
-            <div className="grid gap-2">
-              <Label htmlFor="es-host">
-                {t("settings.elasticsearch.fields.host")}
-              </Label>
-              <Input
-                id="es-host"
-                value={formValues["elasticsearch.host"] ?? ""}
-                onChange={(e) =>
-                  handleFieldChange("elasticsearch.host", e.target.value)
-                }
-                placeholder={t("settings.elasticsearch.placeholders.host")}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="es-port">
-                {t("settings.elasticsearch.fields.port")}
-              </Label>
-              <Input
-                id="es-port"
-                value={formValues["elasticsearch.port"] ?? ""}
-                onChange={(e) =>
-                  handleFieldChange("elasticsearch.port", e.target.value)
-                }
-                placeholder={t("settings.elasticsearch.placeholders.port")}
-              />
-            </div>
-          </>
-        )}
       </CardContent>
       <CardFooter className="gap-2">
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? t("common.saving") : t("common.save")}
-        </Button>
-        <Button variant="outline" onClick={handleTest} disabled={testing}>
+        <Button variant="outline" onClick={handleTest} disabled={testing || !enabled}>
           {testing
             ? t("common.loading")
             : t("settings.elasticsearch.testConnection")}

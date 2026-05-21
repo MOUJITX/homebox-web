@@ -767,15 +767,9 @@
     },
     "elasticsearch": {
       "title": "Elasticsearch Configuration",
-      "description": "Configure Elasticsearch for full-text search over file contents. Changes take effect immediately.",
+      "description": "Enable full-text search over file contents. Host and port are set via ES_HOST / ES_PORT environment variables. Changes take effect immediately.",
       "fields": {
-        "enabled": "Enable Elasticsearch Search",
-        "host": "Host",
-        "port": "Port"
-      },
-      "placeholders": {
-        "host": "localhost",
-        "port": "9200"
+        "enabled": "Enable Elasticsearch Search"
       },
       "testConnection": "Test Connection",
       "testSuccess": "Elasticsearch connection successful",
