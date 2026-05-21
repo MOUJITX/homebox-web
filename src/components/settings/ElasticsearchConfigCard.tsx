@@ -5,7 +5,6 @@ import {
   getSystemConfigGroup,
   saveSystemConfigGroup,
   testElasticsearchConnection,
-  type SystemConfigItem,
 } from "@/api/systemConfig";
 import { getErrorMessage } from "@/lib/error";
 import { Button } from "@/components/ui/button";
@@ -23,7 +22,6 @@ import {
 
 const ElasticsearchConfigCard = () => {
   const { t } = useTranslation();
-  const [items, setItems] = useState<SystemConfigItem[]>([]);
   const [formValues, setFormValues] = useState<Record<string, string>>({});
   const [enabled, setEnabled] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -33,7 +31,6 @@ const ElasticsearchConfigCard = () => {
   const fetchConfig = useCallback(async () => {
     try {
       const { data } = await getSystemConfigGroup("elasticsearch");
-      setItems(data.items);
       const values: Record<string, string> = {};
       for (const item of data.items) {
         values[item.key] = item.value;
@@ -85,11 +82,15 @@ const ElasticsearchConfigCard = () => {
       if (data.success) {
         toast.success(t("settings.elasticsearch.testSuccess"));
       } else {
-        toast.error(t("settings.elasticsearch.testFailed", { message: data.message }));
+        toast.error(
+          t("settings.elasticsearch.testFailed", { message: data.message }),
+        );
       }
     } catch (err) {
       toast.error(
-        t("settings.elasticsearch.testFailed", { message: getErrorMessage(err) ?? "" }),
+        t("settings.elasticsearch.testFailed", {
+          message: getErrorMessage(err) ?? "",
+        }),
       );
     } finally {
       setTesting(false);
@@ -110,7 +111,9 @@ const ElasticsearchConfigCard = () => {
     <Card>
       <CardHeader>
         <CardTitle>{t("settings.elasticsearch.title")}</CardTitle>
-        <CardDescription>{t("settings.elasticsearch.description")}</CardDescription>
+        <CardDescription>
+          {t("settings.elasticsearch.description")}
+        </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         <div className="flex items-center gap-2">
@@ -160,7 +163,9 @@ const ElasticsearchConfigCard = () => {
           {saving ? t("common.saving") : t("common.save")}
         </Button>
         <Button variant="outline" onClick={handleTest} disabled={testing}>
-          {testing ? t("common.loading") : t("settings.elasticsearch.testConnection")}
+          {testing
+            ? t("common.loading")
+            : t("settings.elasticsearch.testConnection")}
         </Button>
       </CardFooter>
     </Card>

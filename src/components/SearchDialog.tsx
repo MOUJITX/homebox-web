@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
-import { SearchIcon, FileIcon, XIcon, LoaderIcon } from "lucide-react";
+import { SearchIcon, FileIcon, LoaderIcon } from "lucide-react";
 import type { SearchResultItem } from "@/api/search";
 import { searchContent } from "@/api/search";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -110,7 +109,9 @@ const SearchDialog = ({ open, onClose }: SearchDialogProps) => {
           {!query.trim() && (
             <div className="flex flex-col items-center gap-3 py-8">
               <SearchIcon className="size-8 text-muted-foreground/50" />
-              <p className="text-sm text-muted-foreground">{t("search.empty")}</p>
+              <p className="text-sm text-muted-foreground">
+                {t("search.empty")}
+              </p>
             </div>
           )}
 
@@ -144,7 +145,11 @@ const SearchDialog = ({ open, onClose }: SearchDialogProps) => {
                       <FileIcon className="size-4 shrink-0 text-muted-foreground" />
                       <div className="flex items-center gap-1.5 min-w-0">
                         {tags.map((source) => (
-                          <Badge key={source.type} variant="secondary" className="text-xs shrink-0">
+                          <Badge
+                            key={source.type}
+                            variant="secondary"
+                            className="text-xs shrink-0"
+                          >
                             {t(`search.tags.${source.type.toLowerCase()}`)}
                           </Badge>
                         ))}
