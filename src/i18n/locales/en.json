@@ -599,8 +599,16 @@
       "contentType": "Type",
       "fileSize": "Size",
       "createdAt": "Created",
+      "status": "Status",
       "actions": "Actions"
     },
+    "status": {
+      "SUCCESS": "Success",
+      "FAILED": "Failed",
+      "PROCESSING": "Processing",
+      "PENDING": "Pending"
+    },
+    "retry": "Retry failed tasks",
     "errors": {
       "uploadFailed": "Failed to upload file",
       "renameFailed": "Failed to rename file",

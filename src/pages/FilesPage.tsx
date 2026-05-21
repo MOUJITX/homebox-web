@@ -10,13 +10,19 @@ import {
   FileAudioIcon,
   FileVideoIcon,
   ImageIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  ClockIcon,
+  RefreshCwIcon,
 } from "lucide-react";
 import {
   getFiles,
   uploadFile,
   renameFile,
   deleteFile,
+  retryFile,
   type FileRecord,
+  type ProcessStatus,
 } from "@/api/files";
 import type { Page } from "@/api/goods";
 import { formatDateTime } from "@/lib/utils";
@@ -61,6 +67,12 @@ const getFileIcon = (contentType: string) => {
   return FileIcon;
 };
 
+const getFinalStatus = (extract: ProcessStatus, chunk: ProcessStatus): ProcessStatus => {
+  if (extract === "FAILED" || chunk === "FAILED") return "FAILED";
+  if (extract === "SUCCESS" && chunk === "SUCCESS") return "SUCCESS";
+  return "PROCESSING";
+};
+
 const FilesPage = () => {
   const { t } = useTranslation();
   const [pageData, setPageData] = useState<Page<FileRecord> | null>(null);
@@ -74,6 +86,7 @@ const FilesPage = () => {
   const [renamingFile, setRenamingFile] = useState<FileRecord | null>(null);
   const [renameValue, setRenameValue] = useState("");
   const [deletingFile, setDeletingFile] = useState<FileRecord | null>(null);
+  const [retrying, setRetrying] = useState<Set<number>>(new Set());
 
   const fetchFiles = useCallback(async (p: number) => {
     setLoading(true);
@@ -116,6 +129,20 @@ const FilesPage = () => {
     void fetchFiles(page);
   };
 
+  const handleRetry = async (fileId: number) => {
+    setRetrying((prev) => new Set(prev).add(fileId));
+    try {
+      await retryFile(fileId);
+    } finally {
+      setRetrying((prev) => {
+        const next = new Set(prev);
+        next.delete(fileId);
+        return next;
+      });
+      void fetchFiles(page);
+    }
+  };
+
   const totalPages = pageData?.totalPages ?? 1;
 
   return (
@@ -151,6 +178,7 @@ const FilesPage = () => {
               <TableHead>{t("files.columns.contentType")}</TableHead>
               <TableHead>{t("files.columns.fileSize")}</TableHead>
               <TableHead>{t("files.columns.createdAt")}</TableHead>
+              <TableHead className="w-24">{t("files.columns.status")}</TableHead>
               <TableHead className="text-right">
                 {t("files.columns.actions")}
               </TableHead>
@@ -159,7 +187,7 @@ const FilesPage = () => {
           <TableBody>
             {loading && (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
+                <TableCell colSpan={7} className="h-24 text-center">
                   {t("common.loading")}
                 </TableCell>
               </TableRow>
@@ -167,7 +195,7 @@ const FilesPage = () => {
             {!loading && (pageData?.content.length ?? 0) === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={6}
+                  colSpan={7}
                   className="h-24 text-center text-muted-foreground"
                 >
                   {t("files.empty")}
@@ -208,6 +236,40 @@ const FilesPage = () => {
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {formatDateTime(file.createdAt)}
+                    </TableCell>
+                    <TableCell>
+                      {(() => {
+                        const status = getFinalStatus(file.extractStatus, file.chunkStatus);
+                        const isRetrying = retrying.has(file.id);
+                        return (
+                          <div className="flex items-center gap-1.5">
+                            {status === "SUCCESS" && (
+                              <CheckCircleIcon className="size-4 text-green-500" />
+                            )}
+                            {status === "FAILED" && (
+                              <XCircleIcon className="size-4 text-red-500" />
+                            )}
+                            {(status === "PROCESSING" || status === "PENDING") && (
+                              <ClockIcon className="size-4 text-amber-500" />
+                            )}
+                            <span className="text-xs">
+                              {t(`files.status.${status}`)}
+                            </span>
+                            {status === "FAILED" && (
+                              <button
+                                className="inline-flex items-center justify-center rounded p-0.5 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
+                                disabled={isRetrying}
+                                title={t("files.retry")}
+                                onClick={() => void handleRetry(file.id)}
+                              >
+                                <RefreshCwIcon
+                                  className={`size-3.5 ${isRetrying ? "animate-spin" : ""}`}
+                                />
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">

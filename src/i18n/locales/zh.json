@@ -448,8 +448,16 @@
       "contentType": "类型",
       "fileSize": "大小",
       "createdAt": "创建时间",
+      "status": "状态",
       "actions": "操作"
     },
+    "status": {
+      "SUCCESS": "成功",
+      "FAILED": "失败",
+      "PROCESSING": "处理中",
+      "PENDING": "等待中"
+    },
+    "retry": "重试失败任务",
     "errors": {
       "uploadFailed": "上传文件失败",
       "renameFailed": "重命名文件失败",

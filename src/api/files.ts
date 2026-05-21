@@ -1,6 +1,8 @@
 import axios from "./axios";
 import type { Page } from "./goods";
 
+export type ProcessStatus = "PENDING" | "PROCESSING" | "SUCCESS" | "FAILED";
+
 export interface FileRecord {
   id: number;
   storedFilename: string;
@@ -9,6 +11,8 @@ export interface FileRecord {
   fileSize: number;
   url: string;
   createdAt: string;
+  extractStatus: ProcessStatus;
+  chunkStatus: ProcessStatus;
 }
 
 export const getFiles = (page = 0, size = 20) =>
@@ -29,3 +33,6 @@ export const renameFile = (id: number, originalFilename: string) =>
   axios.patch<FileRecord>(`/files/${id}/rename`, { originalFilename });
 
 export const deleteFile = (id: number) => axios.delete<void>(`/files/${id}`);
+
+export const retryFile = (id: number) =>
+  axios.post<void>(`/files/${id}/retry`);
