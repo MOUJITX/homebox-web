@@ -76,6 +76,7 @@ const SearchDialog = ({ open, onClose }: SearchDialogProps) => {
     const assetSource = item.sources.find((s) => s.type === "ASSET");
     const goodSource = item.sources.find((s) => s.type === "GOOD");
     const invoiceSource = item.sources.find((s) => s.type === "INVOICE");
+    const subscriptionSource = item.sources.find((s) => s.type === "SUBSCRIPTION");
 
     if (assetSource?.sourceId) {
       navigate(`/assets?assetId=${assetSource.sourceId}`);
@@ -83,6 +84,8 @@ const SearchDialog = ({ open, onClose }: SearchDialogProps) => {
       navigate(`/expiration?goodId=${goodSource.sourceId}`);
     } else if (invoiceSource?.sourceId) {
       navigate(`/invoices?invoiceId=${invoiceSource.sourceId}`);
+    } else if (subscriptionSource?.sourceId) {
+      navigate(`/subscriptions?subscriptionId=${subscriptionSource.sourceId}`);
     }
 
     onClose();

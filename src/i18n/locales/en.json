@@ -918,7 +918,8 @@
     "tags": {
       "asset": "Asset",
       "good": "Expiration",
-      "invoice": "Invoice"
+      "invoice": "Invoice",
+      "subscription": "Subscription"
     }
   },
   "common": {

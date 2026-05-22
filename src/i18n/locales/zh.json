@@ -593,7 +593,8 @@
     "tags": {
       "asset": "资产",
       "good": "有效期",
-      "invoice": "发票"
+      "invoice": "发票",
+      "subscription": "订阅"
     }
   },
   "common": {
