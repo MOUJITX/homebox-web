@@ -13,7 +13,8 @@
     "roles": "Roles",
     "profile": "Profile",
     "settings": "Settings",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "subscriptions": "Subscriptions"
   },
   "login": {
     "title": "Sign In",
@@ -48,7 +49,9 @@
       "itemCount": "Total Items",
       "assetCount": "Total Assets",
       "totalAssetPrice": "Total Asset Value",
-      "invoiceCount": "Total Invoices"
+      "invoiceCount": "Total Invoices",
+      "activeSubscriptionCount": "Active Subscriptions",
+      "monthlySubscriptionSpending": "Monthly Spending"
     },
     "items": {
       "title": "Items",
@@ -80,7 +83,10 @@
         "daysLeft": "Days Left",
         "warranty": "Warranty"
       }
-    }
+    },
+    "activeSubscriptions": "Active Subscriptions",
+    "monthlySpending": "Monthly Spending",
+    "upcomingRenewals": "Upcoming Renewals"
   },
   "members": {
     "search": "Search members…",
@@ -638,7 +644,8 @@
       "itemExpired": "Item Expired",
       "warrantyExpiring": "Warranty Expiring",
       "warrantyExpired": "Warranty Expired",
-      "medicationReminder": "Medication Reminder"
+      "medicationReminder": "Medication Reminder",
+      "subscriptionRenewal": "Subscription Renewal"
     }
   },
   "medications": {
@@ -791,6 +798,116 @@
     },
     "saveSuccess": "Settings saved successfully",
     "saveFailed": "Failed to save settings"
+  },
+  "subscriptions": {
+    "title": "Subscriptions",
+    "create": "Add Subscription",
+    "createDescription": "Add a new subscription to track.",
+    "edit": "Edit Subscription",
+    "editDescription": "Update subscription details.",
+    "delete": "Delete Subscription",
+    "deleteConfirm": "Are you sure you want to delete {{name}}?",
+    "noSubscriptions": "No subscriptions yet",
+    "searchPlaceholder": "Search subscriptions…",
+    "addRecord": "Add Record",
+    "table": {
+      "name": "Name",
+      "platform": "Platform",
+      "type": "Type",
+      "status": "Status",
+      "latestRecord": "Latest Record",
+      "endDate": "End Date",
+      "actions": "Actions"
+    },
+    "filters": {
+      "allTypes": "All Types",
+      "allStatuses": "All Statuses",
+      "allPlatforms": "All Platforms"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "cancelled": "Cancelled"
+    },
+    "types": {
+      "payAsYouGo": "Pay-as-you-go",
+      "periodic": "Periodic"
+    },
+    "billingModes": {
+      "prepaid": "Prepaid",
+      "postpaid": "Postpaid"
+    },
+    "billingCycles": {
+      "monthly": "Monthly (30d)",
+      "quarterly": "Quarterly (90d)",
+      "yearly": "Yearly (365d)",
+      "custom": "Custom days",
+      "daysUnit": "days"
+    },
+    "form": {
+      "name": "Name",
+      "nameRequired": "Name is required",
+      "description": "Description",
+      "platform": "Platform",
+      "platformRequired": "Platform is required",
+      "subscriptionType": "Type",
+      "billingMode": "Billing Mode",
+      "billingCycle": "Billing Cycle",
+      "price": "Price",
+      "currency": "Currency",
+      "status": "Status",
+      "renewNoticeDays": "Renewal Notice (days)",
+      "note": "Note"
+    },
+    "detail": {
+      "title": "Subscription Details",
+      "records": "Records",
+      "noRecords": "No records yet",
+      "renewalInfo": "Renewal Info"
+    },
+    "records": {
+      "title": "Subscription Records",
+      "add": "Add Record",
+      "edit": "Edit Record",
+      "delete": "Delete Record",
+      "date": "Record Date",
+      "amount": "Amount",
+      "paymentMethod": "Payment Method",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "quantity": "Quantity",
+      "note": "Note"
+    },
+    "invoices": {
+      "bind": "Bind Invoice",
+      "unbind": "Unbind",
+      "uploadNew": "Upload New"
+    },
+    "attachments": {
+      "upload": "Upload",
+      "delete": "Delete"
+    },
+    "errors": {
+      "hasRecords": "Cannot delete subscription with records",
+      "cannotDelete": "Failed to delete subscription"
+    }
+  },
+  "platforms": {
+    "title": "Platforms",
+    "name": "Name",
+    "logo": "Logo",
+    "website": "Website",
+    "create": "Create Platform",
+    "edit": "Edit Platform",
+    "delete": "Delete Platform"
+  },
+  "paymentMethods": {
+    "title": "Payment Methods",
+    "name": "Name",
+    "logo": "Logo",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "search": {
     "placeholder": "Search file contents…",

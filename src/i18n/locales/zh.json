@@ -474,6 +474,116 @@
     "requestFailed": "请求失败",
     "networkError": "网络错误，请检查您的连接"
   },
+  "subscriptions": {
+    "title": "订阅管理",
+    "create": "添加订阅",
+    "createDescription": "添加新订阅进行跟踪。",
+    "edit": "编辑订阅",
+    "editDescription": "更新订阅详细信息。",
+    "delete": "删除订阅",
+    "deleteConfirm": "您确定要删除 {{name}} 吗？",
+    "noSubscriptions": "暂无订阅",
+    "searchPlaceholder": "搜索订阅…",
+    "addRecord": "添加记录",
+    "table": {
+      "name": "名称",
+      "platform": "平台",
+      "type": "类型",
+      "status": "状态",
+      "latestRecord": "最新记录",
+      "endDate": "到期日期",
+      "actions": "操作"
+    },
+    "filters": {
+      "allTypes": "全部类型",
+      "allStatuses": "全部状态",
+      "allPlatforms": "全部平台"
+    },
+    "status": {
+      "active": "使用中",
+      "inactive": "暂停中",
+      "cancelled": "已取消"
+    },
+    "types": {
+      "payAsYouGo": "按量付费",
+      "periodic": "包年包月"
+    },
+    "billingModes": {
+      "prepaid": "预付费",
+      "postpaid": "后付费"
+    },
+    "billingCycles": {
+      "monthly": "包月(30天)",
+      "quarterly": "包季(90天)",
+      "yearly": "包年(365天)",
+      "custom": "自定义天数",
+      "daysUnit": "天"
+    },
+    "form": {
+      "name": "名称",
+      "nameRequired": "名称不能为空",
+      "description": "描述",
+      "platform": "平台",
+      "platformRequired": "请选择平台",
+      "subscriptionType": "订阅类型",
+      "billingMode": "计费方式",
+      "billingCycle": "计费周期",
+      "price": "价格",
+      "currency": "币种",
+      "status": "状态",
+      "renewNoticeDays": "续费提醒(天)",
+      "note": "备注"
+    },
+    "detail": {
+      "title": "订阅详情",
+      "records": "订阅记录",
+      "noRecords": "暂无记录",
+      "renewalInfo": "续费信息"
+    },
+    "records": {
+      "title": "订阅记录",
+      "add": "添加记录",
+      "edit": "编辑记录",
+      "delete": "删除记录",
+      "date": "记录日期",
+      "amount": "金额",
+      "paymentMethod": "支付方式",
+      "startDate": "开始日期",
+      "endDate": "到期日期",
+      "quantity": "用量",
+      "note": "备注"
+    },
+    "invoices": {
+      "bind": "关联发票",
+      "unbind": "解除关联",
+      "uploadNew": "上传新发票"
+    },
+    "attachments": {
+      "upload": "上传附件",
+      "delete": "删除"
+    },
+    "errors": {
+      "hasRecords": "存在记录的订阅无法删除",
+      "cannotDelete": "删除订阅失败"
+    }
+  },
+  "platforms": {
+    "title": "平台管理",
+    "name": "名称",
+    "logo": "图标",
+    "website": "网址",
+    "create": "创建平台",
+    "edit": "编辑平台",
+    "delete": "删除平台"
+  },
+  "paymentMethods": {
+    "title": "支付方式",
+    "name": "名称",
+    "logo": "图标",
+    "create": "创建",
+    "edit": "编辑",
+    "delete": "删除"
+  },
   "search": {
     "placeholder": "搜索文件内容…",
     "empty": "搜索附件和文件内容",
@@ -507,7 +617,9 @@
       "itemCount": "物品总数",
       "assetCount": "资产数量",
       "totalAssetPrice": "资产总价值",
-      "invoiceCount": "发票总数"
+      "invoiceCount": "发票总数",
+      "activeSubscriptionCount": "活跃订阅数",
+      "monthlySubscriptionSpending": "本月支出"
     },
     "items": {
       "title": "物品",
@@ -539,7 +651,10 @@
         "daysLeft": "剩余天数",
         "warranty": "保修"
       }
-    }
+    },
+    "activeSubscriptions": "活跃订阅",
+    "monthlySpending": "本月支出",
+    "upcomingRenewals": "即将到期"
   },
   "login": {
     "description": "输入您的凭据以继续",
@@ -600,7 +715,8 @@
     "profile": "用户信息",
     "roles": "角色",
     "settings": "系统设置",
-    "notifications": "消息通知"
+    "notifications": "消息通知",
+    "subscriptions": "订阅管理"
   },
   "profile": {
     "changePassword": "更改密码",
@@ -665,7 +781,8 @@
       "itemExpired": "物品已过期",
       "warrantyExpiring": "保修即将到期",
       "warrantyExpired": "保修已过期",
-      "medicationReminder": "用药提醒"
+      "medicationReminder": "用药提醒",
+      "subscriptionRenewal": "续费提醒"
     }
   },
   "medications": {

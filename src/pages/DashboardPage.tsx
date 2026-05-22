@@ -6,6 +6,7 @@ import {
   BoxIcon,
   BanknoteIcon,
   ReceiptIcon,
+  CreditCardIcon,
   ArrowRightIcon,
   AlertTriangleIcon,
   ClockIcon,
@@ -49,7 +50,7 @@ const DashboardPage = () => {
 
   if (!data) return null;
 
-  const { stats, expiringSoonItems, inUseItems, warrantyExpiringAssets, inUseAssets } = data;
+  const { stats, expiringSoonItems, inUseItems, warrantyExpiringAssets, inUseAssets, upcomingRenewals } = data;
 
   const statCards = [
     {
@@ -80,6 +81,22 @@ const DashboardPage = () => {
       color: "text-amber-600 dark:text-amber-400",
       bg: "bg-amber-500/10",
     },
+    {
+      icon: CreditCardIcon,
+      label: t("dashboard.activeSubscriptions"),
+      value: stats.activeSubscriptionCount,
+      color: "text-rose-600 dark:text-rose-400",
+      bg: "bg-rose-500/10",
+    },
+    {
+      icon: BanknoteIcon,
+      label: t("dashboard.monthlySpending"),
+      value: stats.monthlySubscriptionSpending != null
+        ? formatCurrency(stats.monthlySubscriptionSpending)
+        : "—",
+      color: "text-teal-600 dark:text-teal-400",
+      bg: "bg-teal-500/10",
+    },
   ];
 
   const tabClass = (active: boolean) =>
@@ -93,7 +110,7 @@ const DashboardPage = () => {
   return (
     <div className="flex flex-col gap-6">
       {/* Stats Row */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
         {statCards.map((stat) => (
           <Card key={stat.label}>
             <CardContent className="flex items-center gap-4 px-4">
@@ -330,6 +347,51 @@ const DashboardPage = () => {
           </Link>
         </div>
       </Card>
+
+      {upcomingRenewals && upcomingRenewals.length > 0 && (
+        <Card>
+          <CardHeader className="flex-row items-center justify-between">
+            <CardTitle>{t("dashboard.upcomingRenewals")}</CardTitle>
+          </CardHeader>
+          <CardContent className="px-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t("subscriptions.table.name")}</TableHead>
+                  <TableHead>{t("subscriptions.table.platform")}</TableHead>
+                  <TableHead>{t("subscriptions.table.endDate")}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {upcomingRenewals.map((renewal) => {
+                  const daysLeft = getDaysLeft(renewal.endDate);
+                  return (
+                    <TableRow key={renewal.id}>
+                      <TableCell className="font-medium">{renewal.name}</TableCell>
+                      <TableCell>{renewal.platformName}</TableCell>
+                      <TableCell>
+                        <span>{formatDate(renewal.endDate)}</span>
+                        <Badge variant={daysLeft <= 3 ? "destructive" : "warning"} className="ml-2">
+                          {daysLeft}d
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </CardContent>
+          <div className="border-t px-4 py-2">
+            <Link
+              to="/subscriptions"
+              className="inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              {t("dashboard.upcomingRenewals")}
+              <ArrowRightIcon className="size-3.5" />
+            </Link>
+          </div>
+        </Card>
+      )}
     </div>
   );
 };

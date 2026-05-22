@@ -7,6 +7,7 @@ import {
   PillIcon,
   BoxIcon,
   ReceiptIcon,
+  CreditCardIcon,
   FolderIcon,
   UsersIcon,
   ShieldIcon,
@@ -32,6 +33,7 @@ const navItems: NavItem[] = [
   { label: "nav.medications", path: "/medications", icon: PillIcon },
   { label: "nav.assets", path: "/assets", icon: BoxIcon },
   { label: "nav.invoices", path: "/invoices", icon: ReceiptIcon },
+  { label: "nav.subscriptions", path: "/subscriptions", icon: CreditCardIcon },
   {
     label: "nav.files",
     path: "/files",
