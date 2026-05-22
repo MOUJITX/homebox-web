@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Homebox Client — a web client application for Homebox (home inventory management), built with React, TypeScript, and Vite.
+Homebox Client — a web client application for Homebox (home inventory management), built with React, TypeScript, and Vite. Features include expiration tracking, asset management, invoice management, subscription management, medication reminders, and full-text search.
 
 ## Tech Stack
 
