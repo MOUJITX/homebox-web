@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PlusIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { PlusIcon, PencilIcon, TrashIcon, UploadIcon } from "lucide-react";
 import type { PaymentMethod } from "@/api/paymentMethods";
 import { createPaymentMethod, updatePaymentMethod, deletePaymentMethod } from "@/api/paymentMethods";
+import { uploadFile } from "@/api/files";
 import { usePaymentMethods } from "@/hooks/queries/usePaymentMethods";
 import { getErrorMessage } from "@/lib/error";
 import { useQueryClient } from "@tanstack/react-query";
 import { subscriptionKeys } from "@/hooks/queries/subscriptionKeys";
+import AuthImg from "@/components/AuthImg";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,7 +23,10 @@ const PaymentMethodManagerDialog = ({ open, onClose }: PaymentMethodManagerDialo
   const { t } = useTranslation();
   const { data: paymentMethods = [] } = usePaymentMethods();
   const queryClient = useQueryClient();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState("");
+  const [logoFileId, setLogoFileId] = useState<number | null>(null);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
   const [editing, setEditing] = useState<PaymentMethod | null>(null);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -30,13 +35,31 @@ const PaymentMethodManagerDialog = ({ open, onClose }: PaymentMethodManagerDialo
     queryClient.invalidateQueries({ queryKey: subscriptionKeys.paymentMethods });
   };
 
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingLogo(true);
+    try {
+      const { data } = await uploadFile(file);
+      setLogoFileId(data.id);
+    } catch (err) {
+      setError(getErrorMessage(err) ?? t("common.error"));
+    } finally {
+      setUploadingLogo(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
   const handleCreate = async () => {
     if (!name.trim()) return;
     setSubmitting(true);
     setError("");
     try {
-      await createPaymentMethod({ name: name.trim() });
-      setName("");
+      await createPaymentMethod({
+        name: name.trim(),
+        logoFileId: logoFileId ?? undefined,
+      });
+      resetForm();
       invalidate();
     } catch (err) {
       setError(getErrorMessage(err) ?? t("common.error"));
@@ -50,15 +73,23 @@ const PaymentMethodManagerDialog = ({ open, onClose }: PaymentMethodManagerDialo
     setSubmitting(true);
     setError("");
     try {
-      await updatePaymentMethod(editing.id, { name: name.trim() });
+      await updatePaymentMethod(editing.id, {
+        name: name.trim(),
+        logoFileId: logoFileId ?? undefined,
+      });
       setEditing(null);
-      setName("");
+      resetForm();
       invalidate();
     } catch (err) {
       setError(getErrorMessage(err) ?? t("common.error"));
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const resetForm = () => {
+    setName("");
+    setLogoFileId(null);
   };
 
   const handleDelete = async (id: number) => {
@@ -68,6 +99,17 @@ const PaymentMethodManagerDialog = ({ open, onClose }: PaymentMethodManagerDialo
     } catch (err) {
       setError(getErrorMessage(err) ?? t("common.error"));
     }
+  };
+
+  const handleEdit = (pm: PaymentMethod) => {
+    setEditing(pm);
+    setName(pm.name);
+    setLogoFileId(null);
+  };
+
+  const handleCancel = () => {
+    setEditing(null);
+    resetForm();
   };
 
   return (
@@ -82,13 +124,38 @@ const PaymentMethodManagerDialog = ({ open, onClose }: PaymentMethodManagerDialo
             <Label>{t("paymentMethods.name")}</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={t("paymentMethods.name")} />
           </div>
+          <div className="grid gap-2">
+            <Label>{t("paymentMethods.logo")}</Label>
+            <div className="flex items-center gap-2">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleLogoUpload}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingLogo}
+              >
+                <UploadIcon className="size-3.5" />
+                {uploadingLogo ? "..." : t("paymentMethods.logo")}
+              </Button>
+              {logoFileId && (
+                <span className="text-xs text-muted-foreground">ID: {logoFileId}</span>
+              )}
+            </div>
+          </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
           <Button onClick={editing ? handleUpdate : handleCreate} disabled={submitting || !name.trim()}>
             {editing ? <PencilIcon className="size-3.5" /> : <PlusIcon className="size-3.5" />}
             {editing ? t("common.save") : t("paymentMethods.create")}
           </Button>
           {editing && (
-            <Button variant="outline" onClick={() => { setEditing(null); setName(""); }}>
+            <Button variant="outline" onClick={handleCancel}>
               {t("common.cancel")}
             </Button>
           )}
@@ -100,10 +167,17 @@ const PaymentMethodManagerDialog = ({ open, onClose }: PaymentMethodManagerDialo
           ) : (
             <div className="space-y-1">
               {paymentMethods.map((pm) => (
-                <div key={pm.id} className="flex items-center justify-between rounded-md border px-3 py-2 text-sm">
-                  <span className="truncate">{pm.name}</span>
+                <div key={pm.id} className="flex items-center gap-2 justify-between rounded-md border px-3 py-2 text-sm">
+                  <div className="flex items-center gap-2 min-w-0">
+                    {pm.logoUrl ? (
+                      <AuthImg url={pm.logoUrl} alt="" className="size-6 shrink-0 rounded object-cover" />
+                    ) : (
+                      <div className="size-6 shrink-0 rounded bg-muted" />
+                    )}
+                    <span className="truncate">{pm.name}</span>
+                  </div>
                   <div className="flex gap-1 shrink-0">
-                    <Button variant="ghost" size="icon-xs" onClick={() => { setEditing(pm); setName(pm.name); }}>
+                    <Button variant="ghost" size="icon-xs" onClick={() => handleEdit(pm)}>
                       <PencilIcon className="size-3.5" />
                     </Button>
                     <Button variant="ghost" size="icon-xs" onClick={() => void handleDelete(pm.id)}>
