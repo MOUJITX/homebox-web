@@ -81,8 +81,6 @@ const InvoicesPage = () => {
   const [detailInvoiceId, setDetailInvoiceId] = useState<number | null>(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
 
   // Handle invoiceId query param from search navigation (open detail drawer)
   useEffect(() => {
