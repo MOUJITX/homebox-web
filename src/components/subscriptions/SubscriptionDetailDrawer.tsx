@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PencilIcon, TrashIcon, PlusIcon, ReceiptTextIcon } from "lucide-react";
-import type { SubscriptionType } from "@/api/subscriptions";
 import { useSubscriptionDetail } from "@/hooks/queries/useSubscriptionDetail";
 import { useInvalidateSubscriptions } from "@/hooks/queries/useInvalidateSubscriptions";
 import { formatDate, formatCurrency } from "@/lib/utils";
@@ -55,8 +54,6 @@ const SubscriptionDetailDrawer = ({ subscriptionId, open, onClose }: Subscriptio
   };
 
   if (!detail && !isLoading) return null;
-
-  const subscriptionType: SubscriptionType = detail?.subscriptionType ?? "PERIODIC";
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
@@ -207,7 +204,7 @@ const SubscriptionDetailDrawer = ({ subscriptionId, open, onClose }: Subscriptio
             onClose={() => { setRecordDialogOpen(false); setEditingRecord(null); handleRecordChanged(); }}
             onInvoiceView={(id) => setInvoiceDrawerId(id)}
           />
-          <InvoiceDetailDrawer invoiceId={invoiceDrawerId} open={!!invoiceDrawerId} onClose={() => setInvoiceDrawerId(null)} />
+          <InvoiceDetailDrawer invoiceId={invoiceDrawerId} open={!!invoiceDrawerId} onClose={() => setInvoiceDrawerId(null)} onEdit={() => {}} onDelete={() => {}} onRefresh={handleRecordChanged} />
         </>
       )}
     </Sheet>

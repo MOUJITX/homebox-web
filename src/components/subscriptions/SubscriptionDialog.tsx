@@ -94,10 +94,6 @@ const SubscriptionDialog = ({ open, subscription, onClose }: SubscriptionDialogP
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, subscription]);
 
-  const handleOpen = () => {
-    initForm();
-  };
-
   const handleSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
     if (!name.trim()) {
@@ -157,7 +153,7 @@ const SubscriptionDialog = ({ open, subscription, onClose }: SubscriptionDialogP
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange} onOpenAutoFocus={handleOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>

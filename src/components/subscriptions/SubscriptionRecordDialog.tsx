@@ -137,7 +137,7 @@ const SubscriptionRecordDialog = ({
   const pmOptions = paymentMethods.map((pm) => ({ value: pm.id, label: pm.name }));
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }} onOpenAutoFocus={initForm}>
+    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>
