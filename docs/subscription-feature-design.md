@@ -113,8 +113,8 @@ public enum SubscriptionStatus {
 | recordDate | DATE | NOT NULL | 扣费日期 |
 | amount | DECIMAL(12,2) | NOT NULL | 金额 |
 | currency | VARCHAR(10) | DEFAULT 'CNY' | 币种 |
-| startDate | DATE | NULLABLE | 服务生效日期（包年包月必须有） |
-| endDate | DATE | NULLABLE | 服务到期日期（包年包月必须有） |
+| startDate | DATE | NOT NULL | 服务生效日期 |
+| endDate | DATE | NULLABLE | 服务到期日期（仅包年包月必须有） |
 | quantity | VARCHAR(100) | NULLABLE | 用量描述（按量付费时，如 "500万 token"） |
 | paymentMethodId | Long | FK → payment_methods.id, NULLABLE | 支付方式 |
 | note | TEXT | NULLABLE | 备注 |
@@ -186,7 +186,7 @@ public enum SubscriptionStatus {
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | `/api/subscriptions/{subId}/records` | 某订阅下的所有记录 |
+| GET | `/api/subscriptions/{subId}/records` | 某订阅下的所有记录，按 `recordDate` 倒序排列 |
 | POST | `/api/subscriptions/{subId}/records` | 添加记录 |
 | PUT | `/api/subscriptions/{subId}/records/{id}` | 更新记录 |
 | DELETE | `/api/subscriptions/{subId}/records/{id}` | 删除记录 |
