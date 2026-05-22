@@ -219,7 +219,8 @@
     "errors": {
       "createFailed": "Failed to create good",
       "updateFailed": "Failed to update good",
-      "deleteFailed": "Failed to delete good"
+      "deleteFailed": "Failed to delete good",
+      "loadFailed": "Failed to load good details"
     },
     "items": {
       "title": "Items",
@@ -260,6 +261,11 @@
         "updateFailed": "Failed to update item",
         "deleteFailed": "Failed to delete item"
       }
+    },
+    "detail": {
+      "title": "Good Details",
+      "createdAt": "Created",
+      "updatedAt": "Updated"
     },
     "pictures": {
       "title": "Pictures",

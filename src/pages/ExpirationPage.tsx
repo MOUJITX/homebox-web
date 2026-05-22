@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router";
 import {
@@ -6,8 +6,6 @@ import {
   PencilIcon,
   TrashIcon,
   SearchIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
   TagIcon,
   BuildingIcon,
 } from "lucide-react";
@@ -44,7 +42,7 @@ import {
 import CreateGoodDialog from "@/components/expiration/CreateGoodDialog";
 import EditGoodDialog from "@/components/expiration/EditGoodDialog";
 import DeleteGoodDialog from "@/components/expiration/DeleteGoodDialog";
-import GoodExpandedRow from "@/components/expiration/GoodExpandedRow";
+import GoodDetailDrawer from "@/components/expiration/GoodDetailDrawer";
 import CategoryManagerDialog from "@/components/expiration/CategoryManagerDialog";
 import BrandManagerDialog from "@/components/expiration/BrandManagerDialog";
 
@@ -98,7 +96,8 @@ const ExpirationPage = () => {
   const [createOpen, setCreateOpen] = useState(false);
   const [editingGood, setEditingGood] = useState<Good | null>(null);
   const [deletingGood, setDeletingGood] = useState<Good | null>(null);
-  const [expandedGoodId, setExpandedGoodId] = useState<number | null>(null);
+  const [drawerGoodId, setDrawerGoodId] = useState<number | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [categoryManagerOpen, setCategoryManagerOpen] = useState(false);
   const [brandManagerOpen, setBrandManagerOpen] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -106,13 +105,14 @@ const ExpirationPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  // Handle goodId query param from search navigation (expand good detail)
+  // Handle goodId query param from search navigation (open detail drawer)
   useEffect(() => {
     const goodIdParam = searchParams.get("goodId");
     if (goodIdParam) {
       const id = Number(goodIdParam);
       if (!Number.isNaN(id)) {
-        setExpandedGoodId(id);
+        setDrawerGoodId(id);
+        setDrawerOpen(true);
         const next = new URLSearchParams(searchParams);
         next.delete("goodId");
         const query = next.toString();
@@ -175,7 +175,8 @@ const ExpirationPage = () => {
     setFilterBrandId(null);
     setFilterItemStatus(null);
     setPage(0);
-    setExpandedGoodId(goodId);
+    setDrawerGoodId(goodId);
+    setDrawerOpen(true);
   };
 
   const handleRefDataChanged = () => {
@@ -318,7 +319,6 @@ const ExpirationPage = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-8" />
               <TableHead className="w-12" />
               <TableHead>{t("goods.columns.productName")}</TableHead>
               <TableHead>{t("goods.columns.barcode")}</TableHead>
@@ -334,7 +334,7 @@ const ExpirationPage = () => {
           <TableBody>
             {loading && (
               <TableRow>
-                <TableCell colSpan={9} className="h-24 text-center">
+                <TableCell colSpan={8} className="h-24 text-center">
                   {t("common.loading")}
                 </TableCell>
               </TableRow>
@@ -342,7 +342,7 @@ const ExpirationPage = () => {
             {!loading && pageData.content.length === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={9}
+                  colSpan={8}
                   className="h-24 text-center text-muted-foreground"
                 >
                   {t("common.noResults")}
@@ -351,87 +351,76 @@ const ExpirationPage = () => {
             )}
             {!loading &&
               pageData.content.map((good) => (
-                <Fragment key={good.id}>
-                  <TableRow>
-                    <TableCell>
+                <TableRow
+                  key={good.id}
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setDrawerGoodId(good.id);
+                    setDrawerOpen(true);
+                  }}
+                >
+                  <TableCell>
+                    {good.firstPictureUrl ? (
+                      <div
+                        className="size-8 shrink-0 cursor-pointer overflow-hidden rounded ring-1 ring-foreground/10"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setPreviewUrl(good.firstPictureUrl);
+                        }}
+                      >
+                        <AuthImg
+                          url={good.firstPictureUrl}
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="size-8 shrink-0 rounded bg-muted" />
+                    )}
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    {good.productName}
+                  </TableCell>
+                  <TableCell className="font-mono text-xs">
+                    {good.barcode}
+                  </TableCell>
+                  <TableCell>{good.categoryName}</TableCell>
+                  <TableCell>{good.brandName}</TableCell>
+                  <TableCell>
+                    <span className="tabular-nums">
+                      {good.itemCountInUse}/{good.itemCountTotal}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={goodStatusBadgeVariant(good.status)}>
+                      {t(`goods.status.${good.status}`)}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-1">
                       <Button
                         variant="ghost"
                         size="icon-xs"
-                        onClick={() =>
-                          setExpandedGoodId(
-                            expandedGoodId === good.id ? null : good.id,
-                          )
-                        }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingGood(good);
+                        }}
                       >
-                        {expandedGoodId === good.id ? (
-                          <ChevronUpIcon className="size-3.5" />
-                        ) : (
-                          <ChevronDownIcon className="size-3.5" />
-                        )}
+                        <PencilIcon className="size-3.5" />
                       </Button>
-                    </TableCell>
-                    <TableCell>
-                      {good.firstPictureUrl ? (
-                        <div
-                          className="size-8 shrink-0 cursor-pointer overflow-hidden rounded ring-1 ring-foreground/10"
-                          onClick={() => setPreviewUrl(good.firstPictureUrl)}
-                        >
-                          <AuthImg
-                            url={good.firstPictureUrl}
-                            alt=""
-                            className="h-full w-full object-cover"
-                          />
-                        </div>
-                      ) : (
-                        <div className="size-8 shrink-0 rounded bg-muted" />
-                      )}
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      {good.productName}
-                    </TableCell>
-                    <TableCell className="font-mono text-xs">
-                      {good.barcode}
-                    </TableCell>
-                    <TableCell>{good.categoryName}</TableCell>
-                    <TableCell>{good.brandName}</TableCell>
-                    <TableCell>
-                      <span className="tabular-nums">
-                        {good.itemCountInUse}/{good.itemCountTotal}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={goodStatusBadgeVariant(good.status)}>
-                        {t(`goods.status.${good.status}`)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon-xs"
-                          onClick={() => setEditingGood(good)}
-                        >
-                          <PencilIcon className="size-3.5" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon-xs"
-                          onClick={() => setDeletingGood(good)}
-                        >
-                          <TrashIcon className="size-3.5" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                  {expandedGoodId === good.id && (
-                    <GoodExpandedRow
-                      good={good}
-                      colSpan={9}
-                      onGoodUpdated={fetchGoods}
-                      itemStatus={filterItemStatus}
-                    />
-                  )}
-                </Fragment>
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeletingGood(good);
+                        }}
+                      >
+                        <TrashIcon className="size-3.5" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
               ))}
           </TableBody>
         </Table>
@@ -476,6 +465,14 @@ const ExpirationPage = () => {
         open={categoryManagerOpen}
         onClose={() => setCategoryManagerOpen(false)}
         onChanged={handleRefDataChanged}
+      />
+      <GoodDetailDrawer
+        goodId={drawerGoodId}
+        open={drawerOpen}
+        onClose={() => {
+          setDrawerOpen(false);
+          setDrawerGoodId(null);
+        }}
       />
       <BrandManagerDialog
         open={brandManagerOpen}

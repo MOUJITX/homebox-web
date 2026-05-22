@@ -68,7 +68,8 @@
     "errors": {
       "createFailed": "创建商品失败",
       "updateFailed": "更新商品失败",
-      "deleteFailed": "删除商品失败"
+      "deleteFailed": "删除商品失败",
+      "loadFailed": "加载商品详情失败"
     },
     "items": {
       "title": "项目",
@@ -109,6 +110,11 @@
         "updateFailed": "更新项目失败",
         "deleteFailed": "删除项目失败"
       }
+    },
+    "detail": {
+      "title": "商品详情",
+      "createdAt": "创建时间",
+      "updatedAt": "更新时间"
     },
     "pictures": {
       "title": "图片",
