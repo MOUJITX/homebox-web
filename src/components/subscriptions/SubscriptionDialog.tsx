@@ -220,7 +220,9 @@ const SubscriptionDialog = ({ open, subscription, onClose }: SubscriptionDialogP
                 <Label>{t("subscriptions.form.billingMode")}</Label>
                 <Select value={billingMode} onValueChange={(v) => setBillingMode(v as BillingMode)}>
                   <SelectTrigger>
-                    <SelectValue placeholder={t("subscriptions.form.billingMode")} />
+                    <SelectValue placeholder={t("subscriptions.form.billingMode")}>
+                    {() => billingMode ? t(`subscriptions.billingModes.${billingMode === "PREPAID" ? "prepaid" : "postpaid"}`) : t("subscriptions.form.billingMode")}
+                  </SelectValue>
                   </SelectTrigger>
                   <SelectPopup>
                     {BILLING_MODES.map((mode) => (
@@ -274,7 +276,9 @@ const SubscriptionDialog = ({ open, subscription, onClose }: SubscriptionDialogP
               <Label>{t("subscriptions.form.status")}</Label>
               <Select value={status} onValueChange={(v) => setStatus(v as SubscriptionStatus)}>
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue>
+                    {() => t(`subscriptions.status.${status.toLowerCase()}`)}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectPopup>
                   {STATUSES.map((s) => (
