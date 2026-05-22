@@ -1,4 +1,4 @@
-import { useState, type SubmitEvent } from "react";
+import { useEffect, useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon, PencilIcon } from "lucide-react";
 import type { SubscriptionRecord, SubscriptionType } from "@/api/subscriptions";
@@ -74,6 +74,12 @@ const SubscriptionRecordDialog = ({
     }
     setError("");
   };
+
+  // Re-initialize form when opening or switching between create/edit modes
+  useEffect(() => {
+    if (open) initForm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, record]);
 
   const handleSubmit = async (e: SubmitEvent) => {
     e.preventDefault();

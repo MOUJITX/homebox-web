@@ -163,7 +163,7 @@ const SubscriptionsPage = () => {
           <Button variant="outline" size="sm" onClick={() => setPlatformManagerOpen(true)}>
             {t("platforms.title")}
           </Button>
-          <Button onClick={() => setCreateOpen(true)}>
+          <Button onClick={() => { setEditingSubscription(null); setCreateOpen(true); }}>
             <PlusIcon className="size-4" />
             {t("subscriptions.create")}
           </Button>
@@ -234,10 +234,10 @@ const SubscriptionsPage = () => {
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1">
-                    <Button variant="ghost" size="icon-xs" onClick={(e) => { e.stopPropagation(); setEditingSubscription(sub); }}>
+                    <Button variant="ghost" size="icon-xs" onClick={(e) => { e.stopPropagation(); setCreateOpen(false); setEditingSubscription(sub); }}>
                       <PencilIcon className="size-3.5" />
                     </Button>
-                    <Button variant="ghost" size="icon-xs" onClick={(e) => { e.stopPropagation(); setDeletingSubscription(sub); }}>
+                    <Button variant="ghost" size="icon-xs" onClick={(e) => { e.stopPropagation(); setCreateOpen(false); setEditingSubscription(null); setDeletingSubscription(sub); }}>
                       <TrashIcon className="size-3.5" />
                     </Button>
                   </div>

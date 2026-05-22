@@ -1,4 +1,4 @@
-import { useState, type SubmitEvent } from "react";
+import { useEffect, useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon, PencilIcon } from "lucide-react";
 import type { Subscription, SubscriptionRequest, SubscriptionType, BillingMode, SubscriptionStatus } from "@/api/subscriptions";
@@ -87,6 +87,12 @@ const SubscriptionDialog = ({ open, subscription, onClose }: SubscriptionDialogP
   const handleOpenChange = (v: boolean) => {
     if (!v) onClose();
   };
+
+  // Re-initialize form when opening or when subscription prop changes
+  useEffect(() => {
+    if (open) initForm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, subscription]);
 
   const handleOpen = () => {
     initForm();
