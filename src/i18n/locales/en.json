@@ -794,7 +794,8 @@
     "shortcut": "Ctrl+K",
     "tags": {
       "asset": "Asset",
-      "good": "Expiration"
+      "good": "Expiration",
+      "invoice": "Invoice"
     }
   },
   "common": {

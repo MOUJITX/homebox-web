@@ -476,7 +476,8 @@
     "shortcut": "Ctrl+K",
     "tags": {
       "asset": "资产",
-      "good": "有效期"
+      "good": "有效期",
+      "invoice": "发票"
     }
   },
   "common": {

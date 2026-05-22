@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate, useSearchParams } from "react-router";
 import {
   PlusIcon,
   PencilIcon,
@@ -78,6 +79,27 @@ const InvoicesPage = () => {
   const [editingInvoice, setEditingInvoice] = useState<InvoiceDetail | null>(null);
   const [deletingInvoice, setDeletingInvoice] = useState<Invoice | null>(null);
   const [detailInvoiceId, setDetailInvoiceId] = useState<number | null>(null);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Handle invoiceId query param from search navigation (open detail drawer)
+  useEffect(() => {
+    const invoiceIdParam = searchParams.get("invoiceId");
+    if (invoiceIdParam) {
+      const id = Number(invoiceIdParam);
+      if (!Number.isNaN(id)) {
+        setDetailInvoiceId(id);
+        // Clean URL param
+        const next = new URLSearchParams(searchParams);
+        next.delete("invoiceId");
+        const query = next.toString();
+        navigate(query ? `/invoices?${query}` : "/invoices", { replace: true });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchInvoices = useCallback(async () => {
     setLoading(true);

@@ -75,13 +75,14 @@ const SearchDialog = ({ open, onClose }: SearchDialogProps) => {
   const handleNavigate = (item: SearchResultItem) => {
     const assetSource = item.sources.find((s) => s.type === "ASSET");
     const goodSource = item.sources.find((s) => s.type === "GOOD");
+    const invoiceSource = item.sources.find((s) => s.type === "INVOICE");
 
     if (assetSource?.sourceId) {
-      // Navigate to asset detail - we'll open with the global event
       navigate(`/assets?assetId=${assetSource.sourceId}`);
     } else if (goodSource?.sourceId) {
-      // Navigate to goods
       navigate(`/expiration?goodId=${goodSource.sourceId}`);
+    } else if (invoiceSource?.sourceId) {
+      navigate(`/invoices?invoiceId=${invoiceSource.sourceId}`);
     }
 
     onClose();
