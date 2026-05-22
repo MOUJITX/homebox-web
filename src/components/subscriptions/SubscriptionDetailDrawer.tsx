@@ -81,9 +81,11 @@ const SubscriptionDetailDrawer = ({ subscriptionId, open, onClose }: Subscriptio
 
               <div className="flex items-center gap-3">
                 {detail.platformLogoUrl ? (
-                  <AuthImg url={detail.platformLogoUrl} alt="" className="size-8 rounded object-cover" />
+                  <div className="size-8 shrink-0 overflow-hidden rounded">
+                    <AuthImg url={detail.platformLogoUrl} alt="" className="h-full w-full object-cover" />
+                  </div>
                 ) : (
-                  <div className="size-8 rounded bg-muted" />
+                  <div className="size-8 shrink-0 rounded bg-muted" />
                 )}
                 <div>
                   <span className="text-sm font-medium">{detail.platformName}</span>

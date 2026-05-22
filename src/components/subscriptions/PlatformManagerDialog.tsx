@@ -179,7 +179,9 @@ const PlatformManagerDialog = ({ open, onClose }: PlatformManagerDialogProps) =>
                 <div key={p.id} className="flex items-center gap-2 justify-between rounded-md border px-3 py-2 text-sm">
                   <div className="flex items-center gap-2 min-w-0">
                     {p.logoUrl ? (
-                      <AuthImg url={p.logoUrl} alt="" className="size-6 shrink-0 rounded object-cover" />
+                      <div className="size-6 shrink-0 overflow-hidden rounded">
+                        <AuthImg url={p.logoUrl} alt="" className="h-full w-full object-cover" />
+                      </div>
                     ) : (
                       <div className="size-6 shrink-0 rounded bg-muted" />
                     )}

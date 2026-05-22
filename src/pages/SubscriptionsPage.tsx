@@ -199,9 +199,11 @@ const SubscriptionsPage = () => {
               <TableRow key={sub.id} className="cursor-pointer" onClick={() => handleOpenDrawer(sub.id)}>
                 <TableCell>
                   {sub.platformLogoUrl ? (
-                    <AuthImg url={sub.platformLogoUrl} alt="" className="size-8 rounded object-cover" />
+                    <div className="size-8 shrink-0 overflow-hidden rounded ring-1 ring-foreground/10">
+                      <AuthImg url={sub.platformLogoUrl} alt="" className="h-full w-full object-cover" />
+                    </div>
                   ) : (
-                    <div className="size-8 rounded bg-muted" />
+                    <div className="size-8 shrink-0 rounded bg-muted ring-1 ring-foreground/10" />
                   )}
                 </TableCell>
                 <TableCell>

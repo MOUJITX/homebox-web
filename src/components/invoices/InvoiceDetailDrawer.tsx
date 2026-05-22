@@ -265,7 +265,9 @@ const InvoiceDetailDrawer = ({
                       }}
                     >
                       {sub.platformLogoUrl ? (
-                        <AuthImg url={sub.platformLogoUrl} className="size-5 rounded object-cover" />
+                        <div className="size-5 shrink-0 overflow-hidden rounded">
+                          <AuthImg url={sub.platformLogoUrl} alt="" className="h-full w-full object-cover" />
+                        </div>
                       ) : (
                         <CreditCardIcon className="size-4 text-muted-foreground" />
                       )}

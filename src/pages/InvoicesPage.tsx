@@ -306,7 +306,9 @@ const InvoicesPage = () => {
                           ) : (
                             <>
                               {first.data.platformLogoUrl ? (
-                                <AuthImg url={first.data.platformLogoUrl} className="size-5 shrink-0 rounded object-cover" />
+                                <div className="size-5 shrink-0 overflow-hidden rounded">
+                                  <AuthImg url={first.data.platformLogoUrl} alt="" className="h-full w-full object-cover" />
+                                </div>
                               ) : (
                                 <CreditCardIcon className="size-4 shrink-0 text-muted-foreground" />
                               )}

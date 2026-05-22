@@ -170,7 +170,9 @@ const PaymentMethodManagerDialog = ({ open, onClose }: PaymentMethodManagerDialo
                 <div key={pm.id} className="flex items-center gap-2 justify-between rounded-md border px-3 py-2 text-sm">
                   <div className="flex items-center gap-2 min-w-0">
                     {pm.logoUrl ? (
-                      <AuthImg url={pm.logoUrl} alt="" className="size-6 shrink-0 rounded object-cover" />
+                      <div className="size-6 shrink-0 overflow-hidden rounded">
+                        <AuthImg url={pm.logoUrl} alt="" className="h-full w-full object-cover" />
+                      </div>
                     ) : (
                       <div className="size-6 shrink-0 rounded bg-muted" />
                     )}
