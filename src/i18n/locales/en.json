@@ -773,14 +773,16 @@
         "webhookTemplate": "Webhook Payload Template",
         "crontab": "Check Schedule (Cron)",
         "assetExpiringSoonDays": "Asset Warranty Expiring Soon (Days)",
-        "medicationCrontab": "Medication Reminder Schedule (Cron)"
+        "medicationCrontab": "Medication Reminder Schedule (Cron)",
+        "subscriptionCrontab": "Subscription Renewal Schedule (Cron)"
       },
       "placeholders": {
         "webhookUrl": "https://hooks.example.com/notify",
         "webhookTemplate": "Customize the JSON payload sent to the webhook URL. Leave empty for default.",
         "crontab": "0 0 3 * * ?",
         "assetExpiringSoonDays": "30",
-        "medicationCrontab": "0 0 7-20 * * ?"
+        "medicationCrontab": "0 0 7-20 * * ?",
+        "subscriptionCrontab": "0 0 8 * * ?"
       },
       "templateHint": "Placeholders: {{type}}, {{title}}, {{content}}, {{createdAt}}, {{appName}}",
       "testWebhook": "Test Webhook",
@@ -933,6 +935,7 @@
     "delete": "Delete",
     "deleting": "Deleting…",
     "loading": "Loading…",
+    "error": "An error occurred",
     "noResults": "No results found",
     "pageInfo": "Page {{current}} of {{total}}",
     "previous": "Previous",

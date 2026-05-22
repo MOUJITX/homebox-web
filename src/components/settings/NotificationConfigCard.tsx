@@ -234,6 +234,29 @@ const NotificationConfigCard = () => {
               className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             />
           </div>
+
+          {/* Subscription Cron */}
+          <div className="grid gap-2">
+            <Label htmlFor="config-notification.subscription-crontab">
+              {t("settings.notification.fields.subscriptionCrontab")}
+            </Label>
+            <input
+              id="config-notification.subscription-crontab"
+              value={
+                formValues["notification.subscription-crontab"] ?? ""
+              }
+              onChange={(e) =>
+                handleChange(
+                  "notification.subscription-crontab",
+                  e.target.value,
+                )
+              }
+              placeholder={t(
+                "settings.notification.placeholders.subscriptionCrontab",
+              )}
+              className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            />
+          </div>
         </CardContent>
         <CardFooter className="gap-2">
           <Button type="submit" disabled={saving}>

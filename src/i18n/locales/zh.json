@@ -606,6 +606,7 @@
     "deleting": "正在删除…",
     "loading": "正在加载…",
     "logout": "退出登录",
+    "error": "发生错误",
     "noResults": "未找到结果",
     "pageInfo": "第{{current}}页，共{{total}}页",
     "previous": "上一页",
@@ -911,14 +912,16 @@
         "webhookTemplate": "Webhook 消息模板",
         "crontab": "检查计划 (Cron)",
         "assetExpiringSoonDays": "资产保修临期天数",
-        "medicationCrontab": "用药提醒检查计划 (Cron)"
+        "medicationCrontab": "用药提醒检查计划 (Cron)",
+        "subscriptionCrontab": "订阅续费检查计划 (Cron)"
       },
       "placeholders": {
         "webhookUrl": "https://hooks.example.com/notify",
         "webhookTemplate": "自定义发送到 Webhook 地址的 JSON 消息体。留空使用默认模板。",
         "crontab": "0 0 3 * * ?",
         "assetExpiringSoonDays": "30",
-        "medicationCrontab": "0 0 7-20 * * ?"
+        "medicationCrontab": "0 0 7-20 * * ?",
+        "subscriptionCrontab": "0 0 8 * * ?"
       },
       "templateHint": "可用占位符：{{type}}、{{title}}、{{content}}、{{createdAt}}、{{appName}}",
       "testWebhook": "测试 Webhook",
