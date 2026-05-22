@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PencilIcon, TrashIcon, PlusIcon, EyeIcon } from "lucide-react";
+import { PencilIcon, TrashIcon, PlusIcon, ReceiptTextIcon } from "lucide-react";
 import type { SubscriptionType } from "@/api/subscriptions";
 import { useSubscriptionDetail } from "@/hooks/queries/useSubscriptionDetail";
 import { useInvalidateSubscriptions } from "@/hooks/queries/useInvalidateSubscriptions";
@@ -169,7 +169,7 @@ const SubscriptionDetailDrawer = ({ subscriptionId, open, onClose }: Subscriptio
                         </Button>
                         {rec.invoices.length > 0 && (
                           <Button variant="ghost" size="icon-xs" onClick={() => setInvoiceDrawerId(rec.invoices[0].invoiceId)}>
-                            <EyeIcon className="size-3.5" />
+                            <ReceiptTextIcon className="size-3.5" />
                           </Button>
                         )}
                       </div>
