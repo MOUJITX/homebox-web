@@ -522,7 +522,7 @@
       "sellerName": "Seller",
       "totalAmount": "Amount",
       "invoiceStatus": "Status",
-      "boundAssets": "Assets",
+      "boundAssets": "Associations",
       "actions": "Actions"
     },
     "type": {
@@ -575,6 +575,7 @@
       "createdAt": "Created",
       "updatedAt": "Updated",
       "boundAssets": "Bound Assets",
+      "boundSubscriptions": "Bound Subscriptions",
       "noBoundAssets": "Not bound to any asset."
     },
     "attachments": {

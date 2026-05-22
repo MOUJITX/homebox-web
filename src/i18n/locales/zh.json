@@ -365,7 +365,7 @@
       "sellerName": "销售方",
       "totalAmount": "价税合计",
       "invoiceStatus": "发票状态",
-      "boundAssets": "绑定资产",
+      "boundAssets": "关联",
       "actions": "操作"
     },
     "type": {
@@ -418,6 +418,7 @@
       "createdAt": "创建时间",
       "updatedAt": "更新时间",
       "boundAssets": "关联资产",
+      "boundSubscriptions": "关联订阅",
       "noBoundAssets": "未关联任何资产。"
     },
     "attachments": {

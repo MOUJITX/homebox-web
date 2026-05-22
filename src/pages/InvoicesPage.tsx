@@ -6,6 +6,7 @@ import {
   PencilIcon,
   TrashIcon,
   SearchIcon,
+  CreditCardIcon,
 } from "lucide-react";
 import type { Invoice, InvoiceType, InvoiceStatus, InvoiceDetail, Page } from "@/api/invoices";
 import { getInvoices, getInvoiceById } from "@/api/invoices";
@@ -285,26 +286,39 @@ const InvoicesPage = () => {
                   <TableCell>{invoice.buyerName ?? "—"}</TableCell>
                   <TableCell>{invoice.sellerName ?? "—"}</TableCell>
                   <TableCell>
-                    {invoice.assets.length === 0 ? (
-                      "—"
-                    ) : (
-                      <div className="flex items-center gap-1.5">
-                        {invoice.assets[0].firstPictureUrl && (
-                          <AuthImg
-                            url={invoice.assets[0].firstPictureUrl}
-                            className="size-5 shrink-0 rounded object-cover"
-                          />
-                        )}
-                        <span className="text-xs truncate">
-                          {invoice.assets[0].name}
-                        </span>
-                        {invoice.assets.length > 1 && (
-                          <span className="shrink-0 text-[10px] text-muted-foreground">
-                            +{invoice.assets.length - 1}
-                          </span>
-                        )}
-                      </div>
-                    )}
+                    {(() => {
+                      const allBounds = [
+                        ...invoice.assets.map((a) => ({ type: "asset" as const, data: a })),
+                        ...(invoice.subscriptions || []).map((s) => ({ type: "subscription" as const, data: s })),
+                      ];
+                      if (allBounds.length === 0) return "—";
+                      const first = allBounds[0];
+                      const total = allBounds.length;
+                      return (
+                        <div className="flex items-center gap-1.5">
+                          {first.type === "asset" ? (
+                            <>
+                              {first.data.firstPictureUrl && (
+                                <AuthImg url={first.data.firstPictureUrl} className="size-5 shrink-0 rounded object-cover" />
+                              )}
+                              <span className="text-xs truncate">{first.data.name}</span>
+                            </>
+                          ) : (
+                            <>
+                              {first.data.platformLogoUrl ? (
+                                <AuthImg url={first.data.platformLogoUrl} className="size-5 shrink-0 rounded object-cover" />
+                              ) : (
+                                <CreditCardIcon className="size-4 shrink-0 text-muted-foreground" />
+                              )}
+                              <span className="text-xs truncate">{first.data.subscriptionName}</span>
+                            </>
+                          )}
+                          {total > 1 && (
+                            <span className="shrink-0 text-[10px] text-muted-foreground">+{total - 1}</span>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </TableCell>
                   <TableCell className="text-right font-mono">
                     {invoice.totalAmount != null

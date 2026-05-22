@@ -29,6 +29,7 @@ export interface Invoice {
   totalAmount: number | null;
   attachmentCount: number;
   assets: BoundAsset[];
+  subscriptions: BoundSubscription[];
   createdAt: string;
   updatedAt: string;
 }
@@ -50,6 +51,15 @@ export interface BoundAsset {
   firstPictureUrl: string | null;
 }
 
+export interface BoundSubscription {
+  id: number;
+  subscriptionId: number;
+  subscriptionName: string;
+  platformId: number;
+  platformName: string;
+  platformLogoUrl: string | null;
+}
+
 export interface InvoiceDetail extends Invoice {
   sellerTaxId: string | null;
   buyerTaxId: string | null;
@@ -59,6 +69,7 @@ export interface InvoiceDetail extends Invoice {
   previewImage: string | null;
   attachments: InvoiceAttachment[];
   assets: BoundAsset[];
+  subscriptions: BoundSubscription[];
 }
 
 export interface InvoiceParseResult {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PencilIcon, TrashIcon, PackageIcon } from "lucide-react";
+import { PencilIcon, TrashIcon, PackageIcon, CreditCardIcon } from "lucide-react";
 import { useNavigate } from "react-router";
 import type { InvoiceDetail } from "@/api/invoices";
 import { getInvoiceById } from "@/api/invoices";
@@ -226,7 +226,7 @@ const InvoiceDetailDrawer = ({
                       className="inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs hover:bg-accent/50 transition-colors cursor-pointer"
                       onClick={() => {
                         onClose();
-                        navigate("/assets");
+                        navigate(`/assets?assetId=${asset.assetId}`);
                       }}
                     >
                       {asset.firstPictureUrl && (
@@ -246,6 +246,36 @@ const InvoiceDetailDrawer = ({
                 </div>
               )}
             </div>
+
+            {invoice.subscriptions && invoice.subscriptions.length > 0 && (
+              <div className="grid gap-2">
+                <h4 className="text-sm font-medium flex items-center gap-1.5">
+                  <CreditCardIcon className="size-4" />
+                  {t("invoices.detail.boundSubscriptions")}
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {invoice.subscriptions.map((sub) => (
+                    <button
+                      key={sub.id}
+                      type="button"
+                      className="inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs hover:bg-accent/50 transition-colors cursor-pointer"
+                      onClick={() => {
+                        onClose();
+                        navigate(`/subscriptions?subscriptionId=${sub.subscriptionId}`);
+                      }}
+                    >
+                      {sub.platformLogoUrl ? (
+                        <AuthImg url={sub.platformLogoUrl} className="size-5 rounded object-cover" />
+                      ) : (
+                        <CreditCardIcon className="size-4 text-muted-foreground" />
+                      )}
+                      <span className="font-medium">{sub.subscriptionName}</span>
+                      <span className="text-muted-foreground">{sub.platformName}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {invoice.previewImage && (
               <div className="grid gap-2">
