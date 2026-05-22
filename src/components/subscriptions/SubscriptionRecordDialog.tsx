@@ -2,7 +2,7 @@ import { useEffect, useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon, PencilIcon } from "lucide-react";
 import type { SubscriptionRecord, SubscriptionType } from "@/api/subscriptions";
-import { addRecord, updateRecord } from "@/api/subscriptionRecords";
+import { addRecord, getRecords, updateRecord } from "@/api/subscriptionRecords";
 import { usePaymentMethods } from "@/hooks/queries/usePaymentMethods";
 import { getErrorMessage } from "@/lib/error";
 import { useQueryClient } from "@tanstack/react-query";
@@ -119,9 +119,19 @@ const SubscriptionRecordDialog = ({
     }
   };
 
-  const refreshRecordData = () => {
-    queryClient.invalidateQueries({ queryKey: subscriptionKeys.records(subId) });
-    queryClient.invalidateQueries({ queryKey: subscriptionKeys.detail(subId) });
+  const refreshRecordData = async () => {
+    await queryClient.invalidateQueries({ queryKey: subscriptionKeys.records(subId) });
+    await queryClient.invalidateQueries({ queryKey: subscriptionKeys.detail(subId) });
+    if (record) {
+      try {
+        const { data } = await getRecords(subId);
+        const updated = data.find((r) => r.id === record.id);
+        if (updated) {
+          setAttachments(updated.attachments);
+          setInvoices(updated.invoices);
+        }
+      } catch { /* ignore */ }
+    }
   };
 
   const pmOptions = paymentMethods.map((pm) => ({ value: pm.id, label: pm.name }));
