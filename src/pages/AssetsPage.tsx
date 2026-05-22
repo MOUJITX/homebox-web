@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate, useSearchParams } from "react-router";
 import {
   PlusIcon,
   PencilIcon,
@@ -112,6 +113,25 @@ const AssetsPage = () => {
   const [drawerAssetId, setDrawerAssetId] = useState<number | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [placeManagerOpen, setPlaceManagerOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Handle assetId query param from search navigation (open detail drawer)
+  useEffect(() => {
+    const assetIdParam = searchParams.get("assetId");
+    if (assetIdParam) {
+      const id = Number(assetIdParam);
+      if (!Number.isNaN(id)) {
+        setDrawerAssetId(id);
+        setDrawerOpen(true);
+        const next = new URLSearchParams(searchParams);
+        next.delete("assetId");
+        const query = next.toString();
+        navigate(query ? `/assets?${query}` : "/assets", { replace: true });
+      }
+    }
+  }, []);
   const [storeManagerOpen, setStoreManagerOpen] = useState(false);
   const [categoryManagerOpen, setCategoryManagerOpen] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);

@@ -1,5 +1,6 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate, useSearchParams } from "react-router";
 import {
   PlusIcon,
   PencilIcon,
@@ -101,6 +102,24 @@ const ExpirationPage = () => {
   const [categoryManagerOpen, setCategoryManagerOpen] = useState(false);
   const [brandManagerOpen, setBrandManagerOpen] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Handle goodId query param from search navigation (expand good detail)
+  useEffect(() => {
+    const goodIdParam = searchParams.get("goodId");
+    if (goodIdParam) {
+      const id = Number(goodIdParam);
+      if (!Number.isNaN(id)) {
+        setExpandedGoodId(id);
+        const next = new URLSearchParams(searchParams);
+        next.delete("goodId");
+        const query = next.toString();
+        navigate(query ? `/expiration?${query}` : "/expiration", { replace: true });
+      }
+    }
+  }, []);
 
   const fetchRefData = useCallback(async () => {
     const [catRes, brandRes] = await Promise.all([
