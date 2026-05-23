@@ -25,6 +25,8 @@ import { Select, SelectTrigger, SelectPopup, SelectItem, SelectValue } from "@/c
 import CreateVisitDialog from "@/components/medical/CreateVisitDialog";
 import VisitDetailDrawer from "@/components/medical/VisitDetailDrawer";
 import DeleteVisitDialog from "@/components/medical/DeleteVisitDialog";
+import InstitutionManagerDialog from "@/components/medical/InstitutionManagerDialog";
+import { BuildingIcon } from "lucide-react";
 
 const MedicalRecordsPage = () => {
   const { t } = useTranslation();
@@ -51,6 +53,7 @@ const MedicalRecordsPage = () => {
   const [editing, setEditing] = useState<VisitRecord | null>(null);
   const [deleting, setDeleting] = useState<VisitRecord | null>(null);
   const [detailId, setDetailId] = useState<number | null>(null);
+  const [institutionManagerOpen, setInstitutionManagerOpen] = useState(false);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -153,6 +156,11 @@ const MedicalRecordsPage = () => {
             </SelectPopup>
           </Select>
         </div>
+
+        <Button variant="outline" size="sm" onClick={() => setInstitutionManagerOpen(true)}>
+          <BuildingIcon className="size-3.5" />
+          {t("medical.institutions")}
+        </Button>
 
         <div className="w-32">
           <Select value={patientNameFilter || null} onValueChange={(v) => { setPatientNameFilter((v as string) || ""); setPage(0); }}>
@@ -267,6 +275,11 @@ const MedicalRecordsPage = () => {
         visitId={detailId}
         onClose={() => setDetailId(null)}
         onRefresh={() => { void fetchData(); }}
+      />
+      <InstitutionManagerDialog
+        open={institutionManagerOpen}
+        onClose={() => setInstitutionManagerOpen(false)}
+        onInstitutionsChange={(list) => setInstitutions(list)}
       />
     </div>
   );
