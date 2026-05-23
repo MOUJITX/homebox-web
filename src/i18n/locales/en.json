@@ -884,6 +884,7 @@
       "quantity": "Quantity",
       "orderNo": "Order No.",
       "orderNoPlaceholder": "Enter order number",
+      "expired": "Expired",
       "note": "Note"
     },
     "invoices": {

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { PencilIcon, TrashIcon, PlusIcon, ReceiptTextIcon } from "lucide-react";
 import { useSubscriptionDetail } from "@/hooks/queries/useSubscriptionDetail";
 import { useInvalidateSubscriptions } from "@/hooks/queries/useInvalidateSubscriptions";
-import { formatDate, formatCurrency } from "@/lib/utils";
+import { cn, formatDate, formatCurrency } from "@/lib/utils";
 import AuthImg from "@/components/AuthImg";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -186,11 +186,23 @@ const SubscriptionDetailDrawer = ({
                 </p>
               ) : (
                 <div className="space-y-2">
-                  {detail.records.map((rec) => (
+                  {detail.records.map((rec) => {
+                    const today = new Date().toISOString().slice(0, 10);
+                    const isExpired = rec.endDate && rec.endDate <= today;
+
+                    return (
                     <div
                       key={rec.id}
-                      className="rounded-lg border p-3 text-sm space-y-2"
+                      className={cn(
+                        "relative overflow-hidden rounded-lg border p-3 text-sm space-y-2",
+                        isExpired && "opacity-60 bg-muted/30"
+                      )}
                     >
+                      {isExpired && (
+                        <div className="absolute -left-5 top-2 w-16 -rotate-45 bg-muted-foreground/20 text-center text-[10px] leading-5 text-muted-foreground pl-1.5">
+                          {t("subscriptions.records.expired")}
+                        </div>
+                      )}
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">
                           {formatDate(rec.recordDate)}
@@ -277,7 +289,7 @@ const SubscriptionDetailDrawer = ({
                         )}
                       </div>
                     </div>
-                  ))}
+                  )})}
                 </div>
               )}
             </div>
