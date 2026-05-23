@@ -551,6 +551,9 @@
       "paymentMethod": "支付方式",
       "startDate": "开始日期",
       "endDate": "到期日期",
+      "quickMonth": "1个月",
+      "quickQuarter": "1季度",
+      "quickYear": "1年",
       "quantity": "用量",
       "note": "备注"
     },

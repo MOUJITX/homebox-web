@@ -10,9 +10,6 @@ export interface Subscription {
   description: string | null;
   subscriptionType: SubscriptionType;
   billingMode: BillingMode | null;
-  billingCycleDays: number | null;
-  price: number | null;
-  currency: string;
   platformId: number;
   platformName: string;
   platformLogoUrl: string | null;
@@ -97,9 +94,6 @@ export interface SubscriptionRequest {
   description?: string;
   subscriptionType: SubscriptionType;
   billingMode?: BillingMode;
-  billingCycleDays?: number;
-  price?: number;
-  currency?: string;
   platformId: number;
   status?: SubscriptionStatus;
   renewNoticeDays?: number;

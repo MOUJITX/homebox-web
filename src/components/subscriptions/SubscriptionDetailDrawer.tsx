@@ -109,12 +109,6 @@ const SubscriptionDetailDrawer = ({ subscriptionId, open, onClose }: Subscriptio
                     value={t(`subscriptions.billingModes.${detail.billingMode === "PREPAID" ? "prepaid" : "postpaid"}`)}
                   />
                 )}
-                {detail.subscriptionType === "PERIODIC" && detail.billingCycleDays && (
-                  <Field label={t("subscriptions.form.billingCycle")} value={`${detail.billingCycleDays} ${t("subscriptions.billingCycles.daysUnit")}`} />
-                )}
-                {detail.price != null && (
-                  <Field label={t("subscriptions.form.price")} value={`${formatCurrency(detail.price)} ${detail.currency}`} />
-                )}
                 {detail.subscriptionType === "PERIODIC" && (
                   <Field label={t("subscriptions.form.renewNoticeDays")} value={`${detail.renewNoticeDays} ${t("subscriptions.billingCycles.daysUnit")}`} />
                 )}

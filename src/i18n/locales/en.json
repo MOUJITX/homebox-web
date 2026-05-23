@@ -878,6 +878,9 @@
       "paymentMethod": "Payment Method",
       "startDate": "Start Date",
       "endDate": "End Date",
+      "quickMonth": "1M",
+      "quickQuarter": "1Q",
+      "quickYear": "1Y",
       "quantity": "Quantity",
       "note": "Note"
     },
