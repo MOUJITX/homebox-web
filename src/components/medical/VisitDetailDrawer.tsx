@@ -16,8 +16,6 @@ import {
   type VisitPrescription, type VisitAttachment, type VisitInvoice,
   type VisitSourceType,
 } from "@/api/medical";
-import { uploadFile } from "@/api/files";
-import { getErrorMessage } from "@/lib/error";
 import CreateExaminationDialog from "./CreateExaminationDialog";
 import CreateLabTestDialog from "./CreateLabTestDialog";
 import CreatePrescriptionDialog from "./CreatePrescriptionDialog";
