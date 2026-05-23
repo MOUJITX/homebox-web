@@ -727,7 +727,8 @@
     "roles": "角色",
     "settings": "系统设置",
     "notifications": "消息通知",
-    "subscriptions": "订阅管理"
+    "subscriptions": "订阅管理",
+    "medicalRecords": "病历管理"
   },
   "profile": {
     "changePassword": "更改密码",
@@ -840,6 +841,87 @@
       "createFailed": "创建用药提醒失败",
       "updateFailed": "更新用药提醒失败",
       "deleteFailed": "删除用药提醒失败"
+    }
+  },
+  "medical": {
+    "title": "病历管理",
+    "create": "新增就诊",
+    "edit": "编辑就诊",
+    "delete": "删除就诊",
+    "deleteConfirm": "确定要删除 {{name}} 的就诊记录吗？",
+    "deleteBlocked": "该就诊记录下存在检查、检验或处方，无法删除。请先删除子记录。",
+    "empty": "暂无就诊记录。",
+    "inHospital": "住院中",
+    "age": "岁",
+    "filterAllTypes": "全部类型",
+    "filterType": "类型",
+    "filterInstitution": "机构",
+    "filterPatient": "就诊人",
+    "createInstitution": "新增机构",
+    "institutions": "医疗机构",
+    "visitType": {
+      "OUTPATIENT": "门诊",
+      "INPATIENT": "住院"
+    },
+    "gender": {
+      "MALE": "男",
+      "FEMALE": "女"
+    },
+    "columns": {
+      "patient": "就诊人",
+      "department": "科室",
+      "time": "就诊时间",
+      "doctor": "医生",
+      "actions": "操作"
+    },
+    "form": {
+      "patientName": "就诊人姓名",
+      "patientNamePlaceholder": "请输入姓名",
+      "patientAge": "年龄",
+      "patientAgePlaceholder": "岁",
+      "patientGender": "性别",
+      "visitType": "就诊类型",
+      "visitDate": "就诊日期",
+      "admissionDate": "入院日期",
+      "institution": "就诊机构",
+      "institutionPlaceholder": "请选择机构",
+      "admissionDept": "入院科室",
+      "department": "就诊科室",
+      "dischargeDate": "出院日期",
+      "dischargeDept": "出院科室",
+      "doctor": "医生",
+      "doctorPlaceholder": "医生姓名",
+      "medicalContent": "病历内容",
+      "medicalContentPlaceholder": "请输入病历内容...",
+      "institutionName": "机构名称",
+      "institutionNamePlaceholder": "机构名称",
+      "note": "备注",
+      "examName": "检查项目",
+      "examDate": "检查日期",
+      "testName": "检验项目",
+      "testDate": "检验日期",
+      "description": "描述"
+    },
+    "examinations": "检查",
+    "addExamination": "新增检查",
+    "editExamination": "编辑检查",
+    "noExaminations": "暂无检查记录",
+    "labTests": "检验",
+    "addLabTest": "新增检验",
+    "editLabTest": "编辑检验",
+    "noLabTests": "暂无检验记录",
+    "prescriptions": "处方",
+    "addPrescription": "新增处方",
+    "editPrescription": "编辑处方",
+    "noPrescriptions": "暂无处方记录",
+    "parsePaste": "粘贴解析",
+    "parse": "解析",
+    "parseHint": "粘贴就诊相关的文本内容（挂号单、病历摘要等），AI 将自动解析并填充到对应字段。",
+    "parsePlaceholder": "在此粘贴文本内容...",
+    "errors": {
+      "createFailed": "创建就诊记录失败",
+      "updateFailed": "更新就诊记录失败",
+      "deleteFailed": "删除就诊记录失败"
     }
   },
   "settings": {

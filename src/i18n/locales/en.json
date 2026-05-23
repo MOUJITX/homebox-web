@@ -14,7 +14,8 @@
     "profile": "Profile",
     "settings": "Settings",
     "notifications": "Notifications",
-    "subscriptions": "Subscriptions"
+    "subscriptions": "Subscriptions",
+    "medicalRecords": "Medical Records"
   },
   "login": {
     "title": "Sign In",
@@ -693,6 +694,87 @@
       "createFailed": "Failed to create medication reminder",
       "updateFailed": "Failed to update medication reminder",
       "deleteFailed": "Failed to delete medication reminder"
+    }
+  },
+  "medical": {
+    "title": "Medical Records",
+    "create": "New Record",
+    "edit": "Edit Record",
+    "delete": "Delete Record",
+    "deleteConfirm": "Delete visit record for {{name}}?",
+    "deleteBlocked": "Cannot delete this record because it has examinations, lab tests, or prescriptions. Delete them first.",
+    "empty": "No medical records yet.",
+    "inHospital": "In Hospital",
+    "age": "yo",
+    "filterAllTypes": "All Types",
+    "filterType": "Type",
+    "filterInstitution": "Institution",
+    "filterPatient": "Patient",
+    "createInstitution": "Add Institution",
+    "institutions": "Medical Institutions",
+    "visitType": {
+      "OUTPATIENT": "Outpatient",
+      "INPATIENT": "Inpatient"
+    },
+    "gender": {
+      "MALE": "Male",
+      "FEMALE": "Female"
+    },
+    "columns": {
+      "patient": "Patient",
+      "department": "Department",
+      "time": "Visit Time",
+      "doctor": "Doctor",
+      "actions": "Actions"
+    },
+    "form": {
+      "patientName": "Patient Name",
+      "patientNamePlaceholder": "Enter patient name",
+      "patientAge": "Age",
+      "patientAgePlaceholder": "Years",
+      "patientGender": "Gender",
+      "visitType": "Type",
+      "visitDate": "Visit Date",
+      "admissionDate": "Admission Date",
+      "institution": "Institution",
+      "institutionPlaceholder": "Select institution",
+      "admissionDept": "Admission Dept",
+      "department": "Department",
+      "dischargeDate": "Discharge Date",
+      "dischargeDept": "Discharge Dept",
+      "doctor": "Doctor",
+      "doctorPlaceholder": "Doctor name",
+      "medicalContent": "Medical Content",
+      "medicalContentPlaceholder": "Enter medical record content...",
+      "institutionName": "Name",
+      "institutionNamePlaceholder": "Institution name",
+      "note": "Note",
+      "examName": "Exam Name",
+      "examDate": "Exam Date",
+      "testName": "Test Name",
+      "testDate": "Test Date",
+      "description": "Description"
+    },
+    "examinations": "Examinations",
+    "addExamination": "Add Exam",
+    "editExamination": "Edit Exam",
+    "noExaminations": "No examinations",
+    "labTests": "Lab Tests",
+    "addLabTest": "Add Lab Test",
+    "editLabTest": "Edit Lab Test",
+    "noLabTests": "No lab tests",
+    "prescriptions": "Prescriptions",
+    "addPrescription": "Add Prescription",
+    "editPrescription": "Edit Prescription",
+    "noPrescriptions": "No prescriptions",
+    "parsePaste": "Paste & Parse",
+    "parse": "Parse",
+    "parseHint": "Paste medical record text (appointment slip, medical summary, etc.) and AI will parse the fields automatically.",
+    "parsePlaceholder": "Paste text content here...",
+    "errors": {
+      "createFailed": "Failed to create visit record",
+      "updateFailed": "Failed to update visit record",
+      "deleteFailed": "Failed to delete visit record"
     }
   },
   "settings": {
