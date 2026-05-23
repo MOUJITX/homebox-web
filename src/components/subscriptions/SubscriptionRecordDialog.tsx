@@ -187,7 +187,7 @@ const SubscriptionRecordDialog = ({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto p-1">
           <form onSubmit={handleSubmit} className="grid gap-4" id="record-form">
             <div className="grid gap-2">
               <div className="grid gap-2">
