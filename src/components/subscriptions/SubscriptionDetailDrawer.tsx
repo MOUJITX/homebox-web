@@ -200,15 +200,21 @@ const SubscriptionDetailDrawer = ({
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-1 text-xs text-muted-foreground">
+                        {rec.paymentMethodName && (
+                          <span className="flex items-center gap-1">
+                            {rec.paymentMethodLogoUrl && (
+                              <AuthImg
+                                url={rec.paymentMethodLogoUrl}
+                                alt=""
+                                className="size-4 shrink-0 rounded object-cover"
+                              />
+                            )}
+                            {rec.paymentMethodName}
+                          </span>
+                        )}
                         {rec.orderNo && (
                           <span>
                             {t("subscriptions.records.orderNo")}: {rec.orderNo}
-                          </span>
-                        )}
-                        {rec.paymentMethodName && (
-                          <span>
-                            {t("subscriptions.records.paymentMethod")}:{" "}
-                            {rec.paymentMethodName}
                           </span>
                         )}
                         {rec.quantity && <span>{rec.quantity}</span>}
