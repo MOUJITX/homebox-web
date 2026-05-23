@@ -27,6 +27,7 @@ const PlatformManagerDialog = ({ open, onClose }: PlatformManagerDialogProps) =>
   const [name, setName] = useState("");
   const [website, setWebsite] = useState("");
   const [logoFileId, setLogoFileId] = useState<number | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [editing, setEditing] = useState<Platform | null>(null);
   const [error, setError] = useState("");
@@ -43,6 +44,7 @@ const PlatformManagerDialog = ({ open, onClose }: PlatformManagerDialogProps) =>
     try {
       const { data } = await uploadFile(file);
       setLogoFileId(data.id);
+      setLogoPreview(data.url);
     } catch (err) {
       setError(getErrorMessage(err) ?? t("common.error"));
     } finally {
@@ -94,6 +96,7 @@ const PlatformManagerDialog = ({ open, onClose }: PlatformManagerDialogProps) =>
     setName("");
     setWebsite("");
     setLogoFileId(null);
+    setLogoPreview(null);
   };
 
   const handleDelete = async (id: number) => {
@@ -110,6 +113,7 @@ const PlatformManagerDialog = ({ open, onClose }: PlatformManagerDialogProps) =>
     setName(p.name);
     setWebsite(p.website ?? "");
     setLogoFileId(null);
+    setLogoPreview(p.logoUrl);
   };
 
   const handleCancel = () => {
@@ -153,8 +157,10 @@ const PlatformManagerDialog = ({ open, onClose }: PlatformManagerDialogProps) =>
                 <UploadIcon className="size-3.5" />
                 {uploadingLogo ? "..." : t("platforms.logo")}
               </Button>
-              {logoFileId && (
-                <span className="text-xs text-muted-foreground">ID: {logoFileId}</span>
+              {logoPreview && (
+                <div className="size-8 shrink-0 overflow-hidden rounded border">
+                  <img src={logoPreview} alt="" className="h-full w-full object-cover" />
+                </div>
               )}
             </div>
           </div>

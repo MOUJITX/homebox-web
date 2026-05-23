@@ -26,6 +26,7 @@ const PaymentMethodManagerDialog = ({ open, onClose }: PaymentMethodManagerDialo
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState("");
   const [logoFileId, setLogoFileId] = useState<number | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [editing, setEditing] = useState<PaymentMethod | null>(null);
   const [error, setError] = useState("");
@@ -42,6 +43,7 @@ const PaymentMethodManagerDialog = ({ open, onClose }: PaymentMethodManagerDialo
     try {
       const { data } = await uploadFile(file);
       setLogoFileId(data.id);
+      setLogoPreview(data.url);
     } catch (err) {
       setError(getErrorMessage(err) ?? t("common.error"));
     } finally {
@@ -90,6 +92,7 @@ const PaymentMethodManagerDialog = ({ open, onClose }: PaymentMethodManagerDialo
   const resetForm = () => {
     setName("");
     setLogoFileId(null);
+    setLogoPreview(null);
   };
 
   const handleDelete = async (id: number) => {
@@ -105,6 +108,7 @@ const PaymentMethodManagerDialog = ({ open, onClose }: PaymentMethodManagerDialo
     setEditing(pm);
     setName(pm.name);
     setLogoFileId(null);
+    setLogoPreview(pm.logoUrl);
   };
 
   const handleCancel = () => {
@@ -144,8 +148,10 @@ const PaymentMethodManagerDialog = ({ open, onClose }: PaymentMethodManagerDialo
                 <UploadIcon className="size-3.5" />
                 {uploadingLogo ? "..." : t("paymentMethods.logo")}
               </Button>
-              {logoFileId && (
-                <span className="text-xs text-muted-foreground">ID: {logoFileId}</span>
+              {logoPreview && (
+                <div className="size-8 shrink-0 overflow-hidden rounded border">
+                  <img src={logoPreview} alt="" className="h-full w-full object-cover" />
+                </div>
               )}
             </div>
           </div>
