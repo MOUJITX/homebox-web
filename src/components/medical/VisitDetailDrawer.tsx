@@ -49,8 +49,10 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onRefresh }: Props) => {
   const [itemAddPrescId, setItemAddPrescId] = useState<number | null>(null);
   const [itemEditData, setItemEditData] = useState<{ prescriptionId: number; medicationReminderId: number; note?: string; itemId?: number } | null>(null);
   const [invoiceBind, setInvoiceBind] = useState<{ sourceType: VisitSourceType; sourceId: number } | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const fetchDetail = useCallback(async () => {
+    setLoading(true);
     if (!visitId) return;
     try {
       const [{ data: r }, { data: exams }, { data: tests }, { data: prescs }, { data: atts }, { data: invs }] = await Promise.all([
@@ -67,7 +69,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onRefresh }: Props) => {
       setPrescriptions(prescs.content);
       setAttachments(atts);
       setInvoices(invs);
-    } catch {}
+    } catch {} finally { setLoading(false); }
   }, [visitId]);
 
   useEffect(() => {
@@ -108,7 +110,14 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onRefresh }: Props) => {
     try { await deletePrescriptionItem(id); void fetchDetail(); } catch {}
   };
 
-  if (!record) return null;
+  if (loading || !record) return (
+      <Sheet open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
+        <SheetContent showCloseButton={false} className="sm:max-w-xl overflow-y-auto">
+          <SheetHeader><SheetTitle>{t("common.loading")}</SheetTitle></SheetHeader>
+          <p className="text-sm text-muted-foreground py-8 text-center">{t("common.loading")}</p>
+        </SheetContent>
+      </Sheet>
+    );
 
   const isInpatient = record.visitType === "INPATIENT";
   const visitAttachments = attachments.filter((a) => a.sourceType === "RECORD");
