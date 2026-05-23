@@ -172,6 +172,7 @@ const AiConfigCard = () => {
   const [models, setModels] = useState<AiModel[]>([]);
   const [activeModelId, setActiveModelId] = useState("");
   const [systemPrompt, setSystemPrompt] = useState("");
+  const [visitRecordPrompt, setVisitRecordPrompt] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
@@ -191,6 +192,7 @@ const AiConfigCard = () => {
       }
       setActiveModelId(map["ai.active-model"] ?? "");
       setSystemPrompt(map["ai.system-prompt"] ?? "");
+      setVisitRecordPrompt(map["ai.visit-record-prompt"] ?? "");
     } catch {
       // handled by interceptor
     } finally {
@@ -210,6 +212,7 @@ const AiConfigCard = () => {
         "ai.models": JSON.stringify(models),
         "ai.active-model": activeModelId,
         "ai.system-prompt": systemPrompt,
+        "ai.visit-record-prompt": visitRecordPrompt,
       };
       await saveSystemConfigGroup("ai", payload);
       toast.success(t("settings.saveSuccess"));
@@ -318,6 +321,18 @@ const AiConfigCard = () => {
               placeholder={t("settings.ai.placeholders.systemPrompt")}
               rows={6}
               className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="ai-visit-record-prompt">{t("settings.ai.fields.visitRecordPrompt")}</Label>
+            <textarea
+              id="ai-visit-record-prompt"
+              value={visitRecordPrompt}
+              onChange={(e) => setVisitRecordPrompt(e.target.value)}
+              placeholder={t("settings.ai.placeholders.visitRecordPrompt")}
+              rows={4}
+              className="flex min-h-16 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             />
           </div>
         </CardContent>

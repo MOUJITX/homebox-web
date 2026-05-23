@@ -811,11 +811,13 @@
       "description": "Configure AI service for invoice parsing. Changes take effect immediately.",
       "fields": {
         "model": "AI Model",
-        "systemPrompt": "System Prompt"
+        "systemPrompt": "System Prompt (Invoice)",
+        "visitRecordPrompt": "System Prompt (Visit Record)"
       },
       "placeholders": {
         "model": "Select an AI model",
-        "systemPrompt": "Leave empty to use the default system prompt"
+        "systemPrompt": "Leave empty to use the default invoice prompt",
+        "visitRecordPrompt": "Leave empty to use the default visit record prompt"
       },
       "noModels": "No models configured. Click + to add one.",
       "testConnection": "Test Connection",

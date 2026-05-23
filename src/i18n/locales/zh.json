@@ -958,11 +958,13 @@
       "description": "配置 AI 服务用于发票解析。更改立即生效。",
       "fields": {
         "model": "AI 模型",
-        "systemPrompt": "系统提示词"
+        "systemPrompt": "系统提示词（发票）",
+        "visitRecordPrompt": "系统提示词（就诊记录）"
       },
       "placeholders": {
         "model": "选择一个 AI 模型",
-        "systemPrompt": "留空则使用默认系统提示词"
+        "systemPrompt": "留空则使用默认发票提示词",
+        "visitRecordPrompt": "留空则使用默认就诊记录提示词"
       },
       "noModels": "暂无模型，请点击 + 添加",
       "testConnection": "测试连接",
