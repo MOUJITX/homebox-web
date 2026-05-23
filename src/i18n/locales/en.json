@@ -577,6 +577,7 @@
       "updatedAt": "Updated",
       "boundAssets": "Bound Assets",
       "boundSubscriptions": "Bound Subscriptions",
+      "boundVisits": "Bound Visit Records",
       "noBoundAssets": "Not bound to any asset."
     },
     "attachments": {

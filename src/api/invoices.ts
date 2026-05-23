@@ -30,9 +30,21 @@ export interface Invoice {
   attachmentCount: number;
   assets: BoundAsset[];
   subscriptions: BoundSubscription[];
+  visits: BoundVisitRecord[];
   createdAt: string;
   updatedAt: string;
 }
+
+export interface InvoiceDetail extends Invoice {
+  sellerTaxId: string | null;
+  buyerTaxId: string | null;
+  remark: string | null;
+  fileId: number | null;
+  fileUrl: string | null;
+  previewImage: string | null;
+  attachments: InvoiceAttachment[];
+}
+
 
 export interface InvoiceAttachment {
   id: number;
@@ -60,17 +72,14 @@ export interface BoundSubscription {
   platformLogoUrl: string | null;
 }
 
-export interface InvoiceDetail extends Invoice {
-  sellerTaxId: string | null;
-  buyerTaxId: string | null;
-  remark: string | null;
-  fileId: number | null;
-  fileUrl: string | null;
-  previewImage: string | null;
-  attachments: InvoiceAttachment[];
-  assets: BoundAsset[];
-  subscriptions: BoundSubscription[];
+export interface BoundVisitRecord {
+  id: number;
+  visitId: number;
+  patientName: string;
+  sourceType: string;
+  sourceId: number;
 }
+
 
 export interface InvoiceParseResult {
   invoiceNumber: string | null;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PencilIcon, TrashIcon, PackageIcon, CreditCardIcon } from "lucide-react";
+import { PencilIcon, TrashIcon, PackageIcon, CreditCardIcon, FileTextIcon } from "lucide-react";
 import { useNavigate } from "react-router";
 import type { InvoiceDetail } from "@/api/invoices";
 import { getInvoiceById } from "@/api/invoices";
@@ -273,6 +273,31 @@ const InvoiceDetailDrawer = ({
                       )}
                       <span className="font-medium">{sub.subscriptionName}</span>
                       <span className="text-muted-foreground">{sub.platformName}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {invoice.visits && invoice.visits.length > 0 && (
+              <div className="grid gap-2">
+                <h4 className="text-sm font-medium flex items-center gap-1.5">
+                  <FileTextIcon className="size-4" />
+                  {t("invoices.detail.boundVisits")}
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {invoice.visits.map((v) => (
+                    <button
+                      key={v.id}
+                      type="button"
+                      className="inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs hover:bg-accent/50 transition-colors cursor-pointer"
+                      onClick={() => {
+                        onClose();
+                        navigate(`/medical-records`);
+                      }}
+                    >
+                      <FileTextIcon className="size-4 text-muted-foreground" />
+                      <span className="font-medium">{v.patientName}</span>
                     </button>
                   ))}
                 </div>

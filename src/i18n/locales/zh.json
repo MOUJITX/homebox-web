@@ -419,6 +419,7 @@
       "updatedAt": "更新时间",
       "boundAssets": "关联资产",
       "boundSubscriptions": "关联订阅",
+      "boundVisits": "关联就诊记录",
       "noBoundAssets": "未关联任何资产。"
     },
     "attachments": {
