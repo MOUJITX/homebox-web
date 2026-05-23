@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
+import { Select, SelectTrigger, SelectPopup, SelectItem, SelectValue } from "@/components/ui/select";
 import {
   createVisitRecord,
   updateVisitRecord,
@@ -124,14 +124,6 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
 
   const isInpatient = visitType === "INPATIENT";
 
-  const genderOptions = [
-    { value: "", label: "" },
-    { value: "MALE", label: t("medical.gender.MALE") },
-    { value: "FEMALE", label: t("medical.gender.FEMALE") },
-  ];
-
-  const institutionOptions = institutions.map((i) => ({ value: String(i.id), label: i.name }));
-
   return (
     <>
       <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
@@ -161,14 +153,32 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
             <div className="grid grid-cols-3 gap-3">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium">{t("medical.form.patientGender")}</label>
-                <Select value={patientGender} onChange={(v) => setPatientGender(v as Gender | "")} options={genderOptions} />
+                <Select value={patientGender || null} onValueChange={(v) => setPatientGender((v as Gender) || "")}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="">
+                      {() => patientGender ? t(`medical.gender.${patientGender}`) : ""}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectPopup>
+                    <SelectItem value={null}>-</SelectItem>
+                    <SelectItem value="MALE">{t("medical.gender.MALE")}</SelectItem>
+                    <SelectItem value="FEMALE">{t("medical.gender.FEMALE")}</SelectItem>
+                  </SelectPopup>
+                </Select>
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium">{t("medical.form.visitType")} *</label>
-                <Select value={visitType} onChange={(v) => setVisitType(v as VisitType)} options={[
-                  { value: "OUTPATIENT", label: t("medical.visitType.OUTPATIENT") },
-                  { value: "INPATIENT", label: t("medical.visitType.INPATIENT") },
-                ]} />
+                <Select value={visitType} onValueChange={(v) => setVisitType(v as VisitType)}>
+                  <SelectTrigger>
+                    <SelectValue>
+                      {() => t(`medical.visitType.${visitType}`)}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectPopup>
+                    <SelectItem value="OUTPATIENT">{t("medical.visitType.OUTPATIENT")}</SelectItem>
+                    <SelectItem value="INPATIENT">{t("medical.visitType.INPATIENT")}</SelectItem>
+                  </SelectPopup>
+                </Select>
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium">
@@ -181,7 +191,18 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium">{t("medical.form.institution")} *</label>
-                <Select value={institutionId} onChange={setInstitutionId} options={institutionOptions} placeholder={t("medical.form.institutionPlaceholder")} />
+                <Select value={institutionId || null} onValueChange={(v) => setInstitutionId(v ? String(v) : "")}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("medical.form.institutionPlaceholder")}>
+                      {() => institutionId ? institutions.find((i) => i.id === Number(institutionId))?.name : ""}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectPopup>
+                    {institutions.map((i) => (
+                      <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>
+                    ))}
+                  </SelectPopup>
+                </Select>
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium">

@@ -21,8 +21,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Pagination, PAGE_SIZE_OPTIONS } from "@/components/ui/pagination";
-import { Select, type SelectOption } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { Select, SelectTrigger, SelectPopup, SelectItem, SelectValue } from "@/components/ui/select";
 import CreateVisitDialog from "@/components/medical/CreateVisitDialog";
 import VisitDetailDrawer from "@/components/medical/VisitDetailDrawer";
 import DeleteVisitDialog from "@/components/medical/DeleteVisitDialog";
@@ -83,21 +82,6 @@ const MedicalRecordsPage = () => {
     setPage(0);
   };
 
-  const visitTypeOptions: SelectOption[] = [
-    { value: "OUTPATIENT", label: t("medical.visitType.OUTPATIENT") },
-    { value: "INPATIENT", label: t("medical.visitType.INPATIENT") },
-  ];
-
-  const institutionOptions: SelectOption[] = [
-    { value: "", label: t("common.all") },
-    ...institutions.map((i) => ({ value: String(i.id), label: i.name })),
-  ];
-
-  const patientNameOptions: SelectOption[] = [
-    { value: "", label: t("common.all") },
-    ...patientNames.map((n) => ({ value: n, label: n })),
-  ];
-
   const formatTimeCell = (r: VisitRecord) => {
     if (r.visitType === "OUTPATIENT") {
       return <span className="text-sm">{r.visitDate}</span>;
@@ -139,29 +123,52 @@ const MedicalRecordsPage = () => {
       </div>
 
       <div className="mb-4 flex flex-wrap items-center gap-3">
-        <Select
-          value={visitTypeFilter}
-          onChange={(v) => { setVisitTypeFilter(v as VisitType | ""); setPage(0); }}
-          options={[{ value: "", label: t("medical.filterAllTypes") }, ...visitTypeOptions]}
-          placeholder={t("medical.filterType")}
-        />
-        <Select
-          value={institutionFilter ? String(institutionFilter) : ""}
-          onChange={(v) => { setInstitutionFilter(v ? Number(v) : null); setPage(0); }}
-          options={institutionOptions}
-          placeholder={t("medical.filterInstitution")}
-        />
-        <Select
-          value={patientNameFilter}
-          onChange={(v) => { setPatientNameFilter(v); setPage(0); }}
-          options={patientNameOptions}
-          placeholder={t("medical.filterPatient")}
-        />
-        {patientNameFilter && (
-          <Button variant="ghost" size="sm" onClick={() => { setPatientNameFilter(""); setPage(0); }}>
-            {t("common.clear")}
-          </Button>
-        )}
+        <div className="w-32">
+          <Select value={visitTypeFilter || null} onValueChange={(v) => { setVisitTypeFilter((v as VisitType) || ""); setPage(0); }}>
+            <SelectTrigger>
+              <SelectValue placeholder={t("medical.filterType")}>
+                {() => visitTypeFilter ? t(`medical.visitType.${visitTypeFilter}`) : t("medical.filterAllTypes")}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectPopup>
+              <SelectItem value={null}>{t("medical.filterAllTypes")}</SelectItem>
+              <SelectItem value="OUTPATIENT">{t("medical.visitType.OUTPATIENT")}</SelectItem>
+              <SelectItem value="INPATIENT">{t("medical.visitType.INPATIENT")}</SelectItem>
+            </SelectPopup>
+          </Select>
+        </div>
+
+        <div className="w-36">
+          <Select value={institutionFilter} onValueChange={(v) => { setInstitutionFilter(v as number | null); setPage(0); }}>
+            <SelectTrigger>
+              <SelectValue placeholder={t("medical.filterInstitution")}>
+                {() => institutionFilter ? institutions.find((i) => i.id === institutionFilter)?.name : t("medical.filterAllTypes")}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectPopup>
+              <SelectItem value={null}>{t("medical.filterAllTypes")}</SelectItem>
+              {institutions.map((i) => (
+                <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>
+              ))}
+            </SelectPopup>
+          </Select>
+        </div>
+
+        <div className="w-32">
+          <Select value={patientNameFilter || null} onValueChange={(v) => { setPatientNameFilter((v as string) || ""); setPage(0); }}>
+            <SelectTrigger>
+              <SelectValue placeholder={t("medical.filterPatient")}>
+                {() => patientNameFilter || t("medical.filterAllTypes")}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectPopup>
+              <SelectItem value={null}>{t("medical.filterAllTypes")}</SelectItem>
+              {patientNames.map((n) => (
+                <SelectItem key={n} value={n}>{n}</SelectItem>
+              ))}
+            </SelectPopup>
+          </Select>
+        </div>
       </div>
 
       {loading ? (
