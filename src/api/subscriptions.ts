@@ -43,6 +43,7 @@ export interface SubscriptionRecord {
   paymentMethodName: string | null;
   paymentMethodLogoUrl: string | null;
   note: string | null;
+  expired: boolean;
   attachments: SubscriptionRecordAttachment[];
   invoices: SubscriptionRecordInvoice[];
   createdAt: string;

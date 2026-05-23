@@ -9,6 +9,7 @@ export interface SubscriptionRecordRequest {
   endDate?: string;
   quantity?: string;
   orderNo?: string;
+  expired?: boolean;
   paymentMethodId?: number;
   note?: string;
 }

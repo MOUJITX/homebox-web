@@ -885,6 +885,8 @@
       "orderNo": "Order No.",
       "orderNoPlaceholder": "Enter order number",
       "expired": "Expired",
+      "markExpired": "Mark as expired",
+      "unmarkExpired": "Unmark as expired",
       "note": "Note"
     },
     "invoices": {

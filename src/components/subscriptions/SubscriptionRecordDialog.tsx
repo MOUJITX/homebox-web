@@ -97,7 +97,7 @@ const SubscriptionRecordDialog = ({
 
   const handleSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
-    if (!amount || !recordDate || !startDate) {
+    if (!amount || !recordDate || !startDate || (subscriptionType === "PERIODIC" && !endDate)) {
       setError(t("common.error"));
       return;
     }
@@ -281,6 +281,7 @@ const SubscriptionRecordDialog = ({
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
+                  required={subscriptionType === "PERIODIC"}
                 />
                 <div className="flex gap-1">
                   <Button

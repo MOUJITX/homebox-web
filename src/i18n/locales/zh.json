@@ -557,7 +557,9 @@
       "quantity": "用量",
       "orderNo": "订单编号",
       "orderNoPlaceholder": "请输入订单编号",
-      "expired": "已过期",
+      "expired": "已到期",
+      "markExpired": "标记为已到期",
+      "unmarkExpired": "取消到期标记",
       "note": "备注"
     },
     "invoices": {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PencilIcon, TrashIcon, PlusIcon, ReceiptTextIcon } from "lucide-react";
+import { PencilIcon, TrashIcon, PlusIcon, ReceiptTextIcon, HistoryIcon } from "lucide-react";
 import { useSubscriptionDetail } from "@/hooks/queries/useSubscriptionDetail";
 import { useInvalidateSubscriptions } from "@/hooks/queries/useInvalidateSubscriptions";
 import { cn, formatDate, formatCurrency } from "@/lib/utils";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/sheet";
 import SubscriptionDialog from "./SubscriptionDialog";
 import SubscriptionRecordDialog from "./SubscriptionRecordDialog";
+import { updateRecord } from "@/api/subscriptionRecords";
 import DeleteSubscriptionDialog from "./DeleteSubscriptionDialog";
 import InvoiceDetailDrawer from "@/components/invoices/InvoiceDetailDrawer";
 
@@ -188,7 +189,7 @@ const SubscriptionDetailDrawer = ({
                 <div className="space-y-2">
                   {detail.records.map((rec) => {
                     const today = new Date().toISOString().slice(0, 10);
-                    const isExpired = rec.endDate && rec.endDate <= today;
+                    const isExpired = rec.expired || (rec.endDate && rec.endDate <= today);
 
                     return (
                     <div
@@ -248,7 +249,7 @@ const SubscriptionDetailDrawer = ({
                           {rec.note}
                         </p>
                       )}
-                      <div className="flex gap-1">
+                      <div className="flex gap-1 items-center">
                         <Button
                           variant="ghost"
                           size="icon-xs"
@@ -286,6 +287,23 @@ const SubscriptionDetailDrawer = ({
                           >
                             <ReceiptTextIcon className="size-3.5" />
                           </Button>
+                        )}
+                        {detail.subscriptionType === "PAY_AS_YOU_GO" && (
+                          <div className="ml-auto flex items-center gap-1">
+                            <Button
+                              variant={rec.expired ? "secondary" : "ghost"}
+                              size="icon-xs"
+                              onClick={async () => {
+                                try {
+                                  await updateRecord(subscriptionId!, rec.id, { expired: !rec.expired } as any);
+                                  handleRecordChanged();
+                                } catch { /* ignore */ }
+                              }}
+                              title={rec.expired ? t("subscriptions.records.unmarkExpired") : t("subscriptions.records.markExpired")}
+                            >
+                              <HistoryIcon className="size-3.5" />
+                            </Button>
+                          </div>
                         )}
                       </div>
                     </div>
