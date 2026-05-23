@@ -555,6 +555,8 @@
       "quickQuarter": "1季度",
       "quickYear": "1年",
       "quantity": "用量",
+      "orderNo": "订单编号",
+      "orderNoPlaceholder": "请输入订单编号",
       "note": "备注"
     },
     "invoices": {

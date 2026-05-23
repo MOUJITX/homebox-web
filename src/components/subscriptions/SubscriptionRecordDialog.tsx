@@ -50,6 +50,7 @@ const SubscriptionRecordDialog = ({
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [orderNo, setOrderNo] = useState("");
   const [paymentMethodId, setPaymentMethodId] = useState<number | null>(null);
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
@@ -66,6 +67,7 @@ const SubscriptionRecordDialog = ({
       setStartDate(record.startDate);
       setEndDate(record.endDate ?? "");
       setQuantity(record.quantity ?? "");
+      setOrderNo(record.orderNo ?? "");
       setPaymentMethodId(record.paymentMethodId);
       setNote(record.note ?? "");
       setAttachments(record.attachments);
@@ -78,6 +80,7 @@ const SubscriptionRecordDialog = ({
       setStartDate(today);
       setEndDate("");
       setQuantity("");
+      setOrderNo("");
       setPaymentMethodId(null);
       setNote("");
       setAttachments([]);
@@ -110,6 +113,7 @@ const SubscriptionRecordDialog = ({
         startDate,
         endDate: endDate || undefined,
         quantity: quantity || undefined,
+        orderNo: orderNo || undefined,
         paymentMethodId: paymentMethodId ?? undefined,
         note: note || undefined,
       };
@@ -221,6 +225,17 @@ const SubscriptionRecordDialog = ({
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
                   placeholder="CNY"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="orderNo">
+                  {t("subscriptions.records.orderNo")}
+                </Label>
+                <Input
+                  id="orderNo"
+                  value={orderNo}
+                  onChange={(e) => setOrderNo(e.target.value)}
+                  placeholder={t("subscriptions.records.orderNoPlaceholder")}
                 />
               </div>
               <div className="grid gap-2">

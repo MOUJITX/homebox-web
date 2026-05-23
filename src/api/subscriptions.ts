@@ -38,6 +38,7 @@ export interface SubscriptionRecord {
   startDate: string;
   endDate: string | null;
   quantity: string | null;
+  orderNo: string | null;
   paymentMethodId: number | null;
   paymentMethodName: string | null;
   paymentMethodLogoUrl: string | null;

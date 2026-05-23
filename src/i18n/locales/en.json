@@ -882,6 +882,8 @@
       "quickQuarter": "1Q",
       "quickYear": "1Y",
       "quantity": "Quantity",
+      "orderNo": "Order No.",
+      "orderNoPlaceholder": "Enter order number",
       "note": "Note"
     },
     "invoices": {
