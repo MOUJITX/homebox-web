@@ -930,8 +930,17 @@
     "noAttachments": "暂无附件",
     "invoices": "发票",
     "bindInvoice": "绑定发票",
+    "uploadNewInvoice": "上传新发票",
     "noInvoices": "暂无绑定发票",
     "bind": "绑定",
+    "invoicesSection": {
+      "bindDialog": {
+        "title": "绑定发票",
+        "search": "搜索发票...",
+        "confirm": "绑定"
+      },
+      "uploadNew": "上传新发票"
+    },
     "parsePaste": "粘贴解析",
     "parse": "解析",
     "parseHint": "粘贴就诊相关的文本内容（挂号单、病历摘要等），AI 将自动解析并填充到对应字段。",

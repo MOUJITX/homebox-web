@@ -783,8 +783,17 @@
     "noAttachments": "No attachments",
     "invoices": "Invoices",
     "bindInvoice": "Bind Invoice",
+    "uploadNewInvoice": "Upload New",
     "noInvoices": "No bound invoices",
     "bind": "Bind",
+    "invoicesSection": {
+      "bindDialog": {
+        "title": "Bind Invoice",
+        "search": "Search invoices...",
+        "confirm": "Bind"
+      },
+      "uploadNew": "Upload New"
+    },
     "parsePaste": "Paste & Parse",
     "parse": "Parse",
     "parseHint": "Paste medical record text (appointment slip, medical summary, etc.) and AI will parse the fields automatically.",
