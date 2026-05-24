@@ -708,6 +708,8 @@
     "inHospital": "In Hospital",
     "age": "yo",
     "filterAllTypes": "All Types",
+    "filterAllInstitutions": "All Institutions",
+    "filterAllPatients": "All Patients",
     "filterType": "Type",
     "filterInstitution": "Institution",
     "filterPatient": "Patient",
@@ -723,6 +725,7 @@
     },
     "columns": {
       "patient": "Patient",
+      "type": "Type",
       "department": "Department",
       "time": "Visit Time",
       "doctor": "Doctor",

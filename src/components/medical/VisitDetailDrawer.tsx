@@ -139,13 +139,13 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onRefresh }: Props) => {
           </div>
 
           <div className="grid grid-cols-2 gap-3 text-sm">
-            <div><span className="text-muted-foreground">{isInpatient ? t("medical.form.admissionDate") : t("medical.form.visitDate")}: </span><span>{record.visitDate}</span></div>
             <div><span className="text-muted-foreground">{t("medical.form.institution")}: </span><span>{record.institutionName}</span></div>
-            <div><span className="text-muted-foreground">{isInpatient ? t("medical.form.admissionDept") : t("medical.form.department")}: </span><span>{record.department || "-"}</span></div>
             <div><span className="text-muted-foreground">{t("medical.form.doctor")}: </span><span>{record.doctor || "-"}</span></div>
+            <div><span className="text-muted-foreground">{isInpatient ? t("medical.form.admissionDept") : t("medical.form.department")}: </span><span>{record.department || "-"}</span></div>
+            <div><span className="text-muted-foreground">{isInpatient ? t("medical.form.admissionDate") : t("medical.form.visitDate")}: </span><span>{record.visitDate}</span></div>
             {isInpatient && (<>
-              <div><span className="text-muted-foreground">{t("medical.form.dischargeDate")}: </span><span>{record.dischargeDate || "-"}</span></div>
               <div><span className="text-muted-foreground">{t("medical.form.dischargeDept")}: </span><span>{record.dischargeDept || "-"}</span></div>
+              <div><span className="text-muted-foreground">{t("medical.form.dischargeDate")}: </span><span>{record.dischargeDate || "-"}</span></div>
             </>)}
           </div>
 
@@ -159,7 +159,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onRefresh }: Props) => {
           {/* Attachments (visit level) */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold">{t("medical.attachments")}</h3>
+              <p className="text-xs text-muted-foreground">{t("medical.attachments")}:</p>
               <div className="flex gap-1">
                 <input ref={fileInputRef} type="file" className="hidden" onChange={handleAttachmentUpload} />
                 <Button size="sm" variant="outline" onClick={() => fileInputRef.current?.click()}>
@@ -184,7 +184,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onRefresh }: Props) => {
           {/* Invoices (visit level) */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold">{t("medical.invoices")}</h3>
+              <p className="text-xs text-muted-foreground">{t("medical.invoices")}:</p>
               <Button size="sm" variant="outline" onClick={() => setInvoiceBind({ sourceType: "RECORD", sourceId: visitId! })}>
                 <LinkIcon className="size-3" /> {t("medical.bindInvoice")}
               </Button>

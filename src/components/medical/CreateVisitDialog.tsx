@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+  Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,17 +44,10 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
   const [parseOpen, setParseOpen] = useState(false);
 
   const resetForm = () => {
-    setPatientName("");
-    setPatientAge("");
-    setPatientGender("");
-    setVisitType("OUTPATIENT");
-    setVisitDate("");
-    setInstitutionId("");
-    setMedicalContent("");
-    setDoctor("");
-    setDepartment("");
-    setDischargeDate("");
-    setDischargeDept("");
+    setPatientName(""); setPatientAge(""); setPatientGender("");
+    setVisitType("OUTPATIENT"); setVisitDate(""); setInstitutionId("");
+    setMedicalContent(""); setDoctor(""); setDepartment("");
+    setDischargeDate(""); setDischargeDept("");
   };
 
   useEffect(() => {
@@ -95,9 +88,7 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
     setSubmitting(true);
     try {
       const data: CreateVisitRecordRequest = {
-        patientName: patientName.trim(),
-        visitType,
-        visitDate,
+        patientName: patientName.trim(), visitType, visitDate,
         institutionId: Number(institutionId),
       };
       if (patientAge) data.patientAge = Number(patientAge);
@@ -113,13 +104,9 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
       } else {
         await createVisitRecord(data);
       }
-      onClose();
-      onSuccess();
-    } catch {
-      // handled by interceptor
-    } finally {
-      setSubmitting(false);
-    }
+      onClose(); onSuccess();
+    } catch { /* handled by interceptor */ }
+    finally { setSubmitting(false); }
   };
 
   const isInpatient = visitType === "INPATIENT";
@@ -129,17 +116,17 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
       <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
         <DialogContent showCloseButton={false} className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>{isEdit ? t("medical.edit") : t("medical.create")}</DialogTitle>
+            <div className="flex items-center justify-between">
+              <DialogTitle>{isEdit ? t("medical.edit") : t("medical.create")}</DialogTitle>
+              <Button variant="outline" size="sm" onClick={() => setParseOpen(true)}>
+                {t("medical.parsePaste")}
+              </Button>
+            </div>
           </DialogHeader>
 
-          <div className="flex items-center justify-end gap-2">
-            <Button variant="outline" size="sm" onClick={() => setParseOpen(true)}>
-              {t("medical.parsePaste")}
-            </Button>
-          </div>
-
           <div className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto p-0.5">
-            <div className="grid grid-cols-2 gap-3">
+            {/* Row 1: 就诊人姓名 / 年龄 / 性别 */}
+            <div className="grid grid-cols-3 gap-3">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium">{t("medical.form.patientName")} *</label>
                 <Input value={patientName} onChange={(e) => setPatientName(e.target.value)} placeholder={t("medical.form.patientNamePlaceholder")} />
@@ -148,16 +135,11 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
                 <label className="text-xs font-medium">{t("medical.form.patientAge")}</label>
                 <Input type="number" value={patientAge} onChange={(e) => setPatientAge(e.target.value)} placeholder={t("medical.form.patientAgePlaceholder")} />
               </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-3">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium">{t("medical.form.patientGender")}</label>
                 <Select value={patientGender || null} onValueChange={(v) => setPatientGender((v as Gender) || "")}>
                   <SelectTrigger>
-                    <SelectValue placeholder="">
-                      {() => patientGender ? t(`medical.gender.${patientGender}`) : ""}
-                    </SelectValue>
+                    <SelectValue placeholder="">{() => patientGender ? t(`medical.gender.${patientGender}`) : ""}</SelectValue>
                   </SelectTrigger>
                   <SelectPopup>
                     <SelectItem value={null}>-</SelectItem>
@@ -166,28 +148,9 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
                   </SelectPopup>
                 </Select>
               </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium">{t("medical.form.visitType")} *</label>
-                <Select value={visitType} onValueChange={(v) => setVisitType(v as VisitType)}>
-                  <SelectTrigger>
-                    <SelectValue>
-                      {() => t(`medical.visitType.${visitType}`)}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectPopup>
-                    <SelectItem value="OUTPATIENT">{t("medical.visitType.OUTPATIENT")}</SelectItem>
-                    <SelectItem value="INPATIENT">{t("medical.visitType.INPATIENT")}</SelectItem>
-                  </SelectPopup>
-                </Select>
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium">
-                  {isInpatient ? t("medical.form.admissionDate") : t("medical.form.visitDate")} *
-                </label>
-                <Input type="date" value={visitDate} onChange={(e) => setVisitDate(e.target.value)} />
-              </div>
             </div>
 
+            {/* Row 2: 就诊机构 / 就诊类型 */}
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium">{t("medical.form.institution")} *</label>
@@ -198,38 +161,55 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
                     </SelectValue>
                   </SelectTrigger>
                   <SelectPopup>
-                    {institutions.map((i) => (
-                      <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>
-                    ))}
+                    {institutions.map((i) => (<SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>))}
                   </SelectPopup>
                 </Select>
               </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium">{t("medical.form.visitType")} *</label>
+                <Select value={visitType} onValueChange={(v) => setVisitType(v as VisitType)}>
+                  <SelectTrigger>
+                    <SelectValue>{() => t(`medical.visitType.${visitType}`)}</SelectValue>
+                  </SelectTrigger>
+                  <SelectPopup>
+                    <SelectItem value="OUTPATIENT">{t("medical.visitType.OUTPATIENT")}</SelectItem>
+                    <SelectItem value="INPATIENT">{t("medical.visitType.INPATIENT")}</SelectItem>
+                  </SelectPopup>
+                </Select>
+              </div>
+            </div>
+
+            {/* Row 3: 就诊科室或入院科室 / 就诊时间或入院时间 */}
+            <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium">
                   {isInpatient ? t("medical.form.admissionDept") : t("medical.form.department")}
                 </label>
                 <Input value={department} onChange={(e) => setDepartment(e.target.value)} />
               </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium">
+                  {isInpatient ? t("medical.form.admissionDate") : t("medical.form.visitDate")} *
+                </label>
+                <Input type="date" value={visitDate} onChange={(e) => setVisitDate(e.target.value)} />
+              </div>
             </div>
 
+            {/* Row 4 (仅住院): 出院科室 / 出院时间 */}
             {isInpatient && (
               <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium">{t("medical.form.dischargeDate")}</label>
-                  <Input type="date" value={dischargeDate} onChange={(e) => setDischargeDate(e.target.value)} />
-                </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-medium">{t("medical.form.dischargeDept")}</label>
                   <Input value={dischargeDept} onChange={(e) => setDischargeDept(e.target.value)} />
                 </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium">{t("medical.form.dischargeDate")}</label>
+                  <Input type="date" value={dischargeDate} onChange={(e) => setDischargeDate(e.target.value)} />
+                </div>
               </div>
             )}
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium">{t("medical.form.doctor")}</label>
-              <Input value={doctor} onChange={(e) => setDoctor(e.target.value)} placeholder={t("medical.form.doctorPlaceholder")} />
-            </div>
-
+            {/* 倒数第二行: 病历内容 */}
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium">{t("medical.form.medicalContent")}</label>
               <textarea
@@ -238,6 +218,12 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
                 onChange={(e) => setMedicalContent(e.target.value)}
                 placeholder={t("medical.form.medicalContentPlaceholder")}
               />
+            </div>
+
+            {/* 最后一行: 医生 */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium">{t("medical.form.doctor")}</label>
+              <Input value={doctor} onChange={(e) => setDoctor(e.target.value)} placeholder={t("medical.form.doctorPlaceholder")} />
             </div>
           </div>
 

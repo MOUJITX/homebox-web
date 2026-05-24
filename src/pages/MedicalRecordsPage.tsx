@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PlusIcon, PencilIcon, TrashIcon, EyeIcon } from "lucide-react";
+import { PlusIcon, PencilIcon, TrashIcon, EyeIcon, BuildingIcon } from "lucide-react";
 import {
   getVisitRecords,
   getPatientNames,
@@ -26,7 +26,6 @@ import CreateVisitDialog from "@/components/medical/CreateVisitDialog";
 import VisitDetailDrawer from "@/components/medical/VisitDetailDrawer";
 import DeleteVisitDialog from "@/components/medical/DeleteVisitDialog";
 import InstitutionManagerDialog from "@/components/medical/InstitutionManagerDialog";
-import { BuildingIcon } from "lucide-react";
 
 const MedicalRecordsPage = () => {
   const { t } = useTranslation();
@@ -43,9 +42,9 @@ const MedicalRecordsPage = () => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0]);
   const [loading, setLoading] = useState(true);
-  const [visitTypeFilter, setVisitTypeFilter] = useState<VisitType | "">("");
+  const [visitTypeFilter, setVisitTypeFilter] = useState<VisitType | null>(null);
   const [institutionFilter, setInstitutionFilter] = useState<number | null>(null);
-  const [patientNameFilter, setPatientNameFilter] = useState("");
+  const [patientNameFilter, setPatientNameFilter] = useState<string | null>(null);
   const [institutions, setInstitutions] = useState<MedicalInstitution[]>([]);
   const [patientNames, setPatientNames] = useState<string[]>([]);
 
@@ -86,13 +85,9 @@ const MedicalRecordsPage = () => {
   };
 
   const formatTimeCell = (r: VisitRecord) => {
-    if (r.visitType === "OUTPATIENT") {
-      return <span className="text-sm">{r.visitDate}</span>;
-    }
-    if (r.dischargeDate) {
-      return <span className="text-sm">{r.visitDate} ~ {r.dischargeDate}</span>;
-    }
-    return <span className="text-sm">{r.visitDate} ~ {t("medical.inHospital")}</span>;
+    if (r.visitType === "OUTPATIENT") return <span className="text-sm">{r.visitDate}</span>;
+    if (r.dischargeDate) return <span className="text-sm whitespace-nowrap">{r.visitDate} ~ {r.dischargeDate}</span>;
+    return <span className="text-sm whitespace-nowrap">{r.visitDate} ~ {t("medical.inHospital")}</span>;
   };
 
   const formatDeptCell = (r: VisitRecord) => {
@@ -116,20 +111,12 @@ const MedicalRecordsPage = () => {
   };
 
   return (
-    <div className="mx-auto max-w-5xl">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-xl font-semibold">{t("medical.title")}</h1>
-        <Button onClick={() => setCreateOpen(true)}>
-          <PlusIcon className="size-4" />
-          {t("medical.create")}
-        </Button>
-      </div>
-
-      <div className="mb-4 flex flex-wrap items-center gap-3">
+    <div className="grid gap-4">
+      <div className="flex flex-wrap items-center gap-3">
         <div className="w-32">
-          <Select value={visitTypeFilter || null} onValueChange={(v) => { setVisitTypeFilter((v as VisitType) || ""); setPage(0); }}>
+          <Select value={visitTypeFilter} onValueChange={(v) => { setVisitTypeFilter(v); setPage(0); }}>
             <SelectTrigger>
-              <SelectValue placeholder={t("medical.filterType")}>
+              <SelectValue placeholder={t("medical.filterAllTypes")}>
                 {() => visitTypeFilter ? t(`medical.visitType.${visitTypeFilter}`) : t("medical.filterAllTypes")}
               </SelectValue>
             </SelectTrigger>
@@ -142,14 +129,14 @@ const MedicalRecordsPage = () => {
         </div>
 
         <div className="w-36">
-          <Select value={institutionFilter} onValueChange={(v) => { setInstitutionFilter(v as number | null); setPage(0); }}>
+          <Select value={institutionFilter} onValueChange={(v) => { setInstitutionFilter(v); setPage(0); }}>
             <SelectTrigger>
-              <SelectValue placeholder={t("medical.filterInstitution")}>
-                {() => institutionFilter ? institutions.find((i) => i.id === institutionFilter)?.name : t("medical.filterAllTypes")}
+              <SelectValue placeholder={t("medical.filterAllInstitutions")}>
+                {() => institutionFilter ? institutions.find((i) => i.id === institutionFilter)?.name : t("medical.filterAllInstitutions")}
               </SelectValue>
             </SelectTrigger>
             <SelectPopup>
-              <SelectItem value={null}>{t("medical.filterAllTypes")}</SelectItem>
+              <SelectItem value={null}>{t("medical.filterAllInstitutions")}</SelectItem>
               {institutions.map((i) => (
                 <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>
               ))}
@@ -157,25 +144,31 @@ const MedicalRecordsPage = () => {
           </Select>
         </div>
 
-        <Button variant="outline" size="sm" onClick={() => setInstitutionManagerOpen(true)}>
-          <BuildingIcon className="size-3.5" />
-          {t("medical.institutions")}
-        </Button>
-
         <div className="w-32">
-          <Select value={patientNameFilter || null} onValueChange={(v) => { setPatientNameFilter((v as string) || ""); setPage(0); }}>
+          <Select value={patientNameFilter} onValueChange={(v) => { setPatientNameFilter(v); setPage(0); }}>
             <SelectTrigger>
-              <SelectValue placeholder={t("medical.filterPatient")}>
-                {() => patientNameFilter || t("medical.filterAllTypes")}
+              <SelectValue placeholder={t("medical.filterAllPatients")}>
+                {() => patientNameFilter ?? t("medical.filterAllPatients")}
               </SelectValue>
             </SelectTrigger>
             <SelectPopup>
-              <SelectItem value={null}>{t("medical.filterAllTypes")}</SelectItem>
+              <SelectItem value={null}>{t("medical.filterAllPatients")}</SelectItem>
               {patientNames.map((n) => (
                 <SelectItem key={n} value={n}>{n}</SelectItem>
               ))}
             </SelectPopup>
           </Select>
+        </div>
+
+        <div className="ml-auto flex gap-1">
+          <Button variant="outline" size="sm" onClick={() => setInstitutionManagerOpen(true)}>
+            <BuildingIcon className="size-3.5" />
+            {t("medical.institutions")}
+          </Button>
+          <Button onClick={() => setCreateOpen(true)}>
+            <PlusIcon className="size-4" />
+            {t("medical.create")}
+          </Button>
         </div>
       </div>
 
@@ -189,6 +182,7 @@ const MedicalRecordsPage = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>{t("medical.columns.patient")}</TableHead>
+                <TableHead>{t("medical.columns.type")}</TableHead>
                 <TableHead>{t("medical.columns.department")}</TableHead>
                 <TableHead>{t("medical.columns.time")}</TableHead>
                 <TableHead>{t("medical.columns.doctor")}</TableHead>
@@ -209,15 +203,13 @@ const MedicalRecordsPage = () => {
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell>{formatDeptCell(r)}</TableCell>
                   <TableCell>
-                    <div className="flex flex-col">
-                      {formatTimeCell(r)}
-                      <Badge variant="secondary" className="w-fit text-xs mt-0.5">
-                        {r.visitType === "OUTPATIENT" ? t("medical.visitType.OUTPATIENT") : t("medical.visitType.INPATIENT")}
-                      </Badge>
-                    </div>
+                    <Badge variant="secondary" className="text-xs">
+                      {r.visitType === "OUTPATIENT" ? t("medical.visitType.OUTPATIENT") : t("medical.visitType.INPATIENT")}
+                    </Badge>
                   </TableCell>
+                  <TableCell>{formatDeptCell(r)}</TableCell>
+                  <TableCell>{formatTimeCell(r)}</TableCell>
                   <TableCell>{r.doctor || "-"}</TableCell>
                   <TableCell>
                     <div className="flex gap-1">
