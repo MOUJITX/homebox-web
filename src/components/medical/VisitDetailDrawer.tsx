@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PencilIcon, TrashIcon, PlusIcon, LinkIcon, UploadIcon, FileIcon, DownloadIcon, EyeIcon } from "lucide-react";
+import { PencilIcon, TrashIcon, PlusIcon, LinkIcon, UploadIcon, FileIcon, DownloadIcon, EyeIcon, ReceiptTextIcon, PillIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -241,7 +241,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
             ))}
             {subInvs.map((inv) => (
               <div key={inv.id} className="flex items-center gap-2 text-xs">
-                <FileIcon className="size-3.5 shrink-0 text-muted-foreground" />
+                <ReceiptTextIcon className="size-3.5 shrink-0 text-muted-foreground" />
                 <span className="truncate flex-1">{t("medical.invoiceLabel")}: {inv.invoiceNumber ?? `#${inv.invoiceId}`}</span>
                 <span className="text-muted-foreground shrink-0">{inv.totalAmount}</span>
                 <Button variant="ghost" size="icon-xs" onClick={() => { setViewingInvoiceId(inv.invoiceId); setInvoiceDrawerOpen(true); }} title={t("common.view")}>
@@ -402,7 +402,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
                       <div className="border-t px-3 py-1.5 space-y-0.5">
                         {p.items.map((item) => (
                           <div key={item.id} className="flex items-center gap-2 text-xs">
-                            <FileIcon className="size-3.5 shrink-0 text-muted-foreground" />
+                            <PillIcon className="size-3.5 shrink-0 text-muted-foreground" />
                             <span className="font-medium">{item.medicationName}</span>
                             {item.dosageMethod && <span className="text-muted-foreground">{t("medical.form.dosageMethod")}: {item.dosageMethod}</span>}
                             {item.dosageQuantity && <span className="text-muted-foreground">{item.dosageQuantity}{item.dosageUnit}</span>}
