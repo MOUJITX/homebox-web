@@ -157,9 +157,9 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onRefresh }: Props) => {
           )}
 
           {/* Attachments (visit level) */}
-          <div>
+          <div className="text-sm">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs text-muted-foreground">{t("medical.attachments")}:</p>
+              <p className="text-muted-foreground">{t("medical.attachments")}:</p>
               <div className="flex gap-1">
                 <input ref={fileInputRef} type="file" className="hidden" onChange={handleAttachmentUpload} />
                 <Button size="sm" variant="outline" onClick={() => fileInputRef.current?.click()}>
@@ -182,9 +182,9 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onRefresh }: Props) => {
           </div>
 
           {/* Invoices (visit level) */}
-          <div>
+          <div className="text-sm">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs text-muted-foreground">{t("medical.invoices")}:</p>
+              <p className="text-muted-foreground">{t("medical.invoices")}:</p>
               <Button size="sm" variant="outline" onClick={() => setInvoiceBind({ sourceType: "RECORD", sourceId: visitId! })}>
                 <LinkIcon className="size-3" /> {t("medical.bindInvoice")}
               </Button>

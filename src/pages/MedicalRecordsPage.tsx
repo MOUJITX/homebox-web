@@ -235,17 +235,13 @@ const MedicalRecordsPage = () => {
         </Table>
       </div>
 
-      {pageData.totalPages > 1 && (
-        <div className="mt-6">
-          <Pagination
-            currentPage={page}
-            totalPages={pageData.totalPages}
-            pageSize={pageSize}
-            onPageChange={setPage}
-            onPageSizeChange={handlePageSizeChange}
-          />
-        </div>
-      )}
+      <Pagination
+        currentPage={page}
+        totalPages={pageData.totalPages}
+        pageSize={pageSize}
+        onPageChange={setPage}
+        onPageSizeChange={handlePageSizeChange}
+      />
 
       <CreateVisitDialog
         open={createOpen}
