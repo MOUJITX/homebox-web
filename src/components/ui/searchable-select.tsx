@@ -1,7 +1,6 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { SearchIcon, ChevronDownIcon, XIcon, LoaderIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useDebounce } from "@/hooks/useDebounce";
 
 type Option = {
   value: number;
@@ -12,89 +11,55 @@ type Option = {
 type SearchableSelectProps = {
   value: number | null;
   onChange: (value: number | null) => void;
-  options?: Option[];
-  onSearch?: (query: string) => Promise<Option[]>;
+  options: Option[];
   placeholder?: string;
   emptyMessage?: string;
+  onSearch?: (query: string) => void;
+  loading?: boolean;
 };
 
 const SearchableSelect = ({
   value,
   onChange,
-  options = [],
-  onSearch,
+  options,
   placeholder = "Search...",
   emptyMessage = "No results",
+  onSearch,
+  loading = false,
 }: SearchableSelectProps) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [asyncOptions, setAsyncOptions] = useState<Option[]>([]);
-  const [searching, setSearching] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const debouncedSearch = useDebounce(search, 300);
 
-  const isAsync = !!onSearch;
+  const selected = options.find((o) => o.value === value);
 
-  const selected = isAsync
-    ? [...options, ...asyncOptions].find((o) => o.value === value)
-    : options.find((o) => o.value === value);
-
-  const filtered = isAsync
-    ? asyncOptions
-    : search
-      ? options.filter((o) => o.label.toLowerCase().includes(search.toLowerCase()))
-      : options;
-
-  useEffect(() => {
-    if (!isAsync) return;
-    const fetchResults = async () => {
-      if (!debouncedSearch) {
-        setAsyncOptions([]);
-        return;
-      }
-      setSearching(true);
-      try {
-        const results = await onSearch(debouncedSearch);
-        setAsyncOptions(results);
-      } finally {
-        setSearching(false);
-      }
-    };
-    fetchResults();
-  }, [debouncedSearch, isAsync, onSearch]);
-
-  useEffect(() => {
-    if (open) return;
-    setSearch("");
-    setAsyncOptions([]);
-  }, [open]);
+  const filtered = search
+    ? options.filter((o) => o.label.toLowerCase().includes(search.toLowerCase()))
+    : options;
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setOpen(false);
+        setSearch("");
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const selectOption = useCallback((opt: Option) => {
+  const selectOption = (opt: Option) => {
     onChange(opt.value);
     setSearch("");
     setOpen(false);
-  }, [onChange]);
+  };
 
-  const clearSelection = useCallback(() => {
+  const clearSelection = () => {
     onChange(null);
     setSearch("");
     setOpen(false);
-  }, [onChange]);
-
-  const displayOptions = isAsync
-    ? (debouncedSearch ? filtered : options)
-    : filtered;
+  };
 
   return (
     <div ref={containerRef} className="relative w-full">
@@ -104,26 +69,33 @@ const SearchableSelect = ({
           <Input
             ref={inputRef}
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              onSearch?.(e.target.value);
+            }}
             placeholder={selected?.label ?? placeholder}
             className="h-8 pl-7 pr-7 text-sm"
             autoFocus
             onKeyDown={(e) => {
               if (e.key === "Escape") {
                 setOpen(false);
+                setSearch("");
               }
-              if (e.key === "Enter" && displayOptions.length === 1) {
+              if (e.key === "Enter" && filtered.length === 1) {
                 e.preventDefault();
-                selectOption(displayOptions[0]);
+                selectOption(filtered[0]);
               }
             }}
           />
-          {searching ? (
+          {loading ? (
             <LoaderIcon className="absolute right-2 top-1/2 size-3.5 -translate-y-1/2 animate-spin text-muted-foreground" />
           ) : (
             <ChevronDownIcon
               className="absolute right-2 top-1/2 size-3.5 -translate-y-1/2 cursor-pointer text-muted-foreground"
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setOpen(false);
+                setSearch("");
+              }}
             />
           )}
         </div>
@@ -163,17 +135,24 @@ const SearchableSelect = ({
 
       {open && (
         <div className="absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-lg border bg-popover p-1 text-sm shadow-md ring-1 ring-foreground/10">
-          {displayOptions.length === 0 ? (
+          {loading ? (
+            <div className="flex items-center justify-center gap-2 px-2 py-4 text-xs text-muted-foreground">
+              <LoaderIcon className="size-3.5 animate-spin" />
+            </div>
+          ) : filtered.length === 0 ? (
             <div className="px-2 py-2 text-center text-xs text-muted-foreground">
-              {searching ? "..." : emptyMessage}
+              {emptyMessage}
             </div>
           ) : (
-            displayOptions.map((opt) => (
+            filtered.map((opt) => (
               <button
                 key={opt.value}
                 type="button"
                 className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-left outline-none hover:bg-accent hover:text-accent-foreground"
-                onClick={() => selectOption(opt)}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  selectOption(opt);
+                }}
               >
                 <span>{opt.label}</span>
                 {opt.tag && (

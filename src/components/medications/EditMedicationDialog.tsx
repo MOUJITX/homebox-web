@@ -1,8 +1,10 @@
-import { useState, useEffect, useMemo, type SubmitEvent } from "react";
+import { useState, useEffect, useCallback, useMemo, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { getGoods } from "@/api/goods";
 import { type MedicationReminder, updateMedication } from "@/api/medications";
 import { getErrorMessage } from "@/lib/error";
+import { useDebounce } from "@/hooks/useDebounce";
+import type { Option } from "@/components/ui/searchable-select";
 import {
   Dialog,
   DialogContent,
@@ -48,6 +50,11 @@ const EditMedicationDialog = ({
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  const [goodOptions, setGoodOptions] = useState<Option[]>([]);
+  const [goodsLoading, setGoodsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearch = useDebounce(searchTerm, 300);
+
   useEffect(() => {
     if (reminder) {
       setGoodId(reminder.goodId);
@@ -68,8 +75,55 @@ const EditMedicationDialog = ({
     }
   }, [reminder]);
 
+  useEffect(() => {
+    if (!open) {
+      setGoodOptions([]);
+      return;
+    }
+    let cancelled = false;
+    setGoodsLoading(true);
+    const fetchGoods = async () => {
+      const { data } = await getGoods({
+        search: debouncedSearch || undefined,
+        size: debouncedSearch ? 20 : 200,
+      });
+      if (cancelled) return;
+      setGoodOptions(
+        data.content.map((g) => ({
+          value: g.id,
+          label: `${g.brandName}-${g.productName}`,
+          tag: g.categoryName,
+        })),
+      );
+      setGoodsLoading(false);
+    };
+    fetchGoods();
+    return () => { cancelled = true; };
+  }, [open, debouncedSearch]);
+
+  const selectedGoodOption = useMemo(() => {
+    if (!reminder) return [];
+    return [{
+      value: reminder.goodId,
+      label: `${reminder.brandName}-${reminder.productName}`,
+      tag: reminder.categoryName,
+    }];
+  }, [reminder]);
+
+  const mergedOptions = useMemo(() => {
+    const map = new Map<number, Option>();
+    for (const o of selectedGoodOption) map.set(o.value, o);
+    for (const o of goodOptions) map.set(o.value, o);
+    return Array.from(map.values());
+  }, [selectedGoodOption, goodOptions]);
+
+  const handleGoodSearch = useCallback((query: string) => {
+    setSearchTerm(query);
+  }, []);
+
   const handleClose = () => {
     setError("");
+    setSearchTerm("");
     onClose();
   };
 
@@ -115,24 +169,6 @@ const EditMedicationDialog = ({
     }
   };
 
-  const handleGoodSearch = async (query: string) => {
-    const { data } = await getGoods({ search: query, size: 20 });
-    return data.content.map((g) => ({
-      value: g.id,
-      label: `${g.brandName}-${g.productName}`,
-      tag: g.categoryName,
-    }));
-  };
-
-  const selectedGoodOption = useMemo(() => {
-    if (!reminder) return [];
-    return [{
-      value: reminder.goodId,
-      label: `${reminder.brandName}-${reminder.productName}`,
-      tag: reminder.categoryName,
-    }];
-  }, [reminder]);
-
   return (
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
       <DialogContent className="sm:max-w-lg">
@@ -148,7 +184,8 @@ const EditMedicationDialog = ({
             <SearchableSelect
               value={goodId}
               onChange={(v) => setGoodId(v)}
-              options={selectedGoodOption}
+              options={mergedOptions}
+              loading={goodsLoading}
               onSearch={handleGoodSearch}
               placeholder={t("medications.form.goodPlaceholder")}
               emptyMessage={t("common.noResults")}
