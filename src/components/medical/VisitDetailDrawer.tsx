@@ -13,7 +13,7 @@ import {
   getVisitAttachments, uploadVisitAttachment, deleteVisitAttachment,
   getVisitInvoices, bindVisitInvoice, unbindVisitInvoice,
   type VisitRecord, type VisitExamination, type VisitLabTest,
-  type VisitPrescription, type VisitInvoice,
+  type VisitPrescription, type VisitInvoice, type VisitAttachment,
   type VisitSourceType,
 } from "@/api/medical";
 import AttachmentManager, { type AttachmentItem } from "@/components/shared/AttachmentManager";
@@ -24,6 +24,7 @@ import CreatePrescriptionDialog from "./CreatePrescriptionDialog";
 import CreatePrescriptionItemDialog from "./CreatePrescriptionItemDialog";
 import BindVisitInvoiceDialog from "./BindVisitInvoiceDialog";
 import CreateInvoiceDialog from "@/components/invoices/CreateInvoiceDialog";
+import InvoiceDetailDrawer from "@/components/invoices/InvoiceDetailDrawer";
 import type { InvoiceDetail } from "@/api/invoices";
 
 interface Props {
@@ -35,12 +36,28 @@ interface Props {
   onRefresh: () => void;
 }
 
-const Field = ({ label, value }: { label: string; value: string | number | null | undefined }) => (
+const Field = ({ label, value }: { label: string; value?: string | number | null }) => (
   <div className="grid gap-1">
     <span className="text-xs text-muted-foreground">{label}</span>
     <span className="text-sm">{value ?? "—"}</span>
   </div>
 );
+
+const SubRecordItem = ({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) => {
+  const inner = (
+    <div className="flex items-center justify-between w-full rounded-md border px-3 py-2 text-sm text-left min-w-0">
+      {children}
+    </div>
+  );
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className="w-full hover:bg-accent/50 transition-colors rounded-md">
+        {inner}
+      </button>
+    );
+  }
+  return <div className="rounded-md border px-3 py-2">{inner}</div>;
+};
 
 const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh }: Props) => {
   const { t } = useTranslation();
@@ -50,7 +67,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
   const [examinations, setExaminations] = useState<VisitExamination[]>([]);
   const [labTests, setLabTests] = useState<VisitLabTest[]>([]);
   const [prescriptions, setPrescriptions] = useState<VisitPrescription[]>([]);
-  const [attachments, setAttachments] = useState<AttachmentItem[]>([]);
+  const [attachments, setAttachments] = useState<VisitAttachment[]>([]);
   const [visitInvoices, setVisitInvoices] = useState<VisitInvoice[]>([]);
 
   const [examOpen, setExamOpen] = useState(false);
@@ -62,6 +79,8 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
   const [itemAddPrescId, setItemAddPrescId] = useState<number | null>(null);
   const [invoiceBind, setInvoiceBind] = useState<{ sourceType: VisitSourceType; sourceId: number } | null>(null);
   const [createInvoiceOpen, setCreateInvoiceOpen] = useState(false);
+  const [viewingInvoiceId, setViewingInvoiceId] = useState<number | null>(null);
+  const [invoiceDrawerOpen, setInvoiceDrawerOpen] = useState(false);
 
   const fetchDetail = useCallback(async () => {
     if (!visitId) return;
@@ -79,7 +98,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
       setExaminations(exams.content);
       setLabTests(tests.content);
       setPrescriptions(prescs.content);
-      setAttachments(atts.map((a) => ({ id: a.id, filename: a.originalFilename, fileSize: a.fileSize, url: a.url } satisfies AttachmentItem)));
+      setAttachments(atts);
       setVisitInvoices(invs);
     } catch { setError(true); }
     finally { setLoading(false); }
@@ -151,30 +170,34 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
             )}
 
             {/* Attachments */}
-            <AttachmentManager
-              attachments={attachments}
-              uploadLabel={t("medical.uploadAttachment")}
-              emptyLabel={t("medical.noAttachments")}
-              onUpload={async (file) => { if (visitId) { await uploadVisitAttachment(visitId, file, "RECORD", visitId); void fetchDetail(); } }}
-              onDelete={async (id) => { await deleteVisitAttachment(id); void fetchDetail(); }}
-              getDownloadUrl={(a) => a.url}
-            />
+            <div className="grid gap-2">
+              <AttachmentManager
+                attachments={attachments.map((a) => ({ id: a.id, filename: a.originalFilename, fileSize: a.fileSize, url: a.url } satisfies AttachmentItem))}
+                uploadLabel={t("medical.uploadAttachment")}
+                emptyLabel={t("medical.noAttachments")}
+                onUpload={async (file) => { if (visitId) { await uploadVisitAttachment(visitId, file, "RECORD", visitId); void fetchDetail(); } }}
+                onDelete={async (id) => { await deleteVisitAttachment(id); void fetchDetail(); }}
+                getDownloadUrl={(a) => a.url}
+              />
+            </div>
 
             {/* Invoices */}
-            <InvoiceBindingManager
-              invoices={visitInvoices.filter((i) => i.sourceType === "RECORD").map((inv) => ({
-                id: inv.id, invoiceId: inv.invoiceId, invoiceNumber: inv.invoiceNumber,
-                invoiceDate: inv.invoiceDate, totalAmount: inv.totalAmount,
-              } satisfies BoundInvoice))}
-              title={t("medical.invoices")}
-              bindLabel={t("medical.bindInvoice")}
-              uploadNewLabel={t("medical.uploadNewInvoice")}
-              emptyLabel={t("medical.noInvoices")}
-              onBind={() => setInvoiceBind({ sourceType: "RECORD", sourceId: visitId! })}
-              onCreateNew={() => setCreateInvoiceOpen(true)}
-              onUnbind={async (id) => { await unbindVisitInvoice(id); void fetchDetail(); }}
-              onView={(invoiceId) => { window.open(`/invoices?invoiceId=${invoiceId}`, "_blank"); }}
-            />
+            <div className="grid gap-2">
+              <InvoiceBindingManager
+                invoices={visitInvoices.filter((i) => i.sourceType === "RECORD").map((inv) => ({
+                  id: inv.id, invoiceId: inv.invoiceId, invoiceNumber: inv.invoiceNumber,
+                  invoiceDate: inv.invoiceDate, totalAmount: inv.totalAmount,
+                } satisfies BoundInvoice))}
+                title={t("medical.invoices")}
+                bindLabel={t("medical.bindInvoice")}
+                uploadNewLabel={t("medical.uploadNewInvoice")}
+                emptyLabel={t("medical.noInvoices")}
+                onBind={() => setInvoiceBind({ sourceType: "RECORD", sourceId: visitId! })}
+                onCreateNew={() => setCreateInvoiceOpen(true)}
+                onUnbind={async (id) => { await unbindVisitInvoice(id); void fetchDetail(); }}
+                onView={(invoiceId) => { setViewingInvoiceId(invoiceId); setInvoiceDrawerOpen(true); }}
+              />
+            </div>
 
             {/* Examinations */}
             <div className="grid gap-2">
@@ -194,23 +217,26 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
               ) : (
                 <div className="space-y-1">
                   {examinations.map((e) => (
-                    <div key={e.id} className="flex items-center justify-between rounded-md border px-3 py-2 text-sm">
-                      <div className="min-w-0">
-                        <div className="font-medium truncate">{e.name}</div>
-                        {(e.examDate || e.description) && (
-                          <div className="text-xs text-muted-foreground">
-                            {e.examDate && <span>{e.examDate}</span>}
-                            {e.examDate && e.description && <span> · </span>}
-                            {e.description && <span className="truncate">{e.description}</span>}
-                          </div>
-                        )}
+                    <SubRecordItem key={e.id} onClick={() => setExamEditing(e)}>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="min-w-0 flex-1">
+                          <div className="font-medium truncate">{e.name}</div>
+                          {(e.examDate || e.description) && (
+                            <div className="text-xs text-muted-foreground">
+                              {e.examDate}{e.examDate && e.description ? " · " : ""}{e.description}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1 shrink-0">
-                        <Button variant="ghost" size="icon-xs" onClick={() => setInvoiceBind({ sourceType: "EXAMINATION", sourceId: e.id })}><LinkIcon className="size-3.5" /></Button>
-                        <Button variant="ghost" size="icon-xs" onClick={() => setExamEditing(e)}><PencilIcon className="size-3.5" /></Button>
-                        <Button variant="ghost" size="icon-xs" onClick={() => { deleteExamination(e.id).then(() => fetchDetail()).catch(() => {}); }}><TrashIcon className="size-3.5" /></Button>
+                      <div className="flex items-center gap-1 shrink-0 ml-2" onClick={(ev) => ev.stopPropagation()}>
+                        <Button variant="ghost" size="icon-xs" onClick={() => setInvoiceBind({ sourceType: "EXAMINATION", sourceId: e.id })}>
+                          <LinkIcon className="size-3.5" />
+                        </Button>
+                        <Button variant="ghost" size="icon-xs" onClick={() => { deleteExamination(e.id).then(() => fetchDetail()).catch(() => {}); }}>
+                          <TrashIcon className="size-3.5" />
+                        </Button>
                       </div>
-                    </div>
+                    </SubRecordItem>
                   ))}
                 </div>
               )}
@@ -234,23 +260,26 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
               ) : (
                 <div className="space-y-1">
                   {labTests.map((lt) => (
-                    <div key={lt.id} className="flex items-center justify-between rounded-md border px-3 py-2 text-sm">
-                      <div className="min-w-0">
-                        <div className="font-medium truncate">{lt.name}</div>
-                        {(lt.testDate || lt.description) && (
-                          <div className="text-xs text-muted-foreground">
-                            {lt.testDate && <span>{lt.testDate}</span>}
-                            {lt.testDate && lt.description && <span> · </span>}
-                            {lt.description && <span className="truncate">{lt.description}</span>}
-                          </div>
-                        )}
+                    <SubRecordItem key={lt.id} onClick={() => setTestEditing(lt)}>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="min-w-0 flex-1">
+                          <div className="font-medium truncate">{lt.name}</div>
+                          {(lt.testDate || lt.description) && (
+                            <div className="text-xs text-muted-foreground">
+                              {lt.testDate}{lt.testDate && lt.description ? " · " : ""}{lt.description}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1 shrink-0">
-                        <Button variant="ghost" size="icon-xs" onClick={() => setInvoiceBind({ sourceType: "LAB_TEST", sourceId: lt.id })}><LinkIcon className="size-3.5" /></Button>
-                        <Button variant="ghost" size="icon-xs" onClick={() => setTestEditing(lt)}><PencilIcon className="size-3.5" /></Button>
-                        <Button variant="ghost" size="icon-xs" onClick={() => { deleteLabTest(lt.id).then(() => fetchDetail()).catch(() => {}); }}><TrashIcon className="size-3.5" /></Button>
+                      <div className="flex items-center gap-1 shrink-0 ml-2" onClick={(ev) => ev.stopPropagation()}>
+                        <Button variant="ghost" size="icon-xs" onClick={() => setInvoiceBind({ sourceType: "LAB_TEST", sourceId: lt.id })}>
+                          <LinkIcon className="size-3.5" />
+                        </Button>
+                        <Button variant="ghost" size="icon-xs" onClick={() => { deleteLabTest(lt.id).then(() => fetchDetail()).catch(() => {}); }}>
+                          <TrashIcon className="size-3.5" />
+                        </Button>
                       </div>
-                    </div>
+                    </SubRecordItem>
                   ))}
                 </div>
               )}
@@ -274,32 +303,39 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
               ) : (
                 <div className="space-y-1">
                   {prescriptions.map((p) => (
-                    <div key={p.id} className="rounded-md border px-3 py-2">
-                      <div className="flex items-start justify-between">
-                        <div className="min-w-0 flex-1">
-                          {p.description && <p className="text-sm mb-1">{p.description}</p>}
-                          {p.items.map((item) => (
-                            <div key={item.id} className="flex items-center gap-2 text-xs py-0.5">
-                              <span className="font-medium">{item.medicationName}</span>
-                              {item.dosageMethod && <span className="text-muted-foreground">{item.dosageMethod}</span>}
-                              {item.dosageQuantity && <span className="text-muted-foreground">{item.dosageQuantity}{item.dosageUnit}</span>}
-                              {item.note && <span className="text-muted-foreground">({item.note})</span>}
-                              <Button variant="ghost" size="icon-xs" className="ml-auto" onClick={() => { deletePrescriptionItem(item.id).then(() => fetchDetail()).catch(() => {}); }}>
-                                <TrashIcon className="size-2.5" />
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="flex items-center gap-1 shrink-0 ml-2">
-                          <Button variant="ghost" size="icon-xs" onClick={() => setInvoiceBind({ sourceType: "PRESCRIPTION", sourceId: p.id })}><LinkIcon className="size-3.5" /></Button>
-                          <Button variant="ghost" size="icon-xs" onClick={() => setPrescEditing(p)}><PencilIcon className="size-3.5" /></Button>
-                          <Button variant="ghost" size="icon-xs" onClick={() => { deletePrescription(p.id).then(() => fetchDetail()).catch(() => {}); }}><TrashIcon className="size-3.5" /></Button>
-                        </div>
+                    <SubRecordItem key={p.id}>
+                      <div className="min-w-0 flex-1">
+                        {p.description && <div className="text-sm mb-1">{p.description}</div>}
+                        {p.items.map((item) => (
+                          <div key={item.id} className="flex items-center gap-2 text-xs py-0.5">
+                            <span className="font-medium">{item.medicationName}</span>
+                            {item.dosageMethod && <span className="text-muted-foreground">{item.dosageMethod}</span>}
+                            {item.dosageQuantity && <span className="text-muted-foreground">{item.dosageQuantity}{item.dosageUnit}</span>}
+                            {item.note && <span className="text-muted-foreground">({item.note})</span>}
+                            <Button
+                              variant="ghost" size="icon-xs" className="ml-auto"
+                              onClick={(ev) => { ev.stopPropagation(); deletePrescriptionItem(item.id).then(() => fetchDetail()).catch(() => {}); }}
+                            >
+                              <TrashIcon className="size-2.5" />
+                            </Button>
+                          </div>
+                        ))}
+                        <Button variant="ghost" size="sm" className="text-xs h-6 -ml-2 mt-1" onClick={(ev) => { ev.stopPropagation(); setItemAddPrescId(p.id); }}>
+                          <PlusIcon className="size-2.5" /> {t("medical.addItem")}
+                        </Button>
                       </div>
-                      <Button variant="ghost" size="sm" className="text-xs h-6 -ml-2 mt-1" onClick={() => setItemAddPrescId(p.id)}>
-                        <PlusIcon className="size-2.5" /> {t("medical.addItem")}
-                      </Button>
-                    </div>
+                      <div className="flex items-center gap-1 shrink-0 ml-2" onClick={(ev) => ev.stopPropagation()}>
+                        <Button variant="ghost" size="icon-xs" onClick={() => setInvoiceBind({ sourceType: "PRESCRIPTION", sourceId: p.id })}>
+                          <LinkIcon className="size-3.5" />
+                        </Button>
+                        <Button variant="ghost" size="icon-xs" onClick={() => setPrescEditing(p)}>
+                          <PencilIcon className="size-3.5" />
+                        </Button>
+                        <Button variant="ghost" size="icon-xs" onClick={() => { deletePrescription(p.id).then(() => fetchDetail()).catch(() => {}); }}>
+                          <TrashIcon className="size-3.5" />
+                        </Button>
+                      </div>
+                    </SubRecordItem>
                   ))}
                 </div>
               )}
@@ -323,7 +359,8 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
         <CreatePrescriptionDialog open={prescOpen || !!prescEditing} visitId={visitId!} initialData={prescEditing} onClose={() => { setPrescOpen(false); setPrescEditing(null); }} onSuccess={() => { void fetchDetail(); onRefresh(); }} />
         <CreatePrescriptionItemDialog open={itemAddPrescId !== null} onClose={() => setItemAddPrescId(null)} onSubmit={async (data) => { if (itemAddPrescId) { await addPrescriptionItem(itemAddPrescId, data); void fetchDetail(); } }} />
         <BindVisitInvoiceDialog boundInvoiceIds={visitInvoices.map((i) => i.invoiceId)} open={invoiceBind !== null} onClose={() => setInvoiceBind(null)} onBind={handleInvoiceBindAction} onCreateNew={() => setCreateInvoiceOpen(true)} />
-        <CreateInvoiceDialog open={createInvoiceOpen} onClose={() => setCreateInvoiceOpen(false)} onSuccess={() => {}} onCreated={async (created: InvoiceDetail) => { if (invoiceBind && visitId) { await bindVisitInvoice(visitId, created.id, invoiceBind.sourceType, invoiceBind.sourceId); void fetchDetail(); } }} />
+        <CreateInvoiceDialog open={createInvoiceOpen} onClose={() => setCreateInvoiceOpen(false)} onSuccess={() => {}} onCreated={async (created) => { if (invoiceBind && visitId) { await bindVisitInvoice(visitId, created.id, invoiceBind.sourceType, invoiceBind.sourceId); void fetchDetail(); } }} />
+        <InvoiceDetailDrawer invoiceId={viewingInvoiceId} open={invoiceDrawerOpen} onClose={() => { setInvoiceDrawerOpen(false); setViewingInvoiceId(null); }} onEdit={() => {}} onDelete={() => {}} onRefresh={() => void fetchDetail()} />
       </SheetContent>
     </Sheet>
   );
