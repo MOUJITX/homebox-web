@@ -251,6 +251,7 @@ export interface VisitAttachment {
   fileId: number;
   originalFilename: string;
   fileSize: number;
+  url: string;
   sourceType: VisitSourceType;
   sourceId: number;
   createdAt: string;

@@ -146,12 +146,13 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onRefresh }: Props) => {
             </div>
           )}
 
-                    <AttachmentManager
-            attachments={visitAttachments.map((a) => ({ id: a.id, filename: a.originalFilename, fileSize: a.fileSize } satisfies AttachmentItem))}
+          <AttachmentManager
+            attachments={visitAttachments.map((a) => ({ id: a.id, filename: a.originalFilename, fileSize: a.fileSize, url: a.url } satisfies AttachmentItem))}
             uploadLabel={t("medical.uploadAttachment")}
             emptyLabel={t("medical.noAttachments")}
             onUpload={async (file) => { if (visitId) { await uploadVisitAttachment(visitId, file, "RECORD", visitId); void fetchDetail(); } }}
             onDelete={async (id) => { await deleteVisitAttachment(id); void fetchDetail(); }}
+            getDownloadUrl={(a) => a.url}
           />
 
           <InvoiceBindingManager
@@ -166,6 +167,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onRefresh }: Props) => {
             onBind={() => setInvoiceBind({ sourceType: "RECORD", sourceId: visitId! })}
             onCreateNew={() => setCreateInvoiceOpen(true)}
             onUnbind={async (id) => { await unbindVisitInvoice(id); void fetchDetail(); }}
+            onView={(invoiceId) => { window.open(`/invoices?invoiceId=${invoiceId}`, "_blank"); }}
           />
 
           {/* Examinations */}
