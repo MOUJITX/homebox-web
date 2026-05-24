@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectTrigger, SelectPopup, SelectItem, SelectValue } from "@/components/ui/select";
 import { getMedications, type MedicationReminder } from "@/api/medications";
-import { getGoods, type Good } from "@/api/goods";
+
 import type { CreatePrescriptionItemRequest } from "@/api/medical";
 import CreateMedicationDialog from "@/components/medications/CreateMedicationDialog";
 
@@ -20,7 +20,7 @@ const CreatePrescriptionItemDialog = ({ open, initialData, onClose, onSubmit }: 
   const { t } = useTranslation();
   const isEdit = !!initialData;
   const [reminders, setReminders] = useState<MedicationReminder[]>([]);
-  const [goods, setGoods] = useState<Good[]>([]);
+
   const [reminderId, setReminderId] = useState<number | null>(null);
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -30,7 +30,6 @@ const CreatePrescriptionItemDialog = ({ open, initialData, onClose, onSubmit }: 
     if (open) {
       const load = async () => {
         try { const { data: meds } = await getMedications(0, 200); setReminders(meds.content); } catch {}
-        try { const { data: g } = await getGoods({ size: 200 }); setGoods(g.content); } catch {}
       };
       void load();
       if (initialData) {
@@ -112,7 +111,6 @@ const CreatePrescriptionItemDialog = ({ open, initialData, onClose, onSubmit }: 
 
       <CreateMedicationDialog
         open={createMedOpen}
-        goods={goods}
         onClose={() => setCreateMedOpen(false)}
         onSuccess={() => {
           const reload = async () => {
