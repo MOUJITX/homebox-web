@@ -43,9 +43,15 @@ export interface UpdateMedicationReminderRequest {
   enabled?: boolean;
 }
 
-export const getMedications = (page: number, size: number, enabled?: boolean) =>
+export const getMedications = (
+  page: number,
+  size: number,
+  enabled?: boolean,
+  sortBy = "courseStartDate",
+  sortDir: "asc" | "desc" = "desc",
+) =>
   axios.get<Page<MedicationReminder>>("/medications", {
-    params: { page, size, ...(enabled !== undefined && { enabled }) },
+    params: { page, size, sortBy, sortDir, ...(enabled !== undefined && { enabled }) },
   });
 
 export const getMedicationById = (id: number) =>

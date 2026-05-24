@@ -1,6 +1,6 @@
-import { useState, useEffect, type SubmitEvent } from "react";
+import { useState, useEffect, useMemo, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
-import type { Good } from "@/api/goods";
+import { getGoods } from "@/api/goods";
 import { type MedicationReminder, updateMedication } from "@/api/medications";
 import { getErrorMessage } from "@/lib/error";
 import {
@@ -23,7 +23,6 @@ const DOSAGE_UNITS = ["片", "粒", "ml", "包", "瓶", "滴"];
 interface EditMedicationDialogProps {
   readonly open: boolean;
   readonly reminder: MedicationReminder | null;
-  readonly goods: Good[];
   readonly onClose: () => void;
   readonly onSuccess: () => void;
 }
@@ -33,7 +32,6 @@ const HOURS = Array.from({ length: 24 }, (_, i) => i); // 0-23
 const EditMedicationDialog = ({
   open,
   reminder,
-  goods,
   onClose,
   onSuccess,
 }: EditMedicationDialogProps) => {
@@ -117,11 +115,23 @@ const EditMedicationDialog = ({
     }
   };
 
-  const goodOptions = goods.map((g) => ({
-    value: g.id,
-    label: `${g.brandName}-${g.productName}`,
-    tag: g.categoryName,
-  }));
+  const handleGoodSearch = async (query: string) => {
+    const { data } = await getGoods({ search: query, size: 20 });
+    return data.content.map((g) => ({
+      value: g.id,
+      label: `${g.brandName}-${g.productName}`,
+      tag: g.categoryName,
+    }));
+  };
+
+  const selectedGoodOption = useMemo(() => {
+    if (!reminder) return [];
+    return [{
+      value: reminder.goodId,
+      label: `${reminder.brandName}-${reminder.productName}`,
+      tag: reminder.categoryName,
+    }];
+  }, [reminder]);
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
@@ -138,7 +148,8 @@ const EditMedicationDialog = ({
             <SearchableSelect
               value={goodId}
               onChange={(v) => setGoodId(v)}
-              options={goodOptions}
+              options={selectedGoodOption}
+              onSearch={handleGoodSearch}
               placeholder={t("medications.form.goodPlaceholder")}
               emptyMessage={t("common.noResults")}
             />

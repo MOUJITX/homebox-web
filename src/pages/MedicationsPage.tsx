@@ -5,7 +5,7 @@ import {
   getMedications,
   type MedicationReminder,
 } from "@/api/medications";
-import { getGoods, type Good, type Page } from "@/api/goods";
+import { type Page } from "@/api/goods";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -39,7 +39,6 @@ const MedicationsPage = () => {
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0]);
   const [filter, setFilter] = useState<FilterMode>("all");
   const [loading, setLoading] = useState(true);
-  const [goods, setGoods] = useState<Good[]>([]);
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editing, setEditing] = useState<MedicationReminder | null>(null);
@@ -59,22 +58,9 @@ const MedicationsPage = () => {
     }
   }, [page, pageSize, filter]);
 
-  const fetchGoods = useCallback(async () => {
-    try {
-      const { data } = await getGoods({ size: 9999 });
-      setGoods(data.content);
-    } catch {
-      // handled by interceptor
-    }
-  }, []);
-
   useEffect(() => {
     void fetchData();
   }, [fetchData]);
-
-  useEffect(() => {
-    void fetchGoods();
-  }, [fetchGoods]);
 
   const handleRefresh = () => {
     void fetchData();
@@ -247,14 +233,12 @@ const MedicationsPage = () => {
 
       <CreateMedicationDialog
         open={createOpen}
-        goods={goods}
         onClose={() => setCreateOpen(false)}
         onSuccess={handleRefresh}
       />
       <EditMedicationDialog
         open={!!editing}
         reminder={editing}
-        goods={goods}
         onClose={() => setEditing(null)}
         onSuccess={handleRefresh}
       />

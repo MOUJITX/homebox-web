@@ -179,6 +179,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
     onEdit: () => void,
     onDeleteItem: () => void,
     extraContent?: React.ReactNode,
+    onAddItem?: () => void,
   ) => {
     const subAtts = getSubAttachments(type, data.id);
     const subInvs = getSubInvoices(type, data.id);
@@ -194,6 +195,11 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
             )}
           </div>
           <div className="flex items-center gap-1 shrink-0 ml-2">
+            {onAddItem && (
+              <Button variant="ghost" size="icon-xs" onClick={onAddItem} title={t("medical.addItem")}>
+                <PlusIcon className="size-3.5" />
+              </Button>
+            )}
             <Button variant="ghost" size="icon-xs" onClick={() => { setSubUploadTarget({ sourceType: type, sourceId: data.id }); fileInputRef.current?.click(); }} title={t("medical.uploadAttachment")}>
               <UploadIcon className="size-3.5" />
             </Button>
@@ -387,7 +393,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
               ) : (
                 <div className="space-y-1">
                   {prescriptions.map((p) => renderSubRecordItem(p, "PRESCRIPTION", p.prescriptionDate || t("medical.prescriptions"), null, p.description, () => setPrescEditing(p), () => handlePrescDelete(p.id),
-                    <>
+                    p.items.length > 0 ? (
                       <div className="border-t px-3 py-1.5 space-y-0.5">
                         {p.items.map((item) => (
                           <div key={item.id} className="flex items-center gap-2 text-xs">
@@ -402,12 +408,8 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
                           </div>
                         ))}
                       </div>
-                      <div className="border-t px-3 py-1">
-                        <Button variant="ghost" size="sm" className="text-xs h-6 -ml-2" onClick={() => setItemAddPrescId(p.id)}>
-                          <PlusIcon className="size-2.5" /> {t("medical.addItem")}
-                        </Button>
-                      </div>
-                    </>
+                    ) : undefined,
+                    () => setItemAddPrescId(p.id),
                   ))}
                 </div>
               )}
@@ -436,7 +438,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
           onClose={() => { setPrescOpen(false); setPrescEditing(null); }}
           onSuccess={async () => { if (visitId) { const { data } = await getPrescriptions(visitId, 0, 50); setPrescriptions(data.content); } onRefresh(); }} />
         <CreatePrescriptionItemDialog open={itemAddPrescId !== null} onClose={() => setItemAddPrescId(null)} onSubmit={handlePrescItemAdd} />
-        <BindVisitInvoiceDialog boundInvoiceIds={visitInvoices.map((i) => i.invoiceId)} open={invoiceBind !== null} onClose={() => setInvoiceBind(null)} onBind={handleInvoiceBindAction} onCreateNew={() => setCreateInvoiceOpen(true)} />
+        <BindVisitInvoiceDialog open={invoiceBind !== null} onClose={() => setInvoiceBind(null)} onBind={handleInvoiceBindAction} onCreateNew={() => setCreateInvoiceOpen(true)} />
         <CreateInvoiceDialog open={createInvoiceOpen} onClose={() => setCreateInvoiceOpen(false)} onSuccess={() => {}}
           onCreated={async (created) => { if (invoiceBind && visitId) { const { data } = await bindVisitInvoice(visitId, created.id, invoiceBind.sourceType, invoiceBind.sourceId); setVisitInvoices((prev) => [...prev, data]); } }} />
         <InvoiceDetailDrawer invoiceId={viewingInvoiceId} open={invoiceDrawerOpen} onClose={() => { setInvoiceDrawerOpen(false); setViewingInvoiceId(null); }} onEdit={() => {}} onDelete={() => {}} onRefresh={() => {}} />

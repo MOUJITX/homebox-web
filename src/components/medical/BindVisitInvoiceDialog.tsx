@@ -15,14 +15,13 @@ import { Select, SelectTrigger, SelectPopup, SelectItem, SelectValue } from "@/c
 import { useDebounce } from "@/hooks/useDebounce";
 
 interface Props {
-  readonly boundInvoiceIds: number[];
   readonly open: boolean;
   readonly onClose: () => void;
   readonly onBind: (invoiceId: number) => Promise<void>;
   readonly onCreateNew: () => void;
 }
 
-const BindVisitInvoiceDialog = ({ boundInvoiceIds, open, onClose, onBind, onCreateNew }: Props) => {
+const BindVisitInvoiceDialog = ({ open, onClose, onBind, onCreateNew }: Props) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
@@ -72,8 +71,6 @@ const BindVisitInvoiceDialog = ({ boundInvoiceIds, open, onClose, onBind, onCrea
     finally { setBinding(false); }
   };
 
-  const availableInvoices = invoices.filter((inv) => !boundInvoiceIds.includes(inv.id));
-
   return (
     <Dialog open={open} onOpenChange={(v) => !v && resetAndClose()}>
       <DialogContent className="sm:max-w-lg max-h-[80vh] flex flex-col">
@@ -122,12 +119,12 @@ const BindVisitInvoiceDialog = ({ boundInvoiceIds, open, onClose, onBind, onCrea
 
         <div className="flex-1 overflow-y-auto min-h-0">
           {loading && <p className="text-sm text-muted-foreground text-center py-8">{t("common.loading")}</p>}
-          {!loading && availableInvoices.length === 0 && (
+          {!loading && invoices.length === 0 && (
             <p className="text-sm text-muted-foreground text-center py-8">{t("common.noResults")}</p>
           )}
-          {!loading && availableInvoices.length > 0 && (
+          {!loading && invoices.length > 0 && (
             <div className="space-y-1">
-              {availableInvoices.map((inv) => (
+              {invoices.map((inv) => (
                 <button
                   key={inv.id} type="button"
                   className={`w-full text-left rounded-md border px-3 py-2 text-sm transition-colors ${selectedId === inv.id ? "border-primary bg-primary/5" : "hover:bg-accent/50"}`}
