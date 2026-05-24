@@ -177,7 +177,6 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
                 emptyLabel={t("medical.noAttachments")}
                 onUpload={async (file) => { if (visitId) { await uploadVisitAttachment(visitId, file, "RECORD", visitId); void fetchDetail(); } }}
                 onDelete={async (id) => { await deleteVisitAttachment(id); void fetchDetail(); }}
-                getDownloadUrl={(a) => a.url}
               />
             </div>
 

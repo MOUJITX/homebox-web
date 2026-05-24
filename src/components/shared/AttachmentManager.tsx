@@ -15,7 +15,6 @@ interface Props {
   emptyLabel: string;
   onUpload: (file: File) => Promise<void>;
   onDelete: (id: number) => Promise<void>;
-  getDownloadUrl?: (item: AttachmentItem) => string | undefined;
 }
 
 const formatFileSize = (bytes: number) => {
@@ -24,7 +23,7 @@ const formatFileSize = (bytes: number) => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
-const AttachmentManager = ({ attachments, uploadLabel, emptyLabel, onUpload, onDelete, getDownloadUrl }: Props) => {
+const AttachmentManager = ({ attachments, uploadLabel, emptyLabel, onUpload, onDelete }: Props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -56,28 +55,25 @@ const AttachmentManager = ({ attachments, uploadLabel, emptyLabel, onUpload, onD
         <p className="text-sm text-muted-foreground">{emptyLabel}</p>
       ) : (
         <div className="space-y-2">
-          {attachments.map((a) => {
-            const downloadUrl = getDownloadUrl?.(a);
-            return (
-              <div key={a.id} className="flex items-center gap-3 overflow-hidden rounded-lg border p-2">
-                <FileIcon className="size-4 shrink-0 text-muted-foreground" />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm">{a.filename}</p>
-                  <p className="text-xs text-muted-foreground">{formatFileSize(a.fileSize)}</p>
-                </div>
-                {downloadUrl && (
-                  <a href={downloadUrl} download={a.filename}>
-                    <Button variant="ghost" size="icon-xs" type="button">
-                      <DownloadIcon className="size-3.5" />
-                    </Button>
-                  </a>
-                )}
-                <Button variant="ghost" size="icon-xs" onClick={() => onDelete(a.id)}>
-                  <TrashIcon className="size-3.5" />
-                </Button>
+          {attachments.map((a) => (
+            <div key={a.id} className="flex items-center gap-3 overflow-hidden rounded-lg border p-2">
+              <FileIcon className="size-4 shrink-0 text-muted-foreground" />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm">{a.filename}</p>
+                <p className="text-xs text-muted-foreground">{formatFileSize(a.fileSize)}</p>
               </div>
-            );
-          })}
+              {a.url && (
+                <a href={a.url} download={a.filename}>
+                  <Button variant="ghost" size="icon-xs" type="button">
+                    <DownloadIcon className="size-3.5" />
+                  </Button>
+                </a>
+              )}
+              <Button variant="ghost" size="icon-xs" onClick={() => onDelete(a.id)}>
+                <TrashIcon className="size-3.5" />
+              </Button>
+            </div>
+          ))}
         </div>
       )}
     </div>
