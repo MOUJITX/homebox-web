@@ -107,11 +107,61 @@ yarn preview
 - **Preview** — inline image preview for image files using authenticated image loading
 - **Pagination** — server-side pagination for the file list
 
+### Subscription Management
+
+- **Subscriptions** — CRUD for subscriptions with name, type (Periodic/One-Time), billing mode, platform, status, price, and notes
+- **Subscription Records** — add payment/renewal records with start/end dates, amount, payment method, and order number
+- **Platforms** — standalone CRUD for service platforms (e.g., Netflix, Spotify) with logo upload
+- **Payment Methods** — standalone CRUD for payment methods (e.g., WeChat Pay, Alipay)
+- **Record Attachments** — upload and manage file attachments for subscription records
+- **Record-Invoice Binding** — bind/unbind invoices to subscription records
+- **Dashboard Integration** — upcoming renewals widget on dashboard (subscriptions ending within 7 days)
+- **Server-side pagination** — search by name, filter by type/status/platform
+
+### Medical Records
+
+- **Medical Institutions** — CRUD for hospitals/clinics with name, address, phone
+- **Visit Records** — CRUD for doctor visits with institution, department, doctor, patient info, visit type (Outpatient/Inpatient/Emergency/Physical Exam), medical content, and discharge info
+- **AI Parsing** — paste unstructured medical text to auto-extract visit record data via AI, user reviews before saving
+- **Prescriptions** — manage prescriptions per visit with date, doctor, and medication items linked to medication reminders
+- **Examinations** — manage examination records per visit (e.g., blood test, X-ray) with date and results
+- **Lab Tests** — manage lab test records per visit (e.g., liver function) with date and results
+- **Attachments** — upload files to visit records with source type/ID for contextual organization
+- **Invoice Binding** — bind/unbind invoices to visit records with source type/ID context
+- **Detail Drawer** — right-side drawer for viewing full visit details with tabbed sub-sections (Prescriptions, Examinations, Lab Tests, Attachments, Invoices)
+- **Server-side pagination** — filter by visit type, date range, institution, patient name
+
+### Medication Reminders
+
+- **Medications** — CRUD for medication reminders linked to goods with dosage info (method, quantity, unit), frequency hours, course start/end dates, and enable/disable toggle
+- **Integration** — linked from prescription items in medical records
+
+### Notifications
+
+- **Notification Bell** — header bell icon with unread count badge
+- **Notification List** — page at `/notifications` with pagination and read/unread status
+- **Mark Read** — mark individual or all notifications as read
+- **Auto-generated** — system generates notifications for expiring items, expired items, warranty expiring/expired, and medication reminders
+
+### Full-Text Search
+
+- **Search Dialog** — global search via `Ctrl+K` or header button, searches file contents across goods, assets, and uploaded files
+- **Highlighted Results** — search results show highlighted snippets with source attribution
+- **Elasticsearch Backend** — gracefully degrades when ES is not configured (returns empty results)
+
+### Attachment Management
+
+- **Good Attachments** — upload and manage file attachments for goods (independent of pictures)
+- **Asset Attachments** — upload and manage file attachments for assets (independent of pictures)
+
 ### Settings (Root Only)
 
 - **Settings** — manage system configuration at `/settings` (root role required)
 - **File Storage** — configure Qiniu OSS (access key, secret key, bucket, CDN domain) with connection test
 - **AI Models** — manage multiple AI model configurations for invoice parsing, set active model, test connections
+- **Elasticsearch** — toggle full-text search on/off, configure host/port, test connection
+- **Webhook** — configure webhook URL for notification push
+- **Medication Reminder** — configure cron expression for medication reminder checks
 
 ### Internationalization
 
@@ -130,43 +180,61 @@ src/
 │   ├── goodCategories.ts # Good categories API
 │   ├── goodItems.ts      # Good items API
 │   ├── goodPictures.ts   # Good pictures API
+│   ├── goodAttachments.ts # Good attachments API
 │   ├── goods.ts          # Goods API
 │   ├── assets.ts         # Assets API
 │   ├── assetPictures.ts  # Asset pictures API
+│   ├── assetAttachments.ts # Asset attachments API
 │   ├── assetCategories.ts # Asset categories API
 │   ├── assetPlaces.ts    # Asset places API
 │   ├── assetStores.ts    # Asset stores API
 │   ├── assetInvoices.ts  # Asset-invoice binding API
 │   ├── invoices.ts       # Invoices API
+│   ├── institutions.ts   # Medical institutions API
+│   ├── medical.ts        # Medical records API (visits, prescriptions, exams, lab tests, invoices, attachments)
+│   ├── medications.ts    # Medication reminders API
 │   ├── members.ts        # Members API
+│   ├── notifications.ts  # Notifications API
+│   ├── paymentMethods.ts # Payment methods API
+│   ├── platforms.ts      # Platforms API
 │   ├── profile.ts        # Profile API
 │   ├── roles.ts          # Roles API
+│   ├── search.ts         # Full-text search API
+│   ├── subscriptionRecords.ts # Subscription records API
+│   ├── subscriptions.ts  # Subscriptions API
 │   └── systemConfig.ts   # System configuration API
 ├── components/
 │   ├── AppShell.tsx      # App layout shell (sidebar + topbar + outlet)
 │   ├── AuthFormLayout.tsx # Auth page layout wrapper
 │   ├── AuthImg.tsx       # Authenticated image component
+│   ├── ImagePreview.tsx  # Image preview with zoom
+│   ├── NotificationBell.tsx # Notification bell with unread badge
 │   ├── ProtectedRoute.tsx # Auth guard for routes
 │   ├── RoleGuard.tsx     # Role-based route guard
+│   ├── SearchDialog.tsx  # Global search dialog (Ctrl+K)
 │   ├── SessionExpiredDialog.tsx # Session expiry dialog
 │   ├── Sidebar.tsx       # Navigation sidebar
 │   ├── Topbar.tsx        # Top navigation bar
 │   ├── assets/           # Asset management feature components
 │   ├── invoices/         # Invoice management feature components
 │   ├── expiration/       # Goods expiration feature components
+│   ├── medical/          # Medical records feature components
+│   ├── medications/      # Medication reminder components
 │   ├── members/          # Member management dialogs
 │   ├── profile/          # Profile components
 │   ├── roles/            # Role management dialogs
 │   ├── settings/         # System settings components
+│   ├── shared/           # Shared/reusable components
+│   ├── subscriptions/    # Subscription management components
 │   └── ui/               # Shadcn UI components
 ├── providers/            # React providers (QueryProvider)
 ├── contexts/             # React context providers (AuthContext)
 ├── hooks/                # Custom hooks
-│   └── queries/          # React Query hooks (dashboardKeys, useDashboard, assetKeys, useAssets, useAssetInvoices, etc.)
+│   └── queries/          # React Query hooks (dashboardKeys, useDashboard, assetKeys, useAssets, subscriptionKeys, useSubscriptions, useSubscriptionDetail, useSubscriptionRecords, usePaymentMethods, usePlatforms, useInvalidateAssets, useInvalidateSubscriptions, etc.)
 ├── i18n/                 # i18next config and locale files
-│   └── locales/          # Translation JSON files
+│   └── locales/          # Translation JSON files (en.json, zh.json)
 ├── lib/                  # Utility functions (error, jwt, password, utils)
-├── pages/                # Page components (flat files)
+├── pages/                # Page components
 ├── App.tsx               # Router and provider wiring
 └── main.tsx              # Entry point
 ```
