@@ -10,6 +10,7 @@ import {
 } from "@/api/medical";
 import { getInstitutions, type MedicalInstitution } from "@/api/institutions";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -44,6 +45,7 @@ const MedicalRecordsPage = () => {
   const [visitTypeFilter, setVisitTypeFilter] = useState<VisitType | null>(null);
   const [institutionFilter, setInstitutionFilter] = useState<number | null>(null);
   const [patientNameFilter, setPatientNameFilter] = useState<string | null>(null);
+  const [diagnosisFilter, setDiagnosisFilter] = useState("");
   const [institutions, setInstitutions] = useState<MedicalInstitution[]>([]);
   const [patientNames, setPatientNames] = useState<string[]>([]);
 
@@ -60,6 +62,7 @@ const MedicalRecordsPage = () => {
       if (visitTypeFilter) params.visitType = visitTypeFilter;
       if (institutionFilter) params.institutionId = institutionFilter;
       if (patientNameFilter) params.patientName = patientNameFilter;
+      if (diagnosisFilter) params.diagnosis = diagnosisFilter;
       const { data } = await getVisitRecords(params);
       setPageData(data);
     } catch {
@@ -67,7 +70,7 @@ const MedicalRecordsPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize, visitTypeFilter, institutionFilter, patientNameFilter]);
+  }, [page, pageSize, visitTypeFilter, institutionFilter, patientNameFilter, diagnosisFilter]);
 
   useEffect(() => {
     void fetchData();
@@ -162,6 +165,14 @@ const MedicalRecordsPage = () => {
           </Select>
         </div>
 
+        <div className="w-40">
+          <Input
+            value={diagnosisFilter}
+            onChange={(e) => { setDiagnosisFilter(e.target.value); setPage(0); }}
+            placeholder={t("medical.filterDiagnosis")}
+          />
+        </div>
+
         <div className="ml-auto flex gap-1">
           <Button variant="outline" size="sm" onClick={() => setInstitutionManagerOpen(true)}>
             <BuildingIcon className="size-3.5" />
@@ -183,18 +194,19 @@ const MedicalRecordsPage = () => {
               <TableHead>{t("medical.columns.department")}</TableHead>
               <TableHead>{t("medical.columns.time")}</TableHead>
               <TableHead>{t("medical.columns.doctor")}</TableHead>
+              <TableHead>{t("medical.columns.diagnosis")}</TableHead>
               <TableHead className="w-20">{t("medical.columns.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading && (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">{t("common.loading")}</TableCell>
+                <TableCell colSpan={7} className="h-24 text-center">{t("common.loading")}</TableCell>
               </TableRow>
             )}
             {!loading && pageData.content.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">{t("medical.empty")}</TableCell>
+                <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">{t("medical.empty")}</TableCell>
               </TableRow>
             )}
             {!loading && pageData.content.map((r) => (
@@ -218,6 +230,7 @@ const MedicalRecordsPage = () => {
                 <TableCell>{formatDeptCell(r)}</TableCell>
                 <TableCell>{formatTimeCell(r)}</TableCell>
                 <TableCell>{r.doctor || "-"}</TableCell>
+                <TableCell className="max-w-32 truncate" title={r.diagnosis ?? undefined}>{r.diagnosis || "-"}</TableCell>
                 <TableCell>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon-xs" onClick={() => setDetailId(r.id)} title={t("common.view")}>

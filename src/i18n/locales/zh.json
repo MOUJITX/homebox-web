@@ -857,6 +857,7 @@
     "filterAllTypes": "全部类型",
     "filterAllInstitutions": "全部机构",
     "filterAllPatients": "全部就诊人",
+    "filterDiagnosis": "搜索诊断...",
     "createInstitution": "新增机构",
     "institutions": "医疗机构",
     "visitType": {
@@ -873,6 +874,7 @@
       "department": "科室",
       "time": "就诊时间",
       "doctor": "医生",
+      "diagnosis": "诊断",
       "actions": "操作"
     },
     "form": {
@@ -894,6 +896,8 @@
       "doctorPlaceholder": "医生姓名",
       "medicalContent": "病历内容",
       "medicalContentPlaceholder": "请输入病历内容...",
+      "diagnosis": "诊断",
+      "diagnosisPlaceholder": "请输入诊断...",
       "institutionName": "机构名称",
       "institutionNamePlaceholder": "机构名称",
       "note": "备注",

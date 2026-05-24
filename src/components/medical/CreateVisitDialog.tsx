@@ -36,6 +36,7 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
   const [visitDate, setVisitDate] = useState("");
   const [institutionId, setInstitutionId] = useState("");
   const [medicalContent, setMedicalContent] = useState("");
+  const [diagnosis, setDiagnosis] = useState("");
   const [doctor, setDoctor] = useState("");
   const [department, setDepartment] = useState("");
   const [dischargeDate, setDischargeDate] = useState("");
@@ -46,7 +47,7 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
   const resetForm = () => {
     setPatientName(""); setPatientAge(""); setPatientGender("");
     setVisitType("OUTPATIENT"); setVisitDate(""); setInstitutionId("");
-    setMedicalContent(""); setDoctor(""); setDepartment("");
+    setMedicalContent(""); setDiagnosis(""); setDoctor(""); setDepartment("");
     setDischargeDate(""); setDischargeDept("");
   };
 
@@ -60,6 +61,7 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
         setVisitDate(initialData.visitDate);
         setInstitutionId(String(initialData.institutionId));
         setMedicalContent(initialData.medicalContent ?? "");
+        setDiagnosis(initialData.diagnosis ?? "");
         setDoctor(initialData.doctor ?? "");
         setDepartment(initialData.department ?? "");
         setDischargeDate(initialData.dischargeDate ?? "");
@@ -77,6 +79,7 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
     if (result.visitType) setVisitType(result.visitType as VisitType);
     if (result.visitDate) setVisitDate(result.visitDate as string);
     if (result.medicalContent) setMedicalContent(result.medicalContent as string);
+    if (result.diagnosis) setDiagnosis(result.diagnosis as string);
     if (result.doctor) setDoctor(result.doctor as string);
     if (result.department) setDepartment(result.department as string);
     if (result.dischargeDate) setDischargeDate(result.dischargeDate as string);
@@ -94,6 +97,7 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
       if (patientAge) data.patientAge = Number(patientAge);
       if (patientGender) data.patientGender = patientGender;
       if (medicalContent) data.medicalContent = medicalContent;
+      if (diagnosis) data.diagnosis = diagnosis;
       if (doctor) data.doctor = doctor;
       if (department) data.department = department;
       if (dischargeDate) data.dischargeDate = dischargeDate;
@@ -213,6 +217,11 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
                 onChange={(e) => setMedicalContent(e.target.value)}
                 placeholder={t("medical.form.medicalContentPlaceholder")}
               />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium">{t("medical.form.diagnosis")}</label>
+              <Input value={diagnosis} onChange={(e) => setDiagnosis(e.target.value)} placeholder={t("medical.form.diagnosisPlaceholder")} />
             </div>
 
             <div className="flex flex-col gap-1.5">

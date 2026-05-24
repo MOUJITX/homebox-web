@@ -18,6 +18,7 @@ export interface VisitRecord {
   institutionId: number;
   institutionName: string;
   medicalContent: string | null;
+  diagnosis: string | null;
   doctor: string | null;
   department: string | null;
   dischargeDate: string | null;
@@ -51,6 +52,7 @@ export interface GetVisitRecordsParams {
   endDate?: string;
   institutionId?: number;
   patientName?: string;
+  diagnosis?: string;
 }
 
 export interface CreateVisitRecordRequest {
@@ -61,6 +63,7 @@ export interface CreateVisitRecordRequest {
   visitDate: string;
   institutionId: number;
   medicalContent?: string;
+  diagnosis?: string;
   doctor?: string;
   department?: string;
   dischargeDate?: string;
@@ -75,6 +78,7 @@ export interface UpdateVisitRecordRequest {
   visitDate?: string;
   institutionId?: number;
   medicalContent?: string;
+  diagnosis?: string;
   doctor?: string;
   department?: string;
   dischargeDate?: string;
@@ -88,6 +92,7 @@ export interface VisitRecordParseResult {
   visitType: VisitType | null;
   visitDate: string | null;
   medicalContent: string | null;
+  diagnosis: string | null;
   doctor: string | null;
   department: string | null;
   dischargeDate: string | null;

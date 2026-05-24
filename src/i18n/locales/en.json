@@ -710,6 +710,7 @@
     "filterAllTypes": "All Types",
     "filterAllInstitutions": "All Institutions",
     "filterAllPatients": "All Patients",
+    "filterDiagnosis": "Search diagnosis...",
     "createInstitution": "Add Institution",
     "institutions": "Medical Institutions",
     "visitType": {
@@ -726,6 +727,7 @@
       "department": "Department",
       "time": "Visit Time",
       "doctor": "Doctor",
+      "diagnosis": "Diagnosis",
       "actions": "Actions"
     },
     "form": {
@@ -747,6 +749,8 @@
       "doctorPlaceholder": "Doctor name",
       "medicalContent": "Medical Content",
       "medicalContentPlaceholder": "Enter medical record content...",
+      "diagnosis": "Diagnosis",
+      "diagnosisPlaceholder": "Enter diagnosis...",
       "institutionName": "Name",
       "institutionNamePlaceholder": "Institution name",
       "note": "Note",

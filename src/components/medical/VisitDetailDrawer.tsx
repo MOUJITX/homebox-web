@@ -304,6 +304,13 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
               </div>
             )}
 
+            {record.diagnosis && (
+              <div className="grid gap-1">
+                <span className="text-xs text-muted-foreground">{t("medical.form.diagnosis")}</span>
+                <span className="text-sm whitespace-pre-wrap">{record.diagnosis}</span>
+              </div>
+            )}
+
             <div className="grid gap-2">
               <AttachmentManager
                 attachments={attachments.filter((a) => a.sourceType === "RECORD").map((a) => ({ id: a.id, filename: a.originalFilename, fileSize: a.fileSize, url: a.url } satisfies AttachmentItem))}
