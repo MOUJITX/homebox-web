@@ -106,8 +106,8 @@ const InstitutionManagerDialog = ({ open, onClose, onInstitutionsChange }: Props
                 <div key={inst.id} className="flex items-center gap-2 justify-between rounded-md border px-3 py-2 text-sm">
                   <span className="truncate">{inst.name}</span>
                   <div className="flex gap-1 shrink-0">
-                    <Button variant="ghost" size="icon-xs" onClick={() => handleEdit(inst)}><PencilIcon className="size-3.5" /></Button>
-                    <Button variant="ghost" size="icon-xs" onClick={() => void handleDelete(inst.id)}><TrashIcon className="size-3.5" /></Button>
+                    <Button variant="ghost" size="icon-xs" onClick={() => handleEdit(inst)} title={t("common.edit")}><PencilIcon className="size-3.5" /></Button>
+                    <Button variant="ghost" size="icon-xs" onClick={() => void handleDelete(inst.id)} title={t("common.delete")}><TrashIcon className="size-3.5" /></Button>
                   </div>
                 </div>
               ))}

@@ -16,6 +16,7 @@ import {
   type VisitPrescription, type VisitInvoice, type VisitAttachment,
   type VisitSourceType,
 } from "@/api/medical";
+import { formatFileSize } from "@/lib/utils";
 import AttachmentManager, { type AttachmentItem } from "@/components/shared/AttachmentManager";
 import InvoiceBindingManager, { type BoundInvoice } from "@/components/shared/InvoiceBindingManager";
 import CreateExaminationDialog from "./CreateExaminationDialog";
@@ -25,7 +26,6 @@ import CreatePrescriptionItemDialog from "./CreatePrescriptionItemDialog";
 import BindVisitInvoiceDialog from "./BindVisitInvoiceDialog";
 import CreateInvoiceDialog from "@/components/invoices/CreateInvoiceDialog";
 import InvoiceDetailDrawer from "@/components/invoices/InvoiceDetailDrawer";
-import type { InvoiceDetail } from "@/api/invoices";
 
 interface Props {
   open: boolean;
@@ -42,12 +42,6 @@ const Field = ({ label, value }: { label: string; value?: string | number | null
     <span className="text-sm">{value ?? "—"}</span>
   </div>
 );
-
-const formatFileSize = (bytes: number) => {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-};
 
 const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh }: Props) => {
   const { t } = useTranslation();
@@ -120,11 +114,6 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
   };
 
   const handleVisitAttachmentDelete = async (id: number) => {
-    await deleteVisitAttachment(id);
-    setAttachments((prev) => prev.filter((a) => a.id !== id));
-  };
-
-  const handleSubAttachmentDelete = async (id: number) => {
     await deleteVisitAttachment(id);
     setAttachments((prev) => prev.filter((a) => a.id !== id));
   };
@@ -234,7 +223,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
                     </Button>
                   </a>
                 )}
-                <Button variant="ghost" size="icon-xs" onClick={() => handleSubAttachmentDelete(a.id)} title={t("common.delete")}>
+                <Button variant="ghost" size="icon-xs" onClick={() => handleVisitAttachmentDelete(a.id)} title={t("common.delete")}>
                   <TrashIcon className="size-3.5" />
                 </Button>
               </div>
@@ -336,7 +325,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
               />
             </div>
 
-            {/* Examinations */}
+
             <div className="grid gap-2">
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-medium">
@@ -358,7 +347,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
               )}
             </div>
 
-            {/* Lab Tests */}
+
             <div className="grid gap-2">
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-medium">
@@ -380,7 +369,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
               )}
             </div>
 
-            {/* Prescriptions */}
+
             <div className="grid gap-2">
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-medium">

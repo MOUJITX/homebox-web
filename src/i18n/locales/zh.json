@@ -857,9 +857,6 @@
     "filterAllTypes": "全部类型",
     "filterAllInstitutions": "全部机构",
     "filterAllPatients": "全部就诊人",
-    "filterType": "类型",
-    "filterInstitution": "机构",
-    "filterPatient": "就诊人",
     "createInstitution": "新增机构",
     "institutions": "医疗机构",
     "visitType": {
@@ -909,7 +906,6 @@
       "prescriptionNote": "备注",
       "medicationReminder": "药品",
       "selectReminder": "选择用药提醒",
-      "selectInvoice": "选择发票",
       "dosageMethod": "用法"
     },
     "examinations": "检查",
@@ -936,7 +932,6 @@
     "bindInvoice": "绑定发票",
     "uploadNewInvoice": "上传新发票",
     "noInvoices": "暂无绑定发票",
-    "bind": "绑定",
     "invoicesSection": {
       "bindDialog": {
         "title": "绑定发票",

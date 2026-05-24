@@ -78,13 +78,13 @@ const BindVisitInvoiceDialog = ({ boundInvoiceIds, open, onClose, onBind, onCrea
     <Dialog open={open} onOpenChange={(v) => !v && resetAndClose()}>
       <DialogContent className="sm:max-w-lg max-h-[80vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>{t("medical.invoices.bindDialog.title")}</DialogTitle>
+          <DialogTitle>{t("medical.invoicesSection.bindDialog.title")}</DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <SearchIcon className="size-4 text-muted-foreground shrink-0" />
-            <Input placeholder={t("medical.invoices.bindDialog.search")} value={search} onChange={(e) => setSearch(e.target.value)} />
+            <Input placeholder={t("medical.invoicesSection.bindDialog.search")} value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
           <div className="flex gap-2">
             <div className="flex-1">
@@ -158,10 +158,10 @@ const BindVisitInvoiceDialog = ({ boundInvoiceIds, open, onClose, onBind, onCrea
 
         <DialogFooter>
           <Button variant="outline" onClick={resetAndClose}>{t("common.cancel")}</Button>
-          <Button variant="outline" size="sm" onClick={() => { resetAndClose(); onCreateNew(); }}>{t("medical.invoices.uploadNew")}</Button>
+          <Button variant="outline" size="sm" onClick={() => { resetAndClose(); onCreateNew(); }}>{t("medical.invoicesSection.uploadNew")}</Button>
           <Button onClick={handleBind} disabled={!selectedId || binding}>
             <LinkIcon className="size-3.5" />
-            {binding ? t("common.saving") : t("medical.invoices.bindDialog.confirm")}
+            {binding ? t("common.saving") : t("medical.invoicesSection.bindDialog.confirm")}
           </Button>
         </DialogFooter>
       </DialogContent>

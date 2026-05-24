@@ -8,8 +8,6 @@ export interface BoundInvoice {
   invoiceId: number;
   invoiceNumber: string | null;
   invoiceDate: string | null;
-  sellerName?: string | null;
-  invoiceType?: string;
   totalAmount: number | null;
 }
 
@@ -65,11 +63,11 @@ const InvoiceBindingManager = ({
               </div>
               <div className="flex items-center gap-1 shrink-0">
                 {onView && (
-                  <Button variant="ghost" size="icon-xs" onClick={() => onView(inv.invoiceId)}>
+                  <Button variant="ghost" size="icon-xs" onClick={() => onView(inv.invoiceId)} title="View">
                     <EyeIcon className="size-3.5" />
                   </Button>
                 )}
-                <Button variant="ghost" size="icon-xs" disabled={unbinding === inv.id} onClick={() => handleUnbind(inv.id)}>
+                <Button variant="ghost" size="icon-xs" disabled={unbinding === inv.id} onClick={() => handleUnbind(inv.id)} title="Unbind">
                   <UnlinkIcon className="size-3.5" />
                 </Button>
               </div>

@@ -1,5 +1,7 @@
 import axios from "./axios";
 
+import type { VisitSourceType } from "./medical";
+
 export type InvoiceType =
   | "DIGITAL_INVOICE"
   | "RAILWAY_ELECTRONIC"
@@ -76,7 +78,7 @@ export interface BoundVisitRecord {
   id: number;
   visitId: number;
   patientName: string;
-  sourceType: string;
+  sourceType: VisitSourceType;
   sourceId: number;
 }
 

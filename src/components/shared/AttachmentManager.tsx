@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { UploadIcon, FileIcon, TrashIcon, DownloadIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { formatFileSize } from "@/lib/utils";
 
 export interface AttachmentItem {
   id: number;
@@ -16,12 +17,6 @@ interface Props {
   onUpload: (file: File) => Promise<void>;
   onDelete: (id: number) => Promise<void>;
 }
-
-const formatFileSize = (bytes: number) => {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-};
 
 const AttachmentManager = ({ attachments, uploadLabel, emptyLabel, onUpload, onDelete }: Props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -64,12 +59,12 @@ const AttachmentManager = ({ attachments, uploadLabel, emptyLabel, onUpload, onD
               </div>
               {a.url && (
                 <a href={a.url} download={a.filename}>
-                  <Button variant="ghost" size="icon-xs" type="button">
+                  <Button variant="ghost" size="icon-xs" type="button" title="Download">
                     <DownloadIcon className="size-3.5" />
                   </Button>
                 </a>
               )}
-              <Button variant="ghost" size="icon-xs" onClick={() => onDelete(a.id)}>
+              <Button variant="ghost" size="icon-xs" onClick={() => onDelete(a.id)} title="Delete">
                 <TrashIcon className="size-3.5" />
               </Button>
             </div>

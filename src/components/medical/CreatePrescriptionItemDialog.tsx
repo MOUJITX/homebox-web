@@ -28,8 +28,11 @@ const CreatePrescriptionItemDialog = ({ open, initialData, onClose, onSubmit }: 
 
   useEffect(() => {
     if (open) {
-      getMedications(0, 200, undefined).then(({ data }) => setReminders(data.content)).catch(() => {});
-      getGoods({ size: 200 }).then(({ data }) => setGoods(data.content)).catch(() => {});
+      const load = async () => {
+        try { const { data: meds } = await getMedications(0, 200); setReminders(meds.content); } catch {}
+        try { const { data: g } = await getGoods({ size: 200 }); setGoods(g.content); } catch {}
+      };
+      void load();
       if (initialData) {
         setReminderId(initialData.medicationReminderId);
         setNote(initialData.note ?? "");
@@ -112,7 +115,10 @@ const CreatePrescriptionItemDialog = ({ open, initialData, onClose, onSubmit }: 
         goods={goods}
         onClose={() => setCreateMedOpen(false)}
         onSuccess={() => {
-          getMedications(0, 200, undefined).then(({ data }) => setReminders(data.content)).catch(() => {});
+          const reload = async () => {
+            try { const { data: meds } = await getMedications(0, 200); setReminders(meds.content); } catch {}
+          };
+          void reload();
         }}
       />
     </>

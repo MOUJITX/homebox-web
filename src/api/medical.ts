@@ -138,9 +138,6 @@ export interface CreateExaminationRequest {
 export const getExaminations = (visitId: number, page = 0, size = 10) =>
   axios.get<Page<VisitExamination>>(`/visit-records/${visitId}/examinations`, { params: { page, size } });
 
-export const getExaminationById = (id: number) =>
-  axios.get<VisitExamination>(`/visit-records/0/examinations/${id}`);
-
 export const createExamination = (visitId: number, data: CreateExaminationRequest) =>
   axios.post<VisitExamination>(`/visit-records/${visitId}/examinations`, data);
 
@@ -172,9 +169,6 @@ export interface CreateLabTestRequest {
 
 export const getLabTests = (visitId: number, page = 0, size = 10) =>
   axios.get<Page<VisitLabTest>>(`/visit-records/${visitId}/lab-tests`, { params: { page, size } });
-
-export const getLabTestById = (id: number) =>
-  axios.get<VisitLabTest>(`/visit-records/0/lab-tests/${id}`);
 
 export const createLabTest = (visitId: number, data: CreateLabTestRequest) =>
   axios.post<VisitLabTest>(`/visit-records/${visitId}/lab-tests`, data);
@@ -224,9 +218,6 @@ export interface CreatePrescriptionItemRequest {
 export const getPrescriptions = (visitId: number, page = 0, size = 10) =>
   axios.get<Page<VisitPrescription>>(`/visit-records/${visitId}/prescriptions`, { params: { page, size } });
 
-export const getPrescriptionById = (id: number) =>
-  axios.get<VisitPrescription>(`/visit-records/0/prescriptions/${id}`);
-
 export const createPrescription = (visitId: number, data: CreatePrescriptionRequest) =>
   axios.post<VisitPrescription>(`/visit-records/${visitId}/prescriptions`, data);
 
@@ -238,9 +229,6 @@ export const deletePrescription = (id: number) =>
 
 export const addPrescriptionItem = (prescriptionId: number, data: CreatePrescriptionItemRequest) =>
   axios.post<PrescriptionItem>(`/visit-records/0/prescriptions/${prescriptionId}/items`, data);
-
-export const updatePrescriptionItem = (itemId: number, data: CreatePrescriptionItemRequest) =>
-  axios.put<PrescriptionItem>(`/visit-records/0/prescriptions/0/items/${itemId}`, data);
 
 export const deletePrescriptionItem = (itemId: number) =>
   axios.delete<void>(`/visit-records/0/prescriptions/0/items/${itemId}`);

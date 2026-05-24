@@ -4,7 +4,6 @@ import { PlusIcon, PencilIcon, TrashIcon, EyeIcon, BuildingIcon } from "lucide-r
 import {
   getVisitRecords,
   getPatientNames,
-  deleteVisitRecord,
   type VisitRecord,
   type VisitType,
   type Page,
@@ -75,8 +74,11 @@ const MedicalRecordsPage = () => {
   }, [fetchData]);
 
   useEffect(() => {
-    getInstitutions().then(({ data }) => setInstitutions(data)).catch(() => {});
-    getPatientNames().then(({ data }) => setPatientNames(data)).catch(() => {});
+    const loadFilters = async () => {
+      try { const { data } = await getInstitutions(); setInstitutions(data); } catch {}
+      try { const { data } = await getPatientNames(); setPatientNames(data); } catch {}
+    };
+    void loadFilters();
   }, []);
 
   const handlePageSizeChange = (size: number) => {
@@ -202,7 +204,7 @@ const MedicalRecordsPage = () => {
                     <span className="font-medium">{r.patientName}</span>
                     <span className="text-xs text-muted-foreground">
                       {[
-                        r.patientGender === "MALE" ? t("medical.gender.MALE") : r.patientGender === "FEMALE" ? t("medical.gender.FEMALE") : "",
+                        r.patientGender ? t(`medical.gender.${r.patientGender}`) : "",
                         r.patientAge != null ? `${r.patientAge}${t("medical.age")}` : "",
                       ].filter(Boolean).join(" ")}
                     </span>
@@ -218,13 +220,13 @@ const MedicalRecordsPage = () => {
                 <TableCell>{r.doctor || "-"}</TableCell>
                 <TableCell>
                   <div className="flex gap-1">
-                    <Button variant="ghost" size="icon-xs" onClick={() => setDetailId(r.id)}>
+                    <Button variant="ghost" size="icon-xs" onClick={() => setDetailId(r.id)} title={t("common.view")}>
                       <EyeIcon className="size-3.5" />
                     </Button>
-                    <Button variant="ghost" size="icon-xs" onClick={() => setEditing(r)}>
+                    <Button variant="ghost" size="icon-xs" onClick={() => setEditing(r)} title={t("common.edit")}>
                       <PencilIcon className="size-3.5" />
                     </Button>
-                    <Button variant="ghost" size="icon-xs" onClick={() => setDeleting(r)}>
+                    <Button variant="ghost" size="icon-xs" onClick={() => setDeleting(r)} title={t("common.delete")}>
                       <TrashIcon className="size-3.5" />
                     </Button>
                   </div>

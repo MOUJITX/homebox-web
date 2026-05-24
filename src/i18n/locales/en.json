@@ -710,9 +710,6 @@
     "filterAllTypes": "All Types",
     "filterAllInstitutions": "All Institutions",
     "filterAllPatients": "All Patients",
-    "filterType": "Type",
-    "filterInstitution": "Institution",
-    "filterPatient": "Patient",
     "createInstitution": "Add Institution",
     "institutions": "Medical Institutions",
     "visitType": {
@@ -762,7 +759,6 @@
       "prescriptionNote": "Note",
       "medicationReminder": "Medication",
       "selectReminder": "Select a medication reminder",
-      "selectInvoice": "Select an invoice",
       "dosageMethod": "Route"
     },
     "examinations": "Examinations",
@@ -789,7 +785,6 @@
     "bindInvoice": "Bind Invoice",
     "uploadNewInvoice": "Upload New",
     "noInvoices": "No bound invoices",
-    "bind": "Bind",
     "invoicesSection": {
       "bindDialog": {
         "title": "Bind Invoice",

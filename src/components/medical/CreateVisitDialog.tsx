@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -125,7 +125,6 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
           </DialogHeader>
 
           <div className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto p-0.5">
-            {/* Row 1: 就诊人姓名 / 年龄 / 性别 */}
             <div className="grid grid-cols-3 gap-3">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium">{t("medical.form.patientName")} *</label>
@@ -150,7 +149,6 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
               </div>
             </div>
 
-            {/* Row 2: 就诊机构 / 就诊类型 */}
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium">{t("medical.form.institution")} *</label>
@@ -179,7 +177,6 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
               </div>
             </div>
 
-            {/* Row 3: 就诊科室或入院科室 / 就诊时间或入院时间 */}
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium">
@@ -195,7 +192,6 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
               </div>
             </div>
 
-            {/* Row 4 (仅住院): 出院科室 / 出院时间 */}
             {isInpatient && (
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1.5">
@@ -209,7 +205,6 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
               </div>
             )}
 
-            {/* 倒数第二行: 病历内容 */}
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium">{t("medical.form.medicalContent")}</label>
               <textarea
@@ -220,7 +215,6 @@ const CreateVisitDialog = ({ open, initialData, institutions, onClose, onSuccess
               />
             </div>
 
-            {/* 最后一行: 医生 */}
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium">{t("medical.form.doctor")}</label>
               <Input value={doctor} onChange={(e) => setDoctor(e.target.value)} placeholder={t("medical.form.doctorPlaceholder")} />
