@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PencilIcon, TrashIcon, PlusIcon, LinkIcon } from "lucide-react";
+import { PencilIcon, TrashIcon, PlusIcon, LinkIcon, UploadIcon, FileIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -43,24 +43,16 @@ const Field = ({ label, value }: { label: string; value?: string | number | null
   </div>
 );
 
-const SubRecordItem = ({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) => {
-  const inner = (
-    <div className="flex items-center justify-between w-full rounded-md border px-3 py-2 text-sm text-left min-w-0">
-      {children}
-    </div>
-  );
-  if (onClick) {
-    return (
-      <button type="button" onClick={onClick} className="w-full hover:bg-accent/50 transition-colors rounded-md">
-        {inner}
-      </button>
-    );
-  }
-  return <div className="rounded-md border px-3 py-2">{inner}</div>;
+const formatFileSize = (bytes: number) => {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
 const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh }: Props) => {
   const { t } = useTranslation();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [subUploadTarget, setSubUploadTarget] = useState<{ sourceType: VisitSourceType; sourceId: number } | null>(null);
   const [record, setRecord] = useState<VisitRecord | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -109,6 +101,16 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
     if (!open) { setRecord(null); setError(false); }
   }, [open, visitId, fetchDetail]);
 
+  const handleSubAttachmentUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !subUploadTarget || !visitId) return;
+    try {
+      await uploadVisitAttachment(visitId, file, subUploadTarget.sourceType, subUploadTarget.sourceId);
+      void fetchDetail();
+    } catch {}
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   const handleInvoiceBindAction = async (invoiceId: number) => {
     if (!invoiceBind || !visitId) return;
     await bindVisitInvoice(visitId, invoiceId, invoiceBind.sourceType, invoiceBind.sourceId);
@@ -117,9 +119,91 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
 
   const isInpatient = record?.visitType === "INPATIENT";
 
+  const getSubAttachments = (type: VisitSourceType, id: number) =>
+    attachments.filter((a) => a.sourceType === type && a.sourceId === id);
+
+  const getSubInvoices = (type: VisitSourceType, id: number) =>
+    visitInvoices.filter((i) => i.sourceType === type && i.sourceId === id);
+
+  const renderSubRecordItem = (
+    data: VisitExamination | VisitLabTest | VisitPrescription,
+    type: VisitSourceType,
+    name: string,
+    date: string | null,
+    desc: string | null,
+    onEdit: () => void,
+    onDelete: () => void,
+    extraContent?: React.ReactNode,
+  ) => {
+    const subAtts = getSubAttachments(type, data.id);
+    const subInvs = getSubInvoices(type, data.id);
+    return (
+      <div className="rounded-md border">
+        <div className="flex items-start justify-between px-3 py-2 text-sm">
+          <div className="min-w-0 flex-1">
+            <div className="font-medium truncate">{name}</div>
+            {(date || desc) && (
+              <div className="text-xs text-muted-foreground">
+                {date}{date && desc ? " · " : ""}{desc}
+              </div>
+            )}
+          </div>
+          <div className="flex items-center gap-1 shrink-0 ml-2">
+            <Button variant="ghost" size="icon-xs" onClick={() => { setSubUploadTarget({ sourceType: type, sourceId: data.id }); fileInputRef.current?.click(); }} title={t("medical.uploadAttachment")}>
+              <UploadIcon className="size-3.5" />
+            </Button>
+            <Button variant="ghost" size="icon-xs" onClick={() => setInvoiceBind({ sourceType: type, sourceId: data.id })}>
+              <LinkIcon className="size-3.5" />
+            </Button>
+            <Button variant="ghost" size="icon-xs" onClick={onEdit}>
+              <PencilIcon className="size-3.5" />
+            </Button>
+            <Button variant="ghost" size="icon-xs" onClick={onDelete}>
+              <TrashIcon className="size-3.5" />
+            </Button>
+          </div>
+        </div>
+        {extraContent}
+        {(subAtts.length > 0 || subInvs.length > 0) && (
+          <div className="border-t px-3 py-2 space-y-2">
+            {subAtts.map((a) => (
+              <div key={a.id} className="flex items-center gap-2 text-xs">
+                <FileIcon className="size-3 shrink-0 text-muted-foreground" />
+                <span className="truncate flex-1">{a.originalFilename} ({formatFileSize(a.fileSize)})</span>
+                {a.url && (
+                  <a href={a.url} download={a.originalFilename} className="shrink-0">
+                    <Button variant="ghost" size="icon-xs" type="button" className="size-6">
+                      <svg className="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    </Button>
+                  </a>
+                )}
+                <Button variant="ghost" size="icon-xs" className="size-6" onClick={() => { deleteVisitAttachment(a.id).then(() => fetchDetail()).catch(() => {}); }}>
+                  <TrashIcon className="size-3" />
+                </Button>
+              </div>
+            ))}
+            {subInvs.map((inv) => (
+              <div key={inv.id} className="flex items-center gap-2 text-xs">
+                <span className="truncate flex-1">{inv.invoiceNumber ?? `#${inv.invoiceId}`} - {inv.totalAmount}</span>
+                <Button variant="ghost" size="icon-xs" className="size-6" onClick={() => { setViewingInvoiceId(inv.invoiceId); setInvoiceDrawerOpen(true); }}>
+                  <svg className="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </Button>
+                <Button variant="ghost" size="icon-xs" className="size-6" onClick={() => { unbindVisitInvoice(inv.id).then(() => fetchDetail()).catch(() => {}); }}>
+                  <TrashIcon className="size-3" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
       <SheetContent className="w-full sm:max-w-lg flex flex-col">
+        <input ref={fileInputRef} type="file" className="hidden" onChange={handleSubAttachmentUpload} />
+
         <SheetHeader className="shrink-0">
           <SheetTitle className="truncate">{record?.patientName ?? t("medical.title")}</SheetTitle>
         </SheetHeader>
@@ -138,7 +222,6 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
 
         {!loading && record && (
           <div className="flex flex-1 flex-col gap-5 overflow-y-auto py-4">
-            {/* Badges */}
             <div className="flex items-center gap-2 flex-wrap">
               <Badge variant={isInpatient ? "default" : "secondary"}>
                 {isInpatient ? t("medical.visitType.INPATIENT") : t("medical.visitType.OUTPATIENT")}
@@ -147,7 +230,6 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
               {record.patientAge != null && <span className="text-xs text-muted-foreground">{record.patientAge}{t("medical.age")}</span>}
             </div>
 
-            {/* Basic info */}
             <div className="grid grid-cols-2 gap-4">
               <Field label={t("medical.form.institution")} value={record.institutionName} />
               <Field label={t("medical.form.doctor")} value={record.doctor} />
@@ -161,7 +243,6 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
               )}
             </div>
 
-            {/* Medical content */}
             {record.medicalContent && (
               <div className="grid gap-1">
                 <span className="text-xs text-muted-foreground">{t("medical.form.medicalContent")}</span>
@@ -169,10 +250,9 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
               </div>
             )}
 
-            {/* Attachments */}
             <div className="grid gap-2">
               <AttachmentManager
-                attachments={attachments.map((a) => ({ id: a.id, filename: a.originalFilename, fileSize: a.fileSize, url: a.url } satisfies AttachmentItem))}
+                attachments={attachments.filter((a) => a.sourceType === "RECORD").map((a) => ({ id: a.id, filename: a.originalFilename, fileSize: a.fileSize, url: a.url } satisfies AttachmentItem))}
                 uploadLabel={t("medical.uploadAttachment")}
                 emptyLabel={t("medical.noAttachments")}
                 onUpload={async (file) => { if (visitId) { await uploadVisitAttachment(visitId, file, "RECORD", visitId); void fetchDetail(); } }}
@@ -180,7 +260,6 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
               />
             </div>
 
-            {/* Invoices */}
             <div className="grid gap-2">
               <InvoiceBindingManager
                 invoices={visitInvoices.filter((i) => i.sourceType === "RECORD").map((inv) => ({
@@ -215,28 +294,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
                 </div>
               ) : (
                 <div className="space-y-1">
-                  {examinations.map((e) => (
-                    <SubRecordItem key={e.id} onClick={() => setExamEditing(e)}>
-                      <div className="flex items-center gap-2 min-w-0">
-                        <div className="min-w-0 flex-1">
-                          <div className="font-medium truncate">{e.name}</div>
-                          {(e.examDate || e.description) && (
-                            <div className="text-xs text-muted-foreground">
-                              {e.examDate}{e.examDate && e.description ? " · " : ""}{e.description}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1 shrink-0 ml-2" onClick={(ev) => ev.stopPropagation()}>
-                        <Button variant="ghost" size="icon-xs" onClick={() => setInvoiceBind({ sourceType: "EXAMINATION", sourceId: e.id })}>
-                          <LinkIcon className="size-3.5" />
-                        </Button>
-                        <Button variant="ghost" size="icon-xs" onClick={() => { deleteExamination(e.id).then(() => fetchDetail()).catch(() => {}); }}>
-                          <TrashIcon className="size-3.5" />
-                        </Button>
-                      </div>
-                    </SubRecordItem>
-                  ))}
+                  {examinations.map((e) => renderSubRecordItem(e, "EXAMINATION", e.name, e.examDate, e.description, () => setExamEditing(e), () => { deleteExamination(e.id).then(() => fetchDetail()).catch(() => {}); }))}
                 </div>
               )}
             </div>
@@ -258,28 +316,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
                 </div>
               ) : (
                 <div className="space-y-1">
-                  {labTests.map((lt) => (
-                    <SubRecordItem key={lt.id} onClick={() => setTestEditing(lt)}>
-                      <div className="flex items-center gap-2 min-w-0">
-                        <div className="min-w-0 flex-1">
-                          <div className="font-medium truncate">{lt.name}</div>
-                          {(lt.testDate || lt.description) && (
-                            <div className="text-xs text-muted-foreground">
-                              {lt.testDate}{lt.testDate && lt.description ? " · " : ""}{lt.description}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1 shrink-0 ml-2" onClick={(ev) => ev.stopPropagation()}>
-                        <Button variant="ghost" size="icon-xs" onClick={() => setInvoiceBind({ sourceType: "LAB_TEST", sourceId: lt.id })}>
-                          <LinkIcon className="size-3.5" />
-                        </Button>
-                        <Button variant="ghost" size="icon-xs" onClick={() => { deleteLabTest(lt.id).then(() => fetchDetail()).catch(() => {}); }}>
-                          <TrashIcon className="size-3.5" />
-                        </Button>
-                      </div>
-                    </SubRecordItem>
-                  ))}
+                  {labTests.map((lt) => renderSubRecordItem(lt, "LAB_TEST", lt.name, lt.testDate, lt.description, () => setTestEditing(lt), () => { deleteLabTest(lt.id).then(() => fetchDetail()).catch(() => {}); }))}
                 </div>
               )}
             </div>
@@ -301,40 +338,27 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
                 </div>
               ) : (
                 <div className="space-y-1">
-                  {prescriptions.map((p) => (
-                    <SubRecordItem key={p.id}>
-                      <div className="min-w-0 flex-1">
-                        {p.description && <div className="text-sm mb-1">{p.description}</div>}
+                  {prescriptions.map((p) => renderSubRecordItem(p, "PRESCRIPTION", p.description || t("medical.prescriptions"), null, null, () => setPrescEditing(p), () => { deletePrescription(p.id).then(() => fetchDetail()).catch(() => {}); },
+                    <>
+                      <div className="border-t px-3 py-1.5 space-y-0.5">
                         {p.items.map((item) => (
-                          <div key={item.id} className="flex items-center gap-2 text-xs py-0.5">
+                          <div key={item.id} className="flex items-center gap-2 text-xs">
                             <span className="font-medium">{item.medicationName}</span>
                             {item.dosageMethod && <span className="text-muted-foreground">{item.dosageMethod}</span>}
                             {item.dosageQuantity && <span className="text-muted-foreground">{item.dosageQuantity}{item.dosageUnit}</span>}
                             {item.note && <span className="text-muted-foreground">({item.note})</span>}
-                            <Button
-                              variant="ghost" size="icon-xs" className="ml-auto"
-                              onClick={(ev) => { ev.stopPropagation(); deletePrescriptionItem(item.id).then(() => fetchDetail()).catch(() => {}); }}
-                            >
+                            <Button variant="ghost" size="icon-xs" className="size-5 ml-auto" onClick={() => { deletePrescriptionItem(item.id).then(() => fetchDetail()).catch(() => {}); }}>
                               <TrashIcon className="size-2.5" />
                             </Button>
                           </div>
                         ))}
-                        <Button variant="ghost" size="sm" className="text-xs h-6 -ml-2 mt-1" onClick={(ev) => { ev.stopPropagation(); setItemAddPrescId(p.id); }}>
+                      </div>
+                      <div className="border-t px-3 py-1">
+                        <Button variant="ghost" size="sm" className="text-xs h-6 -ml-2" onClick={() => setItemAddPrescId(p.id)}>
                           <PlusIcon className="size-2.5" /> {t("medical.addItem")}
                         </Button>
                       </div>
-                      <div className="flex items-center gap-1 shrink-0 ml-2" onClick={(ev) => ev.stopPropagation()}>
-                        <Button variant="ghost" size="icon-xs" onClick={() => setInvoiceBind({ sourceType: "PRESCRIPTION", sourceId: p.id })}>
-                          <LinkIcon className="size-3.5" />
-                        </Button>
-                        <Button variant="ghost" size="icon-xs" onClick={() => setPrescEditing(p)}>
-                          <PencilIcon className="size-3.5" />
-                        </Button>
-                        <Button variant="ghost" size="icon-xs" onClick={() => { deletePrescription(p.id).then(() => fetchDetail()).catch(() => {}); }}>
-                          <TrashIcon className="size-3.5" />
-                        </Button>
-                      </div>
-                    </SubRecordItem>
+                    </>
                   ))}
                 </div>
               )}
