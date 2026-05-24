@@ -172,75 +172,79 @@ const MedicalRecordsPage = () => {
         </div>
       </div>
 
-      {loading ? (
-        <div className="py-8 text-center text-muted-foreground">{t("common.loading")}</div>
-      ) : pageData.empty ? (
-        <div className="py-16 text-center text-muted-foreground">{t("medical.empty")}</div>
-      ) : (
-        <>
-          <Table>
-            <TableHeader>
+      <div className="rounded-xl ring-1 ring-foreground/10">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t("medical.columns.patient")}</TableHead>
+              <TableHead>{t("medical.columns.type")}</TableHead>
+              <TableHead>{t("medical.columns.department")}</TableHead>
+              <TableHead>{t("medical.columns.time")}</TableHead>
+              <TableHead>{t("medical.columns.doctor")}</TableHead>
+              <TableHead className="w-20">{t("medical.columns.actions")}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {loading && (
               <TableRow>
-                <TableHead>{t("medical.columns.patient")}</TableHead>
-                <TableHead>{t("medical.columns.type")}</TableHead>
-                <TableHead>{t("medical.columns.department")}</TableHead>
-                <TableHead>{t("medical.columns.time")}</TableHead>
-                <TableHead>{t("medical.columns.doctor")}</TableHead>
-                <TableHead className="w-20">{t("medical.columns.actions")}</TableHead>
+                <TableCell colSpan={6} className="h-24 text-center">{t("common.loading")}</TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {pageData.content.map((r) => (
-                <TableRow key={r.id}>
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span className="font-medium">{r.patientName}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {[
-                          r.patientGender === "MALE" ? t("medical.gender.MALE") : r.patientGender === "FEMALE" ? t("medical.gender.FEMALE") : "",
-                          r.patientAge != null ? `${r.patientAge}${t("medical.age")}` : "",
-                        ].filter(Boolean).join(" ")}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="secondary" className="text-xs">
-                      {r.visitType === "OUTPATIENT" ? t("medical.visitType.OUTPATIENT") : t("medical.visitType.INPATIENT")}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{formatDeptCell(r)}</TableCell>
-                  <TableCell>{formatTimeCell(r)}</TableCell>
-                  <TableCell>{r.doctor || "-"}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-1">
-                      <Button variant="ghost" size="icon-xs" onClick={() => setDetailId(r.id)}>
-                        <EyeIcon className="size-3.5" />
-                      </Button>
-                      <Button variant="ghost" size="icon-xs" onClick={() => setEditing(r)}>
-                        <PencilIcon className="size-3.5" />
-                      </Button>
-                      <Button variant="ghost" size="icon-xs" onClick={() => setDeleting(r)}>
-                        <TrashIcon className="size-3.5" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+            )}
+            {!loading && pageData.content.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">{t("medical.empty")}</TableCell>
+              </TableRow>
+            )}
+            {!loading && pageData.content.map((r) => (
+              <TableRow key={r.id}>
+                <TableCell>
+                  <div className="flex flex-col">
+                    <span className="font-medium">{r.patientName}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {[
+                        r.patientGender === "MALE" ? t("medical.gender.MALE") : r.patientGender === "FEMALE" ? t("medical.gender.FEMALE") : "",
+                        r.patientAge != null ? `${r.patientAge}${t("medical.age")}` : "",
+                      ].filter(Boolean).join(" ")}
+                    </span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Badge variant="secondary" className="text-xs">
+                    {r.visitType === "OUTPATIENT" ? t("medical.visitType.OUTPATIENT") : t("medical.visitType.INPATIENT")}
+                  </Badge>
+                </TableCell>
+                <TableCell>{formatDeptCell(r)}</TableCell>
+                <TableCell>{formatTimeCell(r)}</TableCell>
+                <TableCell>{r.doctor || "-"}</TableCell>
+                <TableCell>
+                  <div className="flex gap-1">
+                    <Button variant="ghost" size="icon-xs" onClick={() => setDetailId(r.id)}>
+                      <EyeIcon className="size-3.5" />
+                    </Button>
+                    <Button variant="ghost" size="icon-xs" onClick={() => setEditing(r)}>
+                      <PencilIcon className="size-3.5" />
+                    </Button>
+                    <Button variant="ghost" size="icon-xs" onClick={() => setDeleting(r)}>
+                      <TrashIcon className="size-3.5" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
-          {pageData.totalPages > 1 && (
-            <div className="mt-6">
-              <Pagination
-                currentPage={page}
-                totalPages={pageData.totalPages}
-                pageSize={pageSize}
-                onPageChange={setPage}
-                onPageSizeChange={handlePageSizeChange}
-              />
-            </div>
-          )}
-        </>
+      {pageData.totalPages > 1 && (
+        <div className="mt-6">
+          <Pagination
+            currentPage={page}
+            totalPages={pageData.totalPages}
+            pageSize={pageSize}
+            onPageChange={setPage}
+            onPageSizeChange={handlePageSizeChange}
+          />
+        </div>
       )}
 
       <CreateVisitDialog
