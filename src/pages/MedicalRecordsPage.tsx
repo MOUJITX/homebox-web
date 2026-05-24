@@ -266,6 +266,8 @@ const MedicalRecordsPage = () => {
         open={detailId !== null}
         visitId={detailId}
         onClose={() => setDetailId(null)}
+        onEdit={(r) => { setDetailId(null); setEditing(r); }}
+        onDelete={(r) => { setDetailId(null); setDeleting(r); }}
         onRefresh={() => { void fetchData(); }}
       />
       <InstitutionManagerDialog
