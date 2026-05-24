@@ -758,6 +758,8 @@
       "testName": "Test Name",
       "testDate": "Test Date",
       "description": "Description",
+      "prescriptionDate": "Prescription Date",
+      "prescriptionNote": "Note",
       "medicationReminder": "Medication",
       "selectReminder": "Select a medication reminder",
       "selectInvoice": "Select an invoice",

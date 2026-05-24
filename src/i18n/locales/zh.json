@@ -905,6 +905,8 @@
       "testName": "检验项目",
       "testDate": "检验日期",
       "description": "描述",
+      "prescriptionDate": "开方日期",
+      "prescriptionNote": "备注",
       "medicationReminder": "药品",
       "selectReminder": "选择用药提醒",
       "selectInvoice": "选择发票",

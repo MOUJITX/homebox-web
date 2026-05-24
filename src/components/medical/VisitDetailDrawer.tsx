@@ -397,7 +397,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
                 </div>
               ) : (
                 <div className="space-y-1">
-                  {prescriptions.map((p) => renderSubRecordItem(p, "PRESCRIPTION", p.description || t("medical.prescriptions"), null, null, () => setPrescEditing(p), () => handlePrescDelete(p.id),
+                  {prescriptions.map((p) => renderSubRecordItem(p, "PRESCRIPTION", p.prescriptionDate || t("medical.prescriptions"), null, p.description, () => setPrescEditing(p), () => handlePrescDelete(p.id),
                     <>
                       <div className="border-t px-3 py-1.5 space-y-0.5">
                         {p.items.map((item) => (

@@ -202,6 +202,7 @@ export interface PrescriptionItem {
 export interface VisitPrescription {
   id: number;
   visitId: number;
+  prescriptionDate: string | null;
   description: string | null;
   items: PrescriptionItem[];
   attachmentCount: number;
@@ -211,6 +212,7 @@ export interface VisitPrescription {
 }
 
 export interface CreatePrescriptionRequest {
+  prescriptionDate?: string;
   description?: string;
 }
 

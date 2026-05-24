@@ -3,11 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  createPrescription,
-  updatePrescription,
-  type VisitPrescription,
-} from "@/api/medical";
+import { createPrescription, updatePrescription, type VisitPrescription } from "@/api/medical";
 
 interface Props {
   open: boolean;
@@ -20,11 +16,13 @@ interface Props {
 const CreatePrescriptionDialog = ({ open, visitId, initialData, onClose, onSuccess }: Props) => {
   const { t } = useTranslation();
   const isEdit = !!initialData;
+  const [prescriptionDate, setPrescriptionDate] = useState("");
   const [description, setDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (open) {
+      setPrescriptionDate(initialData?.prescriptionDate ?? "");
       setDescription(initialData?.description ?? "");
     }
   }, [open, initialData]);
@@ -33,9 +31,9 @@ const CreatePrescriptionDialog = ({ open, visitId, initialData, onClose, onSucce
     setSubmitting(true);
     try {
       if (isEdit) {
-        await updatePrescription(initialData!.id, { description: description || undefined });
+        await updatePrescription(initialData!.id, { prescriptionDate: prescriptionDate || undefined, description: description || undefined });
       } else {
-        await createPrescription(visitId, { description: description || undefined });
+        await createPrescription(visitId, { prescriptionDate: prescriptionDate || undefined, description: description || undefined });
       }
       onClose(); onSuccess();
     } catch {} finally { setSubmitting(false); }
@@ -49,8 +47,12 @@ const CreatePrescriptionDialog = ({ open, visitId, initialData, onClose, onSucce
         </DialogHeader>
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-medium">{t("medical.form.prescriptionDate")}</label>
+            <Input type="date" value={prescriptionDate} onChange={(e) => setPrescriptionDate(e.target.value)} />
+          </div>
+          <div className="flex flex-col gap-1.5">
             <label className="text-xs font-medium">{t("medical.form.description")}</label>
-            <textarea className="flex w-full rounded-md border bg-transparent px-3 py-2 text-sm outline-none min-h-16" value={description} onChange={(e) => setDescription(e.target.value)} />
+            <textarea className="flex w-full rounded-md border bg-transparent px-3 py-2 text-sm outline-none min-h-16" value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t("medical.form.prescriptionNote")} />
           </div>
         </div>
         <DialogFooter>
