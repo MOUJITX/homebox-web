@@ -760,7 +760,8 @@
       "description": "Description",
       "medicationReminder": "Medication",
       "selectReminder": "Select a medication reminder",
-      "selectInvoice": "Select an invoice"
+      "selectInvoice": "Select an invoice",
+      "dosageMethod": "Route"
     },
     "examinations": "Examinations",
     "addExamination": "Add Exam",
@@ -774,6 +775,7 @@
     "addPrescription": "Add Prescription",
     "editPrescription": "Edit Prescription",
     "noPrescriptions": "No prescriptions",
+    "invoiceLabel": "Invoice",
     "addItem": "Add Item",
     "addPrescriptionItem": "Add Medication",
     "editPrescriptionItem": "Edit Medication",

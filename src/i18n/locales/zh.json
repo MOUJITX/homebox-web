@@ -907,7 +907,8 @@
       "description": "描述",
       "medicationReminder": "药品",
       "selectReminder": "选择用药提醒",
-      "selectInvoice": "选择发票"
+      "selectInvoice": "选择发票",
+      "dosageMethod": "用法"
     },
     "examinations": "检查",
     "addExamination": "新增检查",
@@ -921,6 +922,7 @@
     "addPrescription": "新增处方",
     "editPrescription": "编辑处方",
     "noPrescriptions": "暂无处方记录",
+    "invoiceLabel": "发票",
     "addItem": "添加药品",
     "addPrescriptionItem": "添加药品",
     "editPrescriptionItem": "编辑药品",

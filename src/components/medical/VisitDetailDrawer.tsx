@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PencilIcon, TrashIcon, PlusIcon, LinkIcon, UploadIcon, FileIcon } from "lucide-react";
+import { PencilIcon, TrashIcon, PlusIcon, LinkIcon, UploadIcon, FileIcon, DownloadIcon, EyeIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -51,7 +51,7 @@ const formatFileSize = (bytes: number) => {
 
 const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh }: Props) => {
   const { t } = useTranslation();
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [subUploadTarget, setSubUploadTarget] = useState<{ sourceType: VisitSourceType; sourceId: number } | null>(null);
   const [record, setRecord] = useState<VisitRecord | null>(null);
   const [loading, setLoading] = useState(false);
@@ -101,20 +101,76 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
     if (!open) { setRecord(null); setError(false); }
   }, [open, visitId, fetchDetail]);
 
+  // ── Targeted updates to avoid full re-fetch ──
+
   const handleSubAttachmentUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !subUploadTarget || !visitId) return;
     try {
-      await uploadVisitAttachment(visitId, file, subUploadTarget.sourceType, subUploadTarget.sourceId);
-      void fetchDetail();
+      const { data } = await uploadVisitAttachment(visitId, file, subUploadTarget.sourceType, subUploadTarget.sourceId);
+      setAttachments((prev) => [...prev, data]);
     } catch {}
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  const handleVisitAttachmentUpload = async (file: File) => {
+    if (!visitId) return;
+    const { data } = await uploadVisitAttachment(visitId, file, "RECORD", visitId);
+    setAttachments((prev) => [...prev, data]);
+  };
+
+  const handleVisitAttachmentDelete = async (id: number) => {
+    await deleteVisitAttachment(id);
+    setAttachments((prev) => prev.filter((a) => a.id !== id));
+  };
+
+  const handleSubAttachmentDelete = async (id: number) => {
+    await deleteVisitAttachment(id);
+    setAttachments((prev) => prev.filter((a) => a.id !== id));
+  };
+
   const handleInvoiceBindAction = async (invoiceId: number) => {
     if (!invoiceBind || !visitId) return;
-    await bindVisitInvoice(visitId, invoiceId, invoiceBind.sourceType, invoiceBind.sourceId);
-    void fetchDetail();
+    const { data } = await bindVisitInvoice(visitId, invoiceId, invoiceBind.sourceType, invoiceBind.sourceId);
+    setVisitInvoices((prev) => [...prev, data]);
+  };
+
+  const handleInvoiceUnbind = async (id: number) => {
+    await unbindVisitInvoice(id);
+    setVisitInvoices((prev) => prev.filter((i) => i.id !== id));
+  };
+
+  const handleExamDelete = async (id: number) => {
+    await deleteExamination(id);
+    setExaminations((prev) => prev.filter((e) => e.id !== id));
+  };
+
+  const handleTestDelete = async (id: number) => {
+    await deleteLabTest(id);
+    setLabTests((prev) => prev.filter((e) => e.id !== id));
+  };
+
+  const handlePrescDelete = async (id: number) => {
+    await deletePrescription(id);
+    setPrescriptions((prev) => prev.filter((e) => e.id !== id));
+  };
+
+  const handlePrescItemAdd = async (data: { medicationReminderId: number; note?: string }) => {
+    if (!itemAddPrescId) return;
+    await addPrescriptionItem(itemAddPrescId, data);
+    // refetch prescriptions to get updated items
+    if (visitId) {
+      const { data: prescs } = await getPrescriptions(visitId, 0, 50);
+      setPrescriptions(prescs.content);
+    }
+  };
+
+  const handlePrescItemDelete = async (itemId: number) => {
+    await deletePrescriptionItem(itemId);
+    if (visitId) {
+      const { data: prescs } = await getPrescriptions(visitId, 0, 50);
+      setPrescriptions(prescs.content);
+    }
   };
 
   const isInpatient = record?.visitType === "INPATIENT";
@@ -132,7 +188,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
     date: string | null,
     desc: string | null,
     onEdit: () => void,
-    onDelete: () => void,
+    onDeleteItem: () => void,
     extraContent?: React.ReactNode,
   ) => {
     const subAtts = getSubAttachments(type, data.id);
@@ -152,44 +208,47 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
             <Button variant="ghost" size="icon-xs" onClick={() => { setSubUploadTarget({ sourceType: type, sourceId: data.id }); fileInputRef.current?.click(); }} title={t("medical.uploadAttachment")}>
               <UploadIcon className="size-3.5" />
             </Button>
-            <Button variant="ghost" size="icon-xs" onClick={() => setInvoiceBind({ sourceType: type, sourceId: data.id })}>
+            <Button variant="ghost" size="icon-xs" onClick={() => setInvoiceBind({ sourceType: type, sourceId: data.id })} title={t("medical.bindInvoice")}>
               <LinkIcon className="size-3.5" />
             </Button>
-            <Button variant="ghost" size="icon-xs" onClick={onEdit}>
+            <Button variant="ghost" size="icon-xs" onClick={onEdit} title={t("common.edit")}>
               <PencilIcon className="size-3.5" />
             </Button>
-            <Button variant="ghost" size="icon-xs" onClick={onDelete}>
+            <Button variant="ghost" size="icon-xs" onClick={onDeleteItem} title={t("common.delete")}>
               <TrashIcon className="size-3.5" />
             </Button>
           </div>
         </div>
         {extraContent}
         {(subAtts.length > 0 || subInvs.length > 0) && (
-          <div className="border-t px-3 py-2 space-y-2">
+          <div className="border-t px-3 py-2 space-y-1.5">
             {subAtts.map((a) => (
               <div key={a.id} className="flex items-center gap-2 text-xs">
-                <FileIcon className="size-3 shrink-0 text-muted-foreground" />
-                <span className="truncate flex-1">{a.originalFilename} ({formatFileSize(a.fileSize)})</span>
+                <FileIcon className="size-3.5 shrink-0 text-muted-foreground" />
+                <span className="truncate flex-1">{a.originalFilename}</span>
+                <span className="text-muted-foreground shrink-0">{formatFileSize(a.fileSize)}</span>
                 {a.url && (
-                  <a href={a.url} download={a.originalFilename} className="shrink-0">
-                    <Button variant="ghost" size="icon-xs" type="button" className="size-6">
-                      <svg className="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                  <a href={a.url} download={a.originalFilename}>
+                    <Button variant="ghost" size="icon-xs" type="button" title={t("common.download")}>
+                      <DownloadIcon className="size-3.5" />
                     </Button>
                   </a>
                 )}
-                <Button variant="ghost" size="icon-xs" className="size-6" onClick={() => { deleteVisitAttachment(a.id).then(() => fetchDetail()).catch(() => {}); }}>
-                  <TrashIcon className="size-3" />
+                <Button variant="ghost" size="icon-xs" onClick={() => handleSubAttachmentDelete(a.id)} title={t("common.delete")}>
+                  <TrashIcon className="size-3.5" />
                 </Button>
               </div>
             ))}
             {subInvs.map((inv) => (
               <div key={inv.id} className="flex items-center gap-2 text-xs">
-                <span className="truncate flex-1">{inv.invoiceNumber ?? `#${inv.invoiceId}`} - {inv.totalAmount}</span>
-                <Button variant="ghost" size="icon-xs" className="size-6" onClick={() => { setViewingInvoiceId(inv.invoiceId); setInvoiceDrawerOpen(true); }}>
-                  <svg className="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <FileIcon className="size-3.5 shrink-0 text-muted-foreground" />
+                <span className="truncate flex-1">{t("medical.invoiceLabel")}: {inv.invoiceNumber ?? `#${inv.invoiceId}`}</span>
+                <span className="text-muted-foreground shrink-0">{inv.totalAmount}</span>
+                <Button variant="ghost" size="icon-xs" onClick={() => { setViewingInvoiceId(inv.invoiceId); setInvoiceDrawerOpen(true); }} title={t("common.view")}>
+                  <EyeIcon className="size-3.5" />
                 </Button>
-                <Button variant="ghost" size="icon-xs" className="size-6" onClick={() => { unbindVisitInvoice(inv.id).then(() => fetchDetail()).catch(() => {}); }}>
-                  <TrashIcon className="size-3" />
+                <Button variant="ghost" size="icon-xs" onClick={() => handleInvoiceUnbind(inv.id)} title={t("common.unbind")}>
+                  <TrashIcon className="size-3.5" />
                 </Button>
               </div>
             ))}
@@ -255,8 +314,8 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
                 attachments={attachments.filter((a) => a.sourceType === "RECORD").map((a) => ({ id: a.id, filename: a.originalFilename, fileSize: a.fileSize, url: a.url } satisfies AttachmentItem))}
                 uploadLabel={t("medical.uploadAttachment")}
                 emptyLabel={t("medical.noAttachments")}
-                onUpload={async (file) => { if (visitId) { await uploadVisitAttachment(visitId, file, "RECORD", visitId); void fetchDetail(); } }}
-                onDelete={async (id) => { await deleteVisitAttachment(id); void fetchDetail(); }}
+                onUpload={handleVisitAttachmentUpload}
+                onDelete={handleVisitAttachmentDelete}
               />
             </div>
 
@@ -272,7 +331,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
                 emptyLabel={t("medical.noInvoices")}
                 onBind={() => setInvoiceBind({ sourceType: "RECORD", sourceId: visitId! })}
                 onCreateNew={() => setCreateInvoiceOpen(true)}
-                onUnbind={async (id) => { await unbindVisitInvoice(id); void fetchDetail(); }}
+                onUnbind={handleInvoiceUnbind}
                 onView={(invoiceId) => { setViewingInvoiceId(invoiceId); setInvoiceDrawerOpen(true); }}
               />
             </div>
@@ -294,7 +353,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
                 </div>
               ) : (
                 <div className="space-y-1">
-                  {examinations.map((e) => renderSubRecordItem(e, "EXAMINATION", e.name, e.examDate, e.description, () => setExamEditing(e), () => { deleteExamination(e.id).then(() => fetchDetail()).catch(() => {}); }))}
+                  {examinations.map((e) => renderSubRecordItem(e, "EXAMINATION", e.name, e.examDate, e.description, () => setExamEditing(e), () => handleExamDelete(e.id)))}
                 </div>
               )}
             </div>
@@ -316,7 +375,7 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
                 </div>
               ) : (
                 <div className="space-y-1">
-                  {labTests.map((lt) => renderSubRecordItem(lt, "LAB_TEST", lt.name, lt.testDate, lt.description, () => setTestEditing(lt), () => { deleteLabTest(lt.id).then(() => fetchDetail()).catch(() => {}); }))}
+                  {labTests.map((lt) => renderSubRecordItem(lt, "LAB_TEST", lt.name, lt.testDate, lt.description, () => setTestEditing(lt), () => handleTestDelete(lt.id)))}
                 </div>
               )}
             </div>
@@ -338,16 +397,17 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
                 </div>
               ) : (
                 <div className="space-y-1">
-                  {prescriptions.map((p) => renderSubRecordItem(p, "PRESCRIPTION", p.description || t("medical.prescriptions"), null, null, () => setPrescEditing(p), () => { deletePrescription(p.id).then(() => fetchDetail()).catch(() => {}); },
+                  {prescriptions.map((p) => renderSubRecordItem(p, "PRESCRIPTION", p.description || t("medical.prescriptions"), null, null, () => setPrescEditing(p), () => handlePrescDelete(p.id),
                     <>
                       <div className="border-t px-3 py-1.5 space-y-0.5">
                         {p.items.map((item) => (
                           <div key={item.id} className="flex items-center gap-2 text-xs">
+                            <FileIcon className="size-3.5 shrink-0 text-muted-foreground" />
                             <span className="font-medium">{item.medicationName}</span>
-                            {item.dosageMethod && <span className="text-muted-foreground">{item.dosageMethod}</span>}
+                            {item.dosageMethod && <span className="text-muted-foreground">{t("medical.form.dosageMethod")}: {item.dosageMethod}</span>}
                             {item.dosageQuantity && <span className="text-muted-foreground">{item.dosageQuantity}{item.dosageUnit}</span>}
                             {item.note && <span className="text-muted-foreground">({item.note})</span>}
-                            <Button variant="ghost" size="icon-xs" className="size-5 ml-auto" onClick={() => { deletePrescriptionItem(item.id).then(() => fetchDetail()).catch(() => {}); }}>
+                            <Button variant="ghost" size="icon-xs" className="size-5 ml-auto" onClick={() => handlePrescItemDelete(item.id)} title={t("common.delete")}>
                               <TrashIcon className="size-2.5" />
                             </Button>
                           </div>
@@ -377,13 +437,20 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onEdit, onDelete, onRefresh
           </SheetFooter>
         )}
 
-        <CreateExaminationDialog open={examOpen || !!examEditing} visitId={visitId!} initialData={examEditing} onClose={() => { setExamOpen(false); setExamEditing(null); }} onSuccess={() => { void fetchDetail(); onRefresh(); }} />
-        <CreateLabTestDialog open={testOpen || !!testEditing} visitId={visitId!} initialData={testEditing} onClose={() => { setTestOpen(false); setTestEditing(null); }} onSuccess={() => { void fetchDetail(); onRefresh(); }} />
-        <CreatePrescriptionDialog open={prescOpen || !!prescEditing} visitId={visitId!} initialData={prescEditing} onClose={() => { setPrescOpen(false); setPrescEditing(null); }} onSuccess={() => { void fetchDetail(); onRefresh(); }} />
-        <CreatePrescriptionItemDialog open={itemAddPrescId !== null} onClose={() => setItemAddPrescId(null)} onSubmit={async (data) => { if (itemAddPrescId) { await addPrescriptionItem(itemAddPrescId, data); void fetchDetail(); } }} />
+        <CreateExaminationDialog open={examOpen || !!examEditing} visitId={visitId!} initialData={examEditing}
+          onClose={() => { setExamOpen(false); setExamEditing(null); }}
+          onSuccess={async () => { if (visitId) { const { data } = await getExaminations(visitId, 0, 50); setExaminations(data.content); } onRefresh(); }} />
+        <CreateLabTestDialog open={testOpen || !!testEditing} visitId={visitId!} initialData={testEditing}
+          onClose={() => { setTestOpen(false); setTestEditing(null); }}
+          onSuccess={async () => { if (visitId) { const { data } = await getLabTests(visitId, 0, 50); setLabTests(data.content); } onRefresh(); }} />
+        <CreatePrescriptionDialog open={prescOpen || !!prescEditing} visitId={visitId!} initialData={prescEditing}
+          onClose={() => { setPrescOpen(false); setPrescEditing(null); }}
+          onSuccess={async () => { if (visitId) { const { data } = await getPrescriptions(visitId, 0, 50); setPrescriptions(data.content); } onRefresh(); }} />
+        <CreatePrescriptionItemDialog open={itemAddPrescId !== null} onClose={() => setItemAddPrescId(null)} onSubmit={handlePrescItemAdd} />
         <BindVisitInvoiceDialog boundInvoiceIds={visitInvoices.map((i) => i.invoiceId)} open={invoiceBind !== null} onClose={() => setInvoiceBind(null)} onBind={handleInvoiceBindAction} onCreateNew={() => setCreateInvoiceOpen(true)} />
-        <CreateInvoiceDialog open={createInvoiceOpen} onClose={() => setCreateInvoiceOpen(false)} onSuccess={() => {}} onCreated={async (created) => { if (invoiceBind && visitId) { await bindVisitInvoice(visitId, created.id, invoiceBind.sourceType, invoiceBind.sourceId); void fetchDetail(); } }} />
-        <InvoiceDetailDrawer invoiceId={viewingInvoiceId} open={invoiceDrawerOpen} onClose={() => { setInvoiceDrawerOpen(false); setViewingInvoiceId(null); }} onEdit={() => {}} onDelete={() => {}} onRefresh={() => void fetchDetail()} />
+        <CreateInvoiceDialog open={createInvoiceOpen} onClose={() => setCreateInvoiceOpen(false)} onSuccess={() => {}}
+          onCreated={async (created) => { if (invoiceBind && visitId) { const { data } = await bindVisitInvoice(visitId, created.id, invoiceBind.sourceType, invoiceBind.sourceId); setVisitInvoices((prev) => [...prev, data]); } }} />
+        <InvoiceDetailDrawer invoiceId={viewingInvoiceId} open={invoiceDrawerOpen} onClose={() => { setInvoiceDrawerOpen(false); setViewingInvoiceId(null); }} onEdit={() => {}} onDelete={() => {}} onRefresh={() => {}} />
       </SheetContent>
     </Sheet>
   );
