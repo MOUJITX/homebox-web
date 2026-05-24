@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PlusIcon, PencilIcon, TrashIcon, UploadIcon, LinkIcon } from "lucide-react";
+import { PlusIcon, PencilIcon, TrashIcon, UploadIcon, LinkIcon, FileIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -156,25 +156,32 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onRefresh }: Props) => {
             </div>
           )}
 
-          {/* Attachments (visit level) */}
-          <div className="text-sm">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-muted-foreground">{t("medical.attachments")}:</p>
+                    {/* Attachments (visit level) */}
+          <div className="grid gap-3">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-medium">{t("medical.attachments")}</h4>
               <div className="flex gap-1">
                 <input ref={fileInputRef} type="file" className="hidden" onChange={handleAttachmentUpload} />
-                <Button size="sm" variant="outline" onClick={() => fileInputRef.current?.click()}>
-                  <UploadIcon className="size-3" /> {t("medical.uploadAttachment")}
+                <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
+                  <UploadIcon className="size-3.5" />
+                  {t("medical.uploadAttachment")}
                 </Button>
               </div>
             </div>
             {visitAttachments.length === 0 ? (
-              <p className="text-xs text-muted-foreground">{t("medical.noAttachments")}</p>
+              <p className="text-sm text-muted-foreground">{t("medical.noAttachments")}</p>
             ) : (
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {visitAttachments.map((a) => (
-                  <div key={a.id} className="flex items-center justify-between rounded border px-2 py-1 text-xs">
-                    <span>{a.originalFilename} ({(a.fileSize / 1024).toFixed(1)}KB)</span>
-                    <Button variant="ghost" size="icon-xs" onClick={() => handleAttachmentDelete(a.id)}><TrashIcon className="size-3" /></Button>
+                  <div key={a.id} className="flex items-center gap-3 overflow-hidden rounded-lg border p-2">
+                    <FileIcon className="size-4 shrink-0 text-muted-foreground" />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm">{a.originalFilename}</p>
+                      <p className="text-xs text-muted-foreground">{(a.fileSize / 1024).toFixed(1)} KB</p>
+                    </div>
+                    <Button variant="ghost" size="icon-xs" onClick={() => handleAttachmentDelete(a.id)}>
+                      <TrashIcon className="size-3.5" />
+                    </Button>
                   </div>
                 ))}
               </div>
@@ -182,21 +189,29 @@ const VisitDetailDrawer = ({ open, visitId, onClose, onRefresh }: Props) => {
           </div>
 
           {/* Invoices (visit level) */}
-          <div className="text-sm">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-muted-foreground">{t("medical.invoices")}:</p>
-              <Button size="sm" variant="outline" onClick={() => setInvoiceBind({ sourceType: "RECORD", sourceId: visitId! })}>
-                <LinkIcon className="size-3" /> {t("medical.bindInvoice")}
+          <div className="grid gap-3">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-medium">{t("medical.invoices")}</h4>
+              <Button variant="outline" size="sm" onClick={() => setInvoiceBind({ sourceType: "RECORD", sourceId: visitId! })}>
+                <LinkIcon className="size-3.5" />
+                {t("medical.bindInvoice")}
               </Button>
             </div>
             {invoices.filter((i) => i.sourceType === "RECORD").length === 0 ? (
-              <p className="text-xs text-muted-foreground">{t("medical.noInvoices")}</p>
+              <p className="text-sm text-muted-foreground">{t("medical.noInvoices")}</p>
             ) : (
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {invoices.filter((i) => i.sourceType === "RECORD").map((inv) => (
-                  <div key={inv.id} className="flex items-center justify-between rounded border px-2 py-1 text-xs">
-                    <span>{inv.invoiceNumber ?? `#${inv.invoiceId}`} - {inv.totalAmount}</span>
-                    <Button variant="ghost" size="icon-xs" onClick={() => handleInvoiceUnbind(inv.id)}><TrashIcon className="size-3" /></Button>
+                  <div key={inv.id} className="flex items-center justify-between rounded-md border px-3 py-2 text-sm">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="text-xs">{inv.invoiceNumber ?? `#${inv.invoiceId}`}</span>
+                      <span className="text-xs font-medium">{inv.totalAmount}</span>
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <Button variant="ghost" size="icon-xs" onClick={() => handleInvoiceUnbind(inv.id)}>
+                        <TrashIcon className="size-3.5" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
