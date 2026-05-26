@@ -924,6 +924,12 @@
     "addPrescription": "新增处方",
     "editPrescription": "编辑处方",
     "noPrescriptions": "暂无处方记录",
+    "sourceType": {
+      "RECORD": "就诊",
+      "EXAMINATION": "检查",
+      "LAB_TEST": "检验",
+      "PRESCRIPTION": "处方"
+    },
     "invoiceLabel": "发票",
     "addItem": "添加药品",
     "addPrescriptionItem": "添加药品",

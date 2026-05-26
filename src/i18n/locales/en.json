@@ -777,6 +777,12 @@
     "addPrescription": "Add Prescription",
     "editPrescription": "Edit Prescription",
     "noPrescriptions": "No prescriptions",
+    "sourceType": {
+      "RECORD": "Visit",
+      "EXAMINATION": "Examination",
+      "LAB_TEST": "Lab Test",
+      "PRESCRIPTION": "Prescription"
+    },
     "invoiceLabel": "Invoice",
     "addItem": "Add Item",
     "addPrescriptionItem": "Add Medication",

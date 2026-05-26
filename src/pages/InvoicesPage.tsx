@@ -7,6 +7,7 @@ import {
   TrashIcon,
   SearchIcon,
   CreditCardIcon,
+  StethoscopeIcon,
 } from "lucide-react";
 import type { Invoice, InvoiceType, InvoiceStatus, InvoiceDetail, Page } from "@/api/invoices";
 import { getInvoices, getInvoiceById } from "@/api/invoices";
@@ -290,10 +291,14 @@ const InvoicesPage = () => {
                       const allBounds = [
                         ...invoice.assets.map((a) => ({ type: "asset" as const, data: a })),
                         ...(invoice.subscriptions || []).map((s) => ({ type: "subscription" as const, data: s })),
+                        ...(invoice.visits || []).map((v) => ({ type: "visit" as const, data: v })),
                       ];
                       if (allBounds.length === 0) return "—";
                       const first = allBounds[0];
                       const total = allBounds.length;
+                      const sourceTypeLabel = first.type === "visit" && first.data.sourceType !== "RECORD"
+                        ? t(`medical.sourceType.${first.data.sourceType}`) + " "
+                        : "";
                       return (
                         <div className="flex items-center gap-1.5">
                           {first.type === "asset" ? (
@@ -303,7 +308,7 @@ const InvoicesPage = () => {
                               )}
                               <span className="text-xs truncate">{first.data.name}</span>
                             </>
-                          ) : (
+                          ) : first.type === "subscription" ? (
                             <>
                               {first.data.platformLogoUrl ? (
                                 <div className="size-5 shrink-0 overflow-hidden rounded">
@@ -313,6 +318,11 @@ const InvoicesPage = () => {
                                 <CreditCardIcon className="size-4 shrink-0 text-muted-foreground" />
                               )}
                               <span className="text-xs truncate">{first.data.subscriptionName}</span>
+                            </>
+                          ) : (
+                            <>
+                              <StethoscopeIcon className="size-4 shrink-0 text-muted-foreground" />
+                              <span className="text-xs truncate">{sourceTypeLabel}{first.data.patientName}</span>
                             </>
                           )}
                           {total > 1 && (
