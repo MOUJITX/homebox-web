@@ -377,16 +377,16 @@ const VisitDetailDrawer = ({
             {subInvs.map((inv) => (
               <div key={inv.id} className="flex items-center gap-2 text-xs">
                 <ReceiptTextIcon className="size-3.5 shrink-0 text-muted-foreground" />
-                <span className="truncate flex-1">
-                  {inv.sellerName && (
-                    <span className="text-muted-foreground">
-                      {inv.sellerName} ·{" "}
-                    </span>
+                <div className="min-w-0 flex-1">
+                  <div className="font-medium truncate">
+                    {inv.sellerName ?? inv.invoiceNumber ?? `#${inv.invoiceId}`}
+                  </div>
+                  {inv.sellerName && inv.invoiceNumber && (
+                    <div className="text-muted-foreground truncate">
+                      {inv.invoiceNumber}
+                    </div>
                   )}
-                  <span className="font-mono">
-                    {inv.invoiceNumber ?? `#${inv.invoiceId}`}
-                  </span>
-                </span>
+                </div>
                 <span className="text-muted-foreground shrink-0">
                   {inv.totalAmount}
                 </span>

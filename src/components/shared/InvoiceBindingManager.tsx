@@ -106,16 +106,16 @@ const InvoiceBindingManager = ({
                     {formatDate(inv.invoiceDate)}
                   </span>
                 )}
-                <span className="text-xs truncate">
-                  {inv.sellerName && (
-                    <span className="text-muted-foreground">
-                      {inv.sellerName} ·{" "}
-                    </span>
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-medium truncate">
+                    {inv.sellerName ?? inv.invoiceNumber ?? `#${inv.invoiceId}`}
+                  </div>
+                  {inv.sellerName && inv.invoiceNumber && (
+                    <div className="text-xs text-muted-foreground truncate">
+                      {inv.invoiceNumber}
+                    </div>
                   )}
-                  <span className="font-mono">
-                    {inv.invoiceNumber ?? `#${inv.invoiceId}`}
-                  </span>
-                </span>
+                </div>
                 {inv.totalAmount != null && (
                   <span className="text-xs font-medium shrink-0">
                     {formatCurrency(inv.totalAmount)}
