@@ -9,6 +9,7 @@ import {
   type MedicalInstitution,
 } from "@/api/institutions";
 import { getErrorMessage } from "@/lib/error";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -42,7 +43,9 @@ const InstitutionManagerDialog = ({
       const { data } = await getInstitutions();
       setInstitutions(data);
       onInstitutionsChange?.(data);
-    } catch {}
+    } catch (err) {
+      toast.error(getErrorMessage(err) ?? t("medical.errors.loadInstitutionsFailed"));
+    }
   };
 
   useEffect(() => {
