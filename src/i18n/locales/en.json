@@ -1064,6 +1064,27 @@
       "subscription": "Subscription"
     }
   },
+  "shared": {
+    "pictures": {
+      "title": "Pictures",
+      "upload": "Upload",
+      "uploading": "Uploading…",
+      "empty": "No pictures uploaded yet."
+    },
+    "attachments": {
+      "title": "Attachments",
+      "upload": "Upload",
+      "uploading": "Uploading…",
+      "empty": "No attachments uploaded yet.",
+      "indexing": "Indexing…"
+    },
+    "invoices": {
+      "title": "Invoices",
+      "bind": "Bind",
+      "uploadNew": "Upload New",
+      "empty": "No invoices bound yet."
+    }
+  },
   "common": {
     "logout": "Sign Out",
     "cancel": "Cancel",

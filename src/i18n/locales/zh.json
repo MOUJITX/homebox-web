@@ -617,6 +617,27 @@
       "subscription": "订阅"
     }
   },
+  "shared": {
+    "pictures": {
+      "title": "图片",
+      "upload": "上传",
+      "uploading": "上传中…",
+      "empty": "暂无图片。"
+    },
+    "attachments": {
+      "title": "附件",
+      "upload": "上传",
+      "uploading": "上传中…",
+      "empty": "暂无附件。",
+      "indexing": "索引中…"
+    },
+    "invoices": {
+      "title": "发票",
+      "bind": "绑定",
+      "uploadNew": "上传新发票",
+      "empty": "暂无绑定发票。"
+    }
+  },
   "common": {
     "cancel": "取消",
     "create": "创建",

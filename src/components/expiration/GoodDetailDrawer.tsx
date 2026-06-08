@@ -7,7 +7,12 @@ import {
   ToggleLeftIcon,
   ToggleRightIcon,
 } from "lucide-react";
-import { getGoodById, type Good, type GoodDetail, type GoodItem } from "@/api/goods";
+import {
+  getGoodById,
+  type Good,
+  type GoodDetail,
+  type GoodItem,
+} from "@/api/goods";
 import { getGoodCategories, type GoodCategory } from "@/api/goodCategories";
 import { getGoodBrands, type GoodBrand } from "@/api/goodBrands";
 import { updateGoodItem } from "@/api/goodItems";
@@ -29,8 +34,13 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import PictureManager from "./PictureManager";
-import AttachmentManager from "./AttachmentManager";
+import PictureManager from "@/components/shared/PictureManager";
+import AttachmentManager from "@/components/shared/AttachmentManager";
+import { uploadGoodPicture, deleteGoodPicture } from "@/api/goodPictures";
+import {
+  uploadGoodAttachment,
+  deleteGoodAttachment,
+} from "@/api/goodAttachments";
 import CreateItemDialog from "./CreateItemDialog";
 import EditItemDialog from "./EditItemDialog";
 import DeleteItemDialog from "./DeleteItemDialog";
@@ -66,7 +76,10 @@ const isExpiringSoon = (item: GoodItem, expiringSoonDays: number) => {
 const getItemStatus = (
   item: GoodItem,
   expiringSoonDays: number,
-): { label: string; variant: "secondary" | "destructive" | "warning" | "success" } => {
+): {
+  label: string;
+  variant: "secondary" | "destructive" | "warning" | "success";
+} => {
   if (!item.inUse) return { label: "EXHAUSTED", variant: "secondary" };
   if (isExpired(item)) return { label: "EXPIRED", variant: "destructive" };
   if (isExpiringSoon(item, expiringSoonDays))
@@ -182,11 +195,14 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
           <div className="flex flex-1 flex-col gap-5 overflow-y-auto py-4">
             {/* Status badges */}
             <div className="flex items-center gap-2">
-              <Badge variant={detail.itemCountInUse > 0 ? "success" : "secondary"}>
+              <Badge
+                variant={detail.itemCountInUse > 0 ? "success" : "secondary"}
+              >
                 {t(`goods.status.${detail.status}`)}
               </Badge>
               <span className="text-xs text-muted-foreground">
-                {detail.itemCountInUse}/{detail.itemCountTotal} {t("goods.columns.items")}
+                {detail.itemCountInUse}/{detail.itemCountTotal}{" "}
+                {t("goods.columns.items")}
               </span>
               <span className="text-xs text-muted-foreground ml-auto">
                 {t("goods.columns.category")}: {detail.categoryName}
@@ -195,10 +211,22 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
 
             {/* Basic info */}
             <div className="grid grid-cols-2 gap-4">
-              <Field label={t("goods.columns.productName")} value={detail.productName} />
-              <Field label={t("goods.columns.barcode")} value={detail.barcode} />
-              <Field label={t("goods.columns.category")} value={detail.categoryName} />
-              <Field label={t("goods.columns.brand")} value={detail.brandName} />
+              <Field
+                label={t("goods.columns.productName")}
+                value={detail.productName}
+              />
+              <Field
+                label={t("goods.columns.barcode")}
+                value={detail.barcode}
+              />
+              <Field
+                label={t("goods.columns.category")}
+                value={detail.categoryName}
+              />
+              <Field
+                label={t("goods.columns.brand")}
+                value={detail.brandName}
+              />
             </div>
 
             {/* Items */}
@@ -220,8 +248,12 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{t("goods.items.columns.productDate")}</TableHead>
-                      <TableHead>{t("goods.items.columns.expirationDate")}</TableHead>
+                      <TableHead>
+                        {t("goods.items.columns.productDate")}
+                      </TableHead>
+                      <TableHead>
+                        {t("goods.items.columns.expirationDate")}
+                      </TableHead>
                       <TableHead>{t("goods.items.columns.lifeDays")}</TableHead>
                       <TableHead>{t("goods.items.columns.status")}</TableHead>
                       <TableHead className="text-right">
@@ -241,62 +273,100 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
                       </TableRow>
                     )}
                     {detail.items.map((item) => {
-                        const status = getItemStatus(item, detail.expiringSoonDays);
-                        return (
-                          <TableRow key={item.id}>
-                            <TableCell>{formatDate(item.productDate)}</TableCell>
-                            <TableCell>{formatDate(item.expirationDate)}</TableCell>
-                            <TableCell>{item.lifeDays}</TableCell>
-                            <TableCell>
-                              <Badge variant={status.variant}>
-                                {t(`goods.status.${status.label}`)}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <div className="flex justify-end gap-1">
-                                <Button
-                                  variant="ghost"
-                                  size="icon-xs"
-                                  onClick={() => handleToggleInUse(item)}
-                                >
-                                  {item.inUse ? (
-                                    <ToggleRightIcon className="size-3.5" />
-                                  ) : (
-                                    <ToggleLeftIcon className="size-3.5" />
-                                  )}
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="icon-xs"
-                                  onClick={() => setEditingItem(item)}
-                                >
-                                  <PencilIcon className="size-3.5" />
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="icon-xs"
-                                  onClick={() => setDeletingItem(item)}
-                                >
-                                  <TrashIcon className="size-3.5" />
-                                </Button>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
+                      const status = getItemStatus(
+                        item,
+                        detail.expiringSoonDays,
+                      );
+                      return (
+                        <TableRow key={item.id}>
+                          <TableCell>{formatDate(item.productDate)}</TableCell>
+                          <TableCell>
+                            {formatDate(item.expirationDate)}
+                          </TableCell>
+                          <TableCell>{item.lifeDays}</TableCell>
+                          <TableCell>
+                            <Badge variant={status.variant}>
+                              {t(`goods.status.${status.label}`)}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon-xs"
+                                onClick={() => handleToggleInUse(item)}
+                              >
+                                {item.inUse ? (
+                                  <ToggleRightIcon className="size-3.5" />
+                                ) : (
+                                  <ToggleLeftIcon className="size-3.5" />
+                                )}
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon-xs"
+                                onClick={() => setEditingItem(item)}
+                              >
+                                <PencilIcon className="size-3.5" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon-xs"
+                                onClick={() => setDeletingItem(item)}
+                              >
+                                <TrashIcon className="size-3.5" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </div>
             </div>
 
             {/* Pictures */}
-            <PictureManager goodId={detail.id} />
+            <PictureManager
+              pictures={detail.pictures ?? []}
+              title={t("shared.pictures.title")}
+              uploadLabel={t("shared.pictures.upload")}
+              uploadingLabel={t("shared.pictures.uploading")}
+              emptyLabel={t("shared.pictures.empty")}
+              onUpload={async (files) => {
+                await Promise.all(
+                  files.map((file) => uploadGoodPicture(detail.id, file)),
+                );
+                void fetchDetail();
+              }}
+              onDelete={async (id) => {
+                await deleteGoodPicture(detail.id, id);
+                void fetchDetail();
+              }}
+            />
 
             {/* Attachments */}
             <AttachmentManager
-              goodId={detail.id}
-              attachments={detail.attachments || []}
-              onChanged={() => void fetchDetail()}
+              attachments={(detail.attachments ?? []).map((a) => ({
+                id: a.id,
+                filename: a.filename,
+                fileSize: a.fileSize,
+                url: a.url,
+                indexed: a.indexed,
+              }))}
+              title={t("shared.attachments.title")}
+              uploadLabel={t("shared.attachments.upload")}
+              uploadingLabel={t("shared.attachments.uploading")}
+              emptyLabel={t("shared.attachments.empty")}
+              indexingLabel={t("shared.attachments.indexing")}
+              onUpload={async (file) => {
+                await uploadGoodAttachment(detail.id, file);
+                void fetchDetail();
+              }}
+              onDelete={async (id) => {
+                await deleteGoodAttachment(detail.id, id);
+                void fetchDetail();
+              }}
             />
 
             {/* Timestamps */}

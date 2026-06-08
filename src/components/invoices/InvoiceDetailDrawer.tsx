@@ -1,9 +1,21 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PencilIcon, TrashIcon, PackageIcon, CreditCardIcon, FileTextIcon } from "lucide-react";
+import {
+  PencilIcon,
+  TrashIcon,
+  PackageIcon,
+  CreditCardIcon,
+  FileTextIcon,
+  FileIcon,
+  DownloadIcon,
+} from "lucide-react";
 import { useNavigate } from "react-router";
 import type { InvoiceDetail } from "@/api/invoices";
-import { getInvoiceById } from "@/api/invoices";
+import {
+  getInvoiceById,
+  uploadInvoiceAttachment,
+  deleteInvoiceAttachment,
+} from "@/api/invoices";
 import { getErrorMessage } from "@/lib/error";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +29,7 @@ import {
 } from "@/components/ui/sheet";
 import AuthImg from "@/components/AuthImg";
 import ImagePreview from "@/components/ImagePreview";
-import InvoiceAttachmentManager from "./InvoiceAttachmentManager";
+import AttachmentManager from "@/components/shared/AttachmentManager";
 
 const Field = ({
   label,
@@ -261,18 +273,28 @@ const InvoiceDetailDrawer = ({
                       className="inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs hover:bg-accent/50 transition-colors cursor-pointer"
                       onClick={() => {
                         onClose();
-                        navigate(`/subscriptions?subscriptionId=${sub.subscriptionId}`);
+                        navigate(
+                          `/subscriptions?subscriptionId=${sub.subscriptionId}`,
+                        );
                       }}
                     >
                       {sub.platformLogoUrl ? (
                         <div className="size-5 shrink-0 overflow-hidden rounded">
-                          <AuthImg url={sub.platformLogoUrl} alt="" className="h-full w-full object-cover" />
+                          <AuthImg
+                            url={sub.platformLogoUrl}
+                            alt=""
+                            className="h-full w-full object-cover"
+                          />
                         </div>
                       ) : (
                         <CreditCardIcon className="size-4 text-muted-foreground" />
                       )}
-                      <span className="font-medium">{sub.subscriptionName}</span>
-                      <span className="text-muted-foreground">{sub.platformName}</span>
+                      <span className="font-medium">
+                        {sub.subscriptionName}
+                      </span>
+                      <span className="text-muted-foreground">
+                        {sub.platformName}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -313,24 +335,60 @@ const InvoiceDetailDrawer = ({
                   src={`data:image/png;base64,${invoice.previewImage}`}
                   alt={t("invoices.detail.preview")}
                   className="w-full rounded border cursor-pointer hover:opacity-90 transition-opacity"
-                  onClick={() => setPreviewUrl(`data:image/png;base64,${invoice.previewImage}`)}
+                  onClick={() =>
+                    setPreviewUrl(
+                      `data:image/png;base64,${invoice.previewImage}`,
+                    )
+                  }
                 />
               </div>
             )}
 
-            <InvoiceAttachmentManager
-              invoiceId={invoice.id}
-              attachments={invoice.attachments}
-              primaryFile={
-                invoice.fileUrl
-                  ? {
-                      filename: invoice.invoiceNumber || t("invoices.detail.file"),
-                      url: invoice.fileUrl,
+            <div className="grid gap-3">
+              <h4 className="text-sm font-medium">
+                {t("shared.attachments.title")}
+              </h4>
+              {invoice.fileUrl && (
+                <div className="flex items-center gap-3 overflow-hidden rounded-lg border p-2">
+                  <FileIcon className="size-4 shrink-0 text-muted-foreground" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm">
+                      {invoice.invoiceNumber || t("invoices.detail.file")}
+                    </p>
+                  </div>
+                  <a
+                    href={invoice.fileUrl}
+                    download={
+                      invoice.invoiceNumber || t("invoices.detail.file")
                     }
-                  : null
-              }
-              onChanged={handleAttachmentsChanged}
-            />
+                  >
+                    <Button variant="ghost" size="icon-xs">
+                      <DownloadIcon className="size-3.5" />
+                    </Button>
+                  </a>
+                </div>
+              )}
+              <AttachmentManager
+                attachments={invoice.attachments.map((a) => ({
+                  id: a.id,
+                  filename: a.filename,
+                  fileSize: a.fileSize,
+                  url: a.url,
+                }))}
+                title={t("shared.attachments.title")}
+                uploadLabel={t("shared.attachments.upload")}
+                uploadingLabel={t("shared.attachments.uploading")}
+                emptyLabel={t("shared.attachments.empty")}
+                onUpload={async (file) => {
+                  await uploadInvoiceAttachment(invoice.id, file);
+                  handleAttachmentsChanged();
+                }}
+                onDelete={async (id) => {
+                  await deleteInvoiceAttachment(invoice.id, id);
+                  handleAttachmentsChanged();
+                }}
+              />
+            </div>
 
             <div className="grid grid-cols-2 gap-4 text-xs text-muted-foreground">
               <Field

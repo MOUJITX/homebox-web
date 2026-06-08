@@ -12,8 +12,18 @@ import {
 import type { Asset, WarrantyStatus } from "@/api/assets";
 import { updateAsset } from "@/api/assets";
 import type { InvoiceDetail } from "@/api/invoices";
+import { uploadAssetPicture, deleteAssetPicture } from "@/api/assetPictures";
+import {
+  uploadAssetAttachment,
+  deleteAssetAttachment,
+} from "@/api/assetAttachments";
+import {
+  bindInvoiceToAsset,
+  unbindInvoiceFromAsset,
+} from "@/api/assetInvoices";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { useAssetDetail } from "@/hooks/queries/useAssetDetail";
+import { useAssetInvoices } from "@/hooks/queries/useAssetInvoices";
 import { useInvalidateAssets } from "@/hooks/queries/useInvalidateAssets";
 import AuthImg from "@/components/AuthImg";
 import { Badge } from "@/components/ui/badge";
@@ -25,12 +35,16 @@ import {
   SheetTitle,
   SheetFooter,
 } from "@/components/ui/sheet";
-import AssetPictureManager from "./AssetPictureManager";
-import AssetInvoiceManager from "./AssetInvoiceManager";
-import AssetAttachmentManager from "./AssetAttachmentManager";
+import PictureManager from "@/components/shared/PictureManager";
+import AttachmentManager from "@/components/shared/AttachmentManager";
+import InvoiceBindingManager, {
+  type BoundInvoice,
+} from "@/components/shared/InvoiceBindingManager";
 import CreateAssetDialog from "./CreateAssetDialog";
 import EditAssetDialog from "./EditAssetDialog";
 import DeleteAssetDialog from "./DeleteAssetDialog";
+import BindInvoiceDialog from "./BindInvoiceDialog";
+import CreateInvoiceDialog from "@/components/invoices/CreateInvoiceDialog";
 import InvoiceDetailDrawer from "@/components/invoices/InvoiceDetailDrawer";
 import EditInvoiceDialog from "@/components/invoices/EditInvoiceDialog";
 import DeleteInvoiceDialog from "@/components/invoices/DeleteInvoiceDialog";
@@ -81,8 +95,11 @@ const AssetDetailDrawer = ({
     error,
   } = useAssetDetail(open ? assetId : null);
   const invalidate = useInvalidateAssets();
+  const { data: assetInvoices = [] } = useAssetInvoices(open ? assetId : null);
 
   const [createSubOpen, setCreateSubOpen] = useState(false);
+  const [bindOpen, setBindOpen] = useState(false);
+  const [createInvoiceOpen, setCreateInvoiceOpen] = useState(false);
   const [editingAsset, setEditingAsset] = useState<Asset | null>(null);
   const [deletingAsset, setDeletingAsset] = useState<Asset | null>(null);
 
@@ -268,29 +285,75 @@ const AssetDetailDrawer = ({
             )}
 
             {/* Pictures */}
-            <div className="grid gap-2">
-              <AssetPictureManager assetId={detail.id} />
-            </div>
+            <PictureManager
+              pictures={detail.pictures ?? []}
+              title={t("shared.pictures.title")}
+              uploadLabel={t("shared.pictures.upload")}
+              uploadingLabel={t("shared.pictures.uploading")}
+              emptyLabel={t("shared.pictures.empty")}
+              onUpload={async (files) => {
+                await Promise.all(
+                  files.map((file) => uploadAssetPicture(detail.id, file)),
+                );
+                void invalidate.invalidateDetail(assetId!);
+              }}
+              onDelete={async (id) => {
+                await deleteAssetPicture(detail.id, id);
+                void invalidate.invalidateDetail(assetId!);
+              }}
+            />
 
             {/* Invoices */}
-            <div className="grid gap-2">
-              <AssetInvoiceManager
-                assetId={detail.id}
-                onInvoiceView={(id) => {
-                  setViewingInvoiceId(id);
-                  setInvoiceDrawerOpen(true);
-                }}
-              />
-            </div>
+            <InvoiceBindingManager
+              invoices={assetInvoices.map(
+                (inv) =>
+                  ({
+                    id: inv.id,
+                    invoiceId: inv.invoiceId,
+                    invoiceNumber: inv.invoiceNumber,
+                    invoiceDate: inv.invoiceDate,
+                    totalAmount: inv.totalAmount,
+                  }) satisfies BoundInvoice,
+              )}
+              title={t("shared.invoices.title")}
+              bindLabel={t("shared.invoices.bind")}
+              uploadNewLabel={t("shared.invoices.uploadNew")}
+              emptyLabel={t("shared.invoices.empty")}
+              onBind={() => setBindOpen(true)}
+              onCreateNew={() => setCreateInvoiceOpen(true)}
+              onUnbind={async (id) => {
+                await unbindInvoiceFromAsset(assetId!, id);
+                void invalidate.invalidateInvoices(assetId!);
+              }}
+              onView={(id) => {
+                setViewingInvoiceId(id);
+                setInvoiceDrawerOpen(true);
+              }}
+            />
 
             {/* Attachments */}
-            <div className="grid gap-2">
-              <AssetAttachmentManager
-                assetId={detail.id}
-                attachments={detail.attachments || []}
-                onChanged={() => void invalidate.invalidateDetail(assetId!)}
-              />
-            </div>
+            <AttachmentManager
+              attachments={(detail.attachments ?? []).map((a) => ({
+                id: a.id,
+                filename: a.filename,
+                fileSize: a.fileSize,
+                url: a.url,
+                indexed: a.indexed,
+              }))}
+              title={t("shared.attachments.title")}
+              uploadLabel={t("shared.attachments.upload")}
+              uploadingLabel={t("shared.attachments.uploading")}
+              emptyLabel={t("shared.attachments.empty")}
+              indexingLabel={t("shared.attachments.indexing")}
+              onUpload={async (file) => {
+                await uploadAssetAttachment(detail.id, file);
+                void invalidate.invalidateDetail(assetId!);
+              }}
+              onDelete={async (id) => {
+                await deleteAssetAttachment(detail.id, id);
+                void invalidate.invalidateDetail(assetId!);
+              }}
+            />
 
             {/* Sub-assets (for parent assets) */}
             <div className="grid gap-2">
@@ -439,6 +502,25 @@ const AssetDetailDrawer = ({
             setDeletingAsset(null);
             onClose();
             void invalidate.invalidateList();
+          }}
+        />
+
+        <BindInvoiceDialog
+          assetId={assetId!}
+          boundInvoiceIds={assetInvoices.map((i) => i.invoiceId)}
+          open={bindOpen}
+          onClose={() => setBindOpen(false)}
+          onSuccess={() => void invalidate.invalidateInvoices(assetId!)}
+        />
+        <CreateInvoiceDialog
+          open={createInvoiceOpen}
+          onClose={() => setCreateInvoiceOpen(false)}
+          onSuccess={() => {
+            /* no-op, we use onCreated */
+          }}
+          onCreated={async (invoice: InvoiceDetail) => {
+            await bindInvoiceToAsset(assetId!, invoice.id);
+            void invalidate.invalidateInvoices(assetId!);
           }}
         />
 

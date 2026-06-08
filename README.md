@@ -149,6 +149,14 @@ yarn preview
 - **Highlighted Results** — search results show highlighted snippets with source attribution
 - **Elasticsearch Backend** — gracefully degrades when ES is not configured (returns empty results)
 
+### Shared Components
+
+Reusable UI components in `src/components/shared/` provide consistent behavior across modules:
+
+- **PictureManager** — image upload, thumbnail grid, preview lightbox, and delete (used by assets, expiration)
+- **AttachmentManager** — file upload, download, delete with indexing status indicator (used by assets, expiration, invoices, medical records)
+- **InvoiceBindingManager** — bind/unbind invoices with view action (used by assets, medical records)
+
 ### Attachment Management
 
 - **Good Attachments** — upload and manage file attachments for goods (independent of pictures)
