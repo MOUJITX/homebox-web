@@ -821,7 +821,8 @@
       "createFailed": "Failed to create visit record",
       "updateFailed": "Failed to update visit record",
       "deleteFailed": "Failed to delete visit record",
-      "loadFailed": "Failed to load visit record"
+      "loadFailed": "Failed to load visit record",
+      "uploadFailed": "Failed to upload attachment"
     }
   },
   "settings": {

@@ -46,6 +46,8 @@ import {
   type VisitSourceType,
 } from "@/api/medical";
 import { formatFileSize } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/error";
+import { toast } from "sonner";
 import AttachmentManager, {
   type AttachmentItem,
 } from "@/components/shared/AttachmentManager";
@@ -176,7 +178,9 @@ const VisitDetailDrawer = ({
         subUploadTarget.sourceId,
       );
       setAttachments((prev) => [...prev, data]);
-    } catch {}
+    } catch (err) {
+      toast.error(getErrorMessage(err) ?? t("medical.errors.uploadFailed"));
+    }
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 

@@ -989,7 +989,8 @@
       "createFailed": "创建就诊记录失败",
       "updateFailed": "更新就诊记录失败",
       "deleteFailed": "删除就诊记录失败",
-      "loadFailed": "加载就诊记录失败"
+      "loadFailed": "加载就诊记录失败",
+      "uploadFailed": "上传附件失败"
     }
   },
   "settings": {
