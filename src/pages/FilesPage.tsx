@@ -14,6 +14,7 @@ import {
   XCircleIcon,
   ClockIcon,
   RefreshCwIcon,
+  SearchIcon,
 } from "lucide-react";
 import {
   getFiles,
@@ -26,11 +27,19 @@ import {
 } from "@/api/files";
 import type { Page } from "@/api/goods";
 import { formatDateTime } from "@/lib/utils";
+import { useDebounce } from "@/hooks/useDebounce";
 
 import ImagePreview from "@/components/ImagePreview";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectTrigger,
+  SelectPopup,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableHeader,
@@ -60,6 +69,16 @@ const formatFileSize = (bytes: number): string => {
 
 const isImageType = (contentType: string) => contentType.startsWith("image/");
 
+const CONTENT_TYPE_OPTIONS = [
+  { value: "image/", labelKey: "files.filters.typeImage" },
+  { value: "video/", labelKey: "files.filters.typeVideo" },
+  { value: "audio/", labelKey: "files.filters.typeAudio" },
+  { value: "application/pdf", labelKey: "files.filters.typePdf" },
+  { value: "text/", labelKey: "files.filters.typeText" },
+] as const;
+
+const STATUS_OPTIONS: ProcessStatus[] = ["SUCCESS", "PROCESSING", "FAILED"];
+
 const getFileIcon = (contentType: string) => {
   if (contentType.startsWith("video/")) return FileVideoIcon;
   if (contentType.startsWith("audio/")) return FileAudioIcon;
@@ -67,7 +86,10 @@ const getFileIcon = (contentType: string) => {
   return FileIcon;
 };
 
-const getFinalStatus = (extract: ProcessStatus, chunk: ProcessStatus): ProcessStatus => {
+const getFinalStatus = (
+  extract: ProcessStatus,
+  chunk: ProcessStatus,
+): ProcessStatus => {
   if (extract === "FAILED" || chunk === "FAILED") return "FAILED";
   if (extract === "SUCCESS" && chunk === "SUCCESS") return "SUCCESS";
   return "PROCESSING";
@@ -82,21 +104,35 @@ const FilesPage = () => {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
+  const [filterContentType, setFilterContentType] = useState<string | null>(
+    null,
+  );
+  const [filterStatus, setFilterStatus] = useState<string | null>(null);
+
   const [previewFile, setPreviewFile] = useState<FileRecord | null>(null);
   const [renamingFile, setRenamingFile] = useState<FileRecord | null>(null);
   const [renameValue, setRenameValue] = useState("");
   const [deletingFile, setDeletingFile] = useState<FileRecord | null>(null);
   const [retrying, setRetrying] = useState<Set<number>>(new Set());
 
-  const fetchFiles = useCallback(async (p: number) => {
-    setLoading(true);
-    try {
-      const { data } = await getFiles(p, pageSize);
-      setPageData(data);
-    } finally {
-      setLoading(false);
-    }
-  }, [pageSize]);
+  const fetchFiles = useCallback(
+    async (p: number) => {
+      setLoading(true);
+      try {
+        const { data } = await getFiles(p, pageSize, {
+          search: debouncedSearch || undefined,
+          contentType: filterContentType ?? undefined,
+          status: filterStatus ?? undefined,
+        });
+        setPageData(data);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [pageSize, debouncedSearch, filterContentType, filterStatus],
+  );
 
   useEffect(() => {
     void fetchFiles(page);
@@ -147,24 +183,100 @@ const FilesPage = () => {
 
   return (
     <div className="grid gap-4">
-      <div className="flex items-center justify-between gap-3">
-        <h1 className="font-heading text-lg font-semibold">
-          {t("files.title")}
-        </h1>
-        <Button
-          disabled={uploading}
-          onClick={() => fileInputRef.current?.click()}
-        >
-          <UploadIcon className="size-4" />
-          {uploading ? t("files.uploading") : t("files.upload")}
-        </Button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          className="hidden"
-          onChange={handleUpload}
-        />
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="relative max-w-xs flex-1">
+          <SearchIcon className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(0);
+            }}
+            placeholder={t("files.filters.searchPlaceholder")}
+            className="pl-8"
+          />
+        </div>
+
+        <div className="w-40">
+          <Select
+            value={filterContentType}
+            onValueChange={(v) => {
+              setFilterContentType(v);
+              setPage(0);
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={t("files.filters.allTypes")}>
+                {() =>
+                  filterContentType == null
+                    ? t("files.filters.allTypes")
+                    : t(
+                        CONTENT_TYPE_OPTIONS.find(
+                          (o) => o.value === filterContentType,
+                        )?.labelKey ?? "files.filters.allTypes",
+                      )
+                }
+              </SelectValue>
+            </SelectTrigger>
+            <SelectPopup>
+              <SelectItem value={null}>
+                {t("files.filters.allTypes")}
+              </SelectItem>
+              {CONTENT_TYPE_OPTIONS.map((o) => (
+                <SelectItem key={o.value} value={o.value}>
+                  {t(o.labelKey)}
+                </SelectItem>
+              ))}
+            </SelectPopup>
+          </Select>
+        </div>
+
+        <div className="w-36">
+          <Select
+            value={filterStatus}
+            onValueChange={(v) => {
+              setFilterStatus(v);
+              setPage(0);
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={t("files.filters.allStatus")}>
+                {() =>
+                  filterStatus == null
+                    ? t("files.filters.allStatus")
+                    : t(`files.status.${filterStatus}`)
+                }
+              </SelectValue>
+            </SelectTrigger>
+            <SelectPopup>
+              <SelectItem value={null}>
+                {t("files.filters.allStatus")}
+              </SelectItem>
+              {STATUS_OPTIONS.map((s) => (
+                <SelectItem key={s} value={s}>
+                  {t(`files.status.${s}`)}
+                </SelectItem>
+              ))}
+            </SelectPopup>
+          </Select>
+        </div>
+
+        <div className="ml-auto flex gap-1">
+          <Button
+            disabled={uploading}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <UploadIcon className="size-4" />
+            {uploading ? t("files.uploading") : t("files.upload")}
+          </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            className="hidden"
+            onChange={handleUpload}
+          />
+        </div>
       </div>
 
       <div className="rounded-xl ring-1 ring-foreground/10">
@@ -178,7 +290,9 @@ const FilesPage = () => {
               <TableHead>{t("files.columns.contentType")}</TableHead>
               <TableHead>{t("files.columns.fileSize")}</TableHead>
               <TableHead>{t("files.columns.createdAt")}</TableHead>
-              <TableHead className="w-24">{t("files.columns.status")}</TableHead>
+              <TableHead className="w-24">
+                {t("files.columns.status")}
+              </TableHead>
               <TableHead className="text-right">
                 {t("files.columns.actions")}
               </TableHead>
@@ -239,7 +353,10 @@ const FilesPage = () => {
                     </TableCell>
                     <TableCell>
                       {(() => {
-                        const status = getFinalStatus(file.extractStatus, file.chunkStatus);
+                        const status = getFinalStatus(
+                          file.extractStatus,
+                          file.chunkStatus,
+                        );
                         const isRetrying = retrying.has(file.id);
                         return (
                           <div className="flex items-center gap-1.5">
@@ -249,7 +366,8 @@ const FilesPage = () => {
                             {status === "FAILED" && (
                               <XCircleIcon className="size-4 text-red-500" />
                             )}
-                            {(status === "PROCESSING" || status === "PENDING") && (
+                            {(status === "PROCESSING" ||
+                              status === "PENDING") && (
                               <ClockIcon className="size-4 text-amber-500" />
                             )}
                             <span className="text-xs">

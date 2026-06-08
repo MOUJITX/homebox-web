@@ -624,6 +624,16 @@
       "PENDING": "Pending"
     },
     "retry": "Retry failed tasks",
+    "filters": {
+      "searchPlaceholder": "Search by filename…",
+      "allTypes": "All Types",
+      "typeImage": "Image",
+      "typeVideo": "Video",
+      "typeAudio": "Audio",
+      "typePdf": "PDF",
+      "typeText": "Text",
+      "allStatus": "All Status"
+    },
     "errors": {
       "uploadFailed": "Failed to upload file",
       "renameFailed": "Failed to rename file",

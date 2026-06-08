@@ -15,8 +15,20 @@ export interface FileRecord {
   chunkStatus: ProcessStatus;
 }
 
-export const getFiles = (page = 0, size = 20) =>
-  axios.get<Page<FileRecord>>("/files", { params: { page, size } });
+export const getFiles = (
+  page = 0,
+  size = 20,
+  filters?: { search?: string; contentType?: string; status?: string },
+) =>
+  axios.get<Page<FileRecord>>("/files", {
+    params: {
+      page,
+      size,
+      ...(filters?.search ? { search: filters.search } : {}),
+      ...(filters?.contentType ? { contentType: filters.contentType } : {}),
+      ...(filters?.status ? { status: filters.status } : {}),
+    },
+  });
 
 export const getFileById = (id: number) =>
   axios.get<FileRecord>(`/files/${id}`);
@@ -34,5 +46,4 @@ export const renameFile = (id: number, originalFilename: string) =>
 
 export const deleteFile = (id: number) => axios.delete<void>(`/files/${id}`);
 
-export const retryFile = (id: number) =>
-  axios.post<void>(`/files/${id}/retry`);
+export const retryFile = (id: number) => axios.post<void>(`/files/${id}/retry`);
