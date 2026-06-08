@@ -77,11 +77,14 @@ const FilePickerDialog = ({
 
   const defaultView: ViewMode =
     accept && accept.startsWith("image/") ? "grid" : "list";
+  // Derive locked content type from accept (e.g. "image/*" -> "image/")
+  const lockedContentType =
+    accept && accept.includes("*") ? accept.replace("*", "") : null;
   const [viewMode, setViewMode] = useState<ViewMode>(defaultView);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
   const [filterContentType, setFilterContentType] = useState<string | null>(
-    accept && !accept.includes("*") ? accept : null,
+    lockedContentType ?? (accept && !accept.includes("*") ? accept : null),
   );
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
@@ -94,21 +97,16 @@ const FilePickerDialog = ({
     async (p: number) => {
       setLoading(true);
       try {
-        const contentTypeFilter =
-          filterContentType ??
-          (accept && accept.includes("*")
-            ? accept.replace("*", "")
-            : undefined);
         const { data } = await getFiles(p, pageSize, {
           search: debouncedSearch || undefined,
-          contentType: contentTypeFilter,
+          contentType: filterContentType ?? undefined,
         });
         setPageData(data);
       } finally {
         setLoading(false);
       }
     },
-    [pageSize, debouncedSearch, filterContentType, accept],
+    [pageSize, debouncedSearch, filterContentType],
   );
 
   useEffect(() => {
@@ -120,12 +118,12 @@ const FilePickerDialog = ({
       setViewMode(defaultView);
       setSearch("");
       setFilterContentType(
-        accept && !accept.includes("*") ? accept : null,
+        lockedContentType ?? (accept && !accept.includes("*") ? accept : null),
       );
       setPage(0);
       setSelected(initialSelection ?? []);
     }
-  }, [open, defaultView, accept]);
+  }, [open, defaultView, accept, lockedContentType]);
 
   const handleToggleSelect = (file: FileRecord) => {
     setSelected((prev) => {
@@ -204,6 +202,7 @@ const FilePickerDialog = ({
                 setFilterContentType(v);
                 setPage(0);
               }}
+              disabled={lockedContentType != null}
             >
               <SelectTrigger>
                 <SelectValue placeholder={t("filePicker.allTypes")}>
