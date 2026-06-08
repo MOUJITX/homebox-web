@@ -91,145 +91,144 @@ const MedicationsPage = () => {
         };
 
   return (
-    <div className="mx-auto max-w-5xl">
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h1 className="text-xl font-semibold">{t("medications.title")}</h1>
-          <div className="flex border rounded-md">
-            {(
-              [
-                ["all", t("medications.filterAll")],
-                ["enabled", t("medications.filterEnabled")],
-                ["disabled", t("medications.filterDisabled")],
-              ] as [FilterMode, string][]
-            ).map(([mode, label], i, arr) => (
-              <button
-                key={mode}
-                onClick={() => handleFilterChange(mode)}
-                className={`px-3 py-1 text-sm transition-colors ${
-                  i === 0 ? "rounded-l-md" : ""
-                } ${
-                  i === arr.length - 1 ? "rounded-r-md" : ""
-                } ${
-                  filter === mode
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
+    <div className="grid gap-4">
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex border rounded-md">
+          {(
+            [
+              ["all", t("medications.filterAll")],
+              ["enabled", t("medications.filterEnabled")],
+              ["disabled", t("medications.filterDisabled")],
+            ] as [FilterMode, string][]
+          ).map(([mode, label], i, arr) => (
+            <button
+              key={mode}
+              onClick={() => handleFilterChange(mode)}
+              className={`px-3 py-1 text-sm transition-colors ${
+                i === 0 ? "rounded-l-md" : ""
+              } ${
+                i === arr.length - 1 ? "rounded-r-md" : ""
+              } ${
+                filter === mode
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
-        <Button onClick={() => setCreateOpen(true)}>
-          <PlusIcon className="size-4" />
-          {t("medications.create")}
-        </Button>
+        <div className="ml-auto">
+          <Button onClick={() => setCreateOpen(true)}>
+            <PlusIcon className="size-4" />
+            {t("medications.create")}
+          </Button>
+        </div>
       </div>
 
-      {loading ? (
-        <div className="py-8 text-center text-muted-foreground">
-          {t("common.loading")}
-        </div>
-      ) : pageData.empty ? (
-        <div className="py-16 text-center text-muted-foreground">
-          {t("medications.empty")}
-        </div>
-      ) : (
-        <>
-          <Table>
-            <TableHeader>
+      <div className="rounded-xl ring-1 ring-foreground/10">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t("medications.columns.medicine")}</TableHead>
+              <TableHead>{t("medications.columns.dosage")}</TableHead>
+              <TableHead>{t("medications.columns.frequency")}</TableHead>
+              <TableHead>{t("medications.columns.course")}</TableHead>
+              <TableHead>{t("medications.columns.status")}</TableHead>
+              <TableHead className="w-20">
+                {t("medications.columns.actions")}
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {loading && (
               <TableRow>
-                <TableHead>{t("medications.columns.medicine")}</TableHead>
-                <TableHead>{t("medications.columns.dosage")}</TableHead>
-                <TableHead>{t("medications.columns.frequency")}</TableHead>
-                <TableHead>{t("medications.columns.course")}</TableHead>
-                <TableHead>{t("medications.columns.status")}</TableHead>
-                <TableHead className="w-20">
-                  {t("medications.columns.actions")}
-                </TableHead>
+                <TableCell colSpan={6} className="h-24 text-center">
+                  {t("common.loading")}
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {pageData.content.map((r) => {
-                const status = statusBadge(r.enabled);
-                return (
-                  <TableRow key={r.id}>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="font-medium">
-                          {r.brandName}-{r.productName}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          {r.categoryName}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {r.dosageMethod && (
-                        <span>
-                          {r.dosageMethod}
-                          {r.dosageQuantity && ` ${r.dosageQuantity}`}
-                          {r.dosageUnit && ` ${r.dosageUnit}`}
-                        </span>
-                      )}
-                      {r.dosageNote && (
-                        <span className="block text-xs text-muted-foreground">
-                          {r.dosageNote}
-                        </span>
-                      )}
-                      {!r.dosageMethod && !r.dosageNote && "-"}
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-sm">
-                        {formatHours(r.frequencyHours)}
+            )}
+            {!loading && pageData.empty && (
+              <TableRow>
+                <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                  {t("medications.empty")}
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading && pageData.content.map((r) => {
+              const status = statusBadge(r.enabled);
+              return (
+                <TableRow key={r.id}>
+                  <TableCell>
+                    <div className="flex flex-col">
+                      <span className="font-medium">
+                        {r.brandName}-{r.productName}
                       </span>
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-sm whitespace-nowrap">
-                        {r.courseStartDate} ~ {r.courseEndDate}
+                      <span className="text-xs text-muted-foreground">
+                        {r.categoryName}
                       </span>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={status.variant}>{status.label}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon-xs"
-                          onClick={() => setEditing(r)}
-                        >
-                          <PencilIcon className="size-3.5" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon-xs"
-                          onClick={() => setDeleting(r)}
-                        >
-                          <TrashIcon className="size-3.5" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {r.dosageMethod && (
+                      <span>
+                        {r.dosageMethod}
+                        {r.dosageQuantity && ` ${r.dosageQuantity}`}
+                        {r.dosageUnit && ` ${r.dosageUnit}`}
+                      </span>
+                    )}
+                    {r.dosageNote && (
+                      <span className="block text-xs text-muted-foreground">
+                        {r.dosageNote}
+                      </span>
+                    )}
+                    {!r.dosageMethod && !r.dosageNote && "-"}
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-sm">
+                      {formatHours(r.frequencyHours)}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-sm whitespace-nowrap">
+                      {r.courseStartDate} ~ {r.courseEndDate}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={status.variant}>{status.label}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        onClick={() => setEditing(r)}
+                      >
+                        <PencilIcon className="size-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        onClick={() => setDeleting(r)}
+                      >
+                        <TrashIcon className="size-3.5" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
 
-          {pageData.totalPages > 1 && (
-            <div className="mt-6">
-              <Pagination
-                currentPage={page}
-                totalPages={pageData.totalPages}
-                pageSize={pageSize}
-                onPageChange={setPage}
-                onPageSizeChange={handlePageSizeChange}
-              />
-            </div>
-          )}
-        </>
-      )}
+      <Pagination
+        currentPage={page}
+        totalPages={pageData.totalPages}
+        pageSize={pageSize}
+        onPageChange={setPage}
+        onPageSizeChange={handlePageSizeChange}
+      />
 
       <CreateMedicationDialog
         open={createOpen}
