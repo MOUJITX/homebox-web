@@ -173,7 +173,7 @@ const MembersPage = () => {
                   className="inline-flex items-center gap-1"
                   onClick={() => handleSort("createdAt")}
                 >
-                  {t("members.columns.createdAt")}
+                  {t("common.createdAt")}
                   <SortIcon
                     column="createdAt"
                     sortKey={sortKey}
@@ -186,7 +186,7 @@ const MembersPage = () => {
                   className="inline-flex items-center gap-1"
                   onClick={() => handleSort("updatedAt")}
                 >
-                  {t("members.columns.updatedAt")}
+                  {t("common.updatedAt")}
                   <SortIcon
                     column="updatedAt"
                     sortKey={sortKey}
@@ -195,7 +195,7 @@ const MembersPage = () => {
                 </button>
               </TableHead>
               <TableHead className="text-right">
-                {t("members.columns.actions")}
+                {t("common.actions")}
               </TableHead>
             </TableRow>
           </TableHeader>

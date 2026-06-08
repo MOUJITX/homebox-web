@@ -277,7 +277,7 @@ const SubscriptionsPage = () => {
                 {t("subscriptions.table.endDate")}
               </TableHead>
               <TableHead className="text-right">
-                {t("subscriptions.table.actions")}
+                {t("common.actions")}
               </TableHead>
             </TableRow>
           </TableHeader>

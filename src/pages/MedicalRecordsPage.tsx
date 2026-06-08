@@ -294,7 +294,7 @@ const MedicalRecordsPage = () => {
               <TableHead>{t("medical.columns.doctor")}</TableHead>
               <TableHead>{t("medical.columns.diagnosis")}</TableHead>
               <TableHead className="w-20">
-                {t("medical.columns.actions")}
+                {t("common.actions")}
               </TableHead>
             </TableRow>
           </TableHeader>

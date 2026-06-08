@@ -257,7 +257,7 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
                       <TableHead>{t("goods.items.columns.lifeDays")}</TableHead>
                       <TableHead>{t("goods.items.columns.status")}</TableHead>
                       <TableHead className="text-right">
-                        {t("goods.items.columns.actions")}
+                        {t("common.actions")}
                       </TableHead>
                     </TableRow>
                   </TableHeader>
@@ -363,11 +363,11 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
             {/* Timestamps */}
             <div className="grid grid-cols-2 gap-4 text-xs text-muted-foreground">
               <Field
-                label={t("goods.detail.createdAt")}
+                label={t("common.createdAt")}
                 value={detail.createdAt ? formatDate(detail.createdAt) : null}
               />
               <Field
-                label={t("goods.detail.updatedAt")}
+                label={t("common.updatedAt")}
                 value={detail.updatedAt ? formatDate(detail.updatedAt) : null}
               />
             </div>

@@ -130,7 +130,7 @@ const MedicationsPage = () => {
               <TableHead>{t("medications.columns.course")}</TableHead>
               <TableHead>{t("medications.columns.status")}</TableHead>
               <TableHead className="w-20">
-                {t("medications.columns.actions")}
+                {t("common.actions")}
               </TableHead>
             </TableRow>
           </TableHeader>

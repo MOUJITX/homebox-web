@@ -304,7 +304,7 @@ const VisitDetailDrawer = ({
                 setSubUploadTarget({ sourceType: type, sourceId: data.id });
                 fileInputRef.current?.click();
               }}
-              title={t("medical.uploadAttachment")}
+              title={t("common.upload")}
             >
               <UploadIcon className="size-3.5" />
             </Button>
@@ -314,7 +314,7 @@ const VisitDetailDrawer = ({
               onClick={() =>
                 setInvoiceBind({ sourceType: type, sourceId: data.id })
               }
-              title={t("medical.bindInvoice")}
+              title={t("common.bindInvoice")}
             >
               <LinkIcon className="size-3.5" />
             </Button>
@@ -548,9 +548,9 @@ const VisitDetailDrawer = ({
                         totalAmount: inv.totalAmount,
                       }) satisfies BoundInvoice,
                   )}
-                title={t("medical.invoices")}
+                title={t("common.invoices")}
                 emptyLabel={t("medical.noInvoices")}
-                bindLabel={t("medical.bindInvoice")}
+                bindLabel={t("common.bindInvoice")}
                 onBindInvoice={async (invoiceId) => {
                   if (!visitId) return;
                   const { data } = await bindVisitInvoice(
@@ -561,7 +561,7 @@ const VisitDetailDrawer = ({
                   );
                   setVisitInvoices((prev) => [...prev, data]);
                 }}
-                uploadNewLabel={t("medical.uploadNewInvoice")}
+                uploadNewLabel={t("common.uploadNew")}
                 onCreateInvoice={async (invoice) => {
                   if (!visitId) return;
                   const { data } = await bindVisitInvoice(
@@ -811,9 +811,9 @@ const VisitDetailDrawer = ({
           open={invoiceBind !== null}
           onClose={() => setInvoiceBind(null)}
           onBind={handleSubRecordInvoiceBind}
-          title={t("shared.invoices.bindDialog.title")}
-          searchPlaceholder={t("shared.invoices.bindDialog.search")}
-          confirmLabel={t("shared.invoices.bindDialog.confirm")}
+          title={t("common.bindInvoice")}
+          searchPlaceholder={t("common.searchInvoices")}
+          confirmLabel={t("common.bind")}
         />
         <InvoiceDetailDrawer
           invoiceId={viewingInvoiceId}

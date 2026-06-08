@@ -142,7 +142,7 @@ const AssetPlaceManagerDialog = ({
                       {t("assets.assetPlaces.columns.description")}
                     </TableHead>
                     <TableHead className="text-right">
-                      {t("assets.assetPlaces.columns.actions")}
+                      {t("common.actions")}
                     </TableHead>
                   </TableRow>
                 </TableHeader>

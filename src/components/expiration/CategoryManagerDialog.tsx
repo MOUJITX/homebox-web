@@ -163,7 +163,7 @@ const CategoryManagerDialog = ({
                       {t("goods.categories.columns.description")}
                     </TableHead>
                     <TableHead className="text-right">
-                      {t("goods.categories.columns.actions")}
+                      {t("common.actions")}
                     </TableHead>
                   </TableRow>
                 </TableHeader>

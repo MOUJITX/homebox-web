@@ -294,15 +294,15 @@ const AssetDetailDrawer = ({
                     totalAmount: inv.totalAmount,
                   }) satisfies BoundInvoice,
               )}
-              title={t("shared.invoices.title")}
-              emptyLabel={t("shared.invoices.empty")}
-              bindLabel={t("shared.invoices.bind")}
+              title={t("common.invoices")}
+              emptyLabel={t("common.noInvoices")}
+              bindLabel={t("common.bind")}
               onBindInvoice={async (invoiceId) => {
                 await bindInvoiceToAsset(assetId!, invoiceId);
                 void invalidate.invalidateInvoices(assetId!);
               }}
               boundInvoiceIds={assetInvoices.map((i) => i.invoiceId)}
-              uploadNewLabel={t("shared.invoices.uploadNew")}
+              uploadNewLabel={t("common.uploadNew")}
               onCreateInvoice={async (invoice) => {
                 await bindInvoiceToAsset(assetId!, invoice.id);
                 void invalidate.invalidateInvoices(assetId!);
@@ -425,11 +425,11 @@ const AssetDetailDrawer = ({
             {/* Timestamps */}
             <div className="grid grid-cols-2 gap-4 text-xs text-muted-foreground">
               <Field
-                label={t("assets.detail.createdAt")}
+                label={t("common.createdAt")}
                 value={detail.createdAt ? formatDate(detail.createdAt) : null}
               />
               <Field
-                label={t("assets.detail.updatedAt")}
+                label={t("common.updatedAt")}
                 value={detail.updatedAt ? formatDate(detail.updatedAt) : null}
               />
             </div>

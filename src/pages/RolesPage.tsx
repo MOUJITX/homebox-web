@@ -143,7 +143,7 @@ const RolesPage = () => {
                   className="inline-flex items-center gap-1"
                   onClick={() => handleSort("createdAt")}
                 >
-                  {t("roles.columns.createdAt")}
+                  {t("common.createdAt")}
                   <SortIcon
                     column="createdAt"
                     sortKey={sortKey}
@@ -156,7 +156,7 @@ const RolesPage = () => {
                   className="inline-flex items-center gap-1"
                   onClick={() => handleSort("updatedAt")}
                 >
-                  {t("roles.columns.updatedAt")}
+                  {t("common.updatedAt")}
                   <SortIcon
                     column="updatedAt"
                     sortKey={sortKey}
@@ -165,7 +165,7 @@ const RolesPage = () => {
                 </button>
               </TableHead>
               <TableHead className="text-right">
-                {t("roles.columns.actions")}
+                {t("common.actions")}
               </TableHead>
             </TableRow>
           </TableHeader>

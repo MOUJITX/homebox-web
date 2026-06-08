@@ -248,7 +248,7 @@ const InvoicesPage = () => {
               </TableHead>
               <TableHead>{t("invoices.columns.invoiceStatus")}</TableHead>
               <TableHead className="text-right">
-                {t("invoices.columns.actions")}
+                {t("common.actions")}
               </TableHead>
             </TableRow>
           </TableHeader>

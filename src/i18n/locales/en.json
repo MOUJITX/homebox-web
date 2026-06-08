@@ -45,14 +45,11 @@
     "success": "Password changed. Please sign in with your new password."
   },
   "dashboard": {
-    "title": "Dashboard",
     "stats": {
       "itemCount": "Total Items",
       "assetCount": "Total Assets",
       "totalAssetPrice": "Total Asset Value",
-      "invoiceCount": "Total Invoices",
-      "activeSubscriptionCount": "Active Subscriptions",
-      "monthlySubscriptionSpending": "Monthly Spending"
+      "invoiceCount": "Total Invoices"
     },
     "items": {
       "title": "Items",
@@ -102,10 +99,7 @@
       "username": "Username",
       "displayName": "Display Name",
       "role": "Role",
-      "status": "Status",
-      "createdAt": "Created",
-      "updatedAt": "Updated",
-      "actions": "Actions"
+      "status": "Status"
     },
     "form": {
       "username": "Username",
@@ -136,10 +130,7 @@
     "deleteConfirm": "Are you sure you want to delete the {{name}} role? This action cannot be undone.",
     "columns": {
       "name": "Name",
-      "description": "Description",
-      "createdAt": "Created",
-      "updatedAt": "Updated",
-      "actions": "Actions"
+      "description": "Description"
     },
     "form": {
       "name": "Name",
@@ -190,8 +181,7 @@
       "category": "Category",
       "brand": "Brand",
       "items": "Items",
-      "status": "Status",
-      "actions": "Actions"
+      "status": "Status"
     },
     "form": {
       "productName": "Product Name",
@@ -239,15 +229,12 @@
       "delete": "Delete Item",
       "deleteConfirm": "Are you sure you want to delete this item? This action cannot be undone.",
       "empty": "No items yet. Add one to start tracking.",
-      "inUse": "In Use",
-      "notInUse": "Exhausted",
       "dateHint": "Fill in exactly 2 of the 3 fields below — the third will be auto-calculated.",
       "columns": {
         "productDate": "Production Date",
         "expirationDate": "Expiration Date",
         "lifeDays": "Shelf Life (days)",
-        "status": "Status",
-        "actions": "Actions"
+        "status": "Status"
       },
       "form": {
         "productDate": "Production Date",
@@ -270,23 +257,7 @@
       }
     },
     "detail": {
-      "title": "Good Details",
-      "createdAt": "Created",
-      "updatedAt": "Updated"
-    },
-    "pictures": {
-      "title": "Pictures",
-      "manage": "Pictures",
-      "upload": "Upload",
-      "uploading": "Uploading…",
-      "empty": "No pictures uploaded yet."
-    },
-    "attachments": {
-      "title": "Attachments",
-      "upload": "Upload",
-      "uploading": "Uploading…",
-      "empty": "No attachments uploaded yet.",
-      "indexing": "Indexing…"
+      "title": "Good Details"
     },
     "categories": {
       "manage": "Categories",
@@ -294,8 +265,7 @@
       "create": "Create Category",
       "columns": {
         "name": "Name",
-        "description": "Description",
-        "actions": "Actions"
+        "description": "Description"
       },
       "form": {
         "name": "Name",
@@ -314,8 +284,7 @@
       "create": "Create Brand",
       "columns": {
         "brandName": "Brand Name",
-        "companyName": "Company Name",
-        "actions": "Actions"
+        "companyName": "Company Name"
       },
       "form": {
         "brandName": "Brand Name",
@@ -348,8 +317,7 @@
       "totalPrice": "Total Price",
       "inUse": "In Use",
       "retireDate": "Retire Date",
-      "warranty": "Warranty",
-      "actions": "Actions"
+      "warranty": "Warranty"
     },
     "form": {
       "name": "Name",
@@ -401,46 +369,13 @@
       "createDescription": "Add a sub-asset to this asset.",
       "empty": "No sub-assets yet."
     },
-    "pictures": {
-      "title": "Pictures",
-      "manage": "Pictures",
-      "upload": "Upload",
-      "uploading": "Uploading…",
-      "empty": "No pictures uploaded yet."
-    },
-    "invoices": {
-      "title": "Invoices",
-      "manage": "Invoices",
-      "bind": "Bind Invoice",
-      "unbind": "Unbind",
-      "uploadNew": "Upload New",
-      "empty": "No invoices bound yet.",
-      "bindDialog": {
-        "title": "Bind Existing Invoice",
-        "search": "Search invoices…",
-        "confirm": "Bind"
-      },
-      "errors": {
-        "bindFailed": "Failed to bind invoice",
-        "unbindFailed": "Failed to unbind invoice",
-        "loadFailed": "Failed to load invoices"
-      }
-    },
-    "attachments": {
-      "title": "Attachments",
-      "upload": "Upload",
-      "uploading": "Uploading…",
-      "empty": "No attachments uploaded yet.",
-      "indexing": "Indexing…"
-    },
     "assetCategories": {
       "manage": "Categories",
       "manageDescription": "Create, edit, and delete asset categories.",
       "create": "Create Category",
       "columns": {
         "name": "Name",
-        "description": "Description",
-        "actions": "Actions"
+        "description": "Description"
       },
       "form": {
         "name": "Name",
@@ -459,8 +394,7 @@
       "create": "Create Place",
       "columns": {
         "name": "Name",
-        "description": "Description",
-        "actions": "Actions"
+        "description": "Description"
       },
       "form": {
         "name": "Name",
@@ -479,8 +413,7 @@
       "create": "Create Store",
       "columns": {
         "name": "Name",
-        "channel": "Channel",
-        "actions": "Actions"
+        "channel": "Channel"
       },
       "form": {
         "name": "Name",
@@ -502,9 +435,7 @@
     },
     "detail": {
       "title": "Asset Details",
-      "parentAsset": "Parent Asset",
-      "createdAt": "Created",
-      "updatedAt": "Updated"
+      "parentAsset": "Parent Asset"
     }
   },
   "invoices": {
@@ -523,8 +454,7 @@
       "sellerName": "Seller",
       "totalAmount": "Amount",
       "invoiceStatus": "Status",
-      "boundAssets": "Associations",
-      "actions": "Actions"
+      "boundAssets": "Associations"
     },
     "type": {
       "DIGITAL_INVOICE": "Digital Invoice",
@@ -572,9 +502,6 @@
       "sellerInfo": "Seller Information",
       "file": "Invoice File",
       "preview": "Preview",
-      "download": "Download",
-      "createdAt": "Created",
-      "updatedAt": "Updated",
       "boundAssets": "Bound Assets",
       "boundSubscriptions": "Bound Subscriptions",
       "boundVisits": "Bound Visit Records",
@@ -591,14 +518,11 @@
       "updateFailed": "Failed to update invoice",
       "deleteFailed": "Failed to delete invoice",
       "parseFailed": "Failed to parse invoice file",
-      "loadFailed": "Failed to load invoice details",
-      "duplicateInvoiceNumber": "Invoice number already exists"
+      "loadFailed": "Failed to load invoice details"
     }
   },
   "files": {
-    "title": "File Management",
     "upload": "Upload File",
-    "uploading": "Uploading…",
     "rename": "Rename",
     "renameDescription": "Enter a new name for this file.",
     "newFilename": "New Filename",
@@ -613,9 +537,7 @@
       "filename": "Filename",
       "contentType": "Type",
       "fileSize": "Size",
-      "createdAt": "Created",
-      "status": "Status",
-      "actions": "Actions"
+      "status": "Status"
     },
     "status": {
       "SUCCESS": "Success",
@@ -633,11 +555,6 @@
       "typePdf": "PDF",
       "typeText": "Text",
       "allStatus": "All Status"
-    },
-    "errors": {
-      "uploadFailed": "Failed to upload file",
-      "renameFailed": "Failed to rename file",
-      "deleteFailed": "Failed to delete file"
     }
   },
   "errorToast": {
@@ -662,7 +579,6 @@
     }
   },
   "medications": {
-    "title": "Medication Reminders",
     "create": "Create Reminder",
     "createDescription": "Add a new medication reminder.",
     "edit": "Edit Reminder",
@@ -678,8 +594,7 @@
       "dosage": "Dosage",
       "frequency": "Frequency",
       "course": "Course",
-      "status": "Status",
-      "actions": "Actions"
+      "status": "Status"
     },
     "status": {
       "enabled": "Enabled",
@@ -737,8 +652,7 @@
       "department": "Department",
       "time": "Visit Time",
       "doctor": "Doctor",
-      "diagnosis": "Diagnosis",
-      "actions": "Actions"
+      "diagnosis": "Diagnosis"
     },
     "form": {
       "patientName": "Patient Name",
@@ -798,29 +712,12 @@
     "addPrescriptionItem": "Add Medication",
     "editPrescriptionItem": "Edit Medication",
     "createReminder": "New Reminder",
-    "attachments": "Attachments",
-    "uploadAttachment": "Upload",
-    "noAttachments": "No attachments",
-    "invoices": "Invoices",
-    "bindInvoice": "Bind Invoice",
-    "uploadNewInvoice": "Upload New",
     "noInvoices": "No bound invoices",
-    "invoicesSection": {
-      "bindDialog": {
-        "title": "Bind Invoice",
-        "search": "Search invoices...",
-        "confirm": "Bind"
-      },
-      "uploadNew": "Upload New"
-    },
     "parsePaste": "Paste & Parse",
     "parse": "Parse",
     "parseHint": "Paste medical record text (appointment slip, medical summary, etc.) and AI will parse the fields automatically.",
     "parsePlaceholder": "Paste text content here...",
     "errors": {
-      "createFailed": "Failed to create visit record",
-      "updateFailed": "Failed to update visit record",
-      "deleteFailed": "Failed to delete visit record",
       "loadFailed": "Failed to load visit record",
       "uploadFailed": "Failed to upload attachment",
       "loadInstitutionsFailed": "Failed to load institutions",
@@ -852,7 +749,6 @@
         "folder": "Enter folder path (optional)",
         "domain": "https://cdn.example.com"
       },
-      "testConnection": "Test Connection",
       "testSuccess": "Qiniu connection successful",
       "testFailed": "Qiniu connection failed: {{message}}"
     },
@@ -870,7 +766,6 @@
         "visitRecordPrompt": "Leave empty to use the default visit record prompt"
       },
       "noModels": "No models configured. Click + to add one.",
-      "testConnection": "Test Connection",
       "testSuccess": "AI connection successful",
       "testFailed": "AI connection failed: {{message}}",
       "models": {
@@ -882,8 +777,7 @@
         "columns": {
           "name": "Name",
           "apiUrl": "API URL",
-          "model": "Model",
-          "actions": "Actions"
+          "model": "Model"
         },
         "fields": {
           "name": "Model Name",
@@ -930,7 +824,6 @@
       "fields": {
         "enabled": "Enable Elasticsearch Search"
       },
-      "testConnection": "Test Connection",
       "testSuccess": "Elasticsearch connection successful",
       "testFailed": "Elasticsearch connection failed: {{message}}"
     },
@@ -938,7 +831,6 @@
     "saveFailed": "Failed to save settings"
   },
   "subscriptions": {
-    "title": "Subscriptions",
     "create": "Add Subscription",
     "createDescription": "Add a new subscription to track.",
     "edit": "Edit Subscription",
@@ -954,8 +846,7 @@
       "type": "Type",
       "status": "Status",
       "latestRecord": "Latest Record",
-      "endDate": "End Date",
-      "actions": "Actions"
+      "endDate": "End Date"
     },
     "filters": {
       "allTypes": "All Types",
@@ -990,21 +881,16 @@
       "platformRequired": "Platform is required",
       "subscriptionType": "Type",
       "billingMode": "Billing Mode",
-      "billingCycle": "Billing Cycle",
-      "price": "Price",
       "currency": "Currency",
       "status": "Status",
       "renewNoticeDays": "Renewal Notice (days)",
       "note": "Note"
     },
     "detail": {
-      "title": "Subscription Details",
       "records": "Records",
-      "noRecords": "No records yet",
-      "renewalInfo": "Renewal Info"
+      "noRecords": "No records yet"
     },
     "records": {
-      "title": "Subscription Records",
       "add": "Add Record",
       "edit": "Edit Record",
       "delete": "Delete Record",
@@ -1025,35 +911,22 @@
       "note": "Note"
     },
     "invoices": {
-      "bind": "Bind Invoice",
-      "unbind": "Unbind",
-      "uploadNew": "Upload New"
+      "bind": "Bind Invoice"
     },
-    "attachments": {
-      "upload": "Upload",
-      "delete": "Delete"
-    },
-    "errors": {
-      "hasRecords": "Cannot delete subscription with records",
-      "cannotDelete": "Failed to delete subscription"
-    }
+    "attachments": {}
   },
   "platforms": {
     "title": "Platforms",
     "name": "Name",
     "logo": "Logo",
     "website": "Website",
-    "create": "Create Platform",
-    "edit": "Edit Platform",
-    "delete": "Delete Platform"
+    "create": "Create Platform"
   },
   "paymentMethods": {
     "title": "Payment Methods",
     "name": "Name",
     "logo": "Logo",
-    "create": "Create",
-    "edit": "Edit",
-    "delete": "Delete"
+    "create": "Create"
   },
   "search": {
     "placeholder": "Search file contents…",
@@ -1069,24 +942,14 @@
     }
   },
   "shared": {
-    "pictures": {
-      "title": "Pictures",
-      "upload": "Upload",
-      "uploading": "Uploading…",
-      "empty": "No pictures uploaded yet."
-    },
-    "attachments": {
-      "title": "Attachments",
-      "upload": "Upload",
-      "uploading": "Uploading…",
-      "empty": "No attachments uploaded yet.",
-      "indexing": "Indexing…"
-    },
+    "pictures": {},
+    "attachments": {},
     "invoices": {
-      "title": "Invoices",
-      "bind": "Bind",
-      "uploadNew": "Upload New",
-      "empty": "No invoices bound yet."
+      "bindDialog": {
+        "title": "Bind Invoice",
+        "search": "Search invoices…",
+        "confirm": "Bind"
+      }
     }
   },
   "common": {
@@ -1103,6 +966,27 @@
     "noResults": "No results found",
     "pageInfo": "Page {{current}} of {{total}}",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "edit": "Edit",
+    "download": "Download",
+    "view": "View",
+    "unbind": "Unbind",
+    "actions": "Actions",
+    "createdAt": "Created",
+    "updatedAt": "Updated",
+    "upload": "Upload",
+    "uploading": "Uploading…",
+    "pictures": "Pictures",
+    "attachments": "Attachments",
+    "invoices": "Invoices",
+    "testConnection": "Test Connection",
+    "bindInvoice": "Bind Invoice",
+    "uploadNew": "Upload New",
+    "bind": "Bind",
+    "noPictures": "No pictures uploaded yet.",
+    "noAttachments": "No attachments uploaded yet.",
+    "indexing": "Indexing…",
+    "noInvoices": "No invoices bound yet.",
+    "searchInvoices": "Search invoices…"
   }
 }

@@ -168,7 +168,7 @@ const AssetStoreManagerDialog = ({
                       {t("assets.assetStores.columns.channel")}
                     </TableHead>
                     <TableHead className="text-right">
-                      {t("assets.assetStores.columns.actions")}
+                      {t("common.actions")}
                     </TableHead>
                   </TableRow>
                 </TableHeader>

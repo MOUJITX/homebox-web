@@ -40,7 +40,7 @@ const SubscriptionInvoiceManager = ({
         onChanged();
       }}
       boundInvoiceIds={invoices.map((i) => i.invoiceId)}
-      uploadNewLabel={t("subscriptions.invoices.uploadNew")}
+      uploadNewLabel={t("common.uploadNew")}
       onCreateInvoice={async (invoice) => {
         await bindInvoice(recordId, invoice.id);
         onChanged();

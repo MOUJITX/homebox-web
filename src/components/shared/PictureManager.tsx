@@ -46,7 +46,7 @@ const PictureManager = ({
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-sm font-medium flex items-center gap-1.5">
           <ImageIcon className="size-4" />
-          {t("shared.pictures.title")}
+          {t("common.pictures")}
         </h4>
         <Button
           variant="outline"
@@ -56,8 +56,8 @@ const PictureManager = ({
         >
           <PlusIcon className="size-3.5" />
           {uploading
-            ? t("shared.pictures.uploading")
-            : t("shared.pictures.upload")}
+            ? t("common.uploading")
+            : t("common.upload")}
         </Button>
         <input
           ref={fileInputRef}
@@ -71,14 +71,14 @@ const PictureManager = ({
       {isLoading && (
         <div className="rounded-lg border border-dashed p-4">
           <p className="text-sm text-muted-foreground text-center py-4">
-            {t("shared.pictures.uploading").replace(/…$/, "")}...
+            {t("common.uploading").replace(/…$/, "")}...
           </p>
         </div>
       )}
       {!isLoading && pictures.length === 0 && (
         <div className="rounded-lg border border-dashed p-4">
           <p className="text-sm text-muted-foreground text-center py-4">
-            {t("shared.pictures.empty")}
+            {t("common.noPictures")}
           </p>
         </div>
       )}

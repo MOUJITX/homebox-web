@@ -329,7 +329,7 @@ const ExpirationPage = () => {
               <TableHead>{t("goods.columns.items")}</TableHead>
               <TableHead>{t("goods.columns.status")}</TableHead>
               <TableHead className="text-right">
-                {t("goods.columns.actions")}
+                {t("common.actions")}
               </TableHead>
             </TableRow>
           </TableHeader>

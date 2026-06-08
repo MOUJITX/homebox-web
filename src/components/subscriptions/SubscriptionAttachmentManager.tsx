@@ -54,7 +54,7 @@ const SubscriptionAttachmentManager = ({
     <div className="grid gap-3">
       <div className="flex items-center justify-between">
         <h4 className="text-sm font-medium">
-          {t("subscriptions.attachments.upload")}
+          {t("common.upload")}
         </h4>
         <input
           ref={fileInputRef}
@@ -69,7 +69,7 @@ const SubscriptionAttachmentManager = ({
           disabled={uploading}
         >
           <UploadIcon className="size-3.5" />
-          {uploading ? "..." : t("subscriptions.attachments.upload")}
+          {uploading ? "..." : t("common.upload")}
         </Button>
       </div>
       {attachments.length === 0 ? (

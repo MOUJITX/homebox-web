@@ -362,7 +362,7 @@ const InvoiceDetailDrawer = ({
 
             <div className="grid gap-3">
               <h4 className="text-sm font-medium">
-                {t("shared.attachments.title")}
+                {t("common.attachments")}
               </h4>
               {invoice.fileUrl && (
                 <div className="flex items-center gap-3 overflow-hidden rounded-lg border p-2">
@@ -404,11 +404,11 @@ const InvoiceDetailDrawer = ({
 
             <div className="grid grid-cols-2 gap-4 text-xs text-muted-foreground">
               <Field
-                label={t("invoices.detail.createdAt")}
+                label={t("common.createdAt")}
                 value={formatDate(invoice.createdAt)}
               />
               <Field
-                label={t("invoices.detail.updatedAt")}
+                label={t("common.updatedAt")}
                 value={formatDate(invoice.updatedAt)}
               />
             </div>

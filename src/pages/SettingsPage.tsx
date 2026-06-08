@@ -352,7 +352,7 @@ const AiConfigCard = () => {
             {saving ? t("common.saving") : t("common.save")}
           </Button>
           <Button variant="outline" onClick={handleTest} disabled={testing}>
-            {testing ? t("common.loading") : t("settings.ai.testConnection")}
+            {testing ? t("common.loading") : t("common.testConnection")}
           </Button>
         </CardFooter>
       </Card>
@@ -420,7 +420,7 @@ const SettingsPage = () => {
             title={t("settings.qiniu.title")}
             description={t("settings.qiniu.description")}
             onTest={handleTestQiniu}
-            testLabel={t("settings.qiniu.testConnection")}
+            testLabel={t("common.testConnection")}
             fieldLabels={{
               "qiniu.access-key": t("settings.qiniu.fields.accessKey"),
               "qiniu.secret-key": t("settings.qiniu.fields.secretKey"),

@@ -48,7 +48,7 @@ const AttachmentManager = ({
   return (
     <div className="grid gap-3">
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-medium">{t("shared.attachments.title")}</h4>
+        <h4 className="text-sm font-medium">{t("common.attachments")}</h4>
         <div>
           <input
             ref={fileInputRef}
@@ -64,15 +64,15 @@ const AttachmentManager = ({
           >
             <UploadIcon className="size-3.5" />
             {uploading
-              ? t("shared.attachments.uploading")
-              : t("shared.attachments.upload")}
+              ? t("common.uploading")
+              : t("common.upload")}
           </Button>
         </div>
       </div>
 
       {attachments.length === 0 ? (
         <p className="text-sm text-muted-foreground">
-          {t("shared.attachments.empty")}
+          {t("common.noAttachments")}
         </p>
       ) : (
         <div className="grid gap-2">
@@ -89,7 +89,7 @@ const AttachmentManager = ({
                   {a.indexed === false && (
                     <span className="ml-2 inline-flex items-center gap-1 text-amber-500">
                       <LoaderIcon className="size-3 animate-spin" />
-                      {t("shared.attachments.indexing")}
+                      {t("common.indexing")}
                     </span>
                   )}
                 </p>

@@ -159,7 +159,7 @@ const BrandManagerDialog = ({
                       {t("goods.brands.columns.companyName")}
                     </TableHead>
                     <TableHead className="text-right">
-                      {t("goods.brands.columns.actions")}
+                      {t("common.actions")}
                     </TableHead>
                   </TableRow>
                 </TableHeader>

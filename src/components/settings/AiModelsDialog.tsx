@@ -140,7 +140,7 @@ const AiModelsDialog = ({
                       {t("settings.ai.models.columns.model")}
                     </TableHead>
                     <TableHead className="w-20">
-                      {t("settings.ai.models.columns.actions")}
+                      {t("common.actions")}
                     </TableHead>
                   </TableRow>
                 </TableHeader>

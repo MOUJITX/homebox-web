@@ -267,7 +267,7 @@ const FilesPage = () => {
             onClick={() => fileInputRef.current?.click()}
           >
             <UploadIcon className="size-4" />
-            {uploading ? t("files.uploading") : t("files.upload")}
+            {uploading ? t("common.uploading") : t("files.upload")}
           </Button>
           <input
             ref={fileInputRef}
@@ -289,12 +289,12 @@ const FilesPage = () => {
               <TableHead>{t("files.columns.filename")}</TableHead>
               <TableHead>{t("files.columns.contentType")}</TableHead>
               <TableHead>{t("files.columns.fileSize")}</TableHead>
-              <TableHead>{t("files.columns.createdAt")}</TableHead>
+              <TableHead>{t("common.createdAt")}</TableHead>
               <TableHead className="w-24">
                 {t("files.columns.status")}
               </TableHead>
               <TableHead className="text-right">
-                {t("files.columns.actions")}
+                {t("common.actions")}
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -405,7 +405,7 @@ const FilesPage = () => {
                           <Button
                             variant="ghost"
                             size="icon-xs"
-                            title={t("files.download")}
+                            title={t("common.download")}
                           >
                             <DownloadIcon className="size-3.5" />
                           </Button>
@@ -424,7 +424,7 @@ const FilesPage = () => {
                         <Button
                           variant="ghost"
                           size="icon-xs"
-                          title={t("files.delete")}
+                          title={t("common.delete")}
                           onClick={() => setDeletingFile(file)}
                         >
                           <TrashIcon className="size-3.5" />
@@ -481,7 +481,7 @@ const FilesPage = () => {
               <a href={previewFile.url} download={previewFile.originalFilename}>
                 <Button>
                   <DownloadIcon className="size-4" />
-                  {t("files.download")}
+                  {t("common.download")}
                 </Button>
               </a>
             </div>
@@ -529,7 +529,7 @@ const FilesPage = () => {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t("files.delete")}</DialogTitle>
+            <DialogTitle>{t("common.delete")}</DialogTitle>
             <DialogDescription>{t("files.deleteConfirm")}</DialogDescription>
           </DialogHeader>
           <DialogFooter>

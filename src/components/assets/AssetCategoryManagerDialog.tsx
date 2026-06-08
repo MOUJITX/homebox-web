@@ -147,7 +147,7 @@ const AssetCategoryManagerDialog = ({
                       {t("assets.assetCategories.columns.description")}
                     </TableHead>
                     <TableHead className="text-right">
-                      {t("assets.assetCategories.columns.actions")}
+                      {t("common.actions")}
                     </TableHead>
                   </TableRow>
                 </TableHeader>

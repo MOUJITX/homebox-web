@@ -123,7 +123,7 @@ const ElasticsearchConfigCard = () => {
         >
           {testing
             ? t("common.loading")
-            : t("settings.elasticsearch.testConnection")}
+            : t("common.testConnection")}
         </Button>
       </CardFooter>
     </Card>

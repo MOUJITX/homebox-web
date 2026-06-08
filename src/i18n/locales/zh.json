@@ -32,8 +32,7 @@
       "category": "分类",
       "brand": "品牌",
       "items": "项目",
-      "status": "状态",
-      "actions": "操作"
+      "status": "状态"
     },
     "form": {
       "productName": "商品名称",
@@ -81,15 +80,12 @@
       "delete": "删除项目",
       "deleteConfirm": "您确定要删除此项目吗？此操作无法撤消。",
       "empty": "暂无项目。添加一个开始跟踪。",
-      "inUse": "使用中",
-      "notInUse": "已用尽",
       "dateHint": "填写以下3个字段中的任意2个，第3个将自动计算。",
       "columns": {
         "productDate": "生产日期",
         "expirationDate": "到期日期",
         "lifeDays": "保质期（天）",
-        "status": "状态",
-        "actions": "操作"
+        "status": "状态"
       },
       "form": {
         "productDate": "生产日期",
@@ -112,23 +108,7 @@
       }
     },
     "detail": {
-      "title": "商品详情",
-      "createdAt": "创建时间",
-      "updatedAt": "更新时间"
-    },
-    "pictures": {
-      "title": "图片",
-      "manage": "图片",
-      "upload": "上传",
-      "uploading": "上传中…",
-      "empty": "暂无图片。"
-    },
-    "attachments": {
-      "title": "附件",
-      "upload": "上传",
-      "uploading": "上传中…",
-      "empty": "暂无附件。",
-      "indexing": "索引中…"
+      "title": "商品详情"
     },
     "categories": {
       "manage": "分类",
@@ -136,8 +116,7 @@
       "create": "创建分类",
       "columns": {
         "name": "名称",
-        "description": "描述",
-        "actions": "操作"
+        "description": "描述"
       },
       "form": {
         "name": "名称",
@@ -156,8 +135,7 @@
       "create": "创建品牌",
       "columns": {
         "brandName": "品牌名称",
-        "companyName": "公司名称",
-        "actions": "操作"
+        "companyName": "公司名称"
       },
       "form": {
         "brandName": "品牌名称",
@@ -190,8 +168,7 @@
       "totalPrice": "总价",
       "inUse": "使用中",
       "retireDate": "退役日期",
-      "warranty": "保修",
-      "actions": "操作"
+      "warranty": "保修"
     },
     "form": {
       "name": "名称",
@@ -243,46 +220,13 @@
       "createDescription": "为此资产添加子资产。",
       "empty": "暂无子资产。"
     },
-    "pictures": {
-      "title": "图片",
-      "manage": "图片",
-      "upload": "上传",
-      "uploading": "上传中…",
-      "empty": "暂无图片。"
-    },
-    "invoices": {
-      "title": "发票",
-      "manage": "发票",
-      "bind": "绑定发票",
-      "unbind": "解绑",
-      "uploadNew": "上传新发票",
-      "empty": "暂无绑定发票。",
-      "bindDialog": {
-        "title": "绑定已有发票",
-        "search": "搜索发票…",
-        "confirm": "绑定"
-      },
-      "errors": {
-        "bindFailed": "绑定发票失败",
-        "unbindFailed": "解绑发票失败",
-        "loadFailed": "加载发票失败"
-      }
-    },
-    "attachments": {
-      "title": "附件",
-      "upload": "上传",
-      "uploading": "上传中…",
-      "empty": "暂无附件。",
-      "indexing": "索引中…"
-    },
     "assetCategories": {
       "manage": "分类",
       "manageDescription": "创建、编辑和删除资产分类。",
       "create": "创建分类",
       "columns": {
         "name": "名称",
-        "description": "描述",
-        "actions": "操作"
+        "description": "描述"
       },
       "form": {
         "name": "名称",
@@ -301,8 +245,7 @@
       "create": "创建位置",
       "columns": {
         "name": "名称",
-        "description": "描述",
-        "actions": "操作"
+        "description": "描述"
       },
       "form": {
         "name": "名称",
@@ -321,8 +264,7 @@
       "create": "创建商店",
       "columns": {
         "name": "名称",
-        "channel": "渠道",
-        "actions": "操作"
+        "channel": "渠道"
       },
       "form": {
         "name": "名称",
@@ -344,9 +286,7 @@
     },
     "detail": {
       "title": "资产详情",
-      "parentAsset": "父资产",
-      "createdAt": "创建时间",
-      "updatedAt": "更新时间"
+      "parentAsset": "父资产"
     }
   },
   "invoices": {
@@ -365,8 +305,7 @@
       "sellerName": "销售方",
       "totalAmount": "价税合计",
       "invoiceStatus": "发票状态",
-      "boundAssets": "关联",
-      "actions": "操作"
+      "boundAssets": "关联"
     },
     "type": {
       "DIGITAL_INVOICE": "电子发票（普通发票）",
@@ -414,9 +353,6 @@
       "sellerInfo": "销售方信息",
       "file": "发票文件",
       "preview": "预览",
-      "download": "下载",
-      "createdAt": "创建时间",
-      "updatedAt": "更新时间",
       "boundAssets": "关联资产",
       "boundSubscriptions": "关联订阅",
       "boundVisits": "关联就诊记录",
@@ -433,14 +369,11 @@
       "updateFailed": "更新发票失败",
       "deleteFailed": "删除发票失败",
       "parseFailed": "解析发票文件失败",
-      "loadFailed": "加载发票详情失败",
-      "duplicateInvoiceNumber": "发票号码已存在"
+      "loadFailed": "加载发票详情失败"
     }
   },
   "files": {
-    "title": "文件管理",
     "upload": "上传文件",
-    "uploading": "上传中…",
     "rename": "重命名",
     "renameDescription": "输入此文件的新名称。",
     "newFilename": "新文件名",
@@ -455,9 +388,7 @@
       "filename": "文件名",
       "contentType": "类型",
       "fileSize": "大小",
-      "createdAt": "创建时间",
-      "status": "状态",
-      "actions": "操作"
+      "status": "状态"
     },
     "status": {
       "SUCCESS": "成功",
@@ -475,11 +406,6 @@
       "typePdf": "PDF",
       "typeText": "文本",
       "allStatus": "全部状态"
-    },
-    "errors": {
-      "uploadFailed": "上传文件失败",
-      "renameFailed": "重命名文件失败",
-      "deleteFailed": "删除文件失败"
     }
   },
   "errorToast": {
@@ -487,7 +413,6 @@
     "networkError": "网络错误，请检查您的连接"
   },
   "subscriptions": {
-    "title": "订阅管理",
     "create": "添加订阅",
     "createDescription": "添加新订阅进行跟踪。",
     "edit": "编辑订阅",
@@ -503,8 +428,7 @@
       "type": "类型",
       "status": "状态",
       "latestRecord": "最新记录",
-      "endDate": "到期日期",
-      "actions": "操作"
+      "endDate": "到期日期"
     },
     "filters": {
       "allTypes": "全部类型",
@@ -539,21 +463,16 @@
       "platformRequired": "请选择平台",
       "subscriptionType": "订阅类型",
       "billingMode": "计费方式",
-      "billingCycle": "计费周期",
-      "price": "价格",
       "currency": "币种",
       "status": "状态",
       "renewNoticeDays": "续费提醒(天)",
       "note": "备注"
     },
     "detail": {
-      "title": "订阅详情",
       "records": "订阅记录",
-      "noRecords": "暂无记录",
-      "renewalInfo": "续费信息"
+      "noRecords": "暂无记录"
     },
     "records": {
-      "title": "订阅记录",
       "add": "添加记录",
       "edit": "编辑记录",
       "delete": "删除记录",
@@ -574,35 +493,22 @@
       "note": "备注"
     },
     "invoices": {
-      "bind": "关联发票",
-      "unbind": "解除关联",
-      "uploadNew": "上传新发票"
+      "bind": "关联发票"
     },
-    "attachments": {
-      "upload": "上传附件",
-      "delete": "删除"
-    },
-    "errors": {
-      "hasRecords": "存在记录的订阅无法删除",
-      "cannotDelete": "删除订阅失败"
-    }
+    "attachments": {}
   },
   "platforms": {
     "title": "平台管理",
     "name": "名称",
     "logo": "图标",
     "website": "网址",
-    "create": "创建平台",
-    "edit": "编辑平台",
-    "delete": "删除平台"
+    "create": "创建平台"
   },
   "paymentMethods": {
     "title": "支付方式",
     "name": "名称",
     "logo": "图标",
-    "create": "创建",
-    "edit": "编辑",
-    "delete": "删除"
+    "create": "创建"
   },
   "search": {
     "placeholder": "搜索文件内容…",
@@ -618,24 +524,14 @@
     }
   },
   "shared": {
-    "pictures": {
-      "title": "图片",
-      "upload": "上传",
-      "uploading": "上传中…",
-      "empty": "暂无图片。"
-    },
-    "attachments": {
-      "title": "附件",
-      "upload": "上传",
-      "uploading": "上传中…",
-      "empty": "暂无附件。",
-      "indexing": "索引中…"
-    },
+    "pictures": {},
+    "attachments": {},
     "invoices": {
-      "title": "发票",
-      "bind": "绑定",
-      "uploadNew": "上传新发票",
-      "empty": "暂无绑定发票。"
+      "bindDialog": {
+        "title": "绑定发票",
+        "search": "搜索发票…",
+        "confirm": "绑定"
+      }
     }
   },
   "common": {
@@ -652,17 +548,35 @@
     "previous": "上一页",
     "next": "下一页",
     "save": "保存",
-    "saving": "正在保存…"
+    "saving": "正在保存…",
+    "edit": "编辑",
+    "download": "下载",
+    "view": "查看",
+    "unbind": "解绑",
+    "actions": "操作",
+    "createdAt": "创建时间",
+    "updatedAt": "更新时间",
+    "upload": "上传",
+    "uploading": "上传中…",
+    "pictures": "图片",
+    "attachments": "附件",
+    "invoices": "发票",
+    "testConnection": "测试连接",
+    "bindInvoice": "绑定发票",
+    "uploadNew": "上传新发票",
+    "bind": "绑定",
+    "noPictures": "暂无图片。",
+    "noAttachments": "暂无附件。",
+    "indexing": "索引中…",
+    "noInvoices": "暂无绑定发票。",
+    "searchInvoices": "搜索发票…"
   },
   "dashboard": {
-    "title": "仪表盘",
     "stats": {
       "itemCount": "物品总数",
       "assetCount": "资产数量",
       "totalAssetPrice": "资产总价值",
-      "invoiceCount": "发票总数",
-      "activeSubscriptionCount": "活跃订阅数",
-      "monthlySubscriptionSpending": "本月支出"
+      "invoiceCount": "发票总数"
     },
     "items": {
       "title": "物品",
@@ -712,12 +626,9 @@
   },
   "members": {
     "columns": {
-      "actions": "操作",
-      "createdAt": "创建",
       "displayName": "显示名称",
       "role": "角色",
       "status": "状态",
-      "updatedAt": "更新",
       "username": "用户名"
     },
     "create": "创建成员",
@@ -782,11 +693,8 @@
   },
   "roles": {
     "columns": {
-      "actions": "操作",
-      "createdAt": "创建",
       "description": "描述",
-      "name": "名称",
-      "updatedAt": "更新"
+      "name": "名称"
     },
     "create": "创建角色",
     "createDescription": "向系统添加新角色。",
@@ -830,7 +738,6 @@
     }
   },
   "medications": {
-    "title": "用药提醒",
     "create": "创建提醒",
     "createDescription": "添加新的用药提醒。",
     "edit": "编辑提醒",
@@ -846,8 +753,7 @@
       "dosage": "剂量",
       "frequency": "服用时间",
       "course": "疗程",
-      "status": "状态",
-      "actions": "操作"
+      "status": "状态"
     },
     "status": {
       "enabled": "已启用",
@@ -905,8 +811,7 @@
       "department": "科室",
       "time": "就诊时间",
       "doctor": "医生",
-      "diagnosis": "诊断",
-      "actions": "操作"
+      "diagnosis": "诊断"
     },
     "form": {
       "patientName": "就诊人姓名",
@@ -966,29 +871,12 @@
     "addPrescriptionItem": "添加药品",
     "editPrescriptionItem": "编辑药品",
     "createReminder": "新建提醒",
-    "attachments": "附件",
-    "uploadAttachment": "上传",
-    "noAttachments": "暂无附件",
-    "invoices": "发票",
-    "bindInvoice": "绑定发票",
-    "uploadNewInvoice": "上传新发票",
     "noInvoices": "暂无绑定发票",
-    "invoicesSection": {
-      "bindDialog": {
-        "title": "绑定发票",
-        "search": "搜索发票...",
-        "confirm": "绑定"
-      },
-      "uploadNew": "上传新发票"
-    },
     "parsePaste": "粘贴解析",
     "parse": "解析",
     "parseHint": "粘贴就诊相关的文本内容（挂号单、病历摘要等），AI 将自动解析并填充到对应字段。",
     "parsePlaceholder": "在此粘贴文本内容...",
     "errors": {
-      "createFailed": "创建就诊记录失败",
-      "updateFailed": "更新就诊记录失败",
-      "deleteFailed": "删除就诊记录失败",
       "loadFailed": "加载就诊记录失败",
       "uploadFailed": "上传附件失败",
       "loadInstitutionsFailed": "加载机构列表失败",
@@ -1020,7 +908,6 @@
         "folder": "输入文件夹路径（可选）",
         "domain": "https://cdn.example.com"
       },
-      "testConnection": "测试连接",
       "testSuccess": "七牛连接成功",
       "testFailed": "七牛连接失败：{{message}}"
     },
@@ -1038,7 +925,6 @@
         "visitRecordPrompt": "留空则使用默认就诊记录提示词"
       },
       "noModels": "暂无模型，请点击 + 添加",
-      "testConnection": "测试连接",
       "testSuccess": "AI 连接成功",
       "testFailed": "AI 连接失败：{{message}}",
       "models": {
@@ -1050,8 +936,7 @@
         "columns": {
           "name": "名称",
           "apiUrl": "API 地址",
-          "model": "模型",
-          "actions": "操作"
+          "model": "模型"
         },
         "fields": {
           "name": "模型名称",
@@ -1098,7 +983,6 @@
       "fields": {
         "enabled": "启用 Elasticsearch 搜索"
       },
-      "testConnection": "测试连接",
       "testSuccess": "Elasticsearch 连接成功",
       "testFailed": "Elasticsearch 连接失败：{{message}}"
     },

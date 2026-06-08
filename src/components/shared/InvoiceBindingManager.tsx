@@ -144,9 +144,9 @@ const InvoiceBindingManager = ({
         onBind={onBindInvoice}
         onCreateNew={() => setCreateOpen(true)}
         boundInvoiceIds={boundInvoiceIds}
-        title={t("shared.invoices.bindDialog.title")}
-        searchPlaceholder={t("shared.invoices.bindDialog.search")}
-        confirmLabel={t("shared.invoices.bindDialog.confirm")}
+        title={t("common.bindInvoice")}
+        searchPlaceholder={t("common.searchInvoices")}
+        confirmLabel={t("common.bind")}
         uploadNewLabel={uploadNewLabel}
       />
 

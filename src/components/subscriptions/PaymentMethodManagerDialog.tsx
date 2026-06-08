@@ -187,7 +187,7 @@ const PaymentMethodManagerDialog = ({
             ) : (
               <PlusIcon className="size-3.5" />
             )}
-            {editing ? t("common.save") : t("paymentMethods.create")}
+            {editing ? t("common.save") : t("common.create")}
           </Button>
           {editing && (
             <Button variant="outline" onClick={handleCancel}>

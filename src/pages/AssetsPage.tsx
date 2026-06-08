@@ -376,7 +376,7 @@ const AssetsPage = () => {
               <TableHead>{t("assets.columns.retireDate")}</TableHead>
               <TableHead>{t("assets.columns.warranty")}</TableHead>
               <TableHead className="text-right">
-                {t("assets.columns.actions")}
+                {t("common.actions")}
               </TableHead>
             </TableRow>
           </TableHeader>
