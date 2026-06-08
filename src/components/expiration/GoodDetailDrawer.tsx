@@ -216,7 +216,7 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
                 </Button>
               </div>
 
-              <div className="rounded-lg ring-1 ring-foreground/10">
+              <div className="rounded-lg border border-foreground/10">
                 <Table>
                   <TableHeader>
                     <TableRow>
