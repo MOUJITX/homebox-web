@@ -824,7 +824,8 @@
       "loadFailed": "Failed to load visit record",
       "uploadFailed": "Failed to upload attachment",
       "loadInstitutionsFailed": "Failed to load institutions",
-      "loadPatientsFailed": "Failed to load patient names"
+      "loadPatientsFailed": "Failed to load patient names",
+      "loadMedicationsFailed": "Failed to load medications"
     }
   },
   "settings": {

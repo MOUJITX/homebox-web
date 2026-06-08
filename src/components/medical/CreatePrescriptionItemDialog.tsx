@@ -17,6 +17,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getMedications, type MedicationReminder } from "@/api/medications";
+import { getErrorMessage } from "@/lib/error";
+import { toast } from "sonner";
 
 import type { CreatePrescriptionItemRequest } from "@/api/medical";
 import CreateMedicationDialog from "@/components/medications/CreateMedicationDialog";
@@ -49,7 +51,9 @@ const CreatePrescriptionItemDialog = ({
         try {
           const { data: meds } = await getMedications(0, 200);
           setReminders(meds.content);
-        } catch {}
+        } catch (err) {
+          toast.error(getErrorMessage(err) ?? t("medical.errors.loadMedicationsFailed"));
+        }
       };
       void load();
       if (initialData) {
@@ -174,7 +178,9 @@ const CreatePrescriptionItemDialog = ({
             try {
               const { data: meds } = await getMedications(0, 200);
               setReminders(meds.content);
-            } catch {}
+            } catch (err) {
+              toast.error(getErrorMessage(err) ?? t("medical.errors.loadMedicationsFailed"));
+            }
           };
           void reload();
         }}

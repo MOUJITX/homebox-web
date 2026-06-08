@@ -992,7 +992,8 @@
       "loadFailed": "加载就诊记录失败",
       "uploadFailed": "上传附件失败",
       "loadInstitutionsFailed": "加载机构列表失败",
-      "loadPatientsFailed": "加载患者姓名失败"
+      "loadPatientsFailed": "加载患者姓名失败",
+      "loadMedicationsFailed": "加载药物列表失败"
     }
   },
   "settings": {
