@@ -525,10 +525,6 @@ const VisitDetailDrawer = ({
                         url: a.url,
                       }) satisfies AttachmentItem,
                   )}
-                title={t("medical.attachments")}
-                uploadLabel={t("shared.attachments.upload")}
-                uploadingLabel={t("shared.attachments.uploading")}
-                emptyLabel={t("medical.noAttachments")}
                 onUpload={handleVisitAttachmentUpload}
                 onDelete={handleVisitAttachmentDelete}
               />
@@ -822,9 +818,7 @@ const VisitDetailDrawer = ({
             setInvoiceDrawerOpen(false);
             setViewingInvoiceId(null);
           }}
-          onEdit={() => {}}
-          onDelete={() => {}}
-          onRefresh={() => {}}
+          onInvoiceChanged={() => void fetchDetail()}
         />
       </SheetContent>
     </Sheet>

@@ -140,11 +140,6 @@ const InvoicesPage = () => {
     setDetailInvoiceId(invoice.id);
   };
 
-  const handleEditFromDrawer = (invoice: InvoiceDetail) => {
-    setDetailInvoiceId(null);
-    setEditingInvoice(invoice);
-  };
-
   const handleEditFromTable = async (id: number) => {
     try {
       const { data } = await getInvoiceById(id);
@@ -152,11 +147,6 @@ const InvoicesPage = () => {
     } catch {
       // fallback: open with list data won't happen since we don't set state
     }
-  };
-
-  const handleDeleteFromDrawer = (invoice: InvoiceDetail) => {
-    setDetailInvoiceId(null);
-    setDeletingInvoice(invoice);
   };
 
   const totalPages = pageData.totalPages;
@@ -445,9 +435,7 @@ const InvoicesPage = () => {
         invoiceId={detailInvoiceId}
         open={detailInvoiceId !== null}
         onClose={() => setDetailInvoiceId(null)}
-        onEdit={handleEditFromDrawer}
-        onDelete={handleDeleteFromDrawer}
-        onRefresh={fetchInvoices}
+        onInvoiceChanged={fetchInvoices}
       />
     </div>
   );

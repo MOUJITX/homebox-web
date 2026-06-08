@@ -329,10 +329,6 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
             {/* Pictures */}
             <PictureManager
               pictures={detail.pictures ?? []}
-              title={t("shared.pictures.title")}
-              uploadLabel={t("shared.pictures.upload")}
-              uploadingLabel={t("shared.pictures.uploading")}
-              emptyLabel={t("shared.pictures.empty")}
               onUpload={async (files) => {
                 await Promise.all(
                   files.map((file) => uploadGoodPicture(detail.id, file)),
@@ -354,11 +350,6 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
                 url: a.url,
                 indexed: a.indexed,
               }))}
-              title={t("shared.attachments.title")}
-              uploadLabel={t("shared.attachments.upload")}
-              uploadingLabel={t("shared.attachments.uploading")}
-              emptyLabel={t("shared.attachments.empty")}
-              indexingLabel={t("shared.attachments.indexing")}
               onUpload={async (file) => {
                 await uploadGoodAttachment(detail.id, file);
                 void fetchDetail();

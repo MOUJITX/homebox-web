@@ -381,9 +381,7 @@ const SubscriptionDetailDrawer = ({
             invoiceId={invoiceDrawerId}
             open={!!invoiceDrawerId}
             onClose={() => setInvoiceDrawerId(null)}
-            onEdit={() => {}}
-            onDelete={() => {}}
-            onRefresh={handleRecordChanged}
+            onInvoiceChanged={handleRecordChanged}
           />
         </>
       )}

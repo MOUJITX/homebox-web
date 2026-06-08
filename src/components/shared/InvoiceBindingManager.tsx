@@ -27,8 +27,7 @@ interface InvoiceBindingManagerProps {
   readonly onCreateInvoice: (invoice: InvoiceDetail) => Promise<void>;
   readonly onUnbind: (id: number) => Promise<void>;
   readonly onView?: (invoiceId: number) => void;
-  readonly onInvoiceEdit?: (invoice: InvoiceDetail) => void;
-  readonly onInvoiceDelete?: (invoice: InvoiceDetail) => void;
+  readonly onInvoiceChanged?: () => void;
 }
 
 const InvoiceBindingManager = ({
@@ -42,8 +41,7 @@ const InvoiceBindingManager = ({
   onCreateInvoice,
   onUnbind,
   onView,
-  onInvoiceEdit,
-  onInvoiceDelete,
+  onInvoiceChanged,
 }: InvoiceBindingManagerProps) => {
   const { t } = useTranslation();
   const [unbinding, setUnbinding] = useState<number | null>(null);
@@ -166,9 +164,7 @@ const InvoiceBindingManager = ({
           setDrawerOpen(false);
           setViewInvoiceId(null);
         }}
-        onEdit={onInvoiceEdit ?? (() => {})}
-        onDelete={onInvoiceDelete ?? (() => {})}
-        onRefresh={() => {}}
+        onInvoiceChanged={onInvoiceChanged}
       />
     </div>
   );

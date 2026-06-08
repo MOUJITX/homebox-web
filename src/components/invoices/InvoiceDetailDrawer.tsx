@@ -30,6 +30,8 @@ import {
 import AuthImg from "@/components/AuthImg";
 import ImagePreview from "@/components/ImagePreview";
 import AttachmentManager from "@/components/shared/AttachmentManager";
+import EditInvoiceDialog from "./EditInvoiceDialog";
+import DeleteInvoiceDialog from "./DeleteInvoiceDialog";
 
 const Field = ({
   label,
@@ -48,9 +50,7 @@ interface InvoiceDetailDrawerProps {
   readonly invoiceId: number | null;
   readonly open: boolean;
   readonly onClose: () => void;
-  readonly onEdit: (invoice: InvoiceDetail) => void;
-  readonly onDelete: (invoice: InvoiceDetail) => void;
-  readonly onRefresh: () => void;
+  readonly onInvoiceChanged?: () => void;
 }
 
 const statusBadgeVariant = (
@@ -72,9 +72,7 @@ const InvoiceDetailDrawer = ({
   invoiceId,
   open,
   onClose,
-  onEdit,
-  onDelete,
-  onRefresh,
+  onInvoiceChanged,
 }: InvoiceDetailDrawerProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -82,6 +80,26 @@ const InvoiceDetailDrawer = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [editingInvoice, setEditingInvoice] = useState<InvoiceDetail | null>(
+    null,
+  );
+  const [deletingInvoice, setDeletingInvoice] = useState<InvoiceDetail | null>(
+    null,
+  );
+
+  const fetchInvoice = () => {
+    if (invoiceId) {
+      let cancelled = false;
+      getInvoiceById(invoiceId)
+        .then(({ data }) => {
+          if (!cancelled) setInvoice(data);
+        })
+        .catch(() => {});
+      return () => {
+        cancelled = true;
+      };
+    }
+  };
 
   useEffect(() => {
     if (open && invoiceId) {
@@ -108,19 +126,14 @@ const InvoiceDetailDrawer = ({
     }
   }, [open, invoiceId]);
 
+  const handleInvoiceChanged = () => {
+    fetchInvoice();
+    onInvoiceChanged?.();
+  };
+
   const handleAttachmentsChanged = () => {
-    if (invoiceId) {
-      let cancelled = false;
-      getInvoiceById(invoiceId)
-        .then(({ data }) => {
-          if (!cancelled) setInvoice(data);
-        })
-        .catch(() => {});
-      return () => {
-        cancelled = true;
-      };
-    }
-    onRefresh();
+    fetchInvoice();
+    onInvoiceChanged?.();
   };
 
   return (
@@ -375,10 +388,6 @@ const InvoiceDetailDrawer = ({
                   fileSize: a.fileSize,
                   url: a.url,
                 }))}
-                title={t("shared.attachments.title")}
-                uploadLabel={t("shared.attachments.upload")}
-                uploadingLabel={t("shared.attachments.uploading")}
-                emptyLabel={t("shared.attachments.empty")}
                 onUpload={async (file) => {
                   await uploadInvoiceAttachment(invoice.id, file);
                   handleAttachmentsChanged();
@@ -405,11 +414,14 @@ const InvoiceDetailDrawer = ({
 
         {!loading && invoice && (
           <SheetFooter className="shrink-0">
-            <Button variant="outline" onClick={() => onEdit(invoice)}>
+            <Button variant="outline" onClick={() => setEditingInvoice(invoice)}>
               <PencilIcon className="size-3.5" />
               {t("invoices.edit")}
             </Button>
-            <Button variant="destructive" onClick={() => onDelete(invoice)}>
+            <Button
+              variant="destructive"
+              onClick={() => setDeletingInvoice(invoice)}
+            >
               <TrashIcon className="size-3.5" />
               {t("invoices.delete")}
             </Button>
@@ -420,6 +432,25 @@ const InvoiceDetailDrawer = ({
         url={previewUrl}
         open={!!previewUrl}
         onOpenChange={(open) => !open && setPreviewUrl(null)}
+      />
+
+      <EditInvoiceDialog
+        open={!!editingInvoice}
+        invoice={editingInvoice}
+        onClose={() => setEditingInvoice(null)}
+        onSuccess={() => {
+          setEditingInvoice(null);
+          handleInvoiceChanged();
+        }}
+      />
+      <DeleteInvoiceDialog
+        open={!!deletingInvoice}
+        invoice={deletingInvoice}
+        onClose={() => setDeletingInvoice(null)}
+        onSuccess={() => {
+          setDeletingInvoice(null);
+          handleInvoiceChanged();
+        }}
       />
     </Sheet>
   );

@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import type { Asset, WarrantyStatus } from "@/api/assets";
 import { updateAsset } from "@/api/assets";
-import type { InvoiceDetail } from "@/api/invoices";
 import { uploadAssetPicture, deleteAssetPicture } from "@/api/assetPictures";
 import {
   uploadAssetAttachment,
@@ -43,8 +42,6 @@ import InvoiceBindingManager, {
 import CreateAssetDialog from "./CreateAssetDialog";
 import EditAssetDialog from "./EditAssetDialog";
 import DeleteAssetDialog from "./DeleteAssetDialog";
-import EditInvoiceDialog from "@/components/invoices/EditInvoiceDialog";
-import DeleteInvoiceDialog from "@/components/invoices/DeleteInvoiceDialog";
 
 const Field = ({
   label,
@@ -97,13 +94,6 @@ const AssetDetailDrawer = ({
   const [createSubOpen, setCreateSubOpen] = useState(false);
   const [editingAsset, setEditingAsset] = useState<Asset | null>(null);
   const [deletingAsset, setDeletingAsset] = useState<Asset | null>(null);
-
-  const [editingInvoice, setEditingInvoice] = useState<InvoiceDetail | null>(
-    null,
-  );
-  const [deletingInvoice, setDeletingInvoice] = useState<InvoiceDetail | null>(
-    null,
-  );
 
   const handleToggleInUse = async (subAsset: Asset) => {
     const newInUse = !subAsset.inUse;
@@ -280,10 +270,6 @@ const AssetDetailDrawer = ({
             {/* Pictures */}
             <PictureManager
               pictures={detail.pictures ?? []}
-              title={t("shared.pictures.title")}
-              uploadLabel={t("shared.pictures.upload")}
-              uploadingLabel={t("shared.pictures.uploading")}
-              emptyLabel={t("shared.pictures.empty")}
               onUpload={async (files) => {
                 await Promise.all(
                   files.map((file) => uploadAssetPicture(detail.id, file)),
@@ -325,8 +311,7 @@ const AssetDetailDrawer = ({
                 await unbindInvoiceFromAsset(assetId!, id);
                 void invalidate.invalidateInvoices(assetId!);
               }}
-              onInvoiceEdit={(inv) => setEditingInvoice(inv)}
-              onInvoiceDelete={(inv) => setDeletingInvoice(inv)}
+              onInvoiceChanged={() => void invalidate.invalidateDetail(assetId!)}
             />
 
             {/* Attachments */}
@@ -338,11 +323,6 @@ const AssetDetailDrawer = ({
                 url: a.url,
                 indexed: a.indexed,
               }))}
-              title={t("shared.attachments.title")}
-              uploadLabel={t("shared.attachments.upload")}
-              uploadingLabel={t("shared.attachments.uploading")}
-              emptyLabel={t("shared.attachments.empty")}
-              indexingLabel={t("shared.attachments.indexing")}
               onUpload={async (file) => {
                 await uploadAssetAttachment(detail.id, file);
                 void invalidate.invalidateDetail(assetId!);
@@ -503,24 +483,6 @@ const AssetDetailDrawer = ({
           }}
         />
 
-        <EditInvoiceDialog
-          open={!!editingInvoice}
-          invoice={editingInvoice}
-          onClose={() => setEditingInvoice(null)}
-          onSuccess={() => {
-            setEditingInvoice(null);
-            void invalidate.invalidateDetail(assetId!);
-          }}
-        />
-        <DeleteInvoiceDialog
-          open={!!deletingInvoice}
-          invoice={deletingInvoice}
-          onClose={() => setDeletingInvoice(null)}
-          onSuccess={() => {
-            setDeletingInvoice(null);
-            void invalidate.invalidateDetail(assetId!);
-          }}
-        />
       </SheetContent>
     </Sheet>
   );

@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ImageIcon, PlusIcon, TrashIcon } from "lucide-react";
 import AuthImg from "@/components/AuthImg";
 import ImagePreview from "@/components/ImagePreview";
@@ -12,10 +13,6 @@ export interface PictureItem {
 
 interface PictureManagerProps {
   readonly pictures: PictureItem[];
-  readonly title: string;
-  readonly uploadLabel: string;
-  readonly uploadingLabel: string;
-  readonly emptyLabel: string;
   readonly onUpload: (files: File[]) => Promise<void>;
   readonly onDelete: (id: number) => Promise<void>;
   readonly isLoading?: boolean;
@@ -23,14 +20,11 @@ interface PictureManagerProps {
 
 const PictureManager = ({
   pictures,
-  title,
-  uploadLabel,
-  uploadingLabel,
-  emptyLabel,
   onUpload,
   onDelete,
   isLoading,
 }: PictureManagerProps) => {
+  const { t } = useTranslation();
   const [uploading, setUploading] = useState(false);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -52,7 +46,7 @@ const PictureManager = ({
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-sm font-medium flex items-center gap-1.5">
           <ImageIcon className="size-4" />
-          {title}
+          {t("shared.pictures.title")}
         </h4>
         <Button
           variant="outline"
@@ -61,7 +55,9 @@ const PictureManager = ({
           onClick={() => fileInputRef.current?.click()}
         >
           <PlusIcon className="size-3.5" />
-          {uploading ? uploadingLabel : uploadLabel}
+          {uploading
+            ? t("shared.pictures.uploading")
+            : t("shared.pictures.upload")}
         </Button>
         <input
           ref={fileInputRef}
@@ -75,14 +71,14 @@ const PictureManager = ({
       {isLoading && (
         <div className="rounded-lg border border-dashed p-4">
           <p className="text-sm text-muted-foreground text-center py-4">
-            {uploadingLabel.replace(/…$/, "")}...
+            {t("shared.pictures.uploading").replace(/…$/, "")}...
           </p>
         </div>
       )}
       {!isLoading && pictures.length === 0 && (
         <div className="rounded-lg border border-dashed p-4">
           <p className="text-sm text-muted-foreground text-center py-4">
-            {emptyLabel}
+            {t("shared.pictures.empty")}
           </p>
         </div>
       )}

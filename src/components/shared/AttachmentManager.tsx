@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   UploadIcon,
   FileIcon,
@@ -19,25 +20,16 @@ export interface AttachmentItem {
 
 interface AttachmentManagerProps {
   readonly attachments: AttachmentItem[];
-  readonly title: string;
-  readonly uploadLabel: string;
-  readonly uploadingLabel: string;
-  readonly emptyLabel: string;
-  readonly indexingLabel?: string;
   readonly onUpload: (file: File) => Promise<void>;
   readonly onDelete: (id: number) => Promise<void>;
 }
 
 const AttachmentManager = ({
   attachments,
-  title,
-  uploadLabel,
-  uploadingLabel,
-  emptyLabel,
-  indexingLabel,
   onUpload,
   onDelete,
 }: AttachmentManagerProps) => {
+  const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -56,7 +48,7 @@ const AttachmentManager = ({
   return (
     <div className="grid gap-3">
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-medium">{title}</h4>
+        <h4 className="text-sm font-medium">{t("shared.attachments.title")}</h4>
         <div>
           <input
             ref={fileInputRef}
@@ -71,13 +63,17 @@ const AttachmentManager = ({
             disabled={uploading}
           >
             <UploadIcon className="size-3.5" />
-            {uploading ? uploadingLabel : uploadLabel}
+            {uploading
+              ? t("shared.attachments.uploading")
+              : t("shared.attachments.upload")}
           </Button>
         </div>
       </div>
 
       {attachments.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{emptyLabel}</p>
+        <p className="text-sm text-muted-foreground">
+          {t("shared.attachments.empty")}
+        </p>
       ) : (
         <div className="grid gap-2">
           {attachments.map((a) => (
@@ -93,7 +89,7 @@ const AttachmentManager = ({
                   {a.indexed === false && (
                     <span className="ml-2 inline-flex items-center gap-1 text-amber-500">
                       <LoaderIcon className="size-3 animate-spin" />
-                      {indexingLabel ?? "Indexing…"}
+                      {t("shared.attachments.indexing")}
                     </span>
                   )}
                 </p>
