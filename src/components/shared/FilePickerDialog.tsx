@@ -294,7 +294,12 @@ const FilePickerDialog = ({
                     <span className="w-full truncate text-center text-xs">
                       {file.originalFilename}
                     </span>
-                    {isSelected && (
+                    {isSelected && multiple && (
+                      <div className="absolute right-1 top-1 flex size-5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+                        {selected.findIndex((f) => f.id === file.id) + 1}
+                      </div>
+                    )}
+                    {isSelected && !multiple && (
                       <div className="absolute right-1 top-1 flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
                         <CheckIcon className="size-3" />
                       </div>
@@ -338,7 +343,12 @@ const FilePickerDialog = ({
                         {formatFileSize(file.fileSize)}
                       </p>
                     </div>
-                    {isSelected && (
+                    {isSelected && multiple && (
+                      <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+                        {selected.findIndex((f) => f.id === file.id) + 1}
+                      </span>
+                    )}
+                    {isSelected && !multiple && (
                       <CheckIcon className="size-4 shrink-0 text-primary" />
                     )}
                   </button>
