@@ -13,9 +13,12 @@ export interface GoodAttachment {
 export const getGoodAttachments = (goodId: number) =>
   axios.get<GoodAttachment[]>(`/goods/${goodId}/attachments`);
 
-export const uploadGoodAttachment = (goodId: number, file: File) => {
+export const uploadGoodAttachment = (goodId: number, file?: File, fileId?: number) => {
+  if (fileId != null) {
+    return axios.post<GoodAttachment>(`/goods/${goodId}/attachments?fileId=${fileId}`);
+  }
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append("file", file!);
   return axios.post<GoodAttachment>(`/goods/${goodId}/attachments`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });

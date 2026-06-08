@@ -285,12 +285,18 @@ export const getVisitAttachments = (visitId: number) =>
 
 export const uploadVisitAttachment = (
   visitId: number,
-  file: File,
+  file: File | undefined,
   sourceType: VisitSourceType,
   sourceId: number,
+  fileId?: number,
 ) => {
+  if (fileId != null) {
+    return axios.post<VisitAttachment>(
+      `/visit-records/${visitId}/attachments?fileId=${fileId}&sourceType=${sourceType}&sourceId=${sourceId}`,
+    );
+  }
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append("file", file!);
   formData.append("sourceType", sourceType);
   formData.append("sourceId", String(sourceId));
   return axios.post<VisitAttachment>(

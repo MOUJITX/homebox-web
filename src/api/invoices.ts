@@ -176,9 +176,14 @@ export const updateInvoice = (id: number, data: UpdateInvoiceRequest) =>
 export const deleteInvoice = (id: number) =>
   axios.delete<void>(`/invoices/${id}`);
 
-export const uploadInvoiceAttachment = (invoiceId: number, file: File) => {
+export const uploadInvoiceAttachment = (invoiceId: number, file?: File, fileId?: number) => {
+  if (fileId != null) {
+    return axios.post<InvoiceAttachment>(
+      `/invoices/${invoiceId}/attachments?fileId=${fileId}`,
+    );
+  }
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append("file", file!);
   return axios.post<InvoiceAttachment>(
     `/invoices/${invoiceId}/attachments`,
     formData,
