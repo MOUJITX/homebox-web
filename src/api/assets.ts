@@ -5,6 +5,7 @@ export type WarrantyStatus = "IN_WARRANTY" | "OUT_WARRANTY" | "NO_WARRANTY";
 
 export interface AssetPicture {
   id: number;
+  fileId: number;
   filename: string;
   contentType: string;
   fileSize: number;

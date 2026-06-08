@@ -61,6 +61,7 @@ interface FilePickerDialogProps {
   readonly onSelect: (files: FileRecord[]) => void;
   readonly multiple?: boolean;
   readonly accept?: string;
+  readonly initialSelection?: FileRecord[];
 }
 
 const FilePickerDialog = ({
@@ -69,6 +70,7 @@ const FilePickerDialog = ({
   onSelect,
   multiple = false,
   accept,
+  initialSelection,
 }: FilePickerDialogProps) => {
   const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -121,7 +123,7 @@ const FilePickerDialog = ({
         accept && !accept.includes("*") ? accept : null,
       );
       setPage(0);
-      setSelected([]);
+      setSelected(initialSelection ?? []);
     }
   }, [open, defaultView, accept]);
 
@@ -164,7 +166,12 @@ const FilePickerDialog = ({
   };
 
   const totalPages = pageData?.totalPages ?? 1;
-  const files = pageData?.content ?? [];
+  // Merge: show selected files that aren't in the current page at the beginning
+  const rawFiles = pageData?.content ?? [];
+  const selectedNotInPage = selected.filter(
+    (s) => !rawFiles.some((f) => f.id === s.id),
+  );
+  const files = [...selectedNotInPage, ...rawFiles];
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>

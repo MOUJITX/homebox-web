@@ -319,6 +319,7 @@ const AssetDetailDrawer = ({
             <AttachmentManager
               attachments={(detail.attachments ?? []).map((a) => ({
                 id: a.id,
+                fileId: a.fileId,
                 filename: a.filename,
                 fileSize: a.fileSize,
                 url: a.url,

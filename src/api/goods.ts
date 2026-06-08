@@ -7,6 +7,7 @@ export type ItemStatus = "EXPIRED" | "EXPIRING_SOON" | "IN_USE" | "EXHAUSTED";
 
 export interface GoodPicture {
   id: number;
+  fileId: number;
   filename: string;
   contentType: string;
   fileSize: number;

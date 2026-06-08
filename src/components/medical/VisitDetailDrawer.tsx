@@ -533,6 +533,7 @@ const VisitDetailDrawer = ({
                     (a) =>
                       ({
                         id: a.id,
+                        fileId: a.fileId,
                         filename: a.originalFilename,
                         fileSize: a.fileSize,
                         url: a.url,

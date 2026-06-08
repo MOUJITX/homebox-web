@@ -9,6 +9,7 @@ import FilePickerDialog from "./FilePickerDialog";
 
 export interface PictureItem {
   id: number;
+  fileId: number;
   url: string;
   filename: string;
 }
@@ -105,6 +106,17 @@ const PictureManager = ({
         onSelect={handleSelect}
         multiple
         accept="image/*"
+        initialSelection={pictures.map((p) => ({
+          id: p.fileId,
+          storedFilename: "",
+          originalFilename: p.filename,
+          contentType: "image/*",
+          fileSize: 0,
+          url: p.url,
+          createdAt: "",
+          extractStatus: "SUCCESS" as const,
+          chunkStatus: "SUCCESS" as const,
+        }))}
       />
     </div>
   );

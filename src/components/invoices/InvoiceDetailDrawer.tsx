@@ -364,6 +364,7 @@ const InvoiceDetailDrawer = ({
                   ? [
                       {
                         id: -1,
+                        fileId: invoice.fileId ?? undefined,
                         filename:
                           invoice.fileOriginalFilename ||
                           invoice.invoiceNumber ||
@@ -376,6 +377,7 @@ const InvoiceDetailDrawer = ({
                   : []),
                 ...invoice.attachments.map((a) => ({
                   id: a.id,
+                  fileId: a.fileId,
                   filename: a.filename,
                   fileSize: a.fileSize,
                   url: a.url,

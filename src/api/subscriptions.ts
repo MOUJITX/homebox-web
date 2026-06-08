@@ -51,6 +51,7 @@ export interface SubscriptionRecord {
 
 export interface SubscriptionRecordAttachment {
   id: number;
+  fileId: number;
   filename: string;
   contentType: string;
   fileSize: number;

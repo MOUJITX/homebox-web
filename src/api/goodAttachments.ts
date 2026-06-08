@@ -2,6 +2,7 @@ import axios from "./axios";
 
 export interface GoodAttachment {
   id: number;
+  fileId: number;
   filename: string;
   contentType: string;
   fileSize: number;

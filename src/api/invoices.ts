@@ -51,6 +51,7 @@ export interface InvoiceDetail extends Invoice {
 
 export interface InvoiceAttachment {
   id: number;
+  fileId: number;
   filename: string;
   contentType: string;
   fileSize: number;

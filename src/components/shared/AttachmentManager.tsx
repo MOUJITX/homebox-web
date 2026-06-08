@@ -14,6 +14,7 @@ import FilePickerDialog from "./FilePickerDialog";
 
 export interface AttachmentItem {
   id: number;
+  fileId?: number;
   filename: string;
   fileSize?: number;
   url?: string;
@@ -123,6 +124,19 @@ const AttachmentManager = ({
         onClose={() => setPickerOpen(false)}
         onSelect={handleSelect}
         multiple={false}
+        initialSelection={attachments
+          .filter((a) => a.fileId != null)
+          .map((a) => ({
+            id: a.fileId!,
+            storedFilename: "",
+            originalFilename: a.filename,
+            contentType: "",
+            fileSize: a.fileSize ?? 0,
+            url: a.url ?? "",
+            createdAt: "",
+            extractStatus: "SUCCESS" as const,
+            chunkStatus: "SUCCESS" as const,
+          }))}
       />
     </div>
   );
