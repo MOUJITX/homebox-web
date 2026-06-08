@@ -43,9 +43,6 @@ import InvoiceBindingManager, {
 import CreateAssetDialog from "./CreateAssetDialog";
 import EditAssetDialog from "./EditAssetDialog";
 import DeleteAssetDialog from "./DeleteAssetDialog";
-import BindInvoiceDialog from "./BindInvoiceDialog";
-import CreateInvoiceDialog from "@/components/invoices/CreateInvoiceDialog";
-import InvoiceDetailDrawer from "@/components/invoices/InvoiceDetailDrawer";
 import EditInvoiceDialog from "@/components/invoices/EditInvoiceDialog";
 import DeleteInvoiceDialog from "@/components/invoices/DeleteInvoiceDialog";
 
@@ -98,13 +95,9 @@ const AssetDetailDrawer = ({
   const { data: assetInvoices = [] } = useAssetInvoices(open ? assetId : null);
 
   const [createSubOpen, setCreateSubOpen] = useState(false);
-  const [bindOpen, setBindOpen] = useState(false);
-  const [createInvoiceOpen, setCreateInvoiceOpen] = useState(false);
   const [editingAsset, setEditingAsset] = useState<Asset | null>(null);
   const [deletingAsset, setDeletingAsset] = useState<Asset | null>(null);
 
-  const [viewingInvoiceId, setViewingInvoiceId] = useState<number | null>(null);
-  const [invoiceDrawerOpen, setInvoiceDrawerOpen] = useState(false);
   const [editingInvoice, setEditingInvoice] = useState<InvoiceDetail | null>(
     null,
   );
@@ -316,19 +309,24 @@ const AssetDetailDrawer = ({
                   }) satisfies BoundInvoice,
               )}
               title={t("shared.invoices.title")}
-              bindLabel={t("shared.invoices.bind")}
-              uploadNewLabel={t("shared.invoices.uploadNew")}
               emptyLabel={t("shared.invoices.empty")}
-              onBind={() => setBindOpen(true)}
-              onCreateNew={() => setCreateInvoiceOpen(true)}
+              bindLabel={t("shared.invoices.bind")}
+              onBindInvoice={async (invoiceId) => {
+                await bindInvoiceToAsset(assetId!, invoiceId);
+                void invalidate.invalidateInvoices(assetId!);
+              }}
+              boundInvoiceIds={assetInvoices.map((i) => i.invoiceId)}
+              uploadNewLabel={t("shared.invoices.uploadNew")}
+              onCreateInvoice={async (invoice) => {
+                await bindInvoiceToAsset(assetId!, invoice.id);
+                void invalidate.invalidateInvoices(assetId!);
+              }}
               onUnbind={async (id) => {
                 await unbindInvoiceFromAsset(assetId!, id);
                 void invalidate.invalidateInvoices(assetId!);
               }}
-              onView={(id) => {
-                setViewingInvoiceId(id);
-                setInvoiceDrawerOpen(true);
-              }}
+              onInvoiceEdit={(inv) => setEditingInvoice(inv)}
+              onInvoiceDelete={(inv) => setDeletingInvoice(inv)}
             />
 
             {/* Attachments */}
@@ -505,36 +503,6 @@ const AssetDetailDrawer = ({
           }}
         />
 
-        <BindInvoiceDialog
-          assetId={assetId!}
-          boundInvoiceIds={assetInvoices.map((i) => i.invoiceId)}
-          open={bindOpen}
-          onClose={() => setBindOpen(false)}
-          onSuccess={() => void invalidate.invalidateInvoices(assetId!)}
-        />
-        <CreateInvoiceDialog
-          open={createInvoiceOpen}
-          onClose={() => setCreateInvoiceOpen(false)}
-          onSuccess={() => {
-            /* no-op, we use onCreated */
-          }}
-          onCreated={async (invoice: InvoiceDetail) => {
-            await bindInvoiceToAsset(assetId!, invoice.id);
-            void invalidate.invalidateInvoices(assetId!);
-          }}
-        />
-
-        <InvoiceDetailDrawer
-          invoiceId={viewingInvoiceId}
-          open={invoiceDrawerOpen}
-          onClose={() => {
-            setInvoiceDrawerOpen(false);
-            setViewingInvoiceId(null);
-          }}
-          onEdit={(inv) => setEditingInvoice(inv)}
-          onDelete={(inv) => setDeletingInvoice(inv)}
-          onRefresh={() => void invalidate.invalidateDetail(assetId!)}
-        />
         <EditInvoiceDialog
           open={!!editingInvoice}
           invoice={editingInvoice}

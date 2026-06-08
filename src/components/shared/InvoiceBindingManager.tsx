@@ -1,7 +1,12 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FileTextIcon, LinkIcon, EyeIcon, UnlinkIcon } from "lucide-react";
+import type { InvoiceDetail } from "@/api/invoices";
 import { Button } from "@/components/ui/button";
 import { formatDate, formatCurrency } from "@/lib/utils";
+import BindInvoiceDialog from "./BindInvoiceDialog";
+import CreateInvoiceDialog from "@/components/invoices/CreateInvoiceDialog";
+import InvoiceDetailDrawer from "@/components/invoices/InvoiceDetailDrawer";
 
 export interface BoundInvoice {
   id: number;
@@ -14,27 +19,38 @@ export interface BoundInvoice {
 interface InvoiceBindingManagerProps {
   readonly invoices: BoundInvoice[];
   readonly title: string;
-  readonly bindLabel: string;
-  readonly uploadNewLabel: string;
   readonly emptyLabel: string;
-  readonly onBind: () => void;
-  readonly onCreateNew: () => void;
+  readonly bindLabel: string;
+  readonly onBindInvoice: (invoiceId: number) => Promise<void>;
+  readonly boundInvoiceIds?: number[];
+  readonly uploadNewLabel: string;
+  readonly onCreateInvoice: (invoice: InvoiceDetail) => Promise<void>;
   readonly onUnbind: (id: number) => Promise<void>;
   readonly onView?: (invoiceId: number) => void;
+  readonly onInvoiceEdit?: (invoice: InvoiceDetail) => void;
+  readonly onInvoiceDelete?: (invoice: InvoiceDetail) => void;
 }
 
 const InvoiceBindingManager = ({
   invoices,
   title,
-  bindLabel,
-  uploadNewLabel,
   emptyLabel,
-  onBind,
-  onCreateNew,
+  bindLabel,
+  onBindInvoice,
+  boundInvoiceIds,
+  uploadNewLabel,
+  onCreateInvoice,
   onUnbind,
   onView,
+  onInvoiceEdit,
+  onInvoiceDelete,
 }: InvoiceBindingManagerProps) => {
+  const { t } = useTranslation();
   const [unbinding, setUnbinding] = useState<number | null>(null);
+  const [bindOpen, setBindOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [viewInvoiceId, setViewInvoiceId] = useState<number | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleUnbind = async (id: number) => {
     setUnbinding(id);
@@ -42,6 +58,15 @@ const InvoiceBindingManager = ({
       await onUnbind(id);
     } finally {
       setUnbinding(null);
+    }
+  };
+
+  const handleView = (invoiceId: number) => {
+    if (onView) {
+      onView(invoiceId);
+    } else {
+      setViewInvoiceId(invoiceId);
+      setDrawerOpen(true);
     }
   };
 
@@ -53,11 +78,15 @@ const InvoiceBindingManager = ({
           {title}
         </h4>
         <div className="flex gap-1">
-          <Button variant="outline" size="sm" onClick={onBind}>
+          <Button variant="outline" size="sm" onClick={() => setBindOpen(true)}>
             <LinkIcon className="size-3.5" />
             {bindLabel}
           </Button>
-          <Button variant="outline" size="sm" onClick={onCreateNew}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCreateOpen(true)}
+          >
             {uploadNewLabel}
           </Button>
         </div>
@@ -88,16 +117,14 @@ const InvoiceBindingManager = ({
                 )}
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                {onView && (
-                  <Button
-                    variant="ghost"
-                    size="icon-xs"
-                    onClick={() => onView(inv.invoiceId)}
-                    title="View"
-                  >
-                    <EyeIcon className="size-3.5" />
-                  </Button>
-                )}
+                <Button
+                  variant="ghost"
+                  size="icon-xs"
+                  onClick={() => handleView(inv.invoiceId)}
+                  title="View"
+                >
+                  <EyeIcon className="size-3.5" />
+                </Button>
                 <Button
                   variant="ghost"
                   size="icon-xs"
@@ -112,6 +139,37 @@ const InvoiceBindingManager = ({
           ))}
         </div>
       )}
+
+      <BindInvoiceDialog
+        open={bindOpen}
+        onClose={() => setBindOpen(false)}
+        onBind={onBindInvoice}
+        onCreateNew={() => setCreateOpen(true)}
+        boundInvoiceIds={boundInvoiceIds}
+        title={t("shared.invoices.bindDialog.title")}
+        searchPlaceholder={t("shared.invoices.bindDialog.search")}
+        confirmLabel={t("shared.invoices.bindDialog.confirm")}
+        uploadNewLabel={uploadNewLabel}
+      />
+
+      <CreateInvoiceDialog
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onSuccess={() => {}}
+        onCreated={onCreateInvoice}
+      />
+
+      <InvoiceDetailDrawer
+        invoiceId={viewInvoiceId}
+        open={drawerOpen}
+        onClose={() => {
+          setDrawerOpen(false);
+          setViewInvoiceId(null);
+        }}
+        onEdit={onInvoiceEdit ?? (() => {})}
+        onDelete={onInvoiceDelete ?? (() => {})}
+        onRefresh={() => {}}
+      />
     </div>
   );
 };

@@ -56,8 +56,7 @@ import CreateExaminationDialog from "./CreateExaminationDialog";
 import CreateLabTestDialog from "./CreateLabTestDialog";
 import CreatePrescriptionDialog from "./CreatePrescriptionDialog";
 import CreatePrescriptionItemDialog from "./CreatePrescriptionItemDialog";
-import BindVisitInvoiceDialog from "./BindVisitInvoiceDialog";
-import CreateInvoiceDialog from "@/components/invoices/CreateInvoiceDialog";
+import BindInvoiceDialog from "@/components/shared/BindInvoiceDialog";
 import InvoiceDetailDrawer from "@/components/invoices/InvoiceDetailDrawer";
 
 interface Props {
@@ -118,7 +117,6 @@ const VisitDetailDrawer = ({
     sourceType: VisitSourceType;
     sourceId: number;
   } | null>(null);
-  const [createInvoiceOpen, setCreateInvoiceOpen] = useState(false);
   const [viewingInvoiceId, setViewingInvoiceId] = useState<number | null>(null);
   const [invoiceDrawerOpen, setInvoiceDrawerOpen] = useState(false);
 
@@ -198,7 +196,12 @@ const VisitDetailDrawer = ({
     setAttachments((prev) => prev.filter((a) => a.id !== id));
   };
 
-  const handleInvoiceBindAction = async (invoiceId: number) => {
+  const handleInvoiceUnbind = async (id: number) => {
+    await unbindVisitInvoice(id);
+    setVisitInvoices((prev) => prev.filter((i) => i.id !== id));
+  };
+
+  const handleSubRecordInvoiceBind = async (invoiceId: number) => {
     if (!invoiceBind || !visitId) return;
     const { data } = await bindVisitInvoice(
       visitId,
@@ -207,11 +210,6 @@ const VisitDetailDrawer = ({
       invoiceBind.sourceId,
     );
     setVisitInvoices((prev) => [...prev, data]);
-  };
-
-  const handleInvoiceUnbind = async (id: number) => {
-    await unbindVisitInvoice(id);
-    setVisitInvoices((prev) => prev.filter((i) => i.id !== id));
   };
 
   const handleExamDelete = async (id: number) => {
@@ -551,13 +549,29 @@ const VisitDetailDrawer = ({
                       }) satisfies BoundInvoice,
                   )}
                 title={t("medical.invoices")}
-                bindLabel={t("medical.bindInvoice")}
-                uploadNewLabel={t("medical.uploadNewInvoice")}
                 emptyLabel={t("medical.noInvoices")}
-                onBind={() =>
-                  setInvoiceBind({ sourceType: "RECORD", sourceId: visitId! })
-                }
-                onCreateNew={() => setCreateInvoiceOpen(true)}
+                bindLabel={t("medical.bindInvoice")}
+                onBindInvoice={async (invoiceId) => {
+                  if (!visitId) return;
+                  const { data } = await bindVisitInvoice(
+                    visitId,
+                    invoiceId,
+                    "RECORD",
+                    visitId,
+                  );
+                  setVisitInvoices((prev) => [...prev, data]);
+                }}
+                uploadNewLabel={t("medical.uploadNewInvoice")}
+                onCreateInvoice={async (invoice) => {
+                  if (!visitId) return;
+                  const { data } = await bindVisitInvoice(
+                    visitId,
+                    invoice.id,
+                    "RECORD",
+                    visitId,
+                  );
+                  setVisitInvoices((prev) => [...prev, data]);
+                }}
                 onUnbind={handleInvoiceUnbind}
                 onView={(invoiceId) => {
                   setViewingInvoiceId(invoiceId);
@@ -793,27 +807,13 @@ const VisitDetailDrawer = ({
           onClose={() => setItemAddPrescId(null)}
           onSubmit={handlePrescItemAdd}
         />
-        <BindVisitInvoiceDialog
+        <BindInvoiceDialog
           open={invoiceBind !== null}
           onClose={() => setInvoiceBind(null)}
-          onBind={handleInvoiceBindAction}
-          onCreateNew={() => setCreateInvoiceOpen(true)}
-        />
-        <CreateInvoiceDialog
-          open={createInvoiceOpen}
-          onClose={() => setCreateInvoiceOpen(false)}
-          onSuccess={() => {}}
-          onCreated={async (created) => {
-            if (invoiceBind && visitId) {
-              const { data } = await bindVisitInvoice(
-                visitId,
-                created.id,
-                invoiceBind.sourceType,
-                invoiceBind.sourceId,
-              );
-              setVisitInvoices((prev) => [...prev, data]);
-            }
-          }}
+          onBind={handleSubRecordInvoiceBind}
+          title={t("shared.invoices.bindDialog.title")}
+          searchPlaceholder={t("shared.invoices.bindDialog.search")}
+          confirmLabel={t("shared.invoices.bindDialog.confirm")}
         />
         <InvoiceDetailDrawer
           invoiceId={viewingInvoiceId}

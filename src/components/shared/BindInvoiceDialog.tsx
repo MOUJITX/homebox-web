@@ -7,7 +7,6 @@ import {
   INVOICE_TYPES,
   INVOICE_STATUSES,
 } from "@/components/invoices/constants";
-import { bindInvoice } from "@/api/subscriptionRecords";
 import { getErrorMessage } from "@/lib/error";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -28,21 +27,29 @@ import {
 } from "@/components/ui/select";
 import { useDebounce } from "@/hooks/useDebounce";
 
-interface BindSubscriptionInvoiceDialogProps {
-  readonly recordId: number;
-  readonly boundInvoiceIds: number[];
+interface BindInvoiceDialogProps {
   readonly open: boolean;
   readonly onClose: () => void;
-  readonly onSuccess: () => void;
+  readonly onBind: (invoiceId: number) => Promise<void>;
+  readonly onCreateNew?: () => void;
+  readonly boundInvoiceIds?: number[];
+  readonly title: string;
+  readonly searchPlaceholder: string;
+  readonly confirmLabel: string;
+  readonly uploadNewLabel?: string;
 }
 
-const BindSubscriptionInvoiceDialog = ({
-  recordId,
-  boundInvoiceIds,
+const BindInvoiceDialog = ({
   open,
   onClose,
-  onSuccess,
-}: BindSubscriptionInvoiceDialogProps) => {
+  onBind,
+  onCreateNew,
+  boundInvoiceIds,
+  title,
+  searchPlaceholder,
+  confirmLabel,
+  uploadNewLabel,
+}: BindInvoiceDialogProps) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
@@ -76,7 +83,9 @@ const BindSubscriptionInvoiceDialog = ({
   }, [debouncedSearch, filterType, filterStatus, page]);
 
   useEffect(() => {
-    if (open) void fetchInvoices();
+    if (open) {
+      void fetchInvoices();
+    }
   }, [open, fetchInvoices]);
 
   useEffect(() => {
@@ -98,9 +107,8 @@ const BindSubscriptionInvoiceDialog = ({
     setBinding(true);
     setError("");
     try {
-      await bindInvoice(recordId, selectedId);
+      await onBind(selectedId);
       resetAndClose();
-      onSuccess();
     } catch (err) {
       setError(getErrorMessage(err) ?? t("common.error"));
     } finally {
@@ -108,22 +116,22 @@ const BindSubscriptionInvoiceDialog = ({
     }
   };
 
-  const availableInvoices = invoices.filter(
-    (inv) => !boundInvoiceIds.includes(inv.id),
-  );
+  const availableInvoices = boundInvoiceIds
+    ? invoices.filter((inv) => !boundInvoiceIds.includes(inv.id))
+    : invoices;
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && resetAndClose()}>
       <DialogContent className="sm:max-w-lg max-h-[80vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>{t("subscriptions.invoices.bind")}</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <SearchIcon className="size-4 text-muted-foreground shrink-0" />
             <Input
-              placeholder={t("subscriptions.searchPlaceholder")}
+              placeholder={searchPlaceholder}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -190,11 +198,13 @@ const BindSubscriptionInvoiceDialog = ({
               {t("common.loading")}
             </p>
           )}
+
           {!loading && availableInvoices.length === 0 && (
             <p className="text-sm text-muted-foreground text-center py-8">
               {t("common.noResults")}
             </p>
           )}
+
           {!loading && availableInvoices.length > 0 && (
             <div className="space-y-1">
               {availableInvoices.map((inv) => (
@@ -264,9 +274,21 @@ const BindSubscriptionInvoiceDialog = ({
           <Button variant="outline" onClick={resetAndClose}>
             {t("common.cancel")}
           </Button>
+          {onCreateNew && uploadNewLabel && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                resetAndClose();
+                onCreateNew();
+              }}
+            >
+              {uploadNewLabel}
+            </Button>
+          )}
           <Button onClick={handleBind} disabled={!selectedId || binding}>
             <LinkIcon className="size-3.5" />
-            {binding ? t("common.saving") : t("subscriptions.invoices.bind")}
+            {binding ? t("common.saving") : confirmLabel}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -274,4 +296,4 @@ const BindSubscriptionInvoiceDialog = ({
   );
 };
 
-export default BindSubscriptionInvoiceDialog;
+export default BindInvoiceDialog;
