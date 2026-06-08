@@ -210,7 +210,7 @@ const MedicalRecordsPage = () => {
               </TableRow>
             )}
             {!loading && pageData.content.map((r) => (
-              <TableRow key={r.id}>
+              <TableRow key={r.id} className="cursor-pointer" onClick={() => setDetailId(r.id)}>
                 <TableCell>
                   <div className="flex flex-col">
                     <span className="font-medium">{r.patientName}</span>
@@ -233,13 +233,13 @@ const MedicalRecordsPage = () => {
                 <TableCell className="max-w-32 truncate" title={r.diagnosis ?? undefined}>{r.diagnosis || "-"}</TableCell>
                 <TableCell>
                   <div className="flex gap-1">
-                    <Button variant="ghost" size="icon-xs" onClick={() => setDetailId(r.id)} title={t("common.view")}>
+                    <Button variant="ghost" size="icon-xs" onClick={(e) => { e.stopPropagation(); setDetailId(r.id); }} title={t("common.view")}>
                       <EyeIcon className="size-3.5" />
                     </Button>
-                    <Button variant="ghost" size="icon-xs" onClick={() => setEditing(r)} title={t("common.edit")}>
+                    <Button variant="ghost" size="icon-xs" onClick={(e) => { e.stopPropagation(); setEditing(r); }} title={t("common.edit")}>
                       <PencilIcon className="size-3.5" />
                     </Button>
-                    <Button variant="ghost" size="icon-xs" onClick={() => setDeleting(r)} title={t("common.delete")}>
+                    <Button variant="ghost" size="icon-xs" onClick={(e) => { e.stopPropagation(); setDeleting(r); }} title={t("common.delete")}>
                       <TrashIcon className="size-3.5" />
                     </Button>
                   </div>
