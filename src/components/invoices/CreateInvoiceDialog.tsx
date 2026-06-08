@@ -1,6 +1,10 @@
 import { useState, useRef, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
-import type { InvoiceType, InvoiceStatus, InvoiceParseResult } from "@/api/invoices";
+import type {
+  InvoiceType,
+  InvoiceStatus,
+  InvoiceParseResult,
+} from "@/api/invoices";
 import type { InvoiceDetail } from "@/api/invoices";
 import { createInvoice, parseInvoice } from "@/api/invoices";
 import { getErrorMessage } from "@/lib/error";
@@ -41,7 +45,8 @@ const CreateInvoiceDialog = ({
 
   const [invoiceNumber, setInvoiceNumber] = useState("");
   const [invoiceDate, setInvoiceDate] = useState("");
-  const [invoiceType, setInvoiceType] = useState<InvoiceType>("DIGITAL_INVOICE");
+  const [invoiceType, setInvoiceType] =
+    useState<InvoiceType>("DIGITAL_INVOICE");
   const [invoiceStatus, setInvoiceStatus] = useState<InvoiceStatus>("NORMAL");
   const [sellerName, setSellerName] = useState("");
   const [sellerTaxId, setSellerTaxId] = useState("");
@@ -86,7 +91,8 @@ const CreateInvoiceDialog = ({
     if (result.invoiceNumber) setInvoiceNumber(result.invoiceNumber);
     if (result.invoiceDate) setInvoiceDate(result.invoiceDate);
     if (result.invoiceType) setInvoiceType(result.invoiceType as InvoiceType);
-    if (result.invoiceStatus) setInvoiceStatus(result.invoiceStatus as InvoiceStatus);
+    if (result.invoiceStatus)
+      setInvoiceStatus(result.invoiceStatus as InvoiceStatus);
     if (result.sellerName) setSellerName(result.sellerName);
     if (result.sellerTaxId) setSellerTaxId(result.sellerTaxId);
     if (result.buyerName) setBuyerName(result.buyerName);
@@ -155,7 +161,9 @@ const CreateInvoiceDialog = ({
       <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t("invoices.create")}</DialogTitle>
-          <DialogDescription>{t("invoices.createDescription")}</DialogDescription>
+          <DialogDescription>
+            {t("invoices.createDescription")}
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid gap-4">
           <div className="grid gap-2">
@@ -194,7 +202,10 @@ const CreateInvoiceDialog = ({
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label>{t("invoices.form.invoiceType")}</Label>
-              <Select value={invoiceType} onValueChange={(v) => v && setInvoiceType(v)}>
+              <Select
+                value={invoiceType}
+                onValueChange={(v) => v && setInvoiceType(v)}
+              >
                 <SelectTrigger>
                   <SelectValue>
                     {() => t(`invoices.type.${invoiceType}`)}
@@ -211,7 +222,10 @@ const CreateInvoiceDialog = ({
             </div>
             <div className="grid gap-2">
               <Label>{t("invoices.form.invoiceStatus")}</Label>
-              <Select value={invoiceStatus} onValueChange={(v) => v && setInvoiceStatus(v)}>
+              <Select
+                value={invoiceStatus}
+                onValueChange={(v) => v && setInvoiceStatus(v)}
+              >
                 <SelectTrigger>
                   <SelectValue>
                     {() => t(`invoices.status.${invoiceStatus}`)}
@@ -230,49 +244,105 @@ const CreateInvoiceDialog = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="invoice-number">{t("invoices.form.invoiceNumber")}</Label>
-              <Input id="invoice-number" value={invoiceNumber} onChange={(e) => setInvoiceNumber(e.target.value)} />
+              <Label htmlFor="invoice-number">
+                {t("invoices.form.invoiceNumber")}
+              </Label>
+              <Input
+                id="invoice-number"
+                value={invoiceNumber}
+                onChange={(e) => setInvoiceNumber(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="invoice-date">{t("invoices.form.invoiceDate")}</Label>
-              <Input id="invoice-date" type="date" value={invoiceDate} onChange={(e) => setInvoiceDate(e.target.value)} />
+              <Label htmlFor="invoice-date">
+                {t("invoices.form.invoiceDate")}
+              </Label>
+              <Input
+                id="invoice-date"
+                type="date"
+                value={invoiceDate}
+                onChange={(e) => setInvoiceDate(e.target.value)}
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="buyer-name">{t("invoices.form.buyerName")}</Label>
-              <Input id="buyer-name" value={buyerName} onChange={(e) => setBuyerName(e.target.value)} />
+              <Input
+                id="buyer-name"
+                value={buyerName}
+                onChange={(e) => setBuyerName(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="buyer-tax-id">{t("invoices.form.buyerTaxId")}</Label>
-              <Input id="buyer-tax-id" value={buyerTaxId} onChange={(e) => setBuyerTaxId(e.target.value)} />
+              <Label htmlFor="buyer-tax-id">
+                {t("invoices.form.buyerTaxId")}
+              </Label>
+              <Input
+                id="buyer-tax-id"
+                value={buyerTaxId}
+                onChange={(e) => setBuyerTaxId(e.target.value)}
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="seller-name">{t("invoices.form.sellerName")}</Label>
-              <Input id="seller-name" value={sellerName} onChange={(e) => setSellerName(e.target.value)} />
+              <Label htmlFor="seller-name">
+                {t("invoices.form.sellerName")}
+              </Label>
+              <Input
+                id="seller-name"
+                value={sellerName}
+                onChange={(e) => setSellerName(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="seller-tax-id">{t("invoices.form.sellerTaxId")}</Label>
-              <Input id="seller-tax-id" value={sellerTaxId} onChange={(e) => setSellerTaxId(e.target.value)} />
+              <Label htmlFor="seller-tax-id">
+                {t("invoices.form.sellerTaxId")}
+              </Label>
+              <Input
+                id="seller-tax-id"
+                value={sellerTaxId}
+                onChange={(e) => setSellerTaxId(e.target.value)}
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="amount">{t("invoices.form.amount")}</Label>
-              <Input id="amount" type="number" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} />
+              <Input
+                id="amount"
+                type="number"
+                step="0.01"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="tax-amount">{t("invoices.form.taxAmount")}</Label>
-              <Input id="tax-amount" type="number" step="0.01" value={taxAmount} onChange={(e) => setTaxAmount(e.target.value)} />
+              <Input
+                id="tax-amount"
+                type="number"
+                step="0.01"
+                value={taxAmount}
+                onChange={(e) => setTaxAmount(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="total-amount">{t("invoices.form.totalAmount")} *</Label>
-              <Input id="total-amount" type="number" step="0.01" value={totalAmount} onChange={(e) => setTotalAmount(e.target.value)} required />
+              <Label htmlFor="total-amount">
+                {t("invoices.form.totalAmount")} *
+              </Label>
+              <Input
+                id="total-amount"
+                type="number"
+                step="0.01"
+                value={totalAmount}
+                onChange={(e) => setTotalAmount(e.target.value)}
+                required
+              />
             </div>
           </div>
 
@@ -287,7 +357,9 @@ const CreateInvoiceDialog = ({
             />
           </div>
 
-          {error && <p className="text-sm text-destructive text-center">{error}</p>}
+          {error && (
+            <p className="text-sm text-destructive text-center">{error}</p>
+          )}
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
               {t("common.cancel")}

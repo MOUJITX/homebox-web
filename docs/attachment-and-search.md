@@ -7,6 +7,7 @@
 系统已有 `FileRecord` 通用文件记录表和 `FileStorageStrategy` 存储策略（支持本地和 Qiniu OSS 自动切换），文件管理（Files）模块也已实现通用的文件上传/下载/删除。本需求在此基础上扩展附件能力和内容搜索能力。
 
 **技术方案选型：Elasticsearch**，原因：
+
 1. 原生 IK Analyzer 中文分词，语义边界处理优于 ngram
 2. 原生 BM25 相关性排序 + highlight 高亮，无需应用层实现
 3. 原生 `dense_vector` + kNN 向量检索，后续接入 AI Chat Bot 的语义搜索/RAG 可无缝升级，无需再次迁移基础设施
@@ -22,6 +23,7 @@
 #### 1.1 功能描述
 
 在资产详情中新增「附件」Tab（与「图片」并列），支持：
+
 - 上传文档附件（txt / doc / docx / pdf 等，不限制格式）
 - 附件列表展示（文件名、大小、上传时间）
 - 下载附件
@@ -38,11 +40,11 @@
 
 新建 `asset_attachments` 表：
 
-| 列名 | 类型 | 约束 |
-|------|------|------|
-| id | BIGINT | PK, AUTO_INCREMENT |
-| asset_id | BIGINT | NOT NULL, FK → assets(id) |
-| file_id | BIGINT | NOT NULL, FK → file_records(id) |
+| 列名     | 类型   | 约束                            |
+| -------- | ------ | ------------------------------- |
+| id       | BIGINT | PK, AUTO_INCREMENT              |
+| asset_id | BIGINT | NOT NULL, FK → assets(id)       |
+| file_id  | BIGINT | NOT NULL, FK → file_records(id) |
 
 ### 二、有效期物品附件（Good Attachments）
 
@@ -54,15 +56,16 @@
 
 新建 `good_attachments` 表：
 
-| 列名 | 类型 | 约束 |
-|------|------|------|
-| id | BIGINT | PK, AUTO_INCREMENT |
-| good_id | BIGINT | NOT NULL, FK → goods(id) |
+| 列名    | 类型   | 约束                            |
+| ------- | ------ | ------------------------------- |
+| id      | BIGINT | PK, AUTO_INCREMENT              |
+| good_id | BIGINT | NOT NULL, FK → goods(id)        |
 | file_id | BIGINT | NOT NULL, FK → file_records(id) |
 
 ### 三、文件大小限制调整
 
 将所有文件上传大小限制从当前的 10MB 统一修改为 **100MB**，涉及位置：
+
 - `application.yml`：`spring.servlet.multipart.max-file-size` + `max-request-size`
 - `LocalStorageStrategy.validateFile()`
 - `QiniuStorageStrategy.validateFile()`
@@ -72,6 +75,7 @@
 #### 4.1 搜索范围
 
 同时搜索以下来源的文件内容：
+
 - 资产附件（Asset Attachment）
 - 有效期物品附件（Good Attachment）
 - 文件管理中的文件（FileRecord / Files）
@@ -122,25 +126,27 @@
 
 #### 4.3 搜索能力对照
 
-| 能力 | 实现方式 | 负责层 |
-|------|---------|-------|
-| 中文分词 | IK Analyzer（`ik_smart` 搜索时，`ik_max_word` 索引时） | ES |
-| 关键词高亮 | ES `highlight` 原生返回 `<em>` 标签包裹的片段 | ES |
-| 模糊匹配 | IK 分词语义拆分 + ES `match_phrase` / `multi_match` | ES |
-| 排除伪匹配 | IK 分词理解语义边界，不会把「进口红酒」切成「口红」 | ES |
-| 页码定位 | PDFBox 逐页提取记录 page_number 到 chunk | 应用层 |
-| 相关性排序 | ES BM25 原生 `_score` | ES |
-| AI 语义搜索 | ES `dense_vector` + kNN（预留，本期不实现 embedding） | ES（已内置支持） |
-| AI 混合搜索 | ES RRF 融合 BM25 + kNN（预留） | ES（已内置支持） |
+| 能力        | 实现方式                                               | 负责层           |
+| ----------- | ------------------------------------------------------ | ---------------- |
+| 中文分词    | IK Analyzer（`ik_smart` 搜索时，`ik_max_word` 索引时） | ES               |
+| 关键词高亮  | ES `highlight` 原生返回 `<em>` 标签包裹的片段          | ES               |
+| 模糊匹配    | IK 分词语义拆分 + ES `match_phrase` / `multi_match`    | ES               |
+| 排除伪匹配  | IK 分词理解语义边界，不会把「进口红酒」切成「口红」    | ES               |
+| 页码定位    | PDFBox 逐页提取记录 page_number 到 chunk               | 应用层           |
+| 相关性排序  | ES BM25 原生 `_score`                                  | ES               |
+| AI 语义搜索 | ES `dense_vector` + kNN（预留，本期不实现 embedding）  | ES（已内置支持） |
+| AI 混合搜索 | ES RRF 融合 BM25 + kNN（预留）                         | ES（已内置支持） |
 
 #### 4.4 新增依赖
 
 **Server（build.gradle）：**
+
 - `org.springframework.boot:spring-boot-starter-data-elasticsearch` — Spring Data ES 集成
 - `org.apache.tika:tika-parsers-standard-package` — 多格式文本提取
 - ~~`com.huaban:jieba-analysis`~~ — **不需要**（IK Analyzer 替代）
 
 **Docker（docker-compose.yml）：**
+
 - Elasticsearch 8.x 服务（单节点）
 - IK Analyzer 插件
 
@@ -189,34 +195,34 @@
 
 #### `text_chunks` — 文件文本块（数据源头，持久化存储）
 
-| 列名 | 类型 | 约束 | 说明 |
-|------|------|------|------|
-| id | BIGINT | PK, AUTO_INCREMENT | |
-| file_id | BIGINT | NOT NULL, FK → file_records(id) | 所属文件 |
-| chunk_index | INT | NOT NULL | 块序号（0, 1, 2, ...） |
-| chunk_text | MEDIUMTEXT | NOT NULL | 文本块内容（~500 字符） |
-| page_number | INT | NULL | 所在页码（1-based，PDF 可精确，其他为 null） |
-| token_count | INT | NULL | 字符数估算 |
-| indexed | BIT(1) | NOT NULL, DEFAULT FALSE | 是否已同步到 ES |
-| created_at | DATETIME(6) | NOT NULL, auto-set | |
+| 列名        | 类型        | 约束                            | 说明                                         |
+| ----------- | ----------- | ------------------------------- | -------------------------------------------- |
+| id          | BIGINT      | PK, AUTO_INCREMENT              |                                              |
+| file_id     | BIGINT      | NOT NULL, FK → file_records(id) | 所属文件                                     |
+| chunk_index | INT         | NOT NULL                        | 块序号（0, 1, 2, ...）                       |
+| chunk_text  | MEDIUMTEXT  | NOT NULL                        | 文本块内容（~500 字符）                      |
+| page_number | INT         | NULL                            | 所在页码（1-based，PDF 可精确，其他为 null） |
+| token_count | INT         | NULL                            | 字符数估算                                   |
+| indexed     | BIT(1)      | NOT NULL, DEFAULT FALSE         | 是否已同步到 ES                              |
+| created_at  | DATETIME(6) | NOT NULL, auto-set              |                                              |
 
 - `file_records` 表**不新增列**（`extracted_text`/`page_offsets` 由 `text_chunks` 替代）
 - 唯一约束：`UNIQUE(file_id, chunk_index)`
 
 #### `asset_attachments`
 
-| 列名 | 类型 | 约束 |
-|------|------|------|
-| id | BIGINT | PK, AUTO_INCREMENT |
-| asset_id | BIGINT | NOT NULL, FK → assets(id) |
-| file_id | BIGINT | NOT NULL, FK → file_records(id) |
+| 列名     | 类型   | 约束                            |
+| -------- | ------ | ------------------------------- |
+| id       | BIGINT | PK, AUTO_INCREMENT              |
+| asset_id | BIGINT | NOT NULL, FK → assets(id)       |
+| file_id  | BIGINT | NOT NULL, FK → file_records(id) |
 
 #### `good_attachments`
 
-| 列名 | 类型 | 约束 |
-|------|------|------|
-| id | BIGINT | PK, AUTO_INCREMENT |
-| good_id | BIGINT | NOT NULL, FK → goods(id) |
+| 列名    | 类型   | 约束                            |
+| ------- | ------ | ------------------------------- |
+| id      | BIGINT | PK, AUTO_INCREMENT              |
+| good_id | BIGINT | NOT NULL, FK → goods(id)        |
 | file_id | BIGINT | NOT NULL, FK → file_records(id) |
 
 ### Elasticsearch 索引
@@ -240,18 +246,23 @@
   },
   "mappings": {
     "properties": {
-      "chunkId":       { "type": "long" },
-      "fileId":        { "type": "long" },
-      "chunkIndex":    { "type": "integer" },
-      "chunkText":     { "type": "text", "analyzer": "ik_max_word", "search_analyzer": "ik_smart" },
-      "pageNumber":    { "type": "integer" },
-      "createdAt":     { "type": "date" }
+      "chunkId": { "type": "long" },
+      "fileId": { "type": "long" },
+      "chunkIndex": { "type": "integer" },
+      "chunkText": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "pageNumber": { "type": "integer" },
+      "createdAt": { "type": "date" }
     }
   }
 }
 ```
 
 **说明：**
+
 - `chunkText` 索引用 `ik_max_word`（最大粒度切分，提高召回），搜索用 `ik_smart`（最粗粒度切分，提高精度）
 - 1 分片 0 副本（单节点小规模部署）
 - file 元信息（filename 等）不存 ES，通过 MySQL batch query 获取，避免数据不一致
@@ -263,35 +274,35 @@
 
 ### 资产附件 API（`/api/assets/{assetId}/attachments`）
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/assets/{assetId}/attachments` | 获取附件列表 |
-| POST | `/api/assets/{assetId}/attachments` | 上传附件（multipart/form-data） |
-| GET | `/api/assets/{assetId}/attachments/{attachmentId}/file` | 下载/预览附件 |
-| DELETE | `/api/assets/{assetId}/attachments/{attachmentId}` | 删除附件 |
+| 方法   | 路径                                                    | 说明                            |
+| ------ | ------------------------------------------------------- | ------------------------------- |
+| GET    | `/api/assets/{assetId}/attachments`                     | 获取附件列表                    |
+| POST   | `/api/assets/{assetId}/attachments`                     | 上传附件（multipart/form-data） |
+| GET    | `/api/assets/{assetId}/attachments/{attachmentId}/file` | 下载/预览附件                   |
+| DELETE | `/api/assets/{assetId}/attachments/{attachmentId}`      | 删除附件                        |
 
 ### 有效期物品附件 API（`/api/goods/{goodId}/attachments`）
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/goods/{goodId}/attachments` | 获取附件列表 |
-| POST | `/api/goods/{goodId}/attachments` | 上传附件（multipart/form-data） |
-| GET | `/api/goods/{goodId}/attachments/{attachmentId}/file` | 下载/预览附件 |
-| DELETE | `/api/goods/{goodId}/attachments/{attachmentId}` | 删除附件 |
+| 方法   | 路径                                                  | 说明                            |
+| ------ | ----------------------------------------------------- | ------------------------------- |
+| GET    | `/api/goods/{goodId}/attachments`                     | 获取附件列表                    |
+| POST   | `/api/goods/{goodId}/attachments`                     | 上传附件（multipart/form-data） |
+| GET    | `/api/goods/{goodId}/attachments/{attachmentId}/file` | 下载/预览附件                   |
+| DELETE | `/api/goods/{goodId}/attachments/{attachmentId}`      | 删除附件                        |
 
 ### 内容搜索 API
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/search?q=keyword&page=1&size=20` | 搜索文件内容 |
+| 方法 | 路径                                   | 说明         |
+| ---- | -------------------------------------- | ------------ |
+| GET  | `/api/search?q=keyword&page=1&size=20` | 搜索文件内容 |
 
 **请求参数：**
 
-| 参数 | 类型 | 必填 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| q | string | 是 | — | 搜索关键词 |
-| page | int | 否 | 1 | 页码（1-based） |
-| size | int | 否 | 20 | 每页条数 |
+| 参数 | 类型   | 必填 | 默认值 | 说明            |
+| ---- | ------ | ---- | ------ | --------------- |
+| q    | string | 是   | —      | 搜索关键词      |
+| page | int    | 否   | 1      | 页码（1-based） |
+| size | int    | 否   | 20     | 每页条数        |
 
 **响应结构：**
 
@@ -337,12 +348,12 @@
 
 **source.type 枚举：**
 
-| 值 | typeLabel | 显示 Tag |
-|------|-----------|---------|
-| `ASSET` | 资产 | 是 |
-| `GOOD` | 有效期 | 是 |
-| `INVOICE` | 发票（预留） | 是 |
-| `FILE` | — | 否（仅此来源时不显示 Tag） |
+| 值        | typeLabel    | 显示 Tag                   |
+| --------- | ------------ | -------------------------- |
+| `ASSET`   | 资产         | 是                         |
+| `GOOD`    | 有效期       | 是                         |
+| `INVOICE` | 发票（预留） | 是                         |
+| `FILE`    | —            | 否（仅此来源时不显示 Tag） |
 
 ---
 
@@ -533,7 +544,7 @@ SearchRequest esRequest = SearchRequest.of(s -> s
 
 ```sql
 -- ES 返回 fileIds 后，批量获取归属信息
-SELECT 
+SELECT
     f.id AS file_id,
     f.original_filename, f.content_type, f.file_size,
     aa.asset_id, a.name AS asset_name,
@@ -557,7 +568,7 @@ WHERE f.id IN (:fileIds)
 
 ```typescript
 const getTags = (sources: SourceInfo[]): SourceInfo[] => {
-  const nonFileSources = sources.filter(s => s.type !== 'FILE');
+  const nonFileSources = sources.filter((s) => s.type !== "FILE");
   return nonFileSources.length > 0 ? nonFileSources : [];
   // 空数组 → 不显示任何 Tag
 };
@@ -590,18 +601,18 @@ const getTags = (sources: SourceInfo[]): SourceInfo[] => {
 
 ## 实现参考
 
-| 新功能 | 参考现有实现 |
-|--------|------------|
-| AssetAttachment 实体 | `InvoiceAttachment.java` — 相同模式（id + parent FK + file FK） |
-| AssetAttachmentController | `InvoiceAttachmentController.java` |
-| AssetAttachmentService | `InvoiceService.uploadAttachment()` / `deleteAttachment()` |
-| GoodAttachment 全套 | 同上，parent 指向 Good |
-| AssetAttachmentManager (前端) | `InvoiceAttachmentManager.tsx` |
-| GoodAttachmentManager (前端) | `InvoiceAttachmentManager.tsx` |
-| TextExtractionService | 全新（PDFBox 已有的 invoice 预览代码可复用） |
-| ES 索引操作 | 全新（Spring Data Elasticsearch `ElasticsearchOperations`） |
-| SearchService | 全新 |
-| SearchDialog (前端) | 全新 |
+| 新功能                        | 参考现有实现                                                    |
+| ----------------------------- | --------------------------------------------------------------- |
+| AssetAttachment 实体          | `InvoiceAttachment.java` — 相同模式（id + parent FK + file FK） |
+| AssetAttachmentController     | `InvoiceAttachmentController.java`                              |
+| AssetAttachmentService        | `InvoiceService.uploadAttachment()` / `deleteAttachment()`      |
+| GoodAttachment 全套           | 同上，parent 指向 Good                                          |
+| AssetAttachmentManager (前端) | `InvoiceAttachmentManager.tsx`                                  |
+| GoodAttachmentManager (前端)  | `InvoiceAttachmentManager.tsx`                                  |
+| TextExtractionService         | 全新（PDFBox 已有的 invoice 预览代码可复用）                    |
+| ES 索引操作                   | 全新（Spring Data Elasticsearch `ElasticsearchOperations`）     |
+| SearchService                 | 全新                                                            |
+| SearchDialog (前端)           | 全新                                                            |
 
 ---
 

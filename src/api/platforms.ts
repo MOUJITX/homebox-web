@@ -15,8 +15,7 @@ export interface PlatformRequest {
   website?: string;
 }
 
-export const getPlatforms = () =>
-  axios.get<Platform[]>("/platforms");
+export const getPlatforms = () => axios.get<Platform[]>("/platforms");
 
 export const createPlatform = (data: PlatformRequest) =>
   axios.post<Platform>("/platforms", data);

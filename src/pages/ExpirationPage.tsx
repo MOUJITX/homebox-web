@@ -116,7 +116,9 @@ const ExpirationPage = () => {
         const next = new URLSearchParams(searchParams);
         next.delete("goodId");
         const query = next.toString();
-        navigate(query ? `/expiration?${query}` : "/expiration", { replace: true });
+        navigate(query ? `/expiration?${query}` : "/expiration", {
+          replace: true,
+        });
       }
     }
   }, []);

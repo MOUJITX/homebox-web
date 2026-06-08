@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FileTextIcon, PlusIcon, LinkIcon, UnlinkIcon, EyeIcon } from "lucide-react";
+import {
+  FileTextIcon,
+  PlusIcon,
+  LinkIcon,
+  UnlinkIcon,
+  EyeIcon,
+} from "lucide-react";
 import type { SubscriptionRecordInvoice } from "@/api/subscriptions";
 import { bindInvoice, unbindInvoice } from "@/api/subscriptionRecords";
 import { Button } from "@/components/ui/button";
@@ -47,7 +53,11 @@ const SubscriptionInvoiceManager = ({
             <LinkIcon className="size-3.5" />
             {t("subscriptions.invoices.bind")}
           </Button>
-          <Button variant="outline" size="sm" onClick={() => setCreateOpen(true)}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCreateOpen(true)}
+          >
             <PlusIcon className="size-3.5" />
             {t("subscriptions.invoices.uploadNew")}
           </Button>

@@ -3,7 +3,10 @@ import { useTranslation } from "react-i18next";
 import { SearchIcon, LinkIcon } from "lucide-react";
 import type { Invoice, InvoiceType, InvoiceStatus } from "@/api/invoices";
 import { getInvoices } from "@/api/invoices";
-import { INVOICE_TYPES, INVOICE_STATUSES } from "@/components/invoices/constants";
+import {
+  INVOICE_TYPES,
+  INVOICE_STATUSES,
+} from "@/components/invoices/constants";
 import { bindInvoiceToAsset } from "@/api/assetInvoices";
 import { getErrorMessage } from "@/lib/error";
 import { formatDate, formatCurrency } from "@/lib/utils";
@@ -33,7 +36,13 @@ interface BindInvoiceDialogProps {
   readonly onSuccess: () => void;
 }
 
-const BindInvoiceDialog = ({ assetId, boundInvoiceIds, open, onClose, onSuccess }: BindInvoiceDialogProps) => {
+const BindInvoiceDialog = ({
+  assetId,
+  boundInvoiceIds,
+  open,
+  onClose,
+  onSuccess,
+}: BindInvoiceDialogProps) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
@@ -101,7 +110,9 @@ const BindInvoiceDialog = ({ assetId, boundInvoiceIds, open, onClose, onSuccess 
     }
   };
 
-  const availableInvoices = invoices.filter((inv) => !boundInvoiceIds.includes(inv.id));
+  const availableInvoices = invoices.filter(
+    (inv) => !boundInvoiceIds.includes(inv.id),
+  );
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && resetAndClose()}>
@@ -135,7 +146,9 @@ const BindInvoiceDialog = ({ assetId, boundInvoiceIds, open, onClose, onSuccess 
                   </SelectValue>
                 </SelectTrigger>
                 <SelectPopup>
-                  <SelectItem value={null}>{t("invoices.filters.allTypes")}</SelectItem>
+                  <SelectItem value={null}>
+                    {t("invoices.filters.allTypes")}
+                  </SelectItem>
                   {INVOICE_TYPES.map((type) => (
                     <SelectItem key={type} value={type}>
                       {t(`invoices.type.${type}`)}
@@ -175,7 +188,9 @@ const BindInvoiceDialog = ({ assetId, boundInvoiceIds, open, onClose, onSuccess 
 
         <div className="flex-1 overflow-y-auto min-h-0">
           {loading && (
-            <p className="text-sm text-muted-foreground text-center py-8">{t("common.loading")}</p>
+            <p className="text-sm text-muted-foreground text-center py-8">
+              {t("common.loading")}
+            </p>
           )}
 
           {!loading && availableInvoices.length === 0 && (
@@ -205,7 +220,8 @@ const BindInvoiceDialog = ({ assetId, boundInvoiceIds, open, onClose, onSuccess 
                         </span>
                       )}
                       <span className="text-xs truncate">
-                        {inv.sellerName ?? t(`invoices.type.${inv.invoiceType}`)}
+                        {inv.sellerName ??
+                          t(`invoices.type.${inv.invoiceType}`)}
                       </span>
                     </div>
                     {inv.totalAmount != null && (
@@ -230,7 +246,9 @@ const BindInvoiceDialog = ({ assetId, boundInvoiceIds, open, onClose, onSuccess 
             >
               {t("common.previous")}
             </Button>
-            <span>{t("common.pageInfo", { current: page + 1, total: totalPages })}</span>
+            <span>
+              {t("common.pageInfo", { current: page + 1, total: totalPages })}
+            </span>
             <Button
               variant="outline"
               size="sm"
@@ -242,7 +260,9 @@ const BindInvoiceDialog = ({ assetId, boundInvoiceIds, open, onClose, onSuccess 
           </div>
         )}
 
-        {error && <p className="text-sm text-destructive text-center">{error}</p>}
+        {error && (
+          <p className="text-sm text-destructive text-center">{error}</p>
+        )}
 
         <DialogFooter>
           <Button variant="outline" onClick={resetAndClose}>
@@ -250,7 +270,9 @@ const BindInvoiceDialog = ({ assetId, boundInvoiceIds, open, onClose, onSuccess 
           </Button>
           <Button onClick={handleBind} disabled={!selectedId || binding}>
             <LinkIcon className="size-3.5" />
-            {binding ? t("common.saving") : t("assets.invoices.bindDialog.confirm")}
+            {binding
+              ? t("common.saving")
+              : t("assets.invoices.bindDialog.confirm")}
           </Button>
         </DialogFooter>
       </DialogContent>

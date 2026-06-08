@@ -18,8 +18,7 @@ export interface UpdateAssetPlaceRequest {
   description?: string;
 }
 
-export const getAssetPlaces = () =>
-  axios.get<AssetPlace[]>("/asset-places");
+export const getAssetPlaces = () => axios.get<AssetPlace[]>("/asset-places");
 
 export const createAssetPlace = (data: CreateAssetPlaceRequest) =>
   axios.post<AssetPlace>("/asset-places", data);

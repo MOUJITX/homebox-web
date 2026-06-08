@@ -90,7 +90,9 @@ const AssetsPage = () => {
   const [filterIsInUse, setFilterIsInUse] = useState<boolean | null>(null);
   const [filterWarrantyStatus, setFilterWarrantyStatus] =
     useState<WarrantyStatus | null>(null);
-  const [filterParentOnly, setFilterParentOnly] = useState<boolean | null>(true);
+  const [filterParentOnly, setFilterParentOnly] = useState<boolean | null>(
+    true,
+  );
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0]);
 

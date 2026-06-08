@@ -3,7 +3,7 @@ name: build
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   build:
@@ -37,7 +37,7 @@ jobs:
         run: |
           tar -czf ${{ github.event.repository.name }}.tar.gz ./dist
           ls -lh ${{ github.event.repository.name }}.tar.gz
-          
+
       - name: Generate timestamp
         id: timestamp
         run: echo "timestamp=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT

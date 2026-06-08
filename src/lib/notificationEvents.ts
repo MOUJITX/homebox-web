@@ -2,7 +2,9 @@ const listeners = new Set<() => void>();
 
 export const onNotificationsChanged = (fn: () => void) => {
   listeners.add(fn);
-  return () => { listeners.delete(fn); };
+  return () => {
+    listeners.delete(fn);
+  };
 };
 
 export const notifyChanged = () => {

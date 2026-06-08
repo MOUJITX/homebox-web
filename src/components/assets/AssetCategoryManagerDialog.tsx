@@ -100,8 +100,7 @@ const AssetCategoryManagerDialog = ({
       void invalidate.invalidateCategories();
     } catch (err) {
       setError(
-        getErrorMessage(err) ??
-          t("assets.assetCategories.errors.saveFailed"),
+        getErrorMessage(err) ?? t("assets.assetCategories.errors.saveFailed"),
       );
     } finally {
       setSubmitting(false);
@@ -114,8 +113,7 @@ const AssetCategoryManagerDialog = ({
       void invalidate.invalidateCategories();
     } catch (err) {
       setError(
-        getErrorMessage(err) ??
-          t("assets.assetCategories.errors.deleteFailed"),
+        getErrorMessage(err) ?? t("assets.assetCategories.errors.deleteFailed"),
       );
     }
   };

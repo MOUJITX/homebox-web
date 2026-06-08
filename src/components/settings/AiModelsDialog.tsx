@@ -36,7 +36,12 @@ const emptyForm = (): Omit<AiModel, "id"> => ({
   model: "",
 });
 
-const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogProps) => {
+const AiModelsDialog = ({
+  open,
+  onOpenChange,
+  models,
+  onSave,
+}: AiModelsDialogProps) => {
   const { t } = useTranslation();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<Omit<AiModel, "id">>(emptyForm());
@@ -49,7 +54,10 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
     onOpenChange(nextOpen);
   };
 
-  const handleFieldChange = (field: keyof Omit<AiModel, "id">, value: string) => {
+  const handleFieldChange = (
+    field: keyof Omit<AiModel, "id">,
+    value: string,
+  ) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -65,12 +73,25 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
 
   const handleEdit = (model: AiModel) => {
     setEditingId(model.id);
-    setForm({ name: model.name, apiUrl: model.apiUrl, apiKey: model.apiKey, model: model.model });
+    setForm({
+      name: model.name,
+      apiUrl: model.apiUrl,
+      apiKey: model.apiKey,
+      model: model.model,
+    });
   };
 
   const handleUpdate = async () => {
-    if (!editingId || !form.name.trim() || !form.apiUrl.trim() || !form.model.trim()) return;
-    const updated = models.map((m) => (m.id === editingId ? { id: editingId, ...form } : m));
+    if (
+      !editingId ||
+      !form.name.trim() ||
+      !form.apiUrl.trim() ||
+      !form.model.trim()
+    )
+      return;
+    const updated = models.map((m) =>
+      m.id === editingId ? { id: editingId, ...form } : m,
+    );
     await onSave(updated);
     setEditingId(null);
     setForm(emptyForm());
@@ -89,14 +110,17 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
     }
   };
 
-  const isFormValid = form.name.trim() && form.apiUrl.trim() && form.model.trim();
+  const isFormValid =
+    form.name.trim() && form.apiUrl.trim() && form.model.trim();
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-2xl" showCloseButton>
         <DialogHeader>
           <DialogTitle>{t("settings.ai.models.title")}</DialogTitle>
-          <DialogDescription>{t("settings.ai.models.description")}</DialogDescription>
+          <DialogDescription>
+            {t("settings.ai.models.description")}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4">
@@ -106,17 +130,27 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t("settings.ai.models.columns.name")}</TableHead>
-                    <TableHead>{t("settings.ai.models.columns.apiUrl")}</TableHead>
-                    <TableHead>{t("settings.ai.models.columns.model")}</TableHead>
-                    <TableHead className="w-20">{t("settings.ai.models.columns.actions")}</TableHead>
+                    <TableHead>
+                      {t("settings.ai.models.columns.name")}
+                    </TableHead>
+                    <TableHead>
+                      {t("settings.ai.models.columns.apiUrl")}
+                    </TableHead>
+                    <TableHead>
+                      {t("settings.ai.models.columns.model")}
+                    </TableHead>
+                    <TableHead className="w-20">
+                      {t("settings.ai.models.columns.actions")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {models.map((m) => (
                     <TableRow key={m.id}>
                       <TableCell className="font-medium">{m.name}</TableCell>
-                      <TableCell className="max-w-32 truncate">{m.apiUrl}</TableCell>
+                      <TableCell className="max-w-32 truncate">
+                        {m.apiUrl}
+                      </TableCell>
                       <TableCell>{m.model}</TableCell>
                       <TableCell>
                         <div className="flex gap-1">
@@ -154,7 +188,9 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
             </p>
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-1.5">
-                <Label htmlFor="ai-model-name">{t("settings.ai.models.fields.name")}</Label>
+                <Label htmlFor="ai-model-name">
+                  {t("settings.ai.models.fields.name")}
+                </Label>
                 <Input
                   id="ai-model-name"
                   value={form.name}
@@ -163,7 +199,9 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
                 />
               </div>
               <div className="grid gap-1.5">
-                <Label htmlFor="ai-model-model">{t("settings.ai.models.fields.model")}</Label>
+                <Label htmlFor="ai-model-model">
+                  {t("settings.ai.models.fields.model")}
+                </Label>
                 <Input
                   id="ai-model-model"
                   value={form.model}
@@ -173,7 +211,9 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
               </div>
             </div>
             <div className="grid gap-1.5">
-              <Label htmlFor="ai-model-api-url">{t("settings.ai.models.fields.apiUrl")}</Label>
+              <Label htmlFor="ai-model-api-url">
+                {t("settings.ai.models.fields.apiUrl")}
+              </Label>
               <Input
                 id="ai-model-api-url"
                 value={form.apiUrl}
@@ -183,7 +223,9 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
               />
             </div>
             <div className="grid gap-1.5">
-              <Label htmlFor="ai-model-api-key">{t("settings.ai.models.fields.apiKey")}</Label>
+              <Label htmlFor="ai-model-api-key">
+                {t("settings.ai.models.fields.apiKey")}
+              </Label>
               <Input
                 id="ai-model-api-key"
                 type="password"
@@ -196,15 +238,30 @@ const AiModelsDialog = ({ open, onOpenChange, models, onSave }: AiModelsDialogPr
             <div className="flex gap-2">
               {editingId ? (
                 <>
-                  <Button type="button" size="sm" onClick={handleUpdate} disabled={!isFormValid}>
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={handleUpdate}
+                    disabled={!isFormValid}
+                  >
                     {t("common.save")}
                   </Button>
-                  <Button type="button" size="sm" variant="outline" onClick={handleCancelEdit}>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={handleCancelEdit}
+                  >
                     {t("common.cancel")}
                   </Button>
                 </>
               ) : (
-                <Button type="button" size="sm" onClick={handleAdd} disabled={!isFormValid}>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={handleAdd}
+                  disabled={!isFormValid}
+                >
                   <PlusIcon className="size-3.5" />
                   {t("settings.ai.models.add")}
                 </Button>

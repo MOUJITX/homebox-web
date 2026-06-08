@@ -17,7 +17,10 @@ import {
   markAllRead,
   type Notification,
 } from "@/api/notifications";
-import { onNotificationsChanged, notifyChanged } from "@/lib/notificationEvents";
+import {
+  onNotificationsChanged,
+  notifyChanged,
+} from "@/lib/notificationEvents";
 
 const NotificationBell = () => {
   const { t } = useTranslation();
@@ -25,7 +28,9 @@ const NotificationBell = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
-  const pollingRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+  const pollingRef = useRef<ReturnType<typeof setInterval> | undefined>(
+    undefined,
+  );
 
   const fetchUnread = useCallback(async () => {
     try {
@@ -123,7 +128,9 @@ const NotificationBell = () => {
       </DropdownMenuTrigger>
       <DropdownMenuPopup className="w-80">
         <div className="flex items-center justify-between px-3 py-2">
-          <span className="text-sm font-semibold">{t("notifications.title")}</span>
+          <span className="text-sm font-semibold">
+            {t("notifications.title")}
+          </span>
           {unreadCount > 0 && (
             <button
               onClick={handleMarkAllRead}

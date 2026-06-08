@@ -76,7 +76,9 @@ const SearchDialog = ({ open, onClose }: SearchDialogProps) => {
     const assetSource = item.sources.find((s) => s.type === "ASSET");
     const goodSource = item.sources.find((s) => s.type === "GOOD");
     const invoiceSource = item.sources.find((s) => s.type === "INVOICE");
-    const subscriptionSource = item.sources.find((s) => s.type === "SUBSCRIPTION");
+    const subscriptionSource = item.sources.find(
+      (s) => s.type === "SUBSCRIPTION",
+    );
 
     if (assetSource?.sourceId) {
       navigate(`/assets?assetId=${assetSource.sourceId}`);

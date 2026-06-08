@@ -123,5 +123,4 @@ export const createAsset = (data: CreateAssetRequest) =>
 export const updateAsset = (id: number, data: UpdateAssetRequest) =>
   axios.put<AssetDetail>(`/assets/${id}`, data);
 
-export const deleteAsset = (id: number) =>
-  axios.delete<void>(`/assets/${id}`);
+export const deleteAsset = (id: number) => axios.delete<void>(`/assets/${id}`);

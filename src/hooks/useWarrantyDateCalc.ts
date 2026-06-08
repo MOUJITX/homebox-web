@@ -15,15 +15,23 @@ const subtractDays = (date: string, days: number): string =>
   addDays(date, -days);
 
 export const useWarrantyDateCalc = (
-  initial: { activeDate: string; expirationDate: string; warrantyPeriod: string } = {
+  initial: {
+    activeDate: string;
+    expirationDate: string;
+    warrantyPeriod: string;
+  } = {
     activeDate: "",
     expirationDate: "",
     warrantyPeriod: "",
   },
 ) => {
   const [activeDate, setActiveDateRaw] = useState(initial.activeDate);
-  const [expirationDate, setExpirationDateRaw] = useState(initial.expirationDate);
-  const [warrantyPeriod, setWarrantyPeriodRaw] = useState(initial.warrantyPeriod);
+  const [expirationDate, setExpirationDateRaw] = useState(
+    initial.expirationDate,
+  );
+  const [warrantyPeriod, setWarrantyPeriodRaw] = useState(
+    initial.warrantyPeriod,
+  );
 
   const setActiveDate = useCallback(
     (v: string) => {

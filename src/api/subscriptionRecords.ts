@@ -1,5 +1,9 @@
 import axios from "./axios";
-import type { SubscriptionRecord, SubscriptionRecordAttachment, SubscriptionRecordInvoice } from "./subscriptions";
+import type {
+  SubscriptionRecord,
+  SubscriptionRecordAttachment,
+  SubscriptionRecordInvoice,
+} from "./subscriptions";
 
 export interface SubscriptionRecordRequest {
   recordDate: string;
@@ -20,7 +24,11 @@ export const getRecords = (subId: number) =>
 export const addRecord = (subId: number, data: SubscriptionRecordRequest) =>
   axios.post<SubscriptionRecord>(`/subscriptions/${subId}/records`, data);
 
-export const updateRecord = (subId: number, id: number, data: SubscriptionRecordRequest) =>
+export const updateRecord = (
+  subId: number,
+  id: number,
+  data: SubscriptionRecordRequest,
+) =>
   axios.put<SubscriptionRecord>(`/subscriptions/${subId}/records/${id}`, data);
 
 export const deleteRecord = (subId: number, id: number) =>
@@ -32,18 +40,24 @@ export const uploadAttachment = (recordId: number, file: File) => {
   return axios.post<SubscriptionRecordAttachment>(
     `/subscription-records/${recordId}/attachments`,
     formData,
-    { headers: { "Content-Type": "multipart/form-data" } }
+    { headers: { "Content-Type": "multipart/form-data" } },
   );
 };
 
 export const getAttachments = (recordId: number) =>
-  axios.get<SubscriptionRecordAttachment[]>(`/subscription-records/${recordId}/attachments`);
+  axios.get<SubscriptionRecordAttachment[]>(
+    `/subscription-records/${recordId}/attachments`,
+  );
 
 export const deleteAttachment = (recordId: number, attachmentId: number) =>
-  axios.delete<void>(`/subscription-records/${recordId}/attachments/${attachmentId}`);
+  axios.delete<void>(
+    `/subscription-records/${recordId}/attachments/${attachmentId}`,
+  );
 
 export const getInvoices = (recordId: number) =>
-  axios.get<SubscriptionRecordInvoice[]>(`/subscription-records/${recordId}/invoices`);
+  axios.get<SubscriptionRecordInvoice[]>(
+    `/subscription-records/${recordId}/invoices`,
+  );
 
 export const bindInvoice = (recordId: number, invoiceId: number) =>
   axios.post<void>(`/subscription-records/${recordId}/invoices/${invoiceId}`);

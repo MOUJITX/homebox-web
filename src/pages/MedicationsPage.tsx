@@ -1,10 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon, PencilIcon, TrashIcon } from "lucide-react";
-import {
-  getMedications,
-  type MedicationReminder,
-} from "@/api/medications";
+import { getMedications, type MedicationReminder } from "@/api/medications";
 import { type Page } from "@/api/goods";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -47,8 +44,7 @@ const MedicationsPage = () => {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const enabledParam =
-        filter === "all" ? undefined : filter === "enabled";
+      const enabledParam = filter === "all" ? undefined : filter === "enabled";
       const { data } = await getMedications(page, pageSize, enabledParam);
       setPageData(data);
     } catch {
@@ -106,9 +102,7 @@ const MedicationsPage = () => {
               onClick={() => handleFilterChange(mode)}
               className={`px-3 py-1 text-sm transition-colors ${
                 i === 0 ? "rounded-l-md" : ""
-              } ${
-                i === arr.length - 1 ? "rounded-r-md" : ""
-              } ${
+              } ${i === arr.length - 1 ? "rounded-r-md" : ""} ${
                 filter === mode
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:text-foreground"
@@ -150,74 +144,78 @@ const MedicationsPage = () => {
             )}
             {!loading && pageData.empty && (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                <TableCell
+                  colSpan={6}
+                  className="h-24 text-center text-muted-foreground"
+                >
                   {t("medications.empty")}
                 </TableCell>
               </TableRow>
             )}
-            {!loading && pageData.content.map((r) => {
-              const status = statusBadge(r.enabled);
-              return (
-                <TableRow key={r.id}>
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span className="font-medium">
-                        {r.brandName}-{r.productName}
+            {!loading &&
+              pageData.content.map((r) => {
+                const status = statusBadge(r.enabled);
+                return (
+                  <TableRow key={r.id}>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span className="font-medium">
+                          {r.brandName}-{r.productName}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {r.categoryName}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {r.dosageMethod && (
+                        <span>
+                          {r.dosageMethod}
+                          {r.dosageQuantity && ` ${r.dosageQuantity}`}
+                          {r.dosageUnit && ` ${r.dosageUnit}`}
+                        </span>
+                      )}
+                      {r.dosageNote && (
+                        <span className="block text-xs text-muted-foreground">
+                          {r.dosageNote}
+                        </span>
+                      )}
+                      {!r.dosageMethod && !r.dosageNote && "-"}
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm">
+                        {formatHours(r.frequencyHours)}
                       </span>
-                      <span className="text-xs text-muted-foreground">
-                        {r.categoryName}
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm whitespace-nowrap">
+                        {r.courseStartDate} ~ {r.courseEndDate}
                       </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {r.dosageMethod && (
-                      <span>
-                        {r.dosageMethod}
-                        {r.dosageQuantity && ` ${r.dosageQuantity}`}
-                        {r.dosageUnit && ` ${r.dosageUnit}`}
-                      </span>
-                    )}
-                    {r.dosageNote && (
-                      <span className="block text-xs text-muted-foreground">
-                        {r.dosageNote}
-                      </span>
-                    )}
-                    {!r.dosageMethod && !r.dosageNote && "-"}
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-sm">
-                      {formatHours(r.frequencyHours)}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-sm whitespace-nowrap">
-                      {r.courseStartDate} ~ {r.courseEndDate}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={status.variant}>{status.label}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon-xs"
-                        onClick={() => setEditing(r)}
-                      >
-                        <PencilIcon className="size-3.5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon-xs"
-                        onClick={() => setDeleting(r)}
-                      >
-                        <TrashIcon className="size-3.5" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={status.variant}>{status.label}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon-xs"
+                          onClick={() => setEditing(r)}
+                        >
+                          <PencilIcon className="size-3.5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon-xs"
+                          onClick={() => setDeleting(r)}
+                        >
+                          <TrashIcon className="size-3.5" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </div>

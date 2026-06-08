@@ -1,5 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { getSubscriptions, type GetSubscriptionsParams, type SubscriptionType, type SubscriptionStatus } from "@/api/subscriptions";
+import {
+  getSubscriptions,
+  type GetSubscriptionsParams,
+  type SubscriptionType,
+  type SubscriptionStatus,
+} from "@/api/subscriptions";
 import { subscriptionKeys } from "./subscriptionKeys";
 
 interface UseSubscriptionsParams {
@@ -24,7 +29,9 @@ export const useSubscriptions = (params: UseSubscriptionsParams) => {
   };
 
   return useQuery({
-    queryKey: subscriptionKeys.list(queryParams as unknown as Record<string, unknown>),
+    queryKey: subscriptionKeys.list(
+      queryParams as unknown as Record<string, unknown>,
+    ),
     queryFn: async () => {
       const { data } = await getSubscriptions(queryParams);
       return data;

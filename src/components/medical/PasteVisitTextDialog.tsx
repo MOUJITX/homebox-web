@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { parseVisitRecord } from "@/api/medical";
@@ -33,14 +37,21 @@ const PasteVisitTextDialog = ({ open, onClose, onApply }: Props) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) onClose();
+      }}
+    >
       <DialogContent showCloseButton={false} className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{t("medical.parsePaste")}</DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-3">
-          <p className="text-xs text-muted-foreground">{t("medical.parseHint")}</p>
+          <p className="text-xs text-muted-foreground">
+            {t("medical.parseHint")}
+          </p>
           <textarea
             className="flex w-full rounded-md border bg-transparent px-3 py-2 text-sm outline-none min-h-40"
             value={text}
@@ -50,7 +61,9 @@ const PasteVisitTextDialog = ({ open, onClose, onApply }: Props) => {
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>{t("common.cancel")}</Button>
+          <Button variant="outline" onClick={onClose}>
+            {t("common.cancel")}
+          </Button>
           <Button onClick={handleParse} disabled={parsing || !text.trim()}>
             {parsing ? t("common.loading") : t("medical.parse")}
           </Button>

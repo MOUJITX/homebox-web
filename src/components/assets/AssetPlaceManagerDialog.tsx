@@ -94,7 +94,9 @@ const AssetPlaceManagerDialog = ({
       resetForm();
       void invalidate.invalidatePlaces();
     } catch (err) {
-      setError(getErrorMessage(err) ?? t("assets.assetPlaces.errors.saveFailed"));
+      setError(
+        getErrorMessage(err) ?? t("assets.assetPlaces.errors.saveFailed"),
+      );
     } finally {
       setSubmitting(false);
     }
@@ -133,7 +135,9 @@ const AssetPlaceManagerDialog = ({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t("assets.assetPlaces.columns.name")}</TableHead>
+                    <TableHead>
+                      {t("assets.assetPlaces.columns.name")}
+                    </TableHead>
                     <TableHead>
                       {t("assets.assetPlaces.columns.description")}
                     </TableHead>
@@ -163,9 +167,7 @@ const AssetPlaceManagerDialog = ({
                   {!isLoading &&
                     places.map((p) => (
                       <TableRow key={p.id}>
-                        <TableCell className="font-medium">
-                          {p.name}
-                        </TableCell>
+                        <TableCell className="font-medium">{p.name}</TableCell>
                         <TableCell>{p.description || "—"}</TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-1">
@@ -219,7 +221,9 @@ const AssetPlaceManagerDialog = ({
                 id="place-description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder={t("assets.assetPlaces.form.descriptionPlaceholder")}
+                placeholder={t(
+                  "assets.assetPlaces.form.descriptionPlaceholder",
+                )}
               />
             </div>
             {error && (

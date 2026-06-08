@@ -35,12 +35,17 @@ const SearchableSelect = ({
   const selected = options.find((o) => o.value === value);
 
   const filtered = search
-    ? options.filter((o) => o.label.toLowerCase().includes(search.toLowerCase()))
+    ? options.filter((o) =>
+        o.label.toLowerCase().includes(search.toLowerCase()),
+      )
     : options;
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setOpen(false);
         setSearch("");
       }

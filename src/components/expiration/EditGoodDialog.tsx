@@ -107,132 +107,136 @@ const EditGoodDialog = ({
 
   return (
     <>
-    <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{t("goods.edit")}</DialogTitle>
-          <DialogDescription>
-            {t("goods.editDescription", { name: good.productName })}
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="edit-good-name">
-              {t("goods.form.productName")}
-            </Label>
-            <Input
-              id="edit-good-name"
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
-              placeholder={t("goods.form.productNamePlaceholder")}
-              required
-              autoFocus
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="edit-good-barcode">{t("goods.form.barcode")}</Label>
-            <Input
-              id="edit-good-barcode"
-              value={barcode}
-              onChange={(e) => setBarcode(e.target.value)}
-              placeholder={t("goods.form.barcodePlaceholder")}
-              required
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label>{t("goods.form.category")}</Label>
-            <div className="flex gap-2">
-              <Select
-                value={categoryId}
-                onValueChange={(v) => v !== undefined && setCategoryId(v)}
+      <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("goods.edit")}</DialogTitle>
+            <DialogDescription>
+              {t("goods.editDescription", { name: good.productName })}
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="edit-good-name">
+                {t("goods.form.productName")}
+              </Label>
+              <Input
+                id="edit-good-name"
+                value={productName}
+                onChange={(e) => setProductName(e.target.value)}
+                placeholder={t("goods.form.productNamePlaceholder")}
                 required
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t("goods.form.categoryPlaceholder")}>
-                    {() =>
-                      categories.find((c) => c.id === categoryId)?.name ??
-                      t("goods.form.categoryPlaceholder")
-                    }
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectPopup>
-                  {categories.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.name}
-                    </SelectItem>
-                  ))}
-                </SelectPopup>
-              </Select>
-              <Button
-                type="button"
-                variant="outline"
-                size="icon-sm"
-                onClick={() => setCategoryManagerOpen(true)}
-              >
-                <PlusIcon className="size-4" />
-              </Button>
-            </div>
-          </div>
-          <div className="grid gap-2">
-            <Label>{t("goods.form.brand")}</Label>
-            <div className="flex gap-2">
-              <SearchableSelect
-                value={brandId}
-                onChange={(v) => v != null && setBrandId(v)}
-                options={brands.map((b) => ({
-                  value: b.id,
-                  label: b.brandName,
-                }))}
-                placeholder={t("goods.form.brandPlaceholder")}
-                emptyMessage={t("common.noResults")}
+                autoFocus
               />
-              <Button
-                type="button"
-                variant="outline"
-                size="icon-sm"
-                onClick={() => setBrandManagerOpen(true)}
-              >
-                <PlusIcon className="size-4" />
-              </Button>
             </div>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="edit-good-expiring">
-              {t("goods.form.expiringSoonDays")}
-            </Label>
-            <Input
-              id="edit-good-expiring"
-              type="number"
-              min="1"
-              value={expiringSoonDays}
-              onChange={(e) => setExpiringSoonDays(e.target.value)}
-              placeholder={t("goods.form.expiringSoonDaysPlaceholder")}
-            />
-          </div>
-          {error && (
-            <p className="text-sm text-destructive text-center">{error}</p>
-          )}
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose}>
-              {t("common.cancel")}
-            </Button>
-            <Button type="submit" disabled={submitting}>
-              {submitting ? t("common.saving") : t("common.save")}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
-    <CategoryManagerDialog
-      open={categoryManagerOpen}
-      onClose={() => setCategoryManagerOpen(false)}
-      onChanged={onRefDataChanged}
-    />
-    <BrandManagerDialog
-      open={brandManagerOpen}
-      onClose={() => setBrandManagerOpen(false)}
-      onChanged={onRefDataChanged}
-    />
+            <div className="grid gap-2">
+              <Label htmlFor="edit-good-barcode">
+                {t("goods.form.barcode")}
+              </Label>
+              <Input
+                id="edit-good-barcode"
+                value={barcode}
+                onChange={(e) => setBarcode(e.target.value)}
+                placeholder={t("goods.form.barcodePlaceholder")}
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>{t("goods.form.category")}</Label>
+              <div className="flex gap-2">
+                <Select
+                  value={categoryId}
+                  onValueChange={(v) => v !== undefined && setCategoryId(v)}
+                  required
+                >
+                  <SelectTrigger>
+                    <SelectValue
+                      placeholder={t("goods.form.categoryPlaceholder")}
+                    >
+                      {() =>
+                        categories.find((c) => c.id === categoryId)?.name ??
+                        t("goods.form.categoryPlaceholder")
+                      }
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectPopup>
+                    {categories.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.name}
+                      </SelectItem>
+                    ))}
+                  </SelectPopup>
+                </Select>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon-sm"
+                  onClick={() => setCategoryManagerOpen(true)}
+                >
+                  <PlusIcon className="size-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <Label>{t("goods.form.brand")}</Label>
+              <div className="flex gap-2">
+                <SearchableSelect
+                  value={brandId}
+                  onChange={(v) => v != null && setBrandId(v)}
+                  options={brands.map((b) => ({
+                    value: b.id,
+                    label: b.brandName,
+                  }))}
+                  placeholder={t("goods.form.brandPlaceholder")}
+                  emptyMessage={t("common.noResults")}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon-sm"
+                  onClick={() => setBrandManagerOpen(true)}
+                >
+                  <PlusIcon className="size-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-good-expiring">
+                {t("goods.form.expiringSoonDays")}
+              </Label>
+              <Input
+                id="edit-good-expiring"
+                type="number"
+                min="1"
+                value={expiringSoonDays}
+                onChange={(e) => setExpiringSoonDays(e.target.value)}
+                placeholder={t("goods.form.expiringSoonDaysPlaceholder")}
+              />
+            </div>
+            {error && (
+              <p className="text-sm text-destructive text-center">{error}</p>
+            )}
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={handleClose}>
+                {t("common.cancel")}
+              </Button>
+              <Button type="submit" disabled={submitting}>
+                {submitting ? t("common.saving") : t("common.save")}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+      <CategoryManagerDialog
+        open={categoryManagerOpen}
+        onClose={() => setCategoryManagerOpen(false)}
+        onChanged={onRefDataChanged}
+      />
+      <BrandManagerDialog
+        open={brandManagerOpen}
+        onClose={() => setBrandManagerOpen(false)}
+        onChanged={onRefDataChanged}
+      />
     </>
   );
 };

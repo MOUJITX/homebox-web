@@ -2,14 +2,23 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon, PencilIcon, TrashIcon, UploadIcon } from "lucide-react";
 import type { Platform } from "@/api/platforms";
-import { createPlatform, updatePlatform, deletePlatform } from "@/api/platforms";
+import {
+  createPlatform,
+  updatePlatform,
+  deletePlatform,
+} from "@/api/platforms";
 import { uploadFile } from "@/api/files";
 import { usePlatforms } from "@/hooks/queries/usePlatforms";
 import { getErrorMessage } from "@/lib/error";
 import { useQueryClient } from "@tanstack/react-query";
 import { subscriptionKeys } from "@/hooks/queries/subscriptionKeys";
 import AuthImg from "@/components/AuthImg";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,7 +28,10 @@ interface PlatformManagerDialogProps {
   readonly onClose: () => void;
 }
 
-const PlatformManagerDialog = ({ open, onClose }: PlatformManagerDialogProps) => {
+const PlatformManagerDialog = ({
+  open,
+  onClose,
+}: PlatformManagerDialogProps) => {
   const { t } = useTranslation();
   const { data: platforms = [] } = usePlatforms();
   const queryClient = useQueryClient();
@@ -131,11 +143,19 @@ const PlatformManagerDialog = ({ open, onClose }: PlatformManagerDialogProps) =>
         <div className="grid gap-3">
           <div className="grid gap-2">
             <Label>{t("platforms.name")}</Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={t("platforms.name")} />
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={t("platforms.name")}
+            />
           </div>
           <div className="grid gap-2">
             <Label>{t("platforms.website")}</Label>
-            <Input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://" />
+            <Input
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              placeholder="https://"
+            />
           </div>
           <div className="grid gap-2">
             <Label>{t("platforms.logo")}</Label>
@@ -159,14 +179,25 @@ const PlatformManagerDialog = ({ open, onClose }: PlatformManagerDialogProps) =>
               </Button>
               {logoPreview && (
                 <div className="size-8 shrink-0 overflow-hidden rounded border">
-                  <img src={logoPreview} alt="" className="h-full w-full object-cover" />
+                  <img
+                    src={logoPreview}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
                 </div>
               )}
             </div>
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
-          <Button onClick={editing ? handleUpdate : handleCreate} disabled={submitting || !name.trim()}>
-            {editing ? <PencilIcon className="size-3.5" /> : <PlusIcon className="size-3.5" />}
+          <Button
+            onClick={editing ? handleUpdate : handleCreate}
+            disabled={submitting || !name.trim()}
+          >
+            {editing ? (
+              <PencilIcon className="size-3.5" />
+            ) : (
+              <PlusIcon className="size-3.5" />
+            )}
             {editing ? t("common.save") : t("platforms.create")}
           </Button>
           {editing && (
@@ -178,15 +209,24 @@ const PlatformManagerDialog = ({ open, onClose }: PlatformManagerDialogProps) =>
 
         <div className="border-t pt-3 max-h-48 overflow-y-auto">
           {platforms.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-4">{t("common.noResults")}</p>
+            <p className="text-sm text-muted-foreground text-center py-4">
+              {t("common.noResults")}
+            </p>
           ) : (
             <div className="space-y-1">
               {platforms.map((p) => (
-                <div key={p.id} className="flex items-center gap-2 justify-between rounded-md border px-3 py-2 text-sm">
+                <div
+                  key={p.id}
+                  className="flex items-center gap-2 justify-between rounded-md border px-3 py-2 text-sm"
+                >
                   <div className="flex items-center gap-2 min-w-0">
                     {p.logoUrl ? (
                       <div className="size-6 shrink-0 overflow-hidden rounded">
-                        <AuthImg url={p.logoUrl} alt="" className="h-full w-full object-cover" />
+                        <AuthImg
+                          url={p.logoUrl}
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
                       </div>
                     ) : (
                       <div className="size-6 shrink-0 rounded bg-muted" />
@@ -194,10 +234,18 @@ const PlatformManagerDialog = ({ open, onClose }: PlatformManagerDialogProps) =>
                     <span className="truncate">{p.name}</span>
                   </div>
                   <div className="flex gap-1 shrink-0">
-                    <Button variant="ghost" size="icon-xs" onClick={() => handleEdit(p)}>
+                    <Button
+                      variant="ghost"
+                      size="icon-xs"
+                      onClick={() => handleEdit(p)}
+                    >
                       <PencilIcon className="size-3.5" />
                     </Button>
-                    <Button variant="ghost" size="icon-xs" onClick={() => void handleDelete(p.id)}>
+                    <Button
+                      variant="ghost"
+                      size="icon-xs"
+                      onClick={() => void handleDelete(p.id)}
+                    >
                       <TrashIcon className="size-3.5" />
                     </Button>
                   </div>

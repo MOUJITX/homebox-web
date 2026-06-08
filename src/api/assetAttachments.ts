@@ -25,7 +25,5 @@ export const uploadAssetAttachment = (assetId: number, file: File) => {
   );
 };
 
-export const deleteAssetAttachment = (
-  assetId: number,
-  attachmentId: number,
-) => axios.delete<void>(`/assets/${assetId}/attachments/${attachmentId}`);
+export const deleteAssetAttachment = (assetId: number, attachmentId: number) =>
+  axios.delete<void>(`/assets/${assetId}/attachments/${attachmentId}`);

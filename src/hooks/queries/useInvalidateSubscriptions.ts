@@ -12,13 +12,19 @@ export const useInvalidateSubscriptions = () => {
       queryClient.invalidateQueries({ queryKey: subscriptionKeys.detail(id) });
     },
     invalidateRecords: (subId: number) => {
-      queryClient.invalidateQueries({ queryKey: subscriptionKeys.records(subId) });
+      queryClient.invalidateQueries({
+        queryKey: subscriptionKeys.records(subId),
+      });
     },
     invalidateAttachments: (recordId: number) => {
-      queryClient.invalidateQueries({ queryKey: subscriptionKeys.attachments(recordId) });
+      queryClient.invalidateQueries({
+        queryKey: subscriptionKeys.attachments(recordId),
+      });
     },
     invalidateInvoices: (recordId: number) => {
-      queryClient.invalidateQueries({ queryKey: subscriptionKeys.invoices(recordId) });
+      queryClient.invalidateQueries({
+        queryKey: subscriptionKeys.invoices(recordId),
+      });
     },
     invalidateAll: () => {
       queryClient.invalidateQueries({ queryKey: subscriptionKeys.all });

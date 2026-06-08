@@ -75,7 +75,9 @@ const CreateMedicationDialog = ({
       setGoodsLoading(false);
     };
     fetchGoods();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [open, debouncedSearch]);
 
   const handleGoodSearch = useCallback((query: string) => {

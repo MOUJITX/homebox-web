@@ -49,7 +49,9 @@ const NotificationsPage = () => {
       } else {
         setNotifications((prev) =>
           prev.map((n) =>
-            n.id === id ? { ...n, isRead: true, readAt: new Date().toISOString() } : n,
+            n.id === id
+              ? { ...n, isRead: true, readAt: new Date().toISOString() }
+              : n,
           ),
         );
       }
@@ -66,7 +68,11 @@ const NotificationsPage = () => {
         setNotifications([]);
       } else {
         setNotifications((prev) =>
-          prev.map((n) => ({ ...n, isRead: true, readAt: new Date().toISOString() })),
+          prev.map((n) => ({
+            ...n,
+            isRead: true,
+            readAt: new Date().toISOString(),
+          })),
         );
       }
       notifyChanged();

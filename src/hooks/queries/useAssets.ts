@@ -1,5 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAssets, type GetAssetsParams, type WarrantyStatus } from "@/api/assets";
+import {
+  getAssets,
+  type GetAssetsParams,
+  type WarrantyStatus,
+} from "@/api/assets";
 import { assetKeys } from "./assetKeys";
 
 interface UseAssetsParams {

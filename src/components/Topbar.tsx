@@ -83,7 +83,9 @@ const Topbar = () => {
               className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               <SearchIcon className="size-4" />
-              <span className="hidden sm:inline">{t("search.placeholder")}</span>
+              <span className="hidden sm:inline">
+                {t("search.placeholder")}
+              </span>
               <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
                 {t("search.shortcut")}
               </kbd>
@@ -106,7 +108,9 @@ const Topbar = () => {
                   key={code}
                   onClick={() => i18n.changeLanguage(code)}
                   className={
-                    currentLang === code ? "text-accent-foreground bg-accent" : ""
+                    currentLang === code
+                      ? "text-accent-foreground bg-accent"
+                      : ""
                   }
                 >
                   {label}

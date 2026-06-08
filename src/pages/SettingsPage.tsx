@@ -158,7 +158,12 @@ const ConfigGroupCard = ({
           <Button type="submit" disabled={saving}>
             {saving ? t("common.saving") : t("common.save")}
           </Button>
-          <Button type="button" variant="outline" onClick={handleTest} disabled={testing}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleTest}
+            disabled={testing}
+          >
             {testing ? t("common.loading") : testLabel}
           </Button>
         </CardFooter>
@@ -235,7 +240,9 @@ const AiConfigCard = () => {
         toast.error(t("settings.ai.testFailed", { message: data.message }));
       }
     } catch (err) {
-      toast.error(t("settings.ai.testFailed", { message: getErrorMessage(err) ?? "" }));
+      toast.error(
+        t("settings.ai.testFailed", { message: getErrorMessage(err) ?? "" }),
+      );
     } finally {
       setTesting(false);
     }
@@ -313,7 +320,9 @@ const AiConfigCard = () => {
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="ai-system-prompt">{t("settings.ai.fields.systemPrompt")}</Label>
+            <Label htmlFor="ai-system-prompt">
+              {t("settings.ai.fields.systemPrompt")}
+            </Label>
             <textarea
               id="ai-system-prompt"
               value={systemPrompt}
@@ -325,7 +334,9 @@ const AiConfigCard = () => {
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="ai-visit-record-prompt">{t("settings.ai.fields.visitRecordPrompt")}</Label>
+            <Label htmlFor="ai-visit-record-prompt">
+              {t("settings.ai.fields.visitRecordPrompt")}
+            </Label>
             <textarea
               id="ai-visit-record-prompt"
               value={visitRecordPrompt}
@@ -378,7 +389,9 @@ const SettingsPage = () => {
         toast.error(t("settings.qiniu.testFailed", { message: data.message }));
       }
     } catch (err) {
-      toast.error(t("settings.qiniu.testFailed", { message: getErrorMessage(err) ?? "" }));
+      toast.error(
+        t("settings.qiniu.testFailed", { message: getErrorMessage(err) ?? "" }),
+      );
     }
   };
 

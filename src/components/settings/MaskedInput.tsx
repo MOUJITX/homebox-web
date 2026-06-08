@@ -11,7 +11,13 @@ interface MaskedInputProps {
   id?: string;
 }
 
-const MaskedInput = ({ value, onChange, placeholder, sensitive, id }: MaskedInputProps) => {
+const MaskedInput = ({
+  value,
+  onChange,
+  placeholder,
+  sensitive,
+  id,
+}: MaskedInputProps) => {
   const [visible, setVisible] = useState(false);
 
   if (!sensitive) {
@@ -42,7 +48,11 @@ const MaskedInput = ({ value, onChange, placeholder, sensitive, id }: MaskedInpu
         className="absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
         onClick={() => setVisible((v) => !v)}
       >
-        {visible ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+        {visible ? (
+          <EyeOffIcon className="size-4" />
+        ) : (
+          <EyeIcon className="size-4" />
+        )}
       </Button>
     </div>
   );

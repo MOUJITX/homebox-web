@@ -9,7 +9,13 @@ import {
   CreditCardIcon,
   StethoscopeIcon,
 } from "lucide-react";
-import type { Invoice, InvoiceType, InvoiceStatus, InvoiceDetail, Page } from "@/api/invoices";
+import type {
+  Invoice,
+  InvoiceType,
+  InvoiceStatus,
+  InvoiceDetail,
+  Page,
+} from "@/api/invoices";
 import { getInvoices, getInvoiceById } from "@/api/invoices";
 import { INVOICE_TYPES } from "@/components/invoices/constants";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -78,7 +84,9 @@ const InvoicesPage = () => {
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0]);
 
   const [createOpen, setCreateOpen] = useState(false);
-  const [editingInvoice, setEditingInvoice] = useState<InvoiceDetail | null>(null);
+  const [editingInvoice, setEditingInvoice] = useState<InvoiceDetail | null>(
+    null,
+  );
   const [deletingInvoice, setDeletingInvoice] = useState<Invoice | null>(null);
   const [detailInvoiceId, setDetailInvoiceId] = useState<number | null>(null);
   const navigate = useNavigate();
@@ -185,7 +193,9 @@ const InvoicesPage = () => {
               </SelectValue>
             </SelectTrigger>
             <SelectPopup>
-              <SelectItem value={null}>{t("invoices.filters.allTypes")}</SelectItem>
+              <SelectItem value={null}>
+                {t("invoices.filters.allTypes")}
+              </SelectItem>
               {INVOICE_TYPES.map((type) => (
                 <SelectItem key={type} value={type}>
                   {t(`invoices.type.${type}`)}
@@ -243,9 +253,13 @@ const InvoicesPage = () => {
               <TableHead>{t("invoices.columns.buyerName")}</TableHead>
               <TableHead>{t("invoices.columns.sellerName")}</TableHead>
               <TableHead>{t("invoices.columns.boundAssets")}</TableHead>
-              <TableHead className="text-right">{t("invoices.columns.totalAmount")}</TableHead>
+              <TableHead className="text-right">
+                {t("invoices.columns.totalAmount")}
+              </TableHead>
               <TableHead>{t("invoices.columns.invoiceStatus")}</TableHead>
-              <TableHead className="text-right">{t("invoices.columns.actions")}</TableHead>
+              <TableHead className="text-right">
+                {t("invoices.columns.actions")}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -277,7 +291,9 @@ const InvoicesPage = () => {
                     {invoice.invoiceNumber ?? "—"}
                   </TableCell>
                   <TableCell>
-                    {invoice.invoiceDate ? formatDate(invoice.invoiceDate) : "—"}
+                    {invoice.invoiceDate
+                      ? formatDate(invoice.invoiceDate)
+                      : "—"}
                   </TableCell>
                   <TableCell>
                     <Badge variant="outline">
@@ -289,44 +305,72 @@ const InvoicesPage = () => {
                   <TableCell>
                     {(() => {
                       const allBounds = [
-                        ...invoice.assets.map((a) => ({ type: "asset" as const, data: a })),
-                        ...(invoice.subscriptions || []).map((s) => ({ type: "subscription" as const, data: s })),
-                        ...(invoice.visits || []).map((v) => ({ type: "visit" as const, data: v })),
+                        ...invoice.assets.map((a) => ({
+                          type: "asset" as const,
+                          data: a,
+                        })),
+                        ...(invoice.subscriptions || []).map((s) => ({
+                          type: "subscription" as const,
+                          data: s,
+                        })),
+                        ...(invoice.visits || []).map((v) => ({
+                          type: "visit" as const,
+                          data: v,
+                        })),
                       ];
                       if (allBounds.length === 0) return "—";
                       const first = allBounds[0];
                       const total = allBounds.length;
-                      const sourceTypeLabel = first.type === "visit" && first.data.sourceType !== "RECORD"
-                        ? t(`medical.sourceType.${first.data.sourceType}`) + " "
-                        : "";
+                      const sourceTypeLabel =
+                        first.type === "visit" &&
+                        first.data.sourceType !== "RECORD"
+                          ? t(`medical.sourceType.${first.data.sourceType}`) +
+                            " "
+                          : "";
                       return (
                         <div className="flex items-center gap-1.5">
                           {first.type === "asset" ? (
                             <>
                               {first.data.firstPictureUrl && (
-                                <AuthImg url={first.data.firstPictureUrl} className="size-5 shrink-0 rounded object-cover" />
+                                <AuthImg
+                                  url={first.data.firstPictureUrl}
+                                  className="size-5 shrink-0 rounded object-cover"
+                                />
                               )}
-                              <span className="text-xs truncate">{first.data.name}</span>
+                              <span className="text-xs truncate">
+                                {first.data.name}
+                              </span>
                             </>
                           ) : first.type === "subscription" ? (
                             <>
                               {first.data.platformLogoUrl ? (
                                 <div className="size-5 shrink-0 overflow-hidden rounded">
-                                  <AuthImg url={first.data.platformLogoUrl} alt="" className="h-full w-full object-cover" />
+                                  <AuthImg
+                                    url={first.data.platformLogoUrl}
+                                    alt=""
+                                    className="h-full w-full object-cover"
+                                  />
                                 </div>
                               ) : (
                                 <CreditCardIcon className="size-4 shrink-0 text-muted-foreground" />
                               )}
-                              <span className="text-xs truncate">{first.data.subscriptionName}</span>
+                              <span className="text-xs truncate">
+                                {first.data.subscriptionName}
+                              </span>
                             </>
                           ) : (
                             <>
                               <StethoscopeIcon className="size-4 shrink-0 text-muted-foreground" />
-                              <span className="text-xs truncate">{sourceTypeLabel}{first.data.patientName}</span>
+                              <span className="text-xs truncate">
+                                {sourceTypeLabel}
+                                {first.data.patientName}
+                              </span>
                             </>
                           )}
                           {total > 1 && (
-                            <span className="shrink-0 text-[10px] text-muted-foreground">+{total - 1}</span>
+                            <span className="shrink-0 text-[10px] text-muted-foreground">
+                              +{total - 1}
+                            </span>
                           )}
                         </div>
                       );

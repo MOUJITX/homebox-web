@@ -109,7 +109,13 @@ const EditAssetDialog = ({
   }
 
   // Initialize warranty dates when detail loads after asset change
-  if (asset?.hasWarranty && detail && !warranty.activeDate && !warranty.expirationDate && !warranty.warrantyPeriod) {
+  if (
+    asset?.hasWarranty &&
+    detail &&
+    !warranty.activeDate &&
+    !warranty.expirationDate &&
+    !warranty.warrantyPeriod
+  ) {
     warranty.initDates(
       detail.activeDate ?? "",
       detail.expirationDate ?? "",
@@ -145,8 +151,13 @@ const EditAssetDialog = ({
         storeId: storeId ?? undefined,
         hasWarranty,
         activeDate: hasWarranty ? warranty.activeDate || undefined : undefined,
-        warrantyPeriod: hasWarranty && warranty.warrantyPeriod ? Number.parseInt(warranty.warrantyPeriod, 10) : undefined,
-        expirationDate: hasWarranty ? warranty.expirationDate || undefined : undefined,
+        warrantyPeriod:
+          hasWarranty && warranty.warrantyPeriod
+            ? Number.parseInt(warranty.warrantyPeriod, 10)
+            : undefined,
+        expirationDate: hasWarranty
+          ? warranty.expirationDate || undefined
+          : undefined,
         note: note || undefined,
       });
       handleClose();
@@ -184,7 +195,9 @@ const EditAssetDialog = ({
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="edit-asset-barcode">{t("assets.form.barcode")}</Label>
+                <Label htmlFor="edit-asset-barcode">
+                  {t("assets.form.barcode")}
+                </Label>
                 <Input
                   id="edit-asset-barcode"
                   value={barcode}
@@ -193,7 +206,9 @@ const EditAssetDialog = ({
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="edit-asset-serial">{t("assets.form.serialNumber")}</Label>
+                <Label htmlFor="edit-asset-serial">
+                  {t("assets.form.serialNumber")}
+                </Label>
                 <Input
                   id="edit-asset-serial"
                   value={serialNumber}
@@ -211,7 +226,9 @@ const EditAssetDialog = ({
                   required
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder={t("assets.form.categoryPlaceholder")}>
+                    <SelectValue
+                      placeholder={t("assets.form.categoryPlaceholder")}
+                    >
                       {() =>
                         categories.find((c) => c.id === categoryId)?.name ??
                         t("assets.form.categoryPlaceholder")
@@ -245,7 +262,9 @@ const EditAssetDialog = ({
                   required
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder={t("assets.form.placePlaceholder")}>
+                    <SelectValue
+                      placeholder={t("assets.form.placePlaceholder")}
+                    >
                       {() =>
                         places.find((p) => p.id === placeId)?.name ??
                         t("assets.form.placePlaceholder")
@@ -295,7 +314,9 @@ const EditAssetDialog = ({
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="edit-asset-price">{t("assets.form.price")}</Label>
+                <Label htmlFor="edit-asset-price">
+                  {t("assets.form.price")}
+                </Label>
                 <Input
                   id="edit-asset-price"
                   type="number"
@@ -307,7 +328,9 @@ const EditAssetDialog = ({
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="edit-asset-shop-date">{t("assets.form.shopDate")}</Label>
+                <Label htmlFor="edit-asset-shop-date">
+                  {t("assets.form.shopDate")}
+                </Label>
                 <Input
                   id="edit-asset-shop-date"
                   type="date"
@@ -357,7 +380,10 @@ const EditAssetDialog = ({
                 }}
                 className="size-4 rounded"
               />
-              <Label htmlFor="edit-asset-has-warranty" className="cursor-pointer">
+              <Label
+                htmlFor="edit-asset-has-warranty"
+                className="cursor-pointer"
+              >
                 {t("assets.form.hasWarranty")}
               </Label>
             </div>
@@ -387,7 +413,9 @@ const EditAssetDialog = ({
                       type="number"
                       min="1"
                       value={warranty.warrantyPeriod}
-                      onChange={(e) => warranty.setWarrantyPeriod(e.target.value)}
+                      onChange={(e) =>
+                        warranty.setWarrantyPeriod(e.target.value)
+                      }
                       placeholder={t("assets.form.warrantyPeriodPlaceholder")}
                     />
                   </div>
@@ -399,7 +427,9 @@ const EditAssetDialog = ({
                       id="edit-asset-expiration-date"
                       type="date"
                       value={warranty.expirationDate}
-                      onChange={(e) => warranty.setExpirationDate(e.target.value)}
+                      onChange={(e) =>
+                        warranty.setExpirationDate(e.target.value)
+                      }
                     />
                   </div>
                 </div>

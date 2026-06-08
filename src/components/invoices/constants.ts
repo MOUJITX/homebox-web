@@ -15,4 +15,8 @@ export const INVOICE_TYPES: InvoiceType[] = [
   "OTHER",
 ];
 
-export const INVOICE_STATUSES: InvoiceStatus[] = ["NORMAL", "VOIDED", "RED_FLUSHED"];
+export const INVOICE_STATUSES: InvoiceStatus[] = [
+  "NORMAL",
+  "VOIDED",
+  "RED_FLUSHED",
+];

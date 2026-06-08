@@ -1,4 +1,10 @@
-import { useState, useEffect, useCallback, useMemo, type SubmitEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  type SubmitEvent,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { getGoods } from "@/api/goods";
 import { type MedicationReminder, updateMedication } from "@/api/medications";
@@ -98,16 +104,20 @@ const EditMedicationDialog = ({
       setGoodsLoading(false);
     };
     fetchGoods();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [open, debouncedSearch]);
 
   const selectedGoodOption = useMemo(() => {
     if (!reminder) return [];
-    return [{
-      value: reminder.goodId,
-      label: `${reminder.brandName}-${reminder.productName}`,
-      tag: reminder.categoryName,
-    }];
+    return [
+      {
+        value: reminder.goodId,
+        label: `${reminder.brandName}-${reminder.productName}`,
+        tag: reminder.categoryName,
+      },
+    ];
   }, [reminder]);
 
   const mergedOptions = useMemo(() => {

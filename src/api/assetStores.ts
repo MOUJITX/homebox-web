@@ -18,8 +18,7 @@ export interface UpdateAssetStoreRequest {
   channel?: string;
 }
 
-export const getAssetStores = () =>
-  axios.get<AssetStore[]>("/asset-stores");
+export const getAssetStores = () => axios.get<AssetStore[]>("/asset-stores");
 
 export const createAssetStore = (data: CreateAssetStoreRequest) =>
   axios.post<AssetStore>("/asset-stores", data);

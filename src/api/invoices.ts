@@ -47,7 +47,6 @@ export interface InvoiceDetail extends Invoice {
   attachments: InvoiceAttachment[];
 }
 
-
 export interface InvoiceAttachment {
   id: number;
   filename: string;
@@ -81,7 +80,6 @@ export interface BoundVisitRecord {
   sourceType: VisitSourceType;
   sourceId: number;
 }
-
 
 export interface InvoiceParseResult {
   invoiceNumber: string | null;

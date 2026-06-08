@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PencilIcon, TrashIcon, PlusIcon, ReceiptTextIcon, HistoryIcon } from "lucide-react";
+import {
+  PencilIcon,
+  TrashIcon,
+  PlusIcon,
+  ReceiptTextIcon,
+  HistoryIcon,
+} from "lucide-react";
 import { useSubscriptionDetail } from "@/hooks/queries/useSubscriptionDetail";
 import { useInvalidateSubscriptions } from "@/hooks/queries/useInvalidateSubscriptions";
 import { cn, formatDate, formatCurrency } from "@/lib/utils";
@@ -189,125 +195,143 @@ const SubscriptionDetailDrawer = ({
                 <div className="space-y-2">
                   {detail.records.map((rec) => {
                     const today = new Date().toISOString().slice(0, 10);
-                    const isExpired = rec.expired || (rec.endDate && rec.endDate <= today);
+                    const isExpired =
+                      rec.expired || (rec.endDate && rec.endDate <= today);
 
                     return (
-                    <div
-                      key={rec.id}
-                      className={cn(
-                        "relative overflow-hidden rounded-lg border p-3 text-sm space-y-2",
-                        isExpired && "opacity-60 bg-muted/30"
-                      )}
-                    >
-                      {isExpired && (
-                        <div className="absolute -left-5 top-2 w-16 -rotate-45 bg-muted-foreground/20 text-center text-[10px] leading-5 text-muted-foreground pl-1.5">
-                          {t("subscriptions.records.expired")}
+                      <div
+                        key={rec.id}
+                        className={cn(
+                          "relative overflow-hidden rounded-lg border p-3 text-sm space-y-2",
+                          isExpired && "opacity-60 bg-muted/30",
+                        )}
+                      >
+                        {isExpired && (
+                          <div className="absolute -left-5 top-2 w-16 -rotate-45 bg-muted-foreground/20 text-center text-[10px] leading-5 text-muted-foreground pl-1.5">
+                            {t("subscriptions.records.expired")}
+                          </div>
+                        )}
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-muted-foreground">
+                            {formatDate(rec.recordDate)}
+                          </span>
+                          <span className="font-medium">
+                            {formatCurrency(rec.amount)} {rec.currency}
+                          </span>
                         </div>
-                      )}
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">
-                          {formatDate(rec.recordDate)}
-                        </span>
-                        <span className="font-medium">
-                          {formatCurrency(rec.amount)} {rec.currency}
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-1 text-xs text-muted-foreground">
-                        {rec.paymentMethodName && (
-                          <span className="flex items-center gap-1">
-                            {rec.paymentMethodLogoUrl && (
-                              <AuthImg
-                                url={rec.paymentMethodLogoUrl}
-                                alt=""
-                                className="size-4 shrink-0 rounded object-cover"
-                              />
-                            )}
-                            {rec.paymentMethodName}
-                          </span>
-                        )}
-                        {rec.orderNo && (
+                        <div className="grid grid-cols-2 gap-1 text-xs text-muted-foreground">
+                          {rec.paymentMethodName && (
+                            <span className="flex items-center gap-1">
+                              {rec.paymentMethodLogoUrl && (
+                                <AuthImg
+                                  url={rec.paymentMethodLogoUrl}
+                                  alt=""
+                                  className="size-4 shrink-0 rounded object-cover"
+                                />
+                              )}
+                              {rec.paymentMethodName}
+                            </span>
+                          )}
+                          {rec.orderNo && (
+                            <span>
+                              {t("subscriptions.records.orderNo")}:{" "}
+                              {rec.orderNo}
+                            </span>
+                          )}
+                          {rec.quantity && <span>{rec.quantity}</span>}
+                        </div>
+                        <div className="grid grid-cols-2 gap-1 text-xs text-muted-foreground">
                           <span>
-                            {t("subscriptions.records.orderNo")}: {rec.orderNo}
+                            {t("subscriptions.records.startDate")}:{" "}
+                            {formatDate(rec.startDate)}
                           </span>
+                          {rec.endDate && (
+                            <span>
+                              {t("subscriptions.records.endDate")}:{" "}
+                              {formatDate(rec.endDate)}
+                            </span>
+                          )}
+                        </div>
+                        {rec.note && (
+                          <p className="text-xs text-muted-foreground">
+                            {rec.note}
+                          </p>
                         )}
-                        {rec.quantity && <span>{rec.quantity}</span>}
-                      </div>
-                      <div className="grid grid-cols-2 gap-1 text-xs text-muted-foreground">
-                        <span>
-                          {t("subscriptions.records.startDate")}:{" "}
-                          {formatDate(rec.startDate)}
-                        </span>
-                        {rec.endDate && (
-                          <span>
-                            {t("subscriptions.records.endDate")}:{" "}
-                            {formatDate(rec.endDate)}
-                          </span>
-                        )}
-                      </div>
-                      {rec.note && (
-                        <p className="text-xs text-muted-foreground">
-                          {rec.note}
-                        </p>
-                      )}
-                      <div className="flex gap-1 items-center">
-                        <Button
-                          variant="ghost"
-                          size="icon-xs"
-                          onClick={() => {
-                            setEditingRecord(rec);
-                            setRecordDialogOpen(true);
-                          }}
-                        >
-                          <PencilIcon className="size-3.5" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon-xs"
-                          onClick={() => {
-                            if (
-                              window.confirm(t("subscriptions.records.delete"))
-                            ) {
-                              import("@/api/subscriptionRecords").then((m) => {
-                                m.deleteRecord(subscriptionId!, rec.id).then(
-                                  () => handleRecordChanged(),
-                                );
-                              });
-                            }
-                          }}
-                        >
-                          <TrashIcon className="size-3.5" />
-                        </Button>
-                        {rec.invoices.length > 0 && (
+                        <div className="flex gap-1 items-center">
                           <Button
                             variant="ghost"
                             size="icon-xs"
-                            onClick={() =>
-                              setInvoiceDrawerId(rec.invoices[0].invoiceId)
-                            }
+                            onClick={() => {
+                              setEditingRecord(rec);
+                              setRecordDialogOpen(true);
+                            }}
                           >
-                            <ReceiptTextIcon className="size-3.5" />
+                            <PencilIcon className="size-3.5" />
                           </Button>
-                        )}
-                        {detail.subscriptionType === "PAY_AS_YOU_GO" && (
-                          <div className="ml-auto flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon-xs"
+                            onClick={() => {
+                              if (
+                                window.confirm(
+                                  t("subscriptions.records.delete"),
+                                )
+                              ) {
+                                import("@/api/subscriptionRecords").then(
+                                  (m) => {
+                                    m.deleteRecord(
+                                      subscriptionId!,
+                                      rec.id,
+                                    ).then(() => handleRecordChanged());
+                                  },
+                                );
+                              }
+                            }}
+                          >
+                            <TrashIcon className="size-3.5" />
+                          </Button>
+                          {rec.invoices.length > 0 && (
                             <Button
-                              variant={rec.expired ? "secondary" : "ghost"}
+                              variant="ghost"
                               size="icon-xs"
-                              onClick={async () => {
-                                try {
-                                  await updateRecord(subscriptionId!, rec.id, { expired: !rec.expired } as any);
-                                  handleRecordChanged();
-                                } catch { /* ignore */ }
-                              }}
-                              title={rec.expired ? t("subscriptions.records.unmarkExpired") : t("subscriptions.records.markExpired")}
+                              onClick={() =>
+                                setInvoiceDrawerId(rec.invoices[0].invoiceId)
+                              }
                             >
-                              <HistoryIcon className="size-3.5" />
+                              <ReceiptTextIcon className="size-3.5" />
                             </Button>
-                          </div>
-                        )}
+                          )}
+                          {detail.subscriptionType === "PAY_AS_YOU_GO" && (
+                            <div className="ml-auto flex items-center gap-1">
+                              <Button
+                                variant={rec.expired ? "secondary" : "ghost"}
+                                size="icon-xs"
+                                onClick={async () => {
+                                  try {
+                                    await updateRecord(
+                                      subscriptionId!,
+                                      rec.id,
+                                      { expired: !rec.expired } as any,
+                                    );
+                                    handleRecordChanged();
+                                  } catch {
+                                    /* ignore */
+                                  }
+                                }}
+                                title={
+                                  rec.expired
+                                    ? t("subscriptions.records.unmarkExpired")
+                                    : t("subscriptions.records.markExpired")
+                                }
+                              >
+                                <HistoryIcon className="size-3.5" />
+                              </Button>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  )})}
+                    );
+                  })}
                 </div>
               )}
             </div>

@@ -4,7 +4,11 @@ import axios from "./axios";
 
 export type VisitType = "OUTPATIENT" | "INPATIENT";
 export type Gender = "MALE" | "FEMALE";
-export type VisitSourceType = "RECORD" | "EXAMINATION" | "LAB_TEST" | "PRESCRIPTION";
+export type VisitSourceType =
+  | "RECORD"
+  | "EXAMINATION"
+  | "LAB_TEST"
+  | "PRESCRIPTION";
 
 // ──────────────────────── Visit Record ────────────────────────
 
@@ -141,9 +145,14 @@ export interface CreateExaminationRequest {
 }
 
 export const getExaminations = (visitId: number, page = 0, size = 10) =>
-  axios.get<Page<VisitExamination>>(`/visit-records/${visitId}/examinations`, { params: { page, size } });
+  axios.get<Page<VisitExamination>>(`/visit-records/${visitId}/examinations`, {
+    params: { page, size },
+  });
 
-export const createExamination = (visitId: number, data: CreateExaminationRequest) =>
+export const createExamination = (
+  visitId: number,
+  data: CreateExaminationRequest,
+) =>
   axios.post<VisitExamination>(`/visit-records/${visitId}/examinations`, data);
 
 export const updateExamination = (id: number, data: CreateExaminationRequest) =>
@@ -173,7 +182,9 @@ export interface CreateLabTestRequest {
 }
 
 export const getLabTests = (visitId: number, page = 0, size = 10) =>
-  axios.get<Page<VisitLabTest>>(`/visit-records/${visitId}/lab-tests`, { params: { page, size } });
+  axios.get<Page<VisitLabTest>>(`/visit-records/${visitId}/lab-tests`, {
+    params: { page, size },
+  });
 
 export const createLabTest = (visitId: number, data: CreateLabTestRequest) =>
   axios.post<VisitLabTest>(`/visit-records/${visitId}/lab-tests`, data);
@@ -221,19 +232,36 @@ export interface CreatePrescriptionItemRequest {
 }
 
 export const getPrescriptions = (visitId: number, page = 0, size = 10) =>
-  axios.get<Page<VisitPrescription>>(`/visit-records/${visitId}/prescriptions`, { params: { page, size } });
+  axios.get<Page<VisitPrescription>>(
+    `/visit-records/${visitId}/prescriptions`,
+    { params: { page, size } },
+  );
 
-export const createPrescription = (visitId: number, data: CreatePrescriptionRequest) =>
-  axios.post<VisitPrescription>(`/visit-records/${visitId}/prescriptions`, data);
+export const createPrescription = (
+  visitId: number,
+  data: CreatePrescriptionRequest,
+) =>
+  axios.post<VisitPrescription>(
+    `/visit-records/${visitId}/prescriptions`,
+    data,
+  );
 
-export const updatePrescription = (id: number, data: CreatePrescriptionRequest) =>
-  axios.put<VisitPrescription>(`/visit-records/0/prescriptions/${id}`, data);
+export const updatePrescription = (
+  id: number,
+  data: CreatePrescriptionRequest,
+) => axios.put<VisitPrescription>(`/visit-records/0/prescriptions/${id}`, data);
 
 export const deletePrescription = (id: number) =>
   axios.delete<void>(`/visit-records/0/prescriptions/${id}`);
 
-export const addPrescriptionItem = (prescriptionId: number, data: CreatePrescriptionItemRequest) =>
-  axios.post<PrescriptionItem>(`/visit-records/0/prescriptions/${prescriptionId}/items`, data);
+export const addPrescriptionItem = (
+  prescriptionId: number,
+  data: CreatePrescriptionItemRequest,
+) =>
+  axios.post<PrescriptionItem>(
+    `/visit-records/0/prescriptions/${prescriptionId}/items`,
+    data,
+  );
 
 export const deletePrescriptionItem = (itemId: number) =>
   axios.delete<void>(`/visit-records/0/prescriptions/0/items/${itemId}`);
@@ -255,12 +283,20 @@ export interface VisitAttachment {
 export const getVisitAttachments = (visitId: number) =>
   axios.get<VisitAttachment[]>(`/visit-records/${visitId}/attachments`);
 
-export const uploadVisitAttachment = (visitId: number, file: File, sourceType: VisitSourceType, sourceId: number) => {
+export const uploadVisitAttachment = (
+  visitId: number,
+  file: File,
+  sourceType: VisitSourceType,
+  sourceId: number,
+) => {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("sourceType", sourceType);
   formData.append("sourceId", String(sourceId));
-  return axios.post<VisitAttachment>(`/visit-records/${visitId}/attachments`, formData);
+  return axios.post<VisitAttachment>(
+    `/visit-records/${visitId}/attachments`,
+    formData,
+  );
 };
 
 export const deleteVisitAttachment = (id: number) =>
@@ -284,8 +320,17 @@ export interface VisitInvoice {
 export const getVisitInvoices = (visitId: number) =>
   axios.get<VisitInvoice[]>(`/visit-records/${visitId}/invoices`);
 
-export const bindVisitInvoice = (visitId: number, invoiceId: number, sourceType: VisitSourceType, sourceId: number) =>
-  axios.post<VisitInvoice>(`/visit-records/${visitId}/invoices`, { invoiceId, sourceType, sourceId });
+export const bindVisitInvoice = (
+  visitId: number,
+  invoiceId: number,
+  sourceType: VisitSourceType,
+  sourceId: number,
+) =>
+  axios.post<VisitInvoice>(`/visit-records/${visitId}/invoices`, {
+    invoiceId,
+    sourceType,
+    sourceId,
+  });
 
 export const unbindVisitInvoice = (id: number) =>
   axios.delete<void>(`/visit-records/0/invoices/${id}`);

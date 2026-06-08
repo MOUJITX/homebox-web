@@ -21,8 +21,7 @@ export const formatDateTime = (dateStr: string) =>
     minute: "2-digit",
   });
 
-export const formatCurrency = (amount: number) =>
-  `¥${amount.toFixed(2)}`;
+export const formatCurrency = (amount: number) => `¥${amount.toFixed(2)}`;
 
 export const formatFileSize = (bytes: number) => {
   if (bytes < 1024) return `${bytes} B`;

@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PlusIcon, PencilIcon, TrashIcon, EyeIcon, BuildingIcon } from "lucide-react";
+import {
+  PlusIcon,
+  PencilIcon,
+  TrashIcon,
+  EyeIcon,
+  BuildingIcon,
+} from "lucide-react";
 import {
   getVisitRecords,
   getPatientNames,
@@ -21,7 +27,13 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Pagination, PAGE_SIZE_OPTIONS } from "@/components/ui/pagination";
-import { Select, SelectTrigger, SelectPopup, SelectItem, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectPopup,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 import CreateVisitDialog from "@/components/medical/CreateVisitDialog";
 import VisitDetailDrawer from "@/components/medical/VisitDetailDrawer";
 import DeleteVisitDialog from "@/components/medical/DeleteVisitDialog";
@@ -42,9 +54,15 @@ const MedicalRecordsPage = () => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0]);
   const [loading, setLoading] = useState(true);
-  const [visitTypeFilter, setVisitTypeFilter] = useState<VisitType | null>(null);
-  const [institutionFilter, setInstitutionFilter] = useState<number | null>(null);
-  const [patientNameFilter, setPatientNameFilter] = useState<string | null>(null);
+  const [visitTypeFilter, setVisitTypeFilter] = useState<VisitType | null>(
+    null,
+  );
+  const [institutionFilter, setInstitutionFilter] = useState<number | null>(
+    null,
+  );
+  const [patientNameFilter, setPatientNameFilter] = useState<string | null>(
+    null,
+  );
   const [diagnosisFilter, setDiagnosisFilter] = useState("");
   const [institutions, setInstitutions] = useState<MedicalInstitution[]>([]);
   const [patientNames, setPatientNames] = useState<string[]>([]);
@@ -70,7 +88,14 @@ const MedicalRecordsPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize, visitTypeFilter, institutionFilter, patientNameFilter, diagnosisFilter]);
+  }, [
+    page,
+    pageSize,
+    visitTypeFilter,
+    institutionFilter,
+    patientNameFilter,
+    diagnosisFilter,
+  ]);
 
   useEffect(() => {
     void fetchData();
@@ -78,8 +103,14 @@ const MedicalRecordsPage = () => {
 
   useEffect(() => {
     const loadFilters = async () => {
-      try { const { data } = await getInstitutions(); setInstitutions(data); } catch {}
-      try { const { data } = await getPatientNames(); setPatientNames(data); } catch {}
+      try {
+        const { data } = await getInstitutions();
+        setInstitutions(data);
+      } catch {}
+      try {
+        const { data } = await getPatientNames();
+        setPatientNames(data);
+      } catch {}
     };
     void loadFilters();
   }, []);
@@ -90,9 +121,19 @@ const MedicalRecordsPage = () => {
   };
 
   const formatTimeCell = (r: VisitRecord) => {
-    if (r.visitType === "OUTPATIENT") return <span className="text-sm">{r.visitDate}</span>;
-    if (r.dischargeDate) return <span className="text-sm whitespace-nowrap">{r.visitDate} ~ {r.dischargeDate}</span>;
-    return <span className="text-sm whitespace-nowrap">{r.visitDate} ~ {t("medical.inHospital")}</span>;
+    if (r.visitType === "OUTPATIENT")
+      return <span className="text-sm">{r.visitDate}</span>;
+    if (r.dischargeDate)
+      return (
+        <span className="text-sm whitespace-nowrap">
+          {r.visitDate} ~ {r.dischargeDate}
+        </span>
+      );
+    return (
+      <span className="text-sm whitespace-nowrap">
+        {r.visitDate} ~ {t("medical.inHospital")}
+      </span>
+    );
   };
 
   const formatDeptCell = (r: VisitRecord) => {
@@ -100,17 +141,21 @@ const MedicalRecordsPage = () => {
       return (
         <div className="flex flex-col">
           <span className="font-medium">{r.department || "-"}</span>
-          <span className="text-xs text-muted-foreground">{r.institutionName}</span>
+          <span className="text-xs text-muted-foreground">
+            {r.institutionName}
+          </span>
         </div>
       );
     }
     const deptLine = r.dischargeDept
       ? `${r.department || "-"} / ${r.dischargeDept}`
-      : (r.department || "-");
+      : r.department || "-";
     return (
       <div className="flex flex-col">
         <span className="font-medium">{deptLine}</span>
-        <span className="text-xs text-muted-foreground">{r.institutionName}</span>
+        <span className="text-xs text-muted-foreground">
+          {r.institutionName}
+        </span>
       </div>
     );
   };
@@ -119,47 +164,87 @@ const MedicalRecordsPage = () => {
     <div className="grid gap-4">
       <div className="flex flex-wrap items-center gap-3">
         <div className="w-32">
-          <Select value={visitTypeFilter} onValueChange={(v) => { setVisitTypeFilter(v); setPage(0); }}>
+          <Select
+            value={visitTypeFilter}
+            onValueChange={(v) => {
+              setVisitTypeFilter(v);
+              setPage(0);
+            }}
+          >
             <SelectTrigger>
               <SelectValue placeholder={t("medical.filterAllTypes")}>
-                {() => visitTypeFilter ? t(`medical.visitType.${visitTypeFilter}`) : t("medical.filterAllTypes")}
+                {() =>
+                  visitTypeFilter
+                    ? t(`medical.visitType.${visitTypeFilter}`)
+                    : t("medical.filterAllTypes")
+                }
               </SelectValue>
             </SelectTrigger>
             <SelectPopup>
-              <SelectItem value={null}>{t("medical.filterAllTypes")}</SelectItem>
-              <SelectItem value="OUTPATIENT">{t("medical.visitType.OUTPATIENT")}</SelectItem>
-              <SelectItem value="INPATIENT">{t("medical.visitType.INPATIENT")}</SelectItem>
+              <SelectItem value={null}>
+                {t("medical.filterAllTypes")}
+              </SelectItem>
+              <SelectItem value="OUTPATIENT">
+                {t("medical.visitType.OUTPATIENT")}
+              </SelectItem>
+              <SelectItem value="INPATIENT">
+                {t("medical.visitType.INPATIENT")}
+              </SelectItem>
             </SelectPopup>
           </Select>
         </div>
 
         <div className="w-36">
-          <Select value={institutionFilter} onValueChange={(v) => { setInstitutionFilter(v); setPage(0); }}>
+          <Select
+            value={institutionFilter}
+            onValueChange={(v) => {
+              setInstitutionFilter(v);
+              setPage(0);
+            }}
+          >
             <SelectTrigger>
               <SelectValue placeholder={t("medical.filterAllInstitutions")}>
-                {() => institutionFilter ? institutions.find((i) => i.id === institutionFilter)?.name : t("medical.filterAllInstitutions")}
+                {() =>
+                  institutionFilter
+                    ? institutions.find((i) => i.id === institutionFilter)?.name
+                    : t("medical.filterAllInstitutions")
+                }
               </SelectValue>
             </SelectTrigger>
             <SelectPopup>
-              <SelectItem value={null}>{t("medical.filterAllInstitutions")}</SelectItem>
+              <SelectItem value={null}>
+                {t("medical.filterAllInstitutions")}
+              </SelectItem>
               {institutions.map((i) => (
-                <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>
+                <SelectItem key={i.id} value={i.id}>
+                  {i.name}
+                </SelectItem>
               ))}
             </SelectPopup>
           </Select>
         </div>
 
         <div className="w-32">
-          <Select value={patientNameFilter} onValueChange={(v) => { setPatientNameFilter(v); setPage(0); }}>
+          <Select
+            value={patientNameFilter}
+            onValueChange={(v) => {
+              setPatientNameFilter(v);
+              setPage(0);
+            }}
+          >
             <SelectTrigger>
               <SelectValue placeholder={t("medical.filterAllPatients")}>
                 {() => patientNameFilter ?? t("medical.filterAllPatients")}
               </SelectValue>
             </SelectTrigger>
             <SelectPopup>
-              <SelectItem value={null}>{t("medical.filterAllPatients")}</SelectItem>
+              <SelectItem value={null}>
+                {t("medical.filterAllPatients")}
+              </SelectItem>
               {patientNames.map((n) => (
-                <SelectItem key={n} value={n}>{n}</SelectItem>
+                <SelectItem key={n} value={n}>
+                  {n}
+                </SelectItem>
               ))}
             </SelectPopup>
           </Select>
@@ -168,13 +253,20 @@ const MedicalRecordsPage = () => {
         <div className="w-40">
           <Input
             value={diagnosisFilter}
-            onChange={(e) => { setDiagnosisFilter(e.target.value); setPage(0); }}
+            onChange={(e) => {
+              setDiagnosisFilter(e.target.value);
+              setPage(0);
+            }}
             placeholder={t("medical.filterDiagnosis")}
           />
         </div>
 
         <div className="ml-auto flex gap-1">
-          <Button variant="outline" size="sm" onClick={() => setInstitutionManagerOpen(true)}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setInstitutionManagerOpen(true)}
+          >
             <BuildingIcon className="size-3.5" />
             {t("medical.institutions")}
           </Button>
@@ -195,57 +287,108 @@ const MedicalRecordsPage = () => {
               <TableHead>{t("medical.columns.time")}</TableHead>
               <TableHead>{t("medical.columns.doctor")}</TableHead>
               <TableHead>{t("medical.columns.diagnosis")}</TableHead>
-              <TableHead className="w-20">{t("medical.columns.actions")}</TableHead>
+              <TableHead className="w-20">
+                {t("medical.columns.actions")}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading && (
               <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">{t("common.loading")}</TableCell>
+                <TableCell colSpan={7} className="h-24 text-center">
+                  {t("common.loading")}
+                </TableCell>
               </TableRow>
             )}
             {!loading && pageData.content.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">{t("medical.empty")}</TableCell>
+                <TableCell
+                  colSpan={7}
+                  className="h-24 text-center text-muted-foreground"
+                >
+                  {t("medical.empty")}
+                </TableCell>
               </TableRow>
             )}
-            {!loading && pageData.content.map((r) => (
-              <TableRow key={r.id} className="cursor-pointer" onClick={() => setDetailId(r.id)}>
-                <TableCell>
-                  <div className="flex flex-col">
-                    <span className="font-medium">{r.patientName}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {[
-                        r.patientGender ? t(`medical.gender.${r.patientGender}`) : "",
-                        r.patientAge != null ? `${r.patientAge}${t("medical.age")}` : "",
-                      ].filter(Boolean).join(" ")}
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge variant="secondary" className="text-xs">
-                    {r.visitType === "OUTPATIENT" ? t("medical.visitType.OUTPATIENT") : t("medical.visitType.INPATIENT")}
-                  </Badge>
-                </TableCell>
-                <TableCell>{formatDeptCell(r)}</TableCell>
-                <TableCell>{formatTimeCell(r)}</TableCell>
-                <TableCell>{r.doctor || "-"}</TableCell>
-                <TableCell className="max-w-32 truncate" title={r.diagnosis ?? undefined}>{r.diagnosis || "-"}</TableCell>
-                <TableCell>
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="icon-xs" onClick={(e) => { e.stopPropagation(); setDetailId(r.id); }} title={t("common.view")}>
-                      <EyeIcon className="size-3.5" />
-                    </Button>
-                    <Button variant="ghost" size="icon-xs" onClick={(e) => { e.stopPropagation(); setEditing(r); }} title={t("common.edit")}>
-                      <PencilIcon className="size-3.5" />
-                    </Button>
-                    <Button variant="ghost" size="icon-xs" onClick={(e) => { e.stopPropagation(); setDeleting(r); }} title={t("common.delete")}>
-                      <TrashIcon className="size-3.5" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+            {!loading &&
+              pageData.content.map((r) => (
+                <TableRow
+                  key={r.id}
+                  className="cursor-pointer"
+                  onClick={() => setDetailId(r.id)}
+                >
+                  <TableCell>
+                    <div className="flex flex-col">
+                      <span className="font-medium">{r.patientName}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {[
+                          r.patientGender
+                            ? t(`medical.gender.${r.patientGender}`)
+                            : "",
+                          r.patientAge != null
+                            ? `${r.patientAge}${t("medical.age")}`
+                            : "",
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="secondary" className="text-xs">
+                      {r.visitType === "OUTPATIENT"
+                        ? t("medical.visitType.OUTPATIENT")
+                        : t("medical.visitType.INPATIENT")}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{formatDeptCell(r)}</TableCell>
+                  <TableCell>{formatTimeCell(r)}</TableCell>
+                  <TableCell>{r.doctor || "-"}</TableCell>
+                  <TableCell
+                    className="max-w-32 truncate"
+                    title={r.diagnosis ?? undefined}
+                  >
+                    {r.diagnosis || "-"}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDetailId(r.id);
+                        }}
+                        title={t("common.view")}
+                      >
+                        <EyeIcon className="size-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditing(r);
+                        }}
+                        title={t("common.edit")}
+                      >
+                        <PencilIcon className="size-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeleting(r);
+                        }}
+                        title={t("common.delete")}
+                      >
+                        <TrashIcon className="size-3.5" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </div>
@@ -262,28 +405,42 @@ const MedicalRecordsPage = () => {
         open={createOpen}
         institutions={institutions}
         onClose={() => setCreateOpen(false)}
-        onSuccess={() => { void fetchData(); }}
+        onSuccess={() => {
+          void fetchData();
+        }}
       />
       <CreateVisitDialog
         open={!!editing}
         initialData={editing}
         institutions={institutions}
         onClose={() => setEditing(null)}
-        onSuccess={() => { void fetchData(); }}
+        onSuccess={() => {
+          void fetchData();
+        }}
       />
       <DeleteVisitDialog
         open={!!deleting}
         record={deleting}
         onClose={() => setDeleting(null)}
-        onSuccess={() => { void fetchData(); }}
+        onSuccess={() => {
+          void fetchData();
+        }}
       />
       <VisitDetailDrawer
         open={detailId !== null}
         visitId={detailId}
         onClose={() => setDetailId(null)}
-        onEdit={(r) => { setDetailId(null); setEditing(r); }}
-        onDelete={(r) => { setDetailId(null); setDeleting(r); }}
-        onRefresh={() => { void fetchData(); }}
+        onEdit={(r) => {
+          setDetailId(null);
+          setEditing(r);
+        }}
+        onDelete={(r) => {
+          setDetailId(null);
+          setDeleting(r);
+        }}
+        onRefresh={() => {
+          void fetchData();
+        }}
       />
       <InstitutionManagerDialog
         open={institutionManagerOpen}

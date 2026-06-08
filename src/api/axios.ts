@@ -35,8 +35,7 @@ axios.interceptors.response.use(
       onSessionExpired?.();
     } else if (error.response) {
       const message =
-        error.response.data?.message ||
-        i18n.t("errorToast.requestFailed");
+        error.response.data?.message || i18n.t("errorToast.requestFailed");
       toast.error(message);
     } else {
       toast.error(i18n.t("errorToast.networkError"));

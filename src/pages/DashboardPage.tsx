@@ -31,14 +31,20 @@ const getDaysLeft = (dateStr: string) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   target.setHours(0, 0, 0, 0);
-  return Math.ceil((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  return Math.ceil(
+    (target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+  );
 };
 
 const DashboardPage = () => {
   const { t } = useTranslation();
   const { data, isLoading } = useDashboard();
-  const [itemTab, setItemTab] = useState<"expiringSoon" | "inUse">("expiringSoon");
-  const [assetTab, setAssetTab] = useState<"warrantyExpiring" | "inUse">("warrantyExpiring");
+  const [itemTab, setItemTab] = useState<"expiringSoon" | "inUse">(
+    "expiringSoon",
+  );
+  const [assetTab, setAssetTab] = useState<"warrantyExpiring" | "inUse">(
+    "warrantyExpiring",
+  );
 
   if (isLoading) {
     return (
@@ -50,7 +56,14 @@ const DashboardPage = () => {
 
   if (!data) return null;
 
-  const { stats, expiringSoonItems, inUseItems, warrantyExpiringAssets, inUseAssets, upcomingRenewals } = data;
+  const {
+    stats,
+    expiringSoonItems,
+    inUseItems,
+    warrantyExpiringAssets,
+    inUseAssets,
+    upcomingRenewals,
+  } = data;
 
   const statCards = [
     {
@@ -91,9 +104,10 @@ const DashboardPage = () => {
     {
       icon: BanknoteIcon,
       label: t("dashboard.monthlySpending"),
-      value: stats.monthlySubscriptionSpending != null
-        ? formatCurrency(stats.monthlySubscriptionSpending)
-        : "—",
+      value:
+        stats.monthlySubscriptionSpending != null
+          ? formatCurrency(stats.monthlySubscriptionSpending)
+          : "—",
       color: "text-teal-600 dark:text-teal-400",
       bg: "bg-teal-500/10",
     },
@@ -119,7 +133,9 @@ const DashboardPage = () => {
               </div>
               <div className="min-w-0">
                 <p className="text-xs text-muted-foreground">{stat.label}</p>
-                <p className="mt-0.5 truncate text-lg font-semibold">{stat.value}</p>
+                <p className="mt-0.5 truncate text-lg font-semibold">
+                  {stat.value}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -153,11 +169,19 @@ const DashboardPage = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t("dashboard.items.columns.productName")}</TableHead>
-                    <TableHead>{t("dashboard.items.columns.category")}</TableHead>
+                    <TableHead>
+                      {t("dashboard.items.columns.productName")}
+                    </TableHead>
+                    <TableHead>
+                      {t("dashboard.items.columns.category")}
+                    </TableHead>
                     <TableHead>{t("dashboard.items.columns.brand")}</TableHead>
-                    <TableHead>{t("dashboard.items.columns.expirationDate")}</TableHead>
-                    <TableHead>{t("dashboard.items.columns.daysLeft")}</TableHead>
+                    <TableHead>
+                      {t("dashboard.items.columns.expirationDate")}
+                    </TableHead>
+                    <TableHead>
+                      {t("dashboard.items.columns.daysLeft")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -165,12 +189,16 @@ const DashboardPage = () => {
                     const daysLeft = getDaysLeft(item.expirationDate);
                     return (
                       <TableRow key={item.id}>
-                        <TableCell className="font-medium">{item.productName}</TableCell>
+                        <TableCell className="font-medium">
+                          {item.productName}
+                        </TableCell>
                         <TableCell>{item.categoryName}</TableCell>
                         <TableCell>{item.brandName}</TableCell>
                         <TableCell>{formatDate(item.expirationDate)}</TableCell>
                         <TableCell>
-                          <Badge variant={daysLeft <= 7 ? "destructive" : "warning"}>
+                          <Badge
+                            variant={daysLeft <= 7 ? "destructive" : "warning"}
+                          >
                             {daysLeft}d
                           </Badge>
                         </TableCell>
@@ -188,16 +216,22 @@ const DashboardPage = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t("dashboard.items.columns.productName")}</TableHead>
+                  <TableHead>
+                    {t("dashboard.items.columns.productName")}
+                  </TableHead>
                   <TableHead>{t("dashboard.items.columns.category")}</TableHead>
                   <TableHead>{t("dashboard.items.columns.brand")}</TableHead>
-                  <TableHead>{t("dashboard.items.columns.expirationDate")}</TableHead>
+                  <TableHead>
+                    {t("dashboard.items.columns.expirationDate")}
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {inUseItems.map((item) => (
                   <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.productName}</TableCell>
+                    <TableCell className="font-medium">
+                      {item.productName}
+                    </TableCell>
                     <TableCell>{item.categoryName}</TableCell>
                     <TableCell>{item.brandName}</TableCell>
                     <TableCell>{formatDate(item.expirationDate)}</TableCell>
@@ -250,11 +284,17 @@ const DashboardPage = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t("dashboard.assets.columns.name")}</TableHead>
-                    <TableHead>{t("dashboard.assets.columns.category")}</TableHead>
+                    <TableHead>
+                      {t("dashboard.assets.columns.category")}
+                    </TableHead>
                     <TableHead>{t("dashboard.assets.columns.place")}</TableHead>
                     <TableHead>{t("dashboard.assets.columns.price")}</TableHead>
-                    <TableHead>{t("dashboard.assets.columns.expirationDate")}</TableHead>
-                    <TableHead>{t("dashboard.assets.columns.daysLeft")}</TableHead>
+                    <TableHead>
+                      {t("dashboard.assets.columns.expirationDate")}
+                    </TableHead>
+                    <TableHead>
+                      {t("dashboard.assets.columns.daysLeft")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -262,15 +302,23 @@ const DashboardPage = () => {
                     const daysLeft = getDaysLeft(asset.expirationDate);
                     return (
                       <TableRow key={asset.id}>
-                        <TableCell className="font-medium">{asset.name}</TableCell>
+                        <TableCell className="font-medium">
+                          {asset.name}
+                        </TableCell>
                         <TableCell>{asset.categoryName}</TableCell>
                         <TableCell>{asset.placeName}</TableCell>
                         <TableCell>
-                          {asset.price != null ? formatCurrency(asset.price) : "—"}
+                          {asset.price != null
+                            ? formatCurrency(asset.price)
+                            : "—"}
                         </TableCell>
-                        <TableCell>{formatDate(asset.expirationDate)}</TableCell>
                         <TableCell>
-                          <Badge variant={daysLeft <= 30 ? "destructive" : "warning"}>
+                          {formatDate(asset.expirationDate)}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={daysLeft <= 30 ? "destructive" : "warning"}
+                          >
                             {daysLeft}d
                           </Badge>
                         </TableCell>
@@ -289,11 +337,17 @@ const DashboardPage = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>{t("dashboard.assets.columns.name")}</TableHead>
-                  <TableHead>{t("dashboard.assets.columns.category")}</TableHead>
+                  <TableHead>
+                    {t("dashboard.assets.columns.category")}
+                  </TableHead>
                   <TableHead>{t("dashboard.assets.columns.place")}</TableHead>
                   <TableHead>{t("dashboard.assets.columns.price")}</TableHead>
-                  <TableHead>{t("dashboard.assets.columns.shopDate")}</TableHead>
-                  <TableHead>{t("dashboard.assets.columns.warranty")}</TableHead>
+                  <TableHead>
+                    {t("dashboard.assets.columns.shopDate")}
+                  </TableHead>
+                  <TableHead>
+                    {t("dashboard.assets.columns.warranty")}
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -367,11 +421,16 @@ const DashboardPage = () => {
                   const daysLeft = getDaysLeft(renewal.endDate);
                   return (
                     <TableRow key={renewal.id}>
-                      <TableCell className="font-medium">{renewal.name}</TableCell>
+                      <TableCell className="font-medium">
+                        {renewal.name}
+                      </TableCell>
                       <TableCell>{renewal.platformName}</TableCell>
                       <TableCell>
                         <span>{formatDate(renewal.endDate)}</span>
-                        <Badge variant={daysLeft <= 3 ? "destructive" : "warning"} className="ml-2">
+                        <Badge
+                          variant={daysLeft <= 3 ? "destructive" : "warning"}
+                          className="ml-2"
+                        >
                           {daysLeft}d
                         </Badge>
                       </TableCell>

@@ -97,7 +97,12 @@ const SubscriptionRecordDialog = ({
 
   const handleSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
-    if (!amount || !recordDate || !startDate || (subscriptionType === "PERIODIC" && !endDate)) {
+    if (
+      !amount ||
+      !recordDate ||
+      !startDate ||
+      (subscriptionType === "PERIODIC" && !endDate)
+    ) {
       setError(t("common.error"));
       return;
     }

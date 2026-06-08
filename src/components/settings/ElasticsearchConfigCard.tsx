@@ -116,7 +116,11 @@ const ElasticsearchConfigCard = () => {
         </div>
       </CardContent>
       <CardFooter className="gap-2">
-        <Button variant="outline" onClick={handleTest} disabled={testing || !enabled}>
+        <Button
+          variant="outline"
+          onClick={handleTest}
+          disabled={testing || !enabled}
+        >
           {testing
             ? t("common.loading")
             : t("settings.elasticsearch.testConnection")}

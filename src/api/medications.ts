@@ -51,7 +51,13 @@ export const getMedications = (
   sortDir: "asc" | "desc" = "desc",
 ) =>
   axios.get<Page<MedicationReminder>>("/medications", {
-    params: { page, size, sortBy, sortDir, ...(enabled !== undefined && { enabled }) },
+    params: {
+      page,
+      size,
+      sortBy,
+      sortDir,
+      ...(enabled !== undefined && { enabled }),
+    },
   });
 
 export const getMedicationById = (id: number) =>

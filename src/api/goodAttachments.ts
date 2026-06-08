@@ -16,16 +16,10 @@ export const getGoodAttachments = (goodId: number) =>
 export const uploadGoodAttachment = (goodId: number, file: File) => {
   const formData = new FormData();
   formData.append("file", file);
-  return axios.post<GoodAttachment>(
-    `/goods/${goodId}/attachments`,
-    formData,
-    {
-      headers: { "Content-Type": "multipart/form-data" },
-    },
-  );
+  return axios.post<GoodAttachment>(`/goods/${goodId}/attachments`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 };
 
-export const deleteGoodAttachment = (
-  goodId: number,
-  attachmentId: number,
-) => axios.delete<void>(`/goods/${goodId}/attachments/${attachmentId}`);
+export const deleteGoodAttachment = (goodId: number, attachmentId: number) =>
+  axios.delete<void>(`/goods/${goodId}/attachments/${attachmentId}`);

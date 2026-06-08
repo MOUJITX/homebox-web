@@ -28,8 +28,10 @@ export interface TestConnectionResponse {
 export const getSystemConfigGroup = (group: string) =>
   axios.get<SystemConfigGroupResponse>("/system-config", { params: { group } });
 
-export const saveSystemConfigGroup = (group: string, data: Record<string, string>) =>
-  axios.put(`/system-config/${group}`, data);
+export const saveSystemConfigGroup = (
+  group: string,
+  data: Record<string, string>,
+) => axios.put(`/system-config/${group}`, data);
 
 export const testQiniuConnection = () =>
   axios.post<TestConnectionResponse>("/system-config/test/qiniu");

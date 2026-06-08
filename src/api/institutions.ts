@@ -19,8 +19,10 @@ export const getInstitutions = () =>
 export const createInstitution = (data: MedicalInstitutionRequest) =>
   axios.post<MedicalInstitution>("/medical-institutions", data);
 
-export const updateInstitution = (id: number, data: MedicalInstitutionRequest) =>
-  axios.put<MedicalInstitution>(`/medical-institutions/${id}`, data);
+export const updateInstitution = (
+  id: number,
+  data: MedicalInstitutionRequest,
+) => axios.put<MedicalInstitution>(`/medical-institutions/${id}`, data);
 
 export const deleteInstitution = (id: number) =>
   axios.delete<void>(`/medical-institutions/${id}`);

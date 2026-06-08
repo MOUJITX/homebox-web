@@ -104,18 +104,25 @@ const AssetStoreManagerDialog = ({
     setSubmitting(true);
 
     const finalChannel =
-      channel === "__custom__" ? customChannel || undefined : channel || undefined;
+      channel === "__custom__"
+        ? customChannel || undefined
+        : channel || undefined;
 
     try {
       if (mode === "create") {
         await createAssetStore({ name, channel: finalChannel });
       } else if (mode === "edit" && editingStore) {
-        await updateAssetStore(editingStore.id, { name, channel: finalChannel });
+        await updateAssetStore(editingStore.id, {
+          name,
+          channel: finalChannel,
+        });
       }
       resetForm();
       void invalidate.invalidateStores();
     } catch (err) {
-      setError(getErrorMessage(err) ?? t("assets.assetStores.errors.saveFailed"));
+      setError(
+        getErrorMessage(err) ?? t("assets.assetStores.errors.saveFailed"),
+      );
     } finally {
       setSubmitting(false);
     }
@@ -154,8 +161,12 @@ const AssetStoreManagerDialog = ({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t("assets.assetStores.columns.name")}</TableHead>
-                    <TableHead>{t("assets.assetStores.columns.channel")}</TableHead>
+                    <TableHead>
+                      {t("assets.assetStores.columns.name")}
+                    </TableHead>
+                    <TableHead>
+                      {t("assets.assetStores.columns.channel")}
+                    </TableHead>
                     <TableHead className="text-right">
                       {t("assets.assetStores.columns.actions")}
                     </TableHead>
@@ -182,9 +193,7 @@ const AssetStoreManagerDialog = ({
                   {!isLoading &&
                     stores.map((s) => (
                       <TableRow key={s.id}>
-                        <TableCell className="font-medium">
-                          {s.name}
-                        </TableCell>
+                        <TableCell className="font-medium">{s.name}</TableCell>
                         <TableCell>{s.channel || "—"}</TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-1">
@@ -263,7 +272,9 @@ const AssetStoreManagerDialog = ({
                   <Input
                     value={customChannel}
                     onChange={(e) => setCustomChannel(e.target.value)}
-                    placeholder={t("assets.assetStores.form.channelPlaceholder")}
+                    placeholder={t(
+                      "assets.assetStores.form.channelPlaceholder",
+                    )}
                   />
                 )}
               </div>

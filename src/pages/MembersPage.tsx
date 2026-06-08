@@ -134,7 +134,11 @@ const MembersPage = () => {
                   onClick={() => handleSort("username")}
                 >
                   {t("members.columns.username")}
-                  <SortIcon column="username" sortKey={sortKey} sortDir={sortDir} />
+                  <SortIcon
+                    column="username"
+                    sortKey={sortKey}
+                    sortDir={sortDir}
+                  />
                 </button>
               </TableHead>
               <TableHead>
@@ -143,7 +147,11 @@ const MembersPage = () => {
                   onClick={() => handleSort("displayName")}
                 >
                   {t("members.columns.displayName")}
-                  <SortIcon column="displayName" sortKey={sortKey} sortDir={sortDir} />
+                  <SortIcon
+                    column="displayName"
+                    sortKey={sortKey}
+                    sortDir={sortDir}
+                  />
                 </button>
               </TableHead>
               <TableHead>
@@ -152,7 +160,11 @@ const MembersPage = () => {
                   onClick={() => handleSort("roleName")}
                 >
                   {t("members.columns.role")}
-                  <SortIcon column="roleName" sortKey={sortKey} sortDir={sortDir} />
+                  <SortIcon
+                    column="roleName"
+                    sortKey={sortKey}
+                    sortDir={sortDir}
+                  />
                 </button>
               </TableHead>
               <TableHead>{t("members.columns.status")}</TableHead>
@@ -162,7 +174,11 @@ const MembersPage = () => {
                   onClick={() => handleSort("createdAt")}
                 >
                   {t("members.columns.createdAt")}
-                  <SortIcon column="createdAt" sortKey={sortKey} sortDir={sortDir} />
+                  <SortIcon
+                    column="createdAt"
+                    sortKey={sortKey}
+                    sortDir={sortDir}
+                  />
                 </button>
               </TableHead>
               <TableHead>
@@ -171,7 +187,11 @@ const MembersPage = () => {
                   onClick={() => handleSort("updatedAt")}
                 >
                   {t("members.columns.updatedAt")}
-                  <SortIcon column="updatedAt" sortKey={sortKey} sortDir={sortDir} />
+                  <SortIcon
+                    column="updatedAt"
+                    sortKey={sortKey}
+                    sortDir={sortDir}
+                  />
                 </button>
               </TableHead>
               <TableHead className="text-right">
@@ -207,7 +227,9 @@ const MembersPage = () => {
                   <TableCell>
                     <Badge
                       variant={
-                        member.roleName === ROOT_ROLE ? "destructive" : "default"
+                        member.roleName === ROOT_ROLE
+                          ? "destructive"
+                          : "default"
                       }
                     >
                       {member.roleName}

@@ -219,14 +219,9 @@ const NotificationConfigCard = () => {
             </Label>
             <input
               id="config-notification.medication-crontab"
-              value={
-                formValues["notification.medication-crontab"] ?? ""
-              }
+              value={formValues["notification.medication-crontab"] ?? ""}
               onChange={(e) =>
-                handleChange(
-                  "notification.medication-crontab",
-                  e.target.value,
-                )
+                handleChange("notification.medication-crontab", e.target.value)
               }
               placeholder={t(
                 "settings.notification.placeholders.medicationCrontab",
@@ -242,9 +237,7 @@ const NotificationConfigCard = () => {
             </Label>
             <input
               id="config-notification.subscription-crontab"
-              value={
-                formValues["notification.subscription-crontab"] ?? ""
-              }
+              value={formValues["notification.subscription-crontab"] ?? ""}
               onChange={(e) =>
                 handleChange(
                   "notification.subscription-crontab",

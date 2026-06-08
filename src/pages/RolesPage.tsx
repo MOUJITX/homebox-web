@@ -131,7 +131,11 @@ const RolesPage = () => {
                   onClick={() => handleSort("description")}
                 >
                   {t("roles.columns.description")}
-                  <SortIcon column="description" sortKey={sortKey} sortDir={sortDir} />
+                  <SortIcon
+                    column="description"
+                    sortKey={sortKey}
+                    sortDir={sortDir}
+                  />
                 </button>
               </TableHead>
               <TableHead>
@@ -140,7 +144,11 @@ const RolesPage = () => {
                   onClick={() => handleSort("createdAt")}
                 >
                   {t("roles.columns.createdAt")}
-                  <SortIcon column="createdAt" sortKey={sortKey} sortDir={sortDir} />
+                  <SortIcon
+                    column="createdAt"
+                    sortKey={sortKey}
+                    sortDir={sortDir}
+                  />
                 </button>
               </TableHead>
               <TableHead>
@@ -149,7 +157,11 @@ const RolesPage = () => {
                   onClick={() => handleSort("updatedAt")}
                 >
                   {t("roles.columns.updatedAt")}
-                  <SortIcon column="updatedAt" sortKey={sortKey} sortDir={sortDir} />
+                  <SortIcon
+                    column="updatedAt"
+                    sortKey={sortKey}
+                    sortDir={sortDir}
+                  />
                 </button>
               </TableHead>
               <TableHead className="text-right">

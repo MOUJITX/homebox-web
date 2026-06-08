@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { deleteVisitRecord, type VisitRecord } from "@/api/medical";
@@ -32,11 +37,18 @@ const DeleteVisitDialog = ({ open, record, onClose, onSuccess }: Props) => {
   };
 
   const hasSubRecords = record
-    ? record.examinationCount > 0 || record.labTestCount > 0 || record.prescriptionCount > 0
+    ? record.examinationCount > 0 ||
+      record.labTestCount > 0 ||
+      record.prescriptionCount > 0
     : false;
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) onClose();
+      }}
+    >
       <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>{t("medical.delete")}</DialogTitle>
@@ -47,9 +59,15 @@ const DeleteVisitDialog = ({ open, record, onClose, onSuccess }: Props) => {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>{t("common.cancel")}</Button>
+          <Button variant="outline" onClick={onClose}>
+            {t("common.cancel")}
+          </Button>
           {!hasSubRecords && (
-            <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={deleting}
+            >
               {t("common.delete")}
             </Button>
           )}
