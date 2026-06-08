@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon, PencilIcon, TrashIcon, UploadIcon } from "lucide-react";
 import type { PaymentMethod } from "@/api/paymentMethods";
@@ -7,11 +7,11 @@ import {
   updatePaymentMethod,
   deletePaymentMethod,
 } from "@/api/paymentMethods";
-import { uploadFile } from "@/api/files";
 import { usePaymentMethods } from "@/hooks/queries/usePaymentMethods";
 import { getErrorMessage } from "@/lib/error";
 import { useQueryClient } from "@tanstack/react-query";
 import { subscriptionKeys } from "@/hooks/queries/subscriptionKeys";
+import type { FileRecord } from "@/api/files";
 import AuthImg from "@/components/AuthImg";
 import {
   Dialog,
@@ -22,6 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import FilePickerDialog from "@/components/shared/FilePickerDialog";
 
 interface PaymentMethodManagerDialogProps {
   readonly open: boolean;
@@ -35,11 +36,10 @@ const PaymentMethodManagerDialog = ({
   const { t } = useTranslation();
   const { data: paymentMethods = [] } = usePaymentMethods();
   const queryClient = useQueryClient();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState("");
   const [logoFileId, setLogoFileId] = useState<number | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
-  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [editing, setEditing] = useState<PaymentMethod | null>(null);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -50,20 +50,11 @@ const PaymentMethodManagerDialog = ({
     });
   };
 
-  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploadingLogo(true);
-    try {
-      const { data } = await uploadFile(file);
-      setLogoFileId(data.id);
-      setLogoPreview(data.url);
-    } catch (err) {
-      setError(getErrorMessage(err) ?? t("common.error"));
-    } finally {
-      setUploadingLogo(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    }
+  const handleLogoSelect = (files: FileRecord[]) => {
+    if (files.length === 0) return;
+    const file = files[0];
+    setLogoFileId(file.id);
+    setLogoPreview(file.url);
   };
 
   const handleCreate = async () => {
@@ -131,6 +122,7 @@ const PaymentMethodManagerDialog = ({
   };
 
   return (
+    <>
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
@@ -149,22 +141,14 @@ const PaymentMethodManagerDialog = ({
           <div className="grid gap-2">
             <Label>{t("paymentMethods.logo")}</Label>
             <div className="flex items-center gap-2">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleLogoUpload}
-              />
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploadingLogo}
+                onClick={() => setPickerOpen(true)}
               >
                 <UploadIcon className="size-3.5" />
-                {uploadingLogo ? "..." : t("paymentMethods.logo")}
+                {t("paymentMethods.logo")}
               </Button>
               {logoPreview && (
                 <div className="size-8 shrink-0 overflow-hidden rounded border">
@@ -245,6 +229,14 @@ const PaymentMethodManagerDialog = ({
         </div>
       </DialogContent>
     </Dialog>
+    <FilePickerDialog
+      open={pickerOpen}
+      onClose={() => setPickerOpen(false)}
+      onSelect={handleLogoSelect}
+      multiple={false}
+      accept="image/*"
+    />
+    </>
   );
 };
 

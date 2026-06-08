@@ -270,9 +270,9 @@ const AssetDetailDrawer = ({
             {/* Pictures */}
             <PictureManager
               pictures={detail.pictures ?? []}
-              onUpload={async (files) => {
+              onSelect={async (files) => {
                 await Promise.all(
-                  files.map((file) => uploadAssetPicture(detail.id, file)),
+                  files.map((f) => uploadAssetPicture(detail.id, undefined, f.id)),
                 );
                 void invalidate.invalidateDetail(assetId!);
               }}
@@ -324,8 +324,8 @@ const AssetDetailDrawer = ({
                 url: a.url,
                 indexed: a.indexed,
               }))}
-              onUpload={async (file) => {
-                await uploadAssetAttachment(detail.id, file);
+              onSelect={async (file) => {
+                await uploadAssetAttachment(detail.id, undefined, file.id);
                 void invalidate.invalidateDetail(assetId!);
               }}
               onDelete={async (id) => {

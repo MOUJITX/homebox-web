@@ -381,8 +381,8 @@ const InvoiceDetailDrawer = ({
                   url: a.url,
                 })),
               ]}
-              onUpload={async (file) => {
-                await uploadInvoiceAttachment(invoice.id, file);
+              onSelect={async (file) => {
+                await uploadInvoiceAttachment(invoice.id, undefined, file.id);
                 handleAttachmentsChanged();
               }}
               onDelete={async (id) => {

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   UploadIcon,
@@ -7,8 +7,10 @@ import {
   DownloadIcon,
   LoaderIcon,
 } from "lucide-react";
+import type { FileRecord } from "@/api/files";
 import { Button } from "@/components/ui/button";
 import { formatFileSize } from "@/lib/utils";
+import FilePickerDialog from "./FilePickerDialog";
 
 export interface AttachmentItem {
   id: number;
@@ -21,28 +23,26 @@ export interface AttachmentItem {
 
 interface AttachmentManagerProps {
   readonly attachments: AttachmentItem[];
-  readonly onUpload: (file: File) => Promise<void>;
+  readonly onSelect: (file: FileRecord) => Promise<void>;
   readonly onDelete: (id: number) => Promise<void>;
 }
 
 const AttachmentManager = ({
   attachments,
-  onUpload,
+  onSelect,
   onDelete,
 }: AttachmentManagerProps) => {
   const { t } = useTranslation();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploading, setUploading] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [selecting, setSelecting] = useState(false);
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
+  const handleSelect = async (files: FileRecord[]) => {
+    if (files.length === 0) return;
+    setSelecting(true);
     try {
-      await onUpload(file);
+      await onSelect(files[0]);
     } finally {
-      setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      setSelecting(false);
     }
   };
 
@@ -51,20 +51,14 @@ const AttachmentManager = ({
       <div className="flex items-center justify-between">
         <h4 className="text-sm font-medium">{t("common.attachments")}</h4>
         <div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            className="hidden"
-            onChange={handleUpload}
-          />
           <Button
             variant="outline"
             size="sm"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={uploading}
+            onClick={() => setPickerOpen(true)}
+            disabled={selecting}
           >
             <UploadIcon className="size-3.5" />
-            {uploading
+            {selecting
               ? t("common.uploading")
               : t("common.upload")}
           </Button>
@@ -123,6 +117,13 @@ const AttachmentManager = ({
           ))}
         </div>
       )}
+
+      <FilePickerDialog
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={handleSelect}
+        multiple={false}
+      />
     </div>
   );
 };

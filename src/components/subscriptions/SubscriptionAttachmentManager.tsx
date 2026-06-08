@@ -1,9 +1,11 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UploadIcon, TrashIcon, FileIcon, DownloadIcon } from "lucide-react";
+import type { FileRecord } from "@/api/files";
 import type { SubscriptionRecordAttachment } from "@/api/subscriptions";
 import { uploadAttachment, deleteAttachment } from "@/api/subscriptionRecords";
 import { Button } from "@/components/ui/button";
+import FilePickerDialog from "@/components/shared/FilePickerDialog";
 
 const formatFileSize = (bytes: number) => {
   if (bytes < 1024) return `${bytes} B`;
@@ -23,20 +25,18 @@ const SubscriptionAttachmentManager = ({
   onChanged,
 }: SubscriptionAttachmentManagerProps) => {
   const { t } = useTranslation();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
 
-  const handleUpload = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
+  const handleSelect = useCallback(
+    async (files: FileRecord[]) => {
+      if (files.length === 0) return;
       setUploading(true);
       try {
-        await uploadAttachment(recordId, file);
+        await uploadAttachment(recordId, undefined, files[0].id);
         onChanged();
       } finally {
         setUploading(false);
-        if (fileInputRef.current) fileInputRef.current.value = "";
       }
     },
     [recordId, onChanged],
@@ -56,16 +56,10 @@ const SubscriptionAttachmentManager = ({
         <h4 className="text-sm font-medium">
           {t("common.upload")}
         </h4>
-        <input
-          ref={fileInputRef}
-          type="file"
-          className="hidden"
-          onChange={handleUpload}
-        />
         <Button
           variant="outline"
           size="sm"
-          onClick={() => fileInputRef.current?.click()}
+          onClick={() => setPickerOpen(true)}
           disabled={uploading}
         >
           <UploadIcon className="size-3.5" />
@@ -104,6 +98,12 @@ const SubscriptionAttachmentManager = ({
           ))}
         </div>
       )}
+      <FilePickerDialog
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={handleSelect}
+        multiple={false}
+      />
     </div>
   );
 };

@@ -1,9 +1,11 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ImageIcon, PlusIcon, TrashIcon } from "lucide-react";
+import type { FileRecord } from "@/api/files";
 import AuthImg from "@/components/AuthImg";
 import ImagePreview from "@/components/ImagePreview";
 import { Button } from "@/components/ui/button";
+import FilePickerDialog from "./FilePickerDialog";
 
 export interface PictureItem {
   id: number;
@@ -13,31 +15,28 @@ export interface PictureItem {
 
 interface PictureManagerProps {
   readonly pictures: PictureItem[];
-  readonly onUpload: (files: File[]) => Promise<void>;
+  readonly onSelect: (files: FileRecord[]) => Promise<void>;
   readonly onDelete: (id: number) => Promise<void>;
   readonly isLoading?: boolean;
 }
 
 const PictureManager = ({
   pictures,
-  onUpload,
+  onSelect,
   onDelete,
   isLoading,
 }: PictureManagerProps) => {
   const { t } = useTranslation();
-  const [uploading, setUploading] = useState(false);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [selecting, setSelecting] = useState(false);
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files?.length) return;
-    setUploading(true);
+  const handleSelect = async (files: FileRecord[]) => {
+    setSelecting(true);
     try {
-      await onUpload(Array.from(files));
+      await onSelect(files);
     } finally {
-      setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      setSelecting(false);
     }
   };
 
@@ -51,22 +50,12 @@ const PictureManager = ({
         <Button
           variant="outline"
           size="sm"
-          disabled={uploading}
-          onClick={() => fileInputRef.current?.click()}
+          disabled={selecting}
+          onClick={() => setPickerOpen(true)}
         >
           <PlusIcon className="size-3.5" />
-          {uploading
-            ? t("common.uploading")
-            : t("common.upload")}
+          {selecting ? t("common.uploading") : t("common.upload")}
         </Button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/jpeg,image/png,image/webp,image/gif"
-          multiple
-          className="hidden"
-          onChange={handleUpload}
-        />
       </div>
       {isLoading && (
         <div className="rounded-lg border border-dashed p-4">
@@ -109,6 +98,13 @@ const PictureManager = ({
         index={previewIndex ?? 0}
         open={previewIndex != null}
         onOpenChange={(open) => !open && setPreviewIndex(null)}
+      />
+      <FilePickerDialog
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={handleSelect}
+        multiple
+        accept="image/*"
       />
     </div>
   );

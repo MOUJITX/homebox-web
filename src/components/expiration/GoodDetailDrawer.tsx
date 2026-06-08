@@ -329,9 +329,9 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
             {/* Pictures */}
             <PictureManager
               pictures={detail.pictures ?? []}
-              onUpload={async (files) => {
+              onSelect={async (files) => {
                 await Promise.all(
-                  files.map((file) => uploadGoodPicture(detail.id, file)),
+                  files.map((f) => uploadGoodPicture(detail.id, undefined, f.id)),
                 );
                 void fetchDetail();
               }}
@@ -350,8 +350,8 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
                 url: a.url,
                 indexed: a.indexed,
               }))}
-              onUpload={async (file) => {
-                await uploadGoodAttachment(detail.id, file);
+              onSelect={async (file) => {
+                await uploadGoodAttachment(detail.id, undefined, file.id);
                 void fetchDetail();
               }}
               onDelete={async (id) => {

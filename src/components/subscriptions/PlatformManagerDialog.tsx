@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon, PencilIcon, TrashIcon, UploadIcon } from "lucide-react";
 import type { Platform } from "@/api/platforms";
@@ -7,7 +7,7 @@ import {
   updatePlatform,
   deletePlatform,
 } from "@/api/platforms";
-import { uploadFile } from "@/api/files";
+import type { FileRecord } from "@/api/files";
 import { usePlatforms } from "@/hooks/queries/usePlatforms";
 import { getErrorMessage } from "@/lib/error";
 import { useQueryClient } from "@tanstack/react-query";
@@ -22,6 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import FilePickerDialog from "@/components/shared/FilePickerDialog";
 
 interface PlatformManagerDialogProps {
   readonly open: boolean;
@@ -35,12 +36,11 @@ const PlatformManagerDialog = ({
   const { t } = useTranslation();
   const { data: platforms = [] } = usePlatforms();
   const queryClient = useQueryClient();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState("");
   const [website, setWebsite] = useState("");
   const [logoFileId, setLogoFileId] = useState<number | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
-  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [editing, setEditing] = useState<Platform | null>(null);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -49,20 +49,11 @@ const PlatformManagerDialog = ({
     queryClient.invalidateQueries({ queryKey: subscriptionKeys.platforms });
   };
 
-  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploadingLogo(true);
-    try {
-      const { data } = await uploadFile(file);
-      setLogoFileId(data.id);
-      setLogoPreview(data.url);
-    } catch (err) {
-      setError(getErrorMessage(err) ?? t("common.error"));
-    } finally {
-      setUploadingLogo(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    }
+  const handleLogoSelect = (files: FileRecord[]) => {
+    if (files.length === 0) return;
+    const file = files[0];
+    setLogoFileId(file.id);
+    setLogoPreview(file.url);
   };
 
   const handleCreate = async () => {
@@ -134,6 +125,7 @@ const PlatformManagerDialog = ({
   };
 
   return (
+    <>
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
@@ -160,22 +152,14 @@ const PlatformManagerDialog = ({
           <div className="grid gap-2">
             <Label>{t("platforms.logo")}</Label>
             <div className="flex items-center gap-2">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleLogoUpload}
-              />
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploadingLogo}
+                onClick={() => setPickerOpen(true)}
               >
                 <UploadIcon className="size-3.5" />
-                {uploadingLogo ? "..." : t("platforms.logo")}
+                {t("platforms.logo")}
               </Button>
               {logoPreview && (
                 <div className="size-8 shrink-0 overflow-hidden rounded border">
@@ -256,6 +240,14 @@ const PlatformManagerDialog = ({
         </div>
       </DialogContent>
     </Dialog>
+    <FilePickerDialog
+      open={pickerOpen}
+      onClose={() => setPickerOpen(false)}
+      onSelect={handleLogoSelect}
+      multiple={false}
+      accept="image/*"
+    />
+    </>
   );
 };
 

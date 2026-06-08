@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   PencilIcon,
@@ -48,12 +48,14 @@ import {
 import { formatFileSize } from "@/lib/utils";
 import { getErrorMessage } from "@/lib/error";
 import { toast } from "sonner";
+import type { FileRecord } from "@/api/files";
 import AttachmentManager, {
   type AttachmentItem,
 } from "@/components/shared/AttachmentManager";
 import InvoiceBindingManager, {
   type BoundInvoice,
 } from "@/components/shared/InvoiceBindingManager";
+import FilePickerDialog from "@/components/shared/FilePickerDialog";
 import CreateExaminationDialog from "./CreateExaminationDialog";
 import CreateLabTestDialog from "./CreateLabTestDialog";
 import CreatePrescriptionDialog from "./CreatePrescriptionDialog";
@@ -93,7 +95,7 @@ const VisitDetailDrawer = ({
   onRefresh,
 }: Props) => {
   const { t } = useTranslation();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [subPickerOpen, setSubPickerOpen] = useState(false);
   const [subUploadTarget, setSubUploadTarget] = useState<{
     sourceType: VisitSourceType;
     sourceId: number;
@@ -171,32 +173,34 @@ const VisitDetailDrawer = ({
 
   // ── Targeted updates to avoid full re-fetch ──
 
-  const handleSubAttachmentUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file || !subUploadTarget || !visitId) return;
+  const handleSubAttachmentUpload = async (files: FileRecord[]) => {
+    if (files.length === 0 || !subUploadTarget || !visitId) return;
     try {
-      const { data } = await uploadVisitAttachment(
-        visitId,
-        file,
-        subUploadTarget.sourceType,
-        subUploadTarget.sourceId,
+      const results = await Promise.all(
+        files.map((f) =>
+          uploadVisitAttachment(
+            visitId,
+            undefined,
+            subUploadTarget.sourceType,
+            subUploadTarget.sourceId,
+            f.id,
+          ),
+        ),
       );
-      setAttachments((prev) => [...prev, data]);
+      setAttachments((prev) => [...prev, ...results.map((r) => r.data)]);
     } catch (err) {
       toast.error(getErrorMessage(err) ?? t("medical.errors.uploadFailed"));
     }
-    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const handleVisitAttachmentUpload = async (file: File) => {
+  const handleVisitAttachmentUpload = async (file: FileRecord) => {
     if (!visitId) return;
     const { data } = await uploadVisitAttachment(
       visitId,
-      file,
+      undefined,
       "RECORD",
       visitId,
+      file.id,
     );
     setAttachments((prev) => [...prev, data]);
   };
@@ -299,7 +303,7 @@ const VisitDetailDrawer = ({
               size="icon-xs"
               onClick={() => {
                 setSubUploadTarget({ sourceType: type, sourceId: data.id });
-                fileInputRef.current?.click();
+                setSubPickerOpen(true);
               }}
               title={t("common.upload")}
             >
@@ -416,14 +420,9 @@ const VisitDetailDrawer = ({
   };
 
   return (
+    <>
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
       <SheetContent className="w-full sm:max-w-lg flex flex-col">
-        <input
-          ref={fileInputRef}
-          type="file"
-          className="hidden"
-          onChange={handleSubAttachmentUpload}
-        />
 
         <SheetHeader className="shrink-0">
           <SheetTitle className="truncate">
@@ -539,7 +538,7 @@ const VisitDetailDrawer = ({
                         url: a.url,
                       }) satisfies AttachmentItem,
                   )}
-                onUpload={handleVisitAttachmentUpload}
+                onSelect={handleVisitAttachmentUpload}
                 onDelete={handleVisitAttachmentDelete}
               />
             </div>
@@ -860,6 +859,13 @@ const VisitDetailDrawer = ({
         />
       </SheetContent>
     </Sheet>
+    <FilePickerDialog
+      open={subPickerOpen}
+      onClose={() => setSubPickerOpen(false)}
+      onSelect={handleSubAttachmentUpload}
+      multiple={false}
+    />
+    </>
   );
 };
 

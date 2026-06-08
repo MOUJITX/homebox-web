@@ -408,6 +408,23 @@
       "allStatus": "全部状态"
     }
   },
+  "filePicker": {
+    "title": "选择文件",
+    "titleMulti": "选择文件",
+    "gridView": "网格视图",
+    "listView": "列表视图",
+    "uploadNew": "上传新文件",
+    "searchPlaceholder": "搜索文件…",
+    "noFiles": "未找到文件。",
+    "selectedCount": "已选择 {{count}} 个",
+    "confirm": "确认",
+    "allTypes": "所有类型",
+    "typeImage": "图片",
+    "typeVideo": "视频",
+    "typeAudio": "音频",
+    "typePdf": "PDF",
+    "typeText": "文本"
+  },
   "errorToast": {
     "requestFailed": "请求失败",
     "networkError": "网络错误，请检查您的连接"

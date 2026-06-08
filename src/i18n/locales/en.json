@@ -557,6 +557,23 @@
       "allStatus": "All Status"
     }
   },
+  "filePicker": {
+    "title": "Select File",
+    "titleMulti": "Select Files",
+    "gridView": "Grid View",
+    "listView": "List View",
+    "uploadNew": "Upload New",
+    "searchPlaceholder": "Search files…",
+    "noFiles": "No files found.",
+    "selectedCount": "{{count}} selected",
+    "confirm": "Confirm",
+    "allTypes": "All Types",
+    "typeImage": "Image",
+    "typeVideo": "Video",
+    "typeAudio": "Audio",
+    "typePdf": "PDF",
+    "typeText": "Text"
+  },
   "errorToast": {
     "requestFailed": "Request failed",
     "networkError": "Network error, please check your connection"
