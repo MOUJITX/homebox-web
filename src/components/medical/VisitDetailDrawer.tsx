@@ -285,7 +285,7 @@ const VisitDetailDrawer = ({
           <div className="min-w-0 flex-1">
             <div className="font-medium truncate">{name}</div>
             {(date || desc) && (
-              <div className="text-xs text-muted-foreground">
+              <div className="text-xs text-muted-foreground whitespace-pre-wrap">
                 {date}
                 {date && desc ? " · " : ""}
                 {desc}
