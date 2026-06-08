@@ -87,7 +87,7 @@ const AssetPictureManager = ({ assetId }: AssetPictureManagerProps) => {
               <AuthImg
                 url={pic.url}
                 alt={pic.filename}
-                className="size-20 rounded-md object-cover ring-1 ring-foreground/10 cursor-pointer"
+                className="size-20 rounded-md object-cover border border-foreground/10 cursor-pointer"
                 onClick={() => setPreviewIndex(idx)}
               />
               <Button
