@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   PlusIcon,
   PencilIcon,
@@ -19,6 +20,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useAssetCategories } from "@/hooks/queries/useAssetCategories";
 import { useAssetPlaces } from "@/hooks/queries/useAssetPlaces";
 import { useAssets } from "@/hooks/queries/useAssets";
+import { assetKeys } from "@/hooks/queries/assetKeys";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -79,6 +81,7 @@ const warrantyBadgeVariant = (
 
 const AssetsPage = () => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
   const { data: categories = [] } = useAssetCategories();
   const { data: places = [] } = useAssetPlaces();
@@ -512,7 +515,9 @@ const AssetsPage = () => {
         open={!!editingAsset}
         asset={editingAsset}
         onClose={() => setEditingAsset(null)}
-        onSuccess={() => {}}
+        onSuccess={() =>
+          queryClient.invalidateQueries({ queryKey: assetKeys.lists() })
+        }
       />
       <DeleteAssetDialog
         open={!!deletingAsset}
