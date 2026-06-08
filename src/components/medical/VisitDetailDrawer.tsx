@@ -378,8 +378,14 @@ const VisitDetailDrawer = ({
               <div key={inv.id} className="flex items-center gap-2 text-xs">
                 <ReceiptTextIcon className="size-3.5 shrink-0 text-muted-foreground" />
                 <span className="truncate flex-1">
-                  {t("medical.invoiceLabel")}:{" "}
-                  {inv.invoiceNumber ?? `#${inv.invoiceId}`}
+                  {inv.sellerName && (
+                    <span className="text-muted-foreground">
+                      {inv.sellerName} ·{" "}
+                    </span>
+                  )}
+                  <span className="font-mono">
+                    {inv.invoiceNumber ?? `#${inv.invoiceId}`}
+                  </span>
                 </span>
                 <span className="text-muted-foreground shrink-0">
                   {inv.totalAmount}
@@ -552,6 +558,7 @@ const VisitDetailDrawer = ({
                         invoiceNumber: inv.invoiceNumber,
                         invoiceDate: inv.invoiceDate,
                         totalAmount: inv.totalAmount,
+                        sellerName: inv.sellerName,
                       }) satisfies BoundInvoice,
                   )}
                 title={t("common.invoices")}

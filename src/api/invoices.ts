@@ -43,6 +43,8 @@ export interface InvoiceDetail extends Invoice {
   remark: string | null;
   fileId: number | null;
   fileUrl: string | null;
+  fileOriginalFilename: string | null;
+  fileSize: number | null;
   previewImage: string | null;
   attachments: InvoiceAttachment[];
 }

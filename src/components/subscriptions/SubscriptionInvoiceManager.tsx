@@ -30,6 +30,7 @@ const SubscriptionInvoiceManager = ({
             invoiceNumber: inv.invoiceNumber,
             invoiceDate: inv.invoiceDate,
             totalAmount: inv.totalAmount,
+            sellerName: inv.sellerName,
           }) satisfies BoundInvoice,
       )}
       title={t("subscriptions.invoices.bind")}

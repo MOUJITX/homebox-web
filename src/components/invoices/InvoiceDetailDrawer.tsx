@@ -365,7 +365,10 @@ const InvoiceDetailDrawer = ({
                       {
                         id: -1,
                         filename:
-                          invoice.invoiceNumber || t("invoices.detail.file"),
+                          invoice.fileOriginalFilename ||
+                          invoice.invoiceNumber ||
+                          t("invoices.detail.file"),
+                        fileSize: invoice.fileSize ?? undefined,
                         url: invoice.fileUrl,
                         deletable: false,
                       },

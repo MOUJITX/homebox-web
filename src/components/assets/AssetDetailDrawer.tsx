@@ -292,6 +292,7 @@ const AssetDetailDrawer = ({
                     invoiceNumber: inv.invoiceNumber,
                     invoiceDate: inv.invoiceDate,
                     totalAmount: inv.totalAmount,
+                    sellerName: inv.sellerName,
                   }) satisfies BoundInvoice,
               )}
               title={t("common.invoices")}

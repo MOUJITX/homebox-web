@@ -14,6 +14,7 @@ export interface BoundInvoice {
   invoiceNumber: string | null;
   invoiceDate: string | null;
   totalAmount: number | null;
+  sellerName: string | null;
 }
 
 interface InvoiceBindingManagerProps {
@@ -105,11 +106,18 @@ const InvoiceBindingManager = ({
                     {formatDate(inv.invoiceDate)}
                   </span>
                 )}
-                <span className="font-mono text-xs">
-                  {inv.invoiceNumber ?? `#${inv.invoiceId}`}
+                <span className="text-xs truncate">
+                  {inv.sellerName && (
+                    <span className="text-muted-foreground">
+                      {inv.sellerName} ·{" "}
+                    </span>
+                  )}
+                  <span className="font-mono">
+                    {inv.invoiceNumber ?? `#${inv.invoiceId}`}
+                  </span>
                 </span>
                 {inv.totalAmount != null && (
-                  <span className="text-xs font-medium">
+                  <span className="text-xs font-medium shrink-0">
                     {formatCurrency(inv.totalAmount)}
                   </span>
                 )}

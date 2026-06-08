@@ -312,6 +312,7 @@ export interface VisitInvoice {
   invoiceDate: string | null;
   invoiceType: string;
   totalAmount: number;
+  sellerName: string | null;
   sourceType: VisitSourceType;
   sourceId: number;
   createdAt: string;
