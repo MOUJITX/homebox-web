@@ -59,6 +59,7 @@ import CreateLabTestDialog from "./CreateLabTestDialog";
 import CreatePrescriptionDialog from "./CreatePrescriptionDialog";
 import CreatePrescriptionItemDialog from "./CreatePrescriptionItemDialog";
 import BindInvoiceDialog from "@/components/shared/BindInvoiceDialog";
+import CreateInvoiceDialog from "@/components/invoices/CreateInvoiceDialog";
 import InvoiceDetailDrawer from "@/components/invoices/InvoiceDetailDrawer";
 
 interface Props {
@@ -116,6 +117,11 @@ const VisitDetailDrawer = ({
   );
   const [itemAddPrescId, setItemAddPrescId] = useState<number | null>(null);
   const [invoiceBind, setInvoiceBind] = useState<{
+    sourceType: VisitSourceType;
+    sourceId: number;
+  } | null>(null);
+  const [createInvoiceOpen, setCreateInvoiceOpen] = useState(false);
+  const [createInvoiceTarget, setCreateInvoiceTarget] = useState<{
     sourceType: VisitSourceType;
     sourceId: number;
   } | null>(null);
@@ -811,9 +817,32 @@ const VisitDetailDrawer = ({
           open={invoiceBind !== null}
           onClose={() => setInvoiceBind(null)}
           onBind={handleSubRecordInvoiceBind}
+          onCreateNew={() => {
+            setCreateInvoiceTarget(invoiceBind);
+            setCreateInvoiceOpen(true);
+          }}
           title={t("common.bindInvoice")}
           searchPlaceholder={t("common.searchInvoices")}
           confirmLabel={t("common.bind")}
+          uploadNewLabel={t("common.uploadNew")}
+        />
+        <CreateInvoiceDialog
+          open={createInvoiceOpen}
+          onClose={() => {
+            setCreateInvoiceOpen(false);
+            setCreateInvoiceTarget(null);
+          }}
+          onCreated={async (invoice) => {
+            if (!createInvoiceTarget || !visitId) return;
+            const { data } = await bindVisitInvoice(
+              visitId,
+              invoice.id,
+              createInvoiceTarget.sourceType,
+              createInvoiceTarget.sourceId,
+            );
+            setVisitInvoices((prev) => [...prev, data]);
+            setCreateInvoiceTarget(null);
+          }}
         />
         <InvoiceDetailDrawer
           invoiceId={viewingInvoiceId}

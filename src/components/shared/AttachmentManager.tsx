@@ -13,9 +13,10 @@ import { formatFileSize } from "@/lib/utils";
 export interface AttachmentItem {
   id: number;
   filename: string;
-  fileSize: number;
+  fileSize?: number;
   url?: string;
   indexed?: boolean;
+  deletable?: boolean;
 }
 
 interface AttachmentManagerProps {
@@ -84,15 +85,17 @@ const AttachmentManager = ({
               <FileIcon className="size-4 shrink-0 text-muted-foreground" />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm">{a.filename}</p>
-                <p className="text-xs text-muted-foreground">
-                  {formatFileSize(a.fileSize)}
-                  {a.indexed === false && (
-                    <span className="ml-2 inline-flex items-center gap-1 text-amber-500">
-                      <LoaderIcon className="size-3 animate-spin" />
-                      {t("common.indexing")}
-                    </span>
-                  )}
-                </p>
+                {(a.fileSize != null || a.indexed === false) && (
+                  <p className="text-xs text-muted-foreground">
+                    {a.fileSize != null && formatFileSize(a.fileSize)}
+                    {a.indexed === false && (
+                      <span className="ml-2 inline-flex items-center gap-1 text-amber-500">
+                        <LoaderIcon className="size-3 animate-spin" />
+                        {t("common.indexing")}
+                      </span>
+                    )}
+                  </p>
+                )}
               </div>
               {a.url && (
                 <a href={a.url} download={a.filename}>
@@ -106,14 +109,16 @@ const AttachmentManager = ({
                   </Button>
                 </a>
               )}
-              <Button
-                variant="ghost"
-                size="icon-xs"
-                onClick={() => void onDelete(a.id)}
-                title="Delete"
-              >
-                <TrashIcon className="size-3.5" />
-              </Button>
+              {a.deletable !== false && (
+                <Button
+                  variant="ghost"
+                  size="icon-xs"
+                  onClick={() => void onDelete(a.id)}
+                  title="Delete"
+                >
+                  <TrashIcon className="size-3.5" />
+                </Button>
+              )}
             </div>
           ))}
         </div>

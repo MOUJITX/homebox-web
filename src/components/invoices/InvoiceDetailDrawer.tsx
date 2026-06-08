@@ -6,8 +6,6 @@ import {
   PackageIcon,
   CreditCardIcon,
   FileTextIcon,
-  FileIcon,
-  DownloadIcon,
 } from "lucide-react";
 import { useNavigate } from "react-router";
 import type { InvoiceDetail } from "@/api/invoices";
@@ -360,47 +358,35 @@ const InvoiceDetailDrawer = ({
               </div>
             )}
 
-            <div className="grid gap-3">
-              <h4 className="text-sm font-medium">
-                {t("common.attachments")}
-              </h4>
-              {invoice.fileUrl && (
-                <div className="flex items-center gap-3 overflow-hidden rounded-lg border p-2">
-                  <FileIcon className="size-4 shrink-0 text-muted-foreground" />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm">
-                      {invoice.invoiceNumber || t("invoices.detail.file")}
-                    </p>
-                  </div>
-                  <a
-                    href={invoice.fileUrl}
-                    download={
-                      invoice.invoiceNumber || t("invoices.detail.file")
-                    }
-                  >
-                    <Button variant="ghost" size="icon-xs">
-                      <DownloadIcon className="size-3.5" />
-                    </Button>
-                  </a>
-                </div>
-              )}
-              <AttachmentManager
-                attachments={invoice.attachments.map((a) => ({
+            <AttachmentManager
+              attachments={[
+                ...(invoice.fileUrl
+                  ? [
+                      {
+                        id: -1,
+                        filename:
+                          invoice.invoiceNumber || t("invoices.detail.file"),
+                        url: invoice.fileUrl,
+                        deletable: false,
+                      },
+                    ]
+                  : []),
+                ...invoice.attachments.map((a) => ({
                   id: a.id,
                   filename: a.filename,
                   fileSize: a.fileSize,
                   url: a.url,
-                }))}
-                onUpload={async (file) => {
-                  await uploadInvoiceAttachment(invoice.id, file);
-                  handleAttachmentsChanged();
-                }}
-                onDelete={async (id) => {
-                  await deleteInvoiceAttachment(invoice.id, id);
-                  handleAttachmentsChanged();
-                }}
-              />
-            </div>
+                })),
+              ]}
+              onUpload={async (file) => {
+                await uploadInvoiceAttachment(invoice.id, file);
+                handleAttachmentsChanged();
+              }}
+              onDelete={async (id) => {
+                await deleteInvoiceAttachment(invoice.id, id);
+                handleAttachmentsChanged();
+              }}
+            />
 
             <div className="grid grid-cols-2 gap-4 text-xs text-muted-foreground">
               <Field
