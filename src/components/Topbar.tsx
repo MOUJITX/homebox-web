@@ -25,6 +25,13 @@ import { getSearchStatus } from "@/api/search";
 
 const routeTitleMap: Record<string, string> = {
   "/dashboard": "nav.dashboard",
+  "/expiration": "nav.expiration",
+  "/medications": "nav.medications",
+  "/assets": "nav.assets",
+  "/invoices": "nav.invoices",
+  "/medical-records": "nav.medicalRecords",
+  "/subscriptions": "nav.subscriptions",
+  "/files": "nav.files",
   "/notifications": "nav.notifications",
   "/members": "nav.members",
   "/roles": "nav.roles",
