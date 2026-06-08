@@ -153,8 +153,9 @@ yarn preview
 
 Reusable UI components in `src/components/shared/` provide consistent behavior across modules:
 
-- **PictureManager** — image upload, thumbnail grid, preview lightbox, and delete (used by assets, expiration)
-- **AttachmentManager** — file upload, download, delete with indexing status indicator (used by assets, expiration, invoices, medical records)
+- **FilePickerDialog** — reusable file selection dialog that lets users browse, search, and select previously uploaded files from the global file store, or upload new ones. Supports grid/list view toggle, content type filtering, single/multi-select, and pagination
+- **PictureManager** — image management with FilePickerDialog integration, thumbnail grid, preview lightbox, and delete (used by assets, expiration)
+- **AttachmentManager** — file management with FilePickerDialog integration, download, delete with indexing status indicator (used by assets, expiration, invoices, medical records)
 - **InvoiceBindingManager** — bind/unbind invoices with view action (used by assets, medical records)
 
 ### Attachment Management
