@@ -153,7 +153,6 @@ const InvoiceBindingManager = ({
       <CreateInvoiceDialog
         open={createOpen}
         onClose={() => setCreateOpen(false)}
-        onSuccess={() => {}}
         onCreated={onCreateInvoice}
       />
 

@@ -31,7 +31,7 @@ import { INVOICE_TYPES, INVOICE_STATUSES } from "./constants";
 interface CreateInvoiceDialogProps {
   readonly open: boolean;
   readonly onClose: () => void;
-  readonly onSuccess: () => void;
+  readonly onSuccess?: () => void;
   readonly onCreated?: (invoice: InvoiceDetail) => void | Promise<void>;
 }
 
@@ -148,7 +148,7 @@ const CreateInvoiceDialog = ({
       if (onCreated) {
         await onCreated(created);
       }
-      onSuccess();
+      onSuccess?.();
     } catch (err) {
       setError(getErrorMessage(err) ?? t("invoices.errors.createFailed"));
     } finally {
