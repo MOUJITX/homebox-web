@@ -990,7 +990,9 @@
       "updateFailed": "更新就诊记录失败",
       "deleteFailed": "删除就诊记录失败",
       "loadFailed": "加载就诊记录失败",
-      "uploadFailed": "上传附件失败"
+      "uploadFailed": "上传附件失败",
+      "loadInstitutionsFailed": "加载机构列表失败",
+      "loadPatientsFailed": "加载患者姓名失败"
     }
   },
   "settings": {

@@ -15,6 +15,8 @@ import {
   type Page,
 } from "@/api/medical";
 import { getInstitutions, type MedicalInstitution } from "@/api/institutions";
+import { getErrorMessage } from "@/lib/error";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -106,11 +108,15 @@ const MedicalRecordsPage = () => {
       try {
         const { data } = await getInstitutions();
         setInstitutions(data);
-      } catch {}
+      } catch (err) {
+        toast.error(getErrorMessage(err) ?? t("medical.errors.loadInstitutionsFailed"));
+      }
       try {
         const { data } = await getPatientNames();
         setPatientNames(data);
-      } catch {}
+      } catch (err) {
+        toast.error(getErrorMessage(err) ?? t("medical.errors.loadPatientsFailed"));
+      }
     };
     void loadFilters();
   }, []);
