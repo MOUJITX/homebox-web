@@ -155,7 +155,7 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && handleClose()}>
-      <SheetContent className="w-full sm:max-w-lg flex flex-col">
+      <SheetContent className="w-full sm:max-w-2xl flex flex-col">
         <SheetHeader className="shrink-0">
           <SheetTitle className="truncate">
             {detail?.productName ?? t("goods.detail.title")}
