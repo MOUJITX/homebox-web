@@ -51,7 +51,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       (res) => {
         if (!cancelled) setDisplayName(res.data.displayName);
       },
-      () => {},
+      (err) => {
+        console.warn("Failed to fetch user profile:", err);
+      },
     );
     return () => {
       cancelled = true;
