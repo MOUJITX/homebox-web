@@ -94,7 +94,10 @@ const InvoiceDetailDrawer = ({
         .then(({ data }) => {
           if (!cancelled) setInvoice(data);
         })
-        .catch(() => {});
+        .catch((err) => {
+          if (!cancelled)
+            setError(getErrorMessage(err) ?? t("invoices.errors.loadFailed"));
+        });
       return () => {
         cancelled = true;
       };
