@@ -335,6 +335,16 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
                 );
                 void fetchDetail();
               }}
+              onDeselect={async (files) => {
+                const pictures = detail.pictures ?? [];
+                await Promise.all(
+                  files
+                    .map((f) => pictures.find((p) => p.fileId === f.id)?.id)
+                    .filter((id): id is number => id != null)
+                    .map((id) => deleteGoodPicture(detail.id, id)),
+                );
+                void fetchDetail();
+              }}
               onDelete={async (id) => {
                 await deleteGoodPicture(detail.id, id);
                 void fetchDetail();

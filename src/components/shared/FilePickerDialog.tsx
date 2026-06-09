@@ -59,6 +59,7 @@ interface FilePickerDialogProps {
   readonly open: boolean;
   readonly onClose: () => void;
   readonly onSelect: (files: FileRecord[]) => void;
+  readonly onDeselect?: (files: FileRecord[]) => void;
   readonly multiple?: boolean;
   readonly accept?: string;
   readonly initialSelection?: FileRecord[];
@@ -68,12 +69,14 @@ const FilePickerDialog = ({
   open,
   onClose,
   onSelect,
+  onDeselect,
   multiple = false,
   accept,
   initialSelection,
 }: FilePickerDialogProps) => {
   const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const initialSelectionRef = useRef<FileRecord[]>([]);
 
   const defaultView: ViewMode =
     accept && accept.startsWith("image/") ? "grid" : "list";
@@ -115,13 +118,15 @@ const FilePickerDialog = ({
 
   useEffect(() => {
     if (open) {
+      const initial = initialSelection ?? [];
       setViewMode(defaultView);
       setSearch("");
       setFilterContentType(
         lockedContentType ?? (accept && !accept.includes("*") ? accept : null),
       );
       setPage(0);
-      setSelected(initialSelection ?? []);
+      setSelected(initial);
+      initialSelectionRef.current = initial;
     }
   }, [open, defaultView, accept, lockedContentType]);
 
@@ -159,7 +164,13 @@ const FilePickerDialog = ({
   };
 
   const handleConfirm = () => {
-    onSelect(selected);
+    const initialIds = new Set(initialSelectionRef.current.map((f) => f.id));
+    const added = selected.filter((f) => !initialIds.has(f.id));
+    const removed = initialSelectionRef.current.filter(
+      (f) => !selected.some((s) => s.id === f.id),
+    );
+    if (added.length > 0) onSelect(added);
+    if (removed.length > 0) onDeselect?.(removed);
     onClose();
   };
 

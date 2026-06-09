@@ -276,6 +276,16 @@ const AssetDetailDrawer = ({
                 );
                 void invalidate.invalidateDetail(assetId!);
               }}
+              onDeselect={async (files) => {
+                const pictures = detail.pictures ?? [];
+                await Promise.all(
+                  files
+                    .map((f) => pictures.find((p) => p.fileId === f.id)?.id)
+                    .filter((id): id is number => id != null)
+                    .map((id) => deleteAssetPicture(detail.id, id)),
+                );
+                void invalidate.invalidateDetail(assetId!);
+              }}
               onDelete={async (id) => {
                 await deleteAssetPicture(detail.id, id);
                 void invalidate.invalidateDetail(assetId!);

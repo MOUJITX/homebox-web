@@ -17,6 +17,7 @@ export interface PictureItem {
 interface PictureManagerProps {
   readonly pictures: PictureItem[];
   readonly onSelect: (files: FileRecord[]) => Promise<void>;
+  readonly onDeselect?: (files: FileRecord[]) => Promise<void>;
   readonly onDelete: (id: number) => Promise<void>;
   readonly isLoading?: boolean;
 }
@@ -24,6 +25,7 @@ interface PictureManagerProps {
 const PictureManager = ({
   pictures,
   onSelect,
+  onDeselect,
   onDelete,
   isLoading,
 }: PictureManagerProps) => {
@@ -36,6 +38,16 @@ const PictureManager = ({
     setSelecting(true);
     try {
       await onSelect(files);
+    } finally {
+      setSelecting(false);
+    }
+  };
+
+  const handleDeselect = async (files: FileRecord[]) => {
+    if (!onDeselect) return;
+    setSelecting(true);
+    try {
+      await onDeselect(files);
     } finally {
       setSelecting(false);
     }
@@ -104,6 +116,7 @@ const PictureManager = ({
         open={pickerOpen}
         onClose={() => setPickerOpen(false)}
         onSelect={handleSelect}
+        onDeselect={handleDeselect}
         multiple
         accept="image/*"
         initialSelection={pictures.map((p) => ({
