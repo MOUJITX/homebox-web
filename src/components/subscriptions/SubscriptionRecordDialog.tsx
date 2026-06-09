@@ -1,7 +1,12 @@
 import { useEffect, useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon, PencilIcon } from "lucide-react";
-import type { SubscriptionRecord, SubscriptionType } from "@/api/subscriptions";
+import type {
+  SubscriptionRecord,
+  SubscriptionStatus,
+  SubscriptionType,
+} from "@/api/subscriptions";
+import { getSubscriptionById, updateSubscription } from "@/api/subscriptions";
 import { addRecord, getRecords, updateRecord } from "@/api/subscriptionRecords";
 import { usePaymentMethods } from "@/hooks/queries/usePaymentMethods";
 import { getErrorMessage } from "@/lib/error";
@@ -21,11 +26,13 @@ import { SearchableSelect } from "@/components/ui/searchable-select";
 import SubscriptionAttachmentManager from "./SubscriptionAttachmentManager";
 import SubscriptionInvoiceManager from "./SubscriptionInvoiceManager";
 import PaymentMethodManagerDialog from "./PaymentMethodManagerDialog";
+import SubscriptionStatusDialog from "./SubscriptionStatusDialog";
 
 interface SubscriptionRecordDialogProps {
   readonly open: boolean;
   readonly subId: number;
   readonly subscriptionType: SubscriptionType;
+  readonly subscriptionStatus?: SubscriptionStatus;
   readonly record?: SubscriptionRecord | null;
   readonly onClose: () => void;
   readonly onInvoiceView: (invoiceId: number) => void;
@@ -35,6 +42,7 @@ const SubscriptionRecordDialog = ({
   open,
   subId,
   subscriptionType,
+  subscriptionStatus,
   record,
   onClose,
   onInvoiceView,
@@ -56,6 +64,7 @@ const SubscriptionRecordDialog = ({
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [pmManagerOpen, setPmManagerOpen] = useState(false);
+  const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const [attachments, setAttachments] = useState(record?.attachments ?? []);
   const [invoices, setInvoices] = useState(record?.invoices ?? []);
 
@@ -94,6 +103,14 @@ const SubscriptionRecordDialog = ({
     if (open) initForm();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, record]);
+
+  const shouldPromptActivation = (): boolean => {
+    if (isEdit || !subscriptionStatus) return false;
+    if (subscriptionStatus !== "INACTIVE" && subscriptionStatus !== "CANCELLED")
+      return false;
+    const today = new Date().toISOString().slice(0, 10);
+    return !endDate || endDate > today;
+  };
 
   const handleSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
@@ -135,7 +152,12 @@ const SubscriptionRecordDialog = ({
       queryClient.invalidateQueries({
         queryKey: subscriptionKeys.detail(subId),
       });
-      onClose();
+
+      if (shouldPromptActivation()) {
+        setStatusDialogOpen(true);
+      } else {
+        onClose();
+      }
     } catch (err) {
       setError(getErrorMessage(err) ?? t("common.error"));
     } finally {
@@ -174,6 +196,32 @@ const SubscriptionRecordDialog = ({
     const d = new Date(startDate);
     d.setMonth(d.getMonth() + months);
     setEndDate(d.toISOString().slice(0, 10));
+  };
+
+  const handleActivate = async () => {
+    try {
+      const { data: currentDetail } = await getSubscriptionById(subId);
+      await updateSubscription(subId, {
+        name: currentDetail.name,
+        description: currentDetail.description ?? undefined,
+        subscriptionType: currentDetail.subscriptionType,
+        billingMode: currentDetail.billingMode ?? undefined,
+        platformId: currentDetail.platformId,
+        status: "ACTIVE",
+        renewNoticeDays: currentDetail.renewNoticeDays,
+        note: currentDetail.note ?? undefined,
+      });
+      queryClient.invalidateQueries({ queryKey: subscriptionKeys.all });
+    } catch {
+      /* ignore */
+    }
+    setStatusDialogOpen(false);
+    onClose();
+  };
+
+  const handleKeepCurrent = () => {
+    setStatusDialogOpen(false);
+    onClose();
   };
 
   return (
@@ -385,6 +433,16 @@ const SubscriptionRecordDialog = ({
         open={pmManagerOpen}
         onClose={() => setPmManagerOpen(false)}
       />
+
+      {subscriptionStatus && (
+        <SubscriptionStatusDialog
+          open={statusDialogOpen}
+          currentStatus={subscriptionStatus}
+          onActivate={handleActivate}
+          onKeepCurrent={handleKeepCurrent}
+          onClose={() => setStatusDialogOpen(false)}
+        />
+      )}
     </Dialog>
   );
 };

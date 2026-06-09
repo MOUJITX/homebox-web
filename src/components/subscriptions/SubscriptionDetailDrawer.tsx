@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import {
   PencilIcon,
@@ -7,8 +7,11 @@ import {
   ReceiptTextIcon,
   HistoryIcon,
 } from "lucide-react";
+import { toast } from "sonner";
 import { useSubscriptionDetail } from "@/hooks/queries/useSubscriptionDetail";
 import { useInvalidateSubscriptions } from "@/hooks/queries/useInvalidateSubscriptions";
+import type { SubscriptionDetail } from "@/api/subscriptions";
+import { updateSubscription } from "@/api/subscriptions";
 import { cn, formatDate, formatCurrency } from "@/lib/utils";
 import AuthImg from "@/components/AuthImg";
 import { Badge } from "@/components/ui/badge";
@@ -75,10 +78,42 @@ const SubscriptionDetailDrawer = ({
   const [editingRecord, setEditingRecord] = useState<any>(null);
   const [invoiceDrawerId, setInvoiceDrawerId] = useState<number | null>(null);
 
+  const checkAndUpdateStatus = useCallback(
+    async (currentDetail: SubscriptionDetail) => {
+      const today = new Date().toISOString().slice(0, 10);
+      const allExpired =
+        currentDetail.records.length > 0 &&
+        currentDetail.records.every(
+          (r) => r.expired || (r.endDate && r.endDate <= today),
+        );
+      if (allExpired && currentDetail.status === "ACTIVE") {
+        try {
+          await updateSubscription(currentDetail.id, {
+            name: currentDetail.name,
+            description: currentDetail.description ?? undefined,
+            subscriptionType: currentDetail.subscriptionType,
+            billingMode: currentDetail.billingMode ?? undefined,
+            platformId: currentDetail.platformId,
+            status: "INACTIVE",
+            renewNoticeDays: currentDetail.renewNoticeDays,
+            note: currentDetail.note ?? undefined,
+          });
+          toast.success(t("subscriptions.statusChange.autoInactive"));
+        } catch {
+          /* ignore — status stays ACTIVE */
+        }
+      }
+    },
+    [t],
+  );
+
   const handleRecordChanged = () => {
     if (subscriptionId) {
       invalidate.invalidateRecords(subscriptionId);
       invalidate.invalidateDetail(subscriptionId);
+      if (detail) {
+        checkAndUpdateStatus(detail);
+      }
     }
   };
 
@@ -369,6 +404,7 @@ const SubscriptionDetailDrawer = ({
             open={recordDialogOpen}
             subId={detail.id}
             subscriptionType={detail.subscriptionType}
+            subscriptionStatus={detail.status}
             record={editingRecord}
             onClose={() => {
               setRecordDialogOpen(false);

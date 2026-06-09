@@ -875,6 +875,13 @@
       "inactive": "Inactive",
       "cancelled": "Cancelled"
     },
+    "statusChange": {
+      "activateTitle": "Activate Subscription",
+      "activateDescription": "You are adding a new record to a {{status}} subscription. Would you like to change its status to Active?",
+      "activate": "Activate",
+      "keepCurrent": "Keep Current",
+      "autoInactive": "All records have expired. Subscription has been automatically paused."
+    },
     "types": {
       "payAsYouGo": "Pay-as-you-go",
       "periodic": "Periodic"

@@ -457,6 +457,13 @@
       "inactive": "暂停中",
       "cancelled": "已取消"
     },
+    "statusChange": {
+      "activateTitle": "激活订阅",
+      "activateDescription": "您正在为一个{{status}}的订阅添加新记录，是否需要将订阅状态调整为使用中？",
+      "activate": "激活",
+      "keepCurrent": "保持现状",
+      "autoInactive": "所有记录已到期，订阅已自动暂停"
+    },
     "types": {
       "payAsYouGo": "按量付费",
       "periodic": "包年包月"
