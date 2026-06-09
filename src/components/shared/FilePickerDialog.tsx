@@ -251,7 +251,7 @@ const FilePickerDialog = ({
         </div>
 
         {/* File list */}
-        <div className="min-h-0 flex-1 overflow-y-auto">
+        <div className="min-h-0 flex-1 overflow-y-auto p-1">
           {loading && (
             <p className="py-8 text-center text-sm text-muted-foreground">
               {t("common.loading")}
