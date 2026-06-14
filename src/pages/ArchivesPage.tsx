@@ -8,6 +8,8 @@ import {
   TrashIcon,
   SearchIcon,
   TagIcon,
+  EyeIcon,
+  EyeOffIcon,
 } from "lucide-react";
 import type {
   Document,
@@ -129,6 +131,26 @@ const ArchivesPage = () => {
   const [drawerDocId, setDrawerDocId] = useState<number | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [categoryManagerOpen, setCategoryManagerOpen] = useState(false);
+  const [showNumbers, setShowNumbers] = useState<Set<number>>(new Set());
+
+  const maskNumber = (num: string) => {
+    if (num.length >= 6) return `${num.slice(0, 3)}***${num.slice(-3)}`;
+    if (num.length >= 2) return `${num.slice(0, 1)}***${num.slice(-1)}`;
+    return "***";
+  };
+
+  const toggleShowNumber = (docId: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowNumbers((prev) => {
+      const next = new Set(prev);
+      if (next.has(docId)) {
+        next.delete(docId);
+      } else {
+        next.add(docId);
+      }
+      return next;
+    });
+  };
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -351,7 +373,26 @@ const ArchivesPage = () => {
                   <TableCell>{doc.categoryName}</TableCell>
                   <TableCell>{doc.holder ?? "—"}</TableCell>
                   <TableCell className="font-mono text-xs">
-                    {doc.documentNumber ?? "—"}
+                    {doc.documentNumber ? (
+                      <span className="inline-flex items-center gap-1">
+                        {showNumbers.has(doc.id)
+                          ? doc.documentNumber
+                          : maskNumber(doc.documentNumber)}
+                        <Button
+                          variant="ghost"
+                          size="icon-xs"
+                          onClick={(e) => toggleShowNumber(doc.id, e)}
+                        >
+                          {showNumbers.has(doc.id) ? (
+                            <EyeOffIcon className="size-3" />
+                          ) : (
+                            <EyeIcon className="size-3" />
+                          )}
+                        </Button>
+                      </span>
+                    ) : (
+                      "—"
+                    )}
                   </TableCell>
                   <TableCell className="text-xs">
                     {doc.expiryDate ? formatDate(doc.expiryDate) : "—"}

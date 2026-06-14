@@ -1100,7 +1100,8 @@
     "errors": {
       "createFailed": "Failed to create document",
       "updateFailed": "Failed to update document",
-      "deleteFailed": "Failed to delete document"
+      "deleteFailed": "Failed to delete document",
+      "loadFailed": "Failed to load document details"
     }
   }
 }

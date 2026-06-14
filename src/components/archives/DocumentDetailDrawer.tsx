@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/table";
 import AttachmentManager from "@/components/shared/AttachmentManager";
 import InvoiceBindingManager from "@/components/shared/InvoiceBindingManager";
+import type { FileRecord } from "@/api/files";
 import {
   uploadDocumentAttachment,
   deleteDocumentAttachment,
@@ -42,7 +43,7 @@ import DocumentDialog from "./DocumentDialog";
 import DeleteDocumentDialog from "./DeleteDocumentDialog";
 
 const statusVariant = (
-  status: DocumentStatus,
+  status: DocumentStatus | undefined | null,
 ): "success" | "destructive" | "secondary" | "warning" => {
   switch (status) {
     case "ACTIVE":
@@ -53,11 +54,13 @@ const statusVariant = (
       return "secondary";
     case "LOST":
       return "warning";
+    default:
+      return "secondary";
   }
 };
 
 const importanceVariant = (
-  importance: Importance,
+  importance: Importance | undefined | null,
 ): "destructive" | "warning" | "secondary" => {
   switch (importance) {
     case "HIGH":
@@ -65,6 +68,8 @@ const importanceVariant = (
     case "MEDIUM":
       return "warning";
     case "LOW":
+      return "secondary";
+    default:
       return "secondary";
   }
 };
@@ -84,7 +89,7 @@ const DocumentDetailDrawer = ({
 }: DocumentDetailDrawerProps) => {
   const { t } = useTranslation();
   const invalidate = useInvalidateDocuments();
-  const { data: doc, isLoading } = useDocumentDetail(documentId);
+  const { data: doc, isLoading, error } = useDocumentDetail(documentId);
   const [showNumber, setShowNumber] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -94,8 +99,9 @@ const DocumentDetailDrawer = ({
   const [createSubOpen, setCreateSubOpen] = useState(false);
 
   const maskNumber = (num: string) => {
-    if (num.length <= 4) return num;
-    return `${num.slice(0, 3)}${"*".repeat(num.length - 7)}${num.slice(-4)}`;
+    if (num.length >= 6) return `${num.slice(0, 3)}***${num.slice(-3)}`;
+    if (num.length >= 2) return `${num.slice(0, 1)}***${num.slice(-1)}`;
+    return "***";
   };
 
   if (!open) return null;
@@ -111,6 +117,13 @@ const DocumentDetailDrawer = ({
               </p>
             </div>
           )}
+          {error && !isLoading && (
+            <div className="flex h-40 items-center justify-center">
+              <p className="text-sm text-destructive">
+                {t("archives.errors.loadFailed")}
+              </p>
+            </div>
+          )}
           {doc && (
             <div className="grid gap-6">
               <SheetHeader>
@@ -120,12 +133,12 @@ const DocumentDetailDrawer = ({
                       {doc.name}
                       <Badge variant={importanceVariant(doc.importance)}>
                         {t(
-                          `archives.importance.${doc.importance.toLowerCase()}`,
+                          `archives.importance.${(doc.importance ?? "medium").toLowerCase()}`,
                         )}
                       </Badge>
                       <Badge variant={statusVariant(doc.status)}>
                         {t(
-                          `archives.status.${doc.status.toLowerCase()}`,
+                          `archives.status.${(doc.status ?? "active").toLowerCase()}`,
                         )}
                       </Badge>
                     </SheetTitle>
@@ -288,7 +301,7 @@ const DocumentDetailDrawer = ({
                                   variant={statusVariant(sub.status)}
                                 >
                                   {t(
-                                    `archives.status.${sub.status.toLowerCase()}`,
+                                    `archives.status.${(sub.status ?? "active").toLowerCase()}`,
                                   )}
                                 </Badge>
                               </TableCell>
@@ -326,7 +339,7 @@ const DocumentDetailDrawer = ({
                     url: a.url,
                     indexed: a.indexed,
                   }))}
-                  onSelect={async (file: { id: number }) => {
+                  onSelect={async (file: FileRecord) => {
                     await uploadDocumentAttachment(doc.id, undefined, file.id);
                     void invalidate.invalidateDetail(doc.id);
                   }}

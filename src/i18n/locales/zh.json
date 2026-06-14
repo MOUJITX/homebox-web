@@ -1100,7 +1100,8 @@
     "errors": {
       "createFailed": "创建文档失败",
       "updateFailed": "更新文档失败",
-      "deleteFailed": "删除文档失败"
+      "deleteFailed": "删除文档失败",
+      "loadFailed": "加载文档详情失败"
     }
   }
 }
