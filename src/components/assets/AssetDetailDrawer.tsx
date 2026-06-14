@@ -345,7 +345,8 @@ const AssetDetailDrawer = ({
               }}
             />
 
-            {/* Sub-assets (for parent assets) */}
+            {/* Sub-assets (for parent assets only) */}
+            {!detail.parentId && (
             <div className="grid gap-2">
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-medium">
@@ -433,6 +434,7 @@ const AssetDetailDrawer = ({
                 ))}
               </div>
             </div>
+            )}
 
             {/* Timestamps */}
             <div className="grid grid-cols-2 gap-4 text-xs text-muted-foreground">
