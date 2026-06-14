@@ -1074,6 +1074,7 @@
       "subDocuments": "子文档",
       "noSubDocuments": "暂无子文档。",
       "addSubDocument": "添加子文档",
+      "parentDocument": "父文档",
       "attachments": "附件",
       "invoices": "关联发票",
       "noInvoices": "暂无关联发票。",

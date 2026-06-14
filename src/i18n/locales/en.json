@@ -1074,6 +1074,7 @@
       "subDocuments": "Sub-Documents",
       "noSubDocuments": "No sub-documents yet.",
       "addSubDocument": "Add Sub-Document",
+      "parentDocument": "Parent Document",
       "attachments": "Attachments",
       "invoices": "Bound Invoices",
       "noInvoices": "No invoices bound yet.",

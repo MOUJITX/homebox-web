@@ -4,6 +4,8 @@ import {
   PencilIcon,
   PlusIcon,
   TrashIcon,
+  ArrowUpIcon,
+  ChevronLeftIcon,
   EyeIcon,
   EyeOffIcon,
 } from "lucide-react";
@@ -129,23 +131,52 @@ const DocumentDetailDrawer = ({
           {doc && (
             <div className="grid gap-6">
               <SheetHeader>
-                <SheetTitle className="flex items-center gap-2">
-                  {doc.name}
-                  <Badge variant={importanceVariant(doc.importance)}>
-                    {t(
-                      `archives.importance.${(doc.importance ?? "medium").toLowerCase()}`,
-                    )}
-                  </Badge>
-                  <Badge variant={statusVariant(doc.status)}>
-                    {t(
-                      `archives.status.${(doc.status ?? "active").toLowerCase()}`,
-                    )}
-                  </Badge>
-                </SheetTitle>
+                <div className="flex items-center gap-2">
+                  {doc.parentId && (
+                    <Button
+                      variant="ghost"
+                      size="icon-xs"
+                      onClick={() => onNavigateToDocument?.(doc.parentId!)}
+                    >
+                      <ChevronLeftIcon className="size-4" />
+                    </Button>
+                  )}
+                  <SheetTitle className="flex items-center gap-2 truncate">
+                    {doc.name}
+                    <Badge variant={importanceVariant(doc.importance)}>
+                      {t(
+                        `archives.importance.${(doc.importance ?? "medium").toLowerCase()}`,
+                      )}
+                    </Badge>
+                    <Badge variant={statusVariant(doc.status)}>
+                      {t(
+                        `archives.status.${(doc.status ?? "active").toLowerCase()}`,
+                      )}
+                    </Badge>
+                  </SheetTitle>
+                </div>
                 <SheetDescription>
                   {doc.categoryName}
                 </SheetDescription>
               </SheetHeader>
+
+              {doc.parentId && doc.parentName && (
+                <button
+                  type="button"
+                  className="flex items-center gap-3 rounded-lg border p-3 text-left hover:bg-accent/50 transition-colors w-full"
+                  onClick={() => onNavigateToDocument?.(doc.parentId!)}
+                >
+                  <ArrowUpIcon className="size-4 text-muted-foreground shrink-0" />
+                  <div className="min-w-0">
+                    <span className="text-xs text-muted-foreground">
+                      {t("archives.detail.parentDocument")}
+                    </span>
+                    <span className="block text-sm font-medium truncate">
+                      {doc.parentName}
+                    </span>
+                  </div>
+                </button>
+              )}
 
               <div className="grid gap-3 rounded-lg border p-4 text-sm">
                 {doc.holder && (
@@ -304,7 +335,7 @@ const DocumentDetailDrawer = ({
                                     setSubDocToDelete(sub);
                                   }}
                                 >
-                                  <PencilIcon className="size-3.5" />
+                                  <TrashIcon className="size-3.5" />
                                 </Button>
                               </TableCell>
                             </TableRow>

@@ -65,11 +65,6 @@ const DeleteDocumentDialog = ({
           <DialogTitle>{t("archives.delete")}</DialogTitle>
           <DialogDescription>
             {t("archives.deleteConfirm", { name: doc.name })}
-            {doc.subDocumentCount > 0 && (
-              <span className="mt-2 block text-muted-foreground">
-                {t("archives.deleteSubDocumentsHint")}
-              </span>
-            )}
           </DialogDescription>
         </DialogHeader>
         {error && (
