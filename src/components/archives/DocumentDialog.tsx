@@ -106,6 +106,16 @@ const DocumentDialog = ({
     setNote(doc.note ?? "");
   };
 
+  const [prevDocId, setPrevDocId] = useState(editDoc?.id);
+  if (editDoc?.id !== prevDocId) {
+    setPrevDocId(editDoc?.id);
+    if (editDoc) {
+      populateForm(editDoc);
+    } else {
+      resetForm();
+    }
+  }
+
   const handleClose = () => {
     resetForm();
     setCategoryManagerOpen(false);
@@ -161,7 +171,6 @@ const DocumentDialog = ({
       <Dialog
         open={open}
         onOpenChange={(v) => {
-          if (v && editDoc) populateForm(editDoc);
           if (!v) handleClose();
         }}
       >

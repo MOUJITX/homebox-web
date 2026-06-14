@@ -239,7 +239,7 @@ const DocumentDetailDrawer = ({
                       {t("archives.detail.addSubDocument")}
                     </Button>
                   </div>
-                  {doc.subDocuments.length === 0 ? (
+                  {(doc.subDocuments ?? []).length === 0 ? (
                     <p className="text-sm text-muted-foreground">
                       {t("archives.detail.noSubDocuments")}
                     </p>
@@ -266,7 +266,7 @@ const DocumentDetailDrawer = ({
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {doc.subDocuments.map((sub) => (
+                          {(doc.subDocuments ?? []).map((sub) => (
                             <TableRow
                               key={sub.id}
                               className="cursor-pointer"
@@ -318,7 +318,7 @@ const DocumentDetailDrawer = ({
                   {t("archives.detail.attachments")}
                 </h3>
                 <AttachmentManager
-                  attachments={doc.attachments.map((a) => ({
+                  attachments={(doc.attachments ?? []).map((a) => ({
                     id: a.id,
                     fileId: a.fileId,
                     filename: a.filename,
@@ -339,7 +339,7 @@ const DocumentDetailDrawer = ({
 
               <div className="grid gap-3">
                 <InvoiceBindingManager
-                  invoices={doc.invoices.map((inv) => ({
+                  invoices={(doc.invoices ?? []).map((inv) => ({
                     id: inv.id,
                     invoiceId: inv.invoiceId,
                     invoiceNumber: inv.invoiceNumber,
