@@ -85,7 +85,9 @@
     },
     "activeSubscriptions": "Active Subscriptions",
     "monthlySpending": "Monthly Spending",
-    "upcomingRenewals": "Upcoming Renewals"
+    "upcomingRenewals": "Upcoming Renewals",
+    "activeDocuments": "Active Documents",
+    "upcomingDocumentExpiries": "Upcoming Document Expiries"
   },
   "members": {
     "search": "Search members…",
@@ -506,6 +508,7 @@
       "boundAssets": "Bound Assets",
       "boundSubscriptions": "Bound Subscriptions",
       "boundVisits": "Bound Visit Records",
+      "boundDocuments": "Bound Documents",
       "noBoundAssets": "Not bound to any asset."
     },
     "attachments": {
@@ -593,7 +596,8 @@
       "warrantyExpiring": "Warranty Expiring",
       "warrantyExpired": "Warranty Expired",
       "medicationReminder": "Medication Reminder",
-      "subscriptionRenewal": "Subscription Renewal"
+      "subscriptionRenewal": "Subscription Renewal",
+      "documentExpiry": "Document Expiry"
     }
   },
   "medications": {
@@ -963,7 +967,8 @@
       "asset": "Asset",
       "good": "Expiration",
       "invoice": "Invoice",
-      "subscription": "Subscription"
+      "subscription": "Subscription",
+      "document": "Document"
     }
   },
   "shared": {

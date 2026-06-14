@@ -33,6 +33,7 @@ export interface Invoice {
   assets: BoundAsset[];
   subscriptions: BoundSubscription[];
   visits: BoundVisitRecord[];
+  documents: BoundDocument[];
   createdAt: string;
   updatedAt: string;
 }
@@ -82,6 +83,14 @@ export interface BoundVisitRecord {
   patientName: string;
   sourceType: VisitSourceType;
   sourceId: number;
+}
+
+export interface BoundDocument {
+  id: number;
+  documentId: number;
+  documentName: string;
+  categoryId: number;
+  categoryName: string;
 }
 
 export interface InvoiceParseResult {

@@ -63,6 +63,7 @@ const DashboardPage = () => {
     warrantyExpiringAssets,
     inUseAssets,
     upcomingRenewals,
+    expiringDocuments,
   } = data;
 
   const statCards = [
@@ -110,6 +111,14 @@ const DashboardPage = () => {
           : "—",
       color: "text-teal-600 dark:text-teal-400",
       bg: "bg-teal-500/10",
+    },
+    {
+      icon: ShieldCheckIcon,
+      label: t("dashboard.activeDocuments"),
+      value: stats.activeDocumentCount ?? 0,
+      color: "text-cyan-600 dark:text-cyan-400",
+      bg: "bg-cyan-500/10",
+      link: "/archives",
     },
   ];
 
@@ -446,6 +455,56 @@ const DashboardPage = () => {
               className="inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               {t("dashboard.upcomingRenewals")}
+              <ArrowRightIcon className="size-3.5" />
+            </Link>
+          </div>
+        </Card>
+      )}
+
+      {expiringDocuments && expiringDocuments.length > 0 && (
+        <Card>
+          <CardHeader className="flex-row items-center justify-between">
+            <CardTitle>{t("dashboard.upcomingDocumentExpiries")}</CardTitle>
+          </CardHeader>
+          <CardContent className="px-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t("archives.table.name")}</TableHead>
+                  <TableHead>{t("archives.table.category")}</TableHead>
+                  <TableHead>{t("archives.table.expiryDate")}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {expiringDocuments.map((doc) => {
+                  const daysLeft = getDaysLeft(doc.expiryDate);
+                  return (
+                    <TableRow key={doc.id}>
+                      <TableCell className="font-medium">
+                        {doc.name}
+                      </TableCell>
+                      <TableCell>{doc.categoryName}</TableCell>
+                      <TableCell>
+                        <span>{formatDate(doc.expiryDate)}</span>
+                        <Badge
+                          variant={daysLeft <= 3 ? "destructive" : "warning"}
+                          className="ml-2"
+                        >
+                          {daysLeft}d
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </CardContent>
+          <div className="border-t px-4 py-2">
+            <Link
+              to="/archives"
+              className="inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              {t("dashboard.upcomingDocumentExpiries")}
               <ArrowRightIcon className="size-3.5" />
             </Link>
           </div>

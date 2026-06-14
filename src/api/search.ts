@@ -1,7 +1,7 @@
 import axios from "./axios";
 
 export interface SourceInfo {
-  type: "ASSET" | "GOOD" | "INVOICE" | "FILE" | "SUBSCRIPTION";
+  type: "ASSET" | "GOOD" | "INVOICE" | "FILE" | "SUBSCRIPTION" | "DOCUMENT";
   typeLabel: string | null;
   sourceId: number | null;
   sourceName: string | null;

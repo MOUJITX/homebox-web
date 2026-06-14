@@ -8,6 +8,7 @@ import {
   SearchIcon,
   CreditCardIcon,
   StethoscopeIcon,
+  FileTextIcon,
 } from "lucide-react";
 import type {
   Invoice,
@@ -307,6 +308,10 @@ const InvoicesPage = () => {
                           type: "visit" as const,
                           data: v,
                         })),
+                        ...(invoice.documents || []).map((d) => ({
+                          type: "document" as const,
+                          data: d,
+                        })),
                       ];
                       if (allBounds.length === 0) return "—";
                       const first = allBounds[0];
@@ -348,12 +353,19 @@ const InvoicesPage = () => {
                                 {first.data.subscriptionName}
                               </span>
                             </>
-                          ) : (
+                          ) : first.type === "visit" ? (
                             <>
                               <StethoscopeIcon className="size-4 shrink-0 text-muted-foreground" />
                               <span className="text-xs truncate">
                                 {sourceTypeLabel}
                                 {first.data.patientName}
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <FileTextIcon className="size-4 shrink-0 text-muted-foreground" />
+                              <span className="text-xs truncate">
+                                {first.data.documentName}
                               </span>
                             </>
                           )}

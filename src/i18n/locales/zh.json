@@ -356,6 +356,7 @@
       "boundAssets": "关联资产",
       "boundSubscriptions": "关联订阅",
       "boundVisits": "关联就诊记录",
+      "boundDocuments": "关联文档",
       "noBoundAssets": "未关联任何资产。"
     },
     "attachments": {
@@ -544,7 +545,8 @@
       "asset": "资产",
       "good": "有效期",
       "invoice": "发票",
-      "subscription": "订阅"
+      "subscription": "订阅",
+      "document": "文档"
     }
   },
   "shared": {
@@ -635,7 +637,9 @@
     },
     "activeSubscriptions": "活跃订阅",
     "monthlySpending": "本月支出",
-    "upcomingRenewals": "即将到期"
+    "upcomingRenewals": "即将到期",
+    "activeDocuments": "有效文档",
+    "upcomingDocumentExpiries": "即将到期文档"
   },
   "login": {
     "description": "输入您的凭据以继续",
@@ -759,7 +763,8 @@
       "warrantyExpiring": "保修即将到期",
       "warrantyExpired": "保修已过期",
       "medicationReminder": "用药提醒",
-      "subscriptionRenewal": "续费提醒"
+      "subscriptionRenewal": "续费提醒",
+      "documentExpiry": "文档到期提醒"
     }
   },
   "medications": {

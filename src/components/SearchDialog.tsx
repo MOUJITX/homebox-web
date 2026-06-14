@@ -79,6 +79,7 @@ const SearchDialog = ({ open, onClose }: SearchDialogProps) => {
     const subscriptionSource = item.sources.find(
       (s) => s.type === "SUBSCRIPTION",
     );
+    const documentSource = item.sources.find((s) => s.type === "DOCUMENT");
 
     if (assetSource?.sourceId) {
       navigate(`/assets?assetId=${assetSource.sourceId}`);
@@ -88,6 +89,8 @@ const SearchDialog = ({ open, onClose }: SearchDialogProps) => {
       navigate(`/invoices?invoiceId=${invoiceSource.sourceId}`);
     } else if (subscriptionSource?.sourceId) {
       navigate(`/subscriptions?subscriptionId=${subscriptionSource.sourceId}`);
+    } else if (documentSource?.sourceId) {
+      navigate(`/archives?documentId=${documentSource.sourceId}`);
     }
 
     onClose();

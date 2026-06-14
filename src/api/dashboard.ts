@@ -8,6 +8,7 @@ export interface DashboardStats {
   invoiceCount: number;
   activeSubscriptionCount: number;
   monthlySubscriptionSpending: number | null;
+  activeDocumentCount: number;
 }
 
 export interface ExpiringSoonItem {
@@ -62,6 +63,14 @@ export interface UpcomingRenewal {
   endDate: string;
 }
 
+export interface ExpiringDocument {
+  id: number;
+  name: string;
+  categoryName: string;
+  expiryDate: string;
+  reminderDays: number;
+}
+
 export interface DashboardData {
   stats: DashboardStats;
   expiringSoonItems: ExpiringSoonItem[];
@@ -69,6 +78,7 @@ export interface DashboardData {
   warrantyExpiringAssets: WarrantyExpiringAsset[];
   inUseAssets: InUseAsset[];
   upcomingRenewals: UpcomingRenewal[];
+  expiringDocuments: ExpiringDocument[];
 }
 
 export const getDashboard = () => axios.get<DashboardData>("/dashboard");
