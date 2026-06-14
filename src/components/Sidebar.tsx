@@ -12,6 +12,7 @@ import {
   FolderIcon,
   UsersIcon,
   ShieldIcon,
+  ShieldCheckIcon,
   SettingsIcon,
   PanelLeftCloseIcon,
   PanelLeftOpenIcon,
@@ -35,6 +36,7 @@ const navItems: NavItem[] = [
   { label: "nav.assets", path: "/assets", icon: BoxIcon },
   { label: "nav.invoices", path: "/invoices", icon: ReceiptIcon },
   { label: "nav.medicalRecords", path: "/medical-records", icon: FileTextIcon },
+  { label: "nav.archives", path: "/archives", icon: ShieldCheckIcon },
   { label: "nav.subscriptions", path: "/subscriptions", icon: CreditCardIcon },
   {
     label: "nav.files",

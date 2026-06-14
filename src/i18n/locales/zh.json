@@ -695,7 +695,8 @@
     "settings": "系统设置",
     "notifications": "消息通知",
     "subscriptions": "订阅管理",
-    "medicalRecords": "病历管理"
+    "medicalRecords": "病历管理",
+    "archives": "家庭档案"
   },
   "profile": {
     "changePassword": "更改密码",
@@ -1012,5 +1013,94 @@
     },
     "saveSuccess": "设置保存成功",
     "saveFailed": "设置保存失败"
+  },
+  "archives": {
+    "create": "添加文档",
+    "createDescription": "添加新的家庭文档进行归档管理。",
+    "createSubDocument": "添加子文档",
+    "createSubDocumentDescription": "在当前文档下添加子文档。",
+    "edit": "编辑文档",
+    "editDescription": "更新{{name}}的详细信息。",
+    "noData": "暂无文档，点击上方按钮添加。",
+    "searchPlaceholder": "按名称、编号或持有人搜索…",
+    "table": {
+      "name": "名称",
+      "category": "分类",
+      "holder": "持有人",
+      "documentNumber": "编号",
+      "expiryDate": "到期日期",
+      "status": "状态",
+      "subDocuments": "子文档数",
+      "actions": "操作"
+    },
+    "filters": {
+      "allCategories": "全部分类",
+      "allStatuses": "全部状态",
+      "allImportance": "全部重要程度"
+    },
+    "status": {
+      "active": "有效",
+      "expired": "已过期",
+      "revoked": "已注销",
+      "lost": "已遗失"
+    },
+    "importance": {
+      "high": "重要",
+      "medium": "一般",
+      "low": "低"
+    },
+    "form": {
+      "name": "文档名称",
+      "namePlaceholder": "输入文档名称",
+      "category": "分类",
+      "categoryPlaceholder": "选择分类",
+      "holder": "持有人",
+      "holderPlaceholder": "输入持有人姓名",
+      "documentNumber": "编号",
+      "documentNumberPlaceholder": "输入证件号/合同编号",
+      "issuer": "签发机构",
+      "issuerPlaceholder": "输入签发机构/来源",
+      "issueDate": "签发日期",
+      "expiryDate": "到期日期",
+      "expiryDateHint": "设置到期日期即启用到期提醒",
+      "reminderDays": "提前提醒天数",
+      "status": "状态",
+      "importance": "重要程度",
+      "note": "备注",
+      "notePlaceholder": "输入备注信息"
+    },
+    "detail": {
+      "title": "文档详情",
+      "subDocuments": "子文档",
+      "noSubDocuments": "暂无子文档。",
+      "addSubDocument": "添加子文档",
+      "attachments": "附件",
+      "invoices": "关联发票",
+      "noInvoices": "暂无关联发票。",
+      "reminderDaysValue": "到期前 {{days}} 天提醒"
+    },
+    "delete": {
+      "title": "删除文档",
+      "confirm": "您确定要删除「{{name}}」吗？",
+      "subDocumentsWillBeUnlinked": "该文档下的子文档将变为顶层文档，不会被删除。"
+    },
+    "categories": {
+      "manage": "分类管理",
+      "manageDescription": "管理文档分类，用于对家庭文档进行归类。",
+      "name": "名称",
+      "namePlaceholder": "输入分类名称",
+      "description": "描述",
+      "descriptionPlaceholder": "输入分类描述（可选）",
+      "create": "添加分类",
+      "errors": {
+        "saveFailed": "保存分类失败",
+        "deleteFailed": "删除分类失败"
+      }
+    },
+    "errors": {
+      "createFailed": "创建文档失败",
+      "updateFailed": "更新文档失败",
+      "deleteFailed": "删除文档失败"
+    }
   }
 }

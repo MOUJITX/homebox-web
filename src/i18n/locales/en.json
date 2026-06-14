@@ -15,7 +15,8 @@
     "settings": "Settings",
     "notifications": "Notifications",
     "subscriptions": "Subscriptions",
-    "medicalRecords": "Medical Records"
+    "medicalRecords": "Medical Records",
+    "archives": "Archives"
   },
   "login": {
     "title": "Sign In",
@@ -1012,5 +1013,94 @@
     "indexing": "Indexing…",
     "noInvoices": "No invoices bound yet.",
     "searchInvoices": "Search invoices…"
+  },
+  "archives": {
+    "create": "Add Document",
+    "createDescription": "Add a new family document for archiving.",
+    "createSubDocument": "Add Sub-Document",
+    "createSubDocumentDescription": "Add a sub-document under the current document.",
+    "edit": "Edit Document",
+    "editDescription": "Update details for {{name}}.",
+    "noData": "No documents yet. Click the button above to add one.",
+    "searchPlaceholder": "Search by name, number, or holder…",
+    "table": {
+      "name": "Name",
+      "category": "Category",
+      "holder": "Holder",
+      "documentNumber": "Number",
+      "expiryDate": "Expiry Date",
+      "status": "Status",
+      "subDocuments": "Sub-Docs",
+      "actions": "Actions"
+    },
+    "filters": {
+      "allCategories": "All Categories",
+      "allStatuses": "All Statuses",
+      "allImportance": "All Importance"
+    },
+    "status": {
+      "active": "Active",
+      "expired": "Expired",
+      "revoked": "Revoked",
+      "lost": "Lost"
+    },
+    "importance": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "form": {
+      "name": "Document Name",
+      "namePlaceholder": "Enter document name",
+      "category": "Category",
+      "categoryPlaceholder": "Select category",
+      "holder": "Holder",
+      "holderPlaceholder": "Enter holder name",
+      "documentNumber": "Number",
+      "documentNumberPlaceholder": "Enter ID/contract number",
+      "issuer": "Issuer",
+      "issuerPlaceholder": "Enter issuer/source",
+      "issueDate": "Issue Date",
+      "expiryDate": "Expiry Date",
+      "expiryDateHint": "Setting an expiry date enables reminders",
+      "reminderDays": "Reminder Days",
+      "status": "Status",
+      "importance": "Importance",
+      "note": "Note",
+      "notePlaceholder": "Enter note"
+    },
+    "detail": {
+      "title": "Document Details",
+      "subDocuments": "Sub-Documents",
+      "noSubDocuments": "No sub-documents yet.",
+      "addSubDocument": "Add Sub-Document",
+      "attachments": "Attachments",
+      "invoices": "Bound Invoices",
+      "noInvoices": "No invoices bound yet.",
+      "reminderDaysValue": "Reminder {{days}} days before expiry"
+    },
+    "delete": {
+      "title": "Delete Document",
+      "confirm": "Are you sure you want to delete \"{{name}}\"?",
+      "subDocumentsWillBeUnlinked": "Sub-documents will become top-level documents and will not be deleted."
+    },
+    "categories": {
+      "manage": "Manage Categories",
+      "manageDescription": "Manage document categories for organizing family documents.",
+      "name": "Name",
+      "namePlaceholder": "Enter category name",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter category description (optional)",
+      "create": "Add Category",
+      "errors": {
+        "saveFailed": "Failed to save category",
+        "deleteFailed": "Failed to delete category"
+      }
+    },
+    "errors": {
+      "createFailed": "Failed to create document",
+      "updateFailed": "Failed to update document",
+      "deleteFailed": "Failed to delete document"
+    }
   }
 }
