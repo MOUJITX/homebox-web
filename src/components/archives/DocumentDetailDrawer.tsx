@@ -327,9 +327,6 @@ const DocumentDetailDrawer = ({
               )}
 
               <div className="grid gap-3">
-                <h3 className="text-sm font-medium">
-                  {t("archives.detail.attachments")}
-                </h3>
                 <AttachmentManager
                   attachments={(doc.attachments ?? []).map((a) => ({
                     id: a.id,
