@@ -106,7 +106,7 @@ const DocumentDialog = ({
     setNote(doc.note ?? "");
   };
 
-  const [prevDocId, setPrevDocId] = useState(editDoc?.id);
+  const [prevDocId, setPrevDocId] = useState<number | undefined>(undefined);
   if (editDoc?.id !== prevDocId) {
     setPrevDocId(editDoc?.id);
     if (editDoc) {
@@ -118,6 +118,7 @@ const DocumentDialog = ({
 
   const handleClose = () => {
     resetForm();
+    setPrevDocId(undefined);
     setCategoryManagerOpen(false);
     onClose();
   };
