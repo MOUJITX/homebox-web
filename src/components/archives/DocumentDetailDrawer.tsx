@@ -251,7 +251,7 @@ const DocumentDetailDrawer = ({
                     <span className="text-muted-foreground">
                       {t("archives.form.note")}
                     </span>
-                    <span className="max-w-[60%] text-right">
+                    <span className="max-w-[60%] text-right whitespace-pre-line">
                       {doc.note}
                     </span>
                   </div>
