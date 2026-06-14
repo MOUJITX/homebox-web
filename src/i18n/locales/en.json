@@ -825,7 +825,8 @@
         "crontab": "Check Schedule (Cron)",
         "assetExpiringSoonDays": "Asset Warranty Expiring Soon (Days)",
         "medicationCrontab": "Medication Reminder Schedule (Cron)",
-        "subscriptionCrontab": "Subscription Renewal Schedule (Cron)"
+        "subscriptionCrontab": "Subscription Renewal Schedule (Cron)",
+        "archivesCrontab": "Document Expiry Schedule (Cron)"
       },
       "placeholders": {
         "webhookUrl": "https://hooks.example.com/notify",
@@ -833,7 +834,8 @@
         "crontab": "0 0 3 * * ?",
         "assetExpiringSoonDays": "30",
         "medicationCrontab": "0 0 7-20 * * ?",
-        "subscriptionCrontab": "0 0 8 * * ?"
+        "subscriptionCrontab": "0 0 8 * * ?",
+        "archivesCrontab": "0 0 8 * * ?"
       },
       "templateHint": "Placeholders: {{type}}, {{title}}, {{content}}, {{createdAt}}, {{appName}}",
       "testWebhook": "Test Webhook",

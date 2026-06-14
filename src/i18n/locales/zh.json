@@ -992,7 +992,8 @@
         "crontab": "检查计划 (Cron)",
         "assetExpiringSoonDays": "资产保修临期天数",
         "medicationCrontab": "用药提醒检查计划 (Cron)",
-        "subscriptionCrontab": "订阅续费检查计划 (Cron)"
+        "subscriptionCrontab": "订阅续费检查计划 (Cron)",
+        "archivesCrontab": "文档到期检查计划 (Cron)"
       },
       "placeholders": {
         "webhookUrl": "https://hooks.example.com/notify",
@@ -1000,7 +1001,8 @@
         "crontab": "0 0 3 * * ?",
         "assetExpiringSoonDays": "30",
         "medicationCrontab": "0 0 7-20 * * ?",
-        "subscriptionCrontab": "0 0 8 * * ?"
+        "subscriptionCrontab": "0 0 8 * * ?",
+        "archivesCrontab": "0 0 8 * * ?"
       },
       "templateHint": "可用占位符：{{type}}、{{title}}、{{content}}、{{createdAt}}、{{appName}}",
       "testWebhook": "测试 Webhook",

@@ -250,6 +250,27 @@ const NotificationConfigCard = () => {
               className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             />
           </div>
+
+          {/* Archives Cron */}
+          <div className="grid gap-2">
+            <Label htmlFor="config-notification.archives-crontab">
+              {t("settings.notification.fields.archivesCrontab")}
+            </Label>
+            <input
+              id="config-notification.archives-crontab"
+              value={formValues["notification.archives-crontab"] ?? ""}
+              onChange={(e) =>
+                handleChange(
+                  "notification.archives-crontab",
+                  e.target.value,
+                )
+              }
+              placeholder={t(
+                "settings.notification.placeholders.archivesCrontab",
+              )}
+              className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            />
+          </div>
         </CardContent>
         <CardFooter className="gap-2">
           <Button type="submit" disabled={saving}>
