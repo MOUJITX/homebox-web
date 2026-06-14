@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import {
   PencilIcon,
   PlusIcon,
+  TrashIcon,
   EyeIcon,
   EyeOffIcon,
 } from "lucide-react";
@@ -18,6 +19,7 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
@@ -127,34 +129,22 @@ const DocumentDetailDrawer = ({
           {doc && (
             <div className="grid gap-6">
               <SheetHeader>
-                <div className="flex items-start justify-between">
-                  <div className="grid gap-1">
-                    <SheetTitle className="flex items-center gap-2">
-                      {doc.name}
-                      <Badge variant={importanceVariant(doc.importance)}>
-                        {t(
-                          `archives.importance.${(doc.importance ?? "medium").toLowerCase()}`,
-                        )}
-                      </Badge>
-                      <Badge variant={statusVariant(doc.status)}>
-                        {t(
-                          `archives.status.${(doc.status ?? "active").toLowerCase()}`,
-                        )}
-                      </Badge>
-                    </SheetTitle>
-                    <SheetDescription>
-                      {doc.categoryName}
-                    </SheetDescription>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setEditOpen(true)}
-                  >
-                    <PencilIcon className="size-3.5" />
-                    {t("common.edit")}
-                  </Button>
-                </div>
+                <SheetTitle className="flex items-center gap-2">
+                  {doc.name}
+                  <Badge variant={importanceVariant(doc.importance)}>
+                    {t(
+                      `archives.importance.${(doc.importance ?? "medium").toLowerCase()}`,
+                    )}
+                  </Badge>
+                  <Badge variant={statusVariant(doc.status)}>
+                    {t(
+                      `archives.status.${(doc.status ?? "active").toLowerCase()}`,
+                    )}
+                  </Badge>
+                </SheetTitle>
+                <SheetDescription>
+                  {doc.categoryName}
+                </SheetDescription>
               </SheetHeader>
 
               <div className="grid gap-3 rounded-lg border p-4 text-sm">
@@ -378,15 +368,19 @@ const DocumentDetailDrawer = ({
                 />
               </div>
 
-              <div className="flex justify-end">
+              <SheetFooter className="shrink-0">
+                <Button variant="outline" onClick={() => setEditOpen(true)}>
+                  <PencilIcon className="size-3.5" />
+                  {t("archives.edit")}
+                </Button>
                 <Button
                   variant="destructive"
-                  size="sm"
                   onClick={() => setDeleteOpen(true)}
                 >
-                  {t("common.delete")}
+                  <TrashIcon className="size-3.5" />
+                  {t("archives.delete")}
                 </Button>
-              </div>
+              </SheetFooter>
             </div>
           )}
         </SheetContent>

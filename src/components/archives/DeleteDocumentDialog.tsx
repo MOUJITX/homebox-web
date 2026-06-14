@@ -62,12 +62,12 @@ const DeleteDocumentDialog = ({
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle>{t("archives.delete.title")}</DialogTitle>
+          <DialogTitle>{t("archives.delete")}</DialogTitle>
           <DialogDescription>
-            {t("archives.delete.confirm", { name: doc.name })}
+            {t("archives.deleteConfirm", { name: doc.name })}
             {doc.subDocumentCount > 0 && (
               <span className="mt-2 block text-muted-foreground">
-                {t("archives.delete.subDocumentsWillBeUnlinked")}
+                {t("archives.deleteSubDocumentsHint")}
               </span>
             )}
           </DialogDescription>

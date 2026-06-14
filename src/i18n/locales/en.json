@@ -1079,11 +1079,9 @@
       "noInvoices": "No invoices bound yet.",
       "reminderDaysValue": "Reminder {{days}} days before expiry"
     },
-    "delete": {
-      "title": "Delete Document",
-      "confirm": "Are you sure you want to delete \"{{name}}\"?",
-      "subDocumentsWillBeUnlinked": "Sub-documents will become top-level documents and will not be deleted."
-    },
+    "delete": "Delete Document",
+    "deleteConfirm": "Are you sure you want to delete \"{{name}}\"?",
+    "deleteSubDocumentsHint": "Sub-documents will become top-level documents and will not be deleted.",
     "categories": {
       "manage": "Manage Categories",
       "manageDescription": "Manage document categories for organizing family documents.",

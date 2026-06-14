@@ -1079,11 +1079,9 @@
       "noInvoices": "暂无关联发票。",
       "reminderDaysValue": "到期前 {{days}} 天提醒"
     },
-    "delete": {
-      "title": "删除文档",
-      "confirm": "您确定要删除「{{name}}」吗？",
-      "subDocumentsWillBeUnlinked": "该文档下的子文档将变为顶层文档，不会被删除。"
-    },
+    "delete": "删除文档",
+    "deleteConfirm": "您确定要删除「{{name}}」吗？",
+    "deleteSubDocumentsHint": "该文档下的子文档将变为顶层文档，不会被删除。",
     "categories": {
       "manage": "分类管理",
       "manageDescription": "管理文档分类，用于对家庭文档进行归类。",
