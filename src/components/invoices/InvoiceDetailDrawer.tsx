@@ -234,16 +234,12 @@ const InvoiceDetailDrawer = ({
               </div>
             )}
 
-            <div className="grid gap-2">
-              <h4 className="text-sm font-medium flex items-center gap-1.5">
-                <PackageIcon className="size-4" />
-                {t("invoices.detail.boundAssets")}
-              </h4>
-              {invoice.assets.length === 0 ? (
-                <p className="text-xs text-muted-foreground">
-                  {t("invoices.detail.noBoundAssets")}
-                </p>
-              ) : (
+            {invoice.assets && invoice.assets.length > 0 && (
+              <div className="grid gap-2">
+                <h4 className="text-sm font-medium flex items-center gap-1.5">
+                  <PackageIcon className="size-4" />
+                  {t("invoices.detail.boundAssets")}
+                </h4>
                 <div className="flex flex-wrap gap-2">
                   {invoice.assets.map((asset) => (
                     <button
@@ -270,8 +266,8 @@ const InvoiceDetailDrawer = ({
                     </button>
                   ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {invoice.subscriptions && invoice.subscriptions.length > 0 && (
               <div className="grid gap-2">
