@@ -10,6 +10,7 @@ import {
   CreditCardIcon,
   FileTextIcon,
   FolderIcon,
+  BookOpenIcon,
   UsersIcon,
   ShieldIcon,
   ShieldCheckIcon,
@@ -37,6 +38,7 @@ const navItems: NavItem[] = [
   { label: "nav.invoices", path: "/invoices", icon: ReceiptIcon },
   { label: "nav.medicalRecords", path: "/medical-records", icon: FileTextIcon },
   { label: "nav.archives", path: "/archives", icon: ShieldCheckIcon },
+  { label: "nav.books", path: "/books", icon: BookOpenIcon },
   { label: "nav.subscriptions", path: "/subscriptions", icon: CreditCardIcon },
   {
     label: "nav.files",
