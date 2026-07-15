@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["AGENTS.md"],
+  "permission": {
+    "bash": {
+      "*": "allow",
+      "git push *": "deny"
+    },
+    "external_directory": {
+      "../../Springboot/com.moujitx.homebox.server/**": "allow"
+    }
+  }
+}
