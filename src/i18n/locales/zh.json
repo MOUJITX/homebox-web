@@ -595,7 +595,9 @@
     "noAttachments": "暂无附件。",
     "indexing": "索引中…",
     "noInvoices": "暂无绑定发票。",
-    "searchInvoices": "搜索发票…"
+    "searchInvoices": "搜索发票…",
+    "yes": "是",
+    "no": "否"
   },
   "dashboard": {
     "stats": {
@@ -920,7 +922,8 @@
       "storage": "云存储",
       "ai": "AI",
       "notification": "消息通知",
-      "elasticsearch": "搜索"
+      "elasticsearch": "搜索",
+      "douban": "豆瓣"
     },
     "qiniu": {
       "title": "七牛 OSS 配置",
@@ -1018,6 +1021,18 @@
       },
       "testSuccess": "Elasticsearch 连接成功",
       "testFailed": "Elasticsearch 连接失败：{{message}}"
+    },
+    "douban": {
+      "title": "豆瓣 API 配置",
+      "description": "配置豆瓣 API Key 以支持图书信息查询。更改立即生效。",
+      "fields": {
+        "apiKey": "API Key"
+      },
+      "placeholders": {
+        "apiKey": "输入豆瓣 API Key"
+      },
+      "testSuccess": "豆瓣 API 连接成功",
+      "testFailed": "豆瓣 API 连接失败：{{message}}"
     },
     "saveSuccess": "设置保存成功",
     "saveFailed": "设置保存失败"

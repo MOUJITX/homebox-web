@@ -6,6 +6,7 @@ import {
   saveSystemConfigGroup,
   testQiniuConnection,
   testAiConnection,
+  testDoubanConnection,
   type SystemConfigItem,
   type AiModel,
 } from "@/api/systemConfig";
@@ -367,13 +368,14 @@ const AiConfigCard = () => {
   );
 };
 
-type SettingsTab = "storage" | "ai" | "notification" | "elasticsearch";
+type SettingsTab = "storage" | "ai" | "notification" | "elasticsearch" | "douban";
 
 const settingsTabs: { key: SettingsTab; label: string }[] = [
   { key: "storage", label: "settings.tabs.storage" },
   { key: "ai", label: "settings.tabs.ai" },
   { key: "notification", label: "settings.tabs.notification" },
   { key: "elasticsearch", label: "settings.tabs.elasticsearch" },
+  { key: "douban", label: "settings.tabs.douban" },
 ];
 
 const SettingsPage = () => {
@@ -391,6 +393,25 @@ const SettingsPage = () => {
     } catch (err) {
       toast.error(
         t("settings.qiniu.testFailed", { message: getErrorMessage(err) ?? "" }),
+      );
+    }
+  };
+
+  const handleTestDouban = async () => {
+    try {
+      const { data } = await testDoubanConnection();
+      if (data.success) {
+        toast.success(t("settings.douban.testSuccess"));
+      } else {
+        toast.error(
+          t("settings.douban.testFailed", { message: data.message }),
+        );
+      }
+    } catch (err) {
+      toast.error(
+        t("settings.douban.testFailed", {
+          message: getErrorMessage(err) ?? "",
+        }),
       );
     }
   };
@@ -454,6 +475,24 @@ const SettingsPage = () => {
       {activeTab === "elasticsearch" && (
         <div className="grid gap-6">
           <ElasticsearchConfigCard />
+        </div>
+      )}
+
+      {activeTab === "douban" && (
+        <div className="grid gap-6">
+          <ConfigGroupCard
+            group="douban"
+            title={t("settings.douban.title")}
+            description={t("settings.douban.description")}
+            onTest={handleTestDouban}
+            testLabel={t("common.testConnection")}
+            fieldLabels={{
+              "douban.api-key": t("settings.douban.fields.apiKey"),
+            }}
+            fieldPlaceholders={{
+              "douban.api-key": t("settings.douban.placeholders.apiKey"),
+            }}
+          />
         </div>
       )}
     </div>

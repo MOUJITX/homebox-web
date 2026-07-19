@@ -753,7 +753,8 @@
       "storage": "Storage",
       "ai": "AI",
       "notification": "Notifications",
-      "elasticsearch": "Search"
+      "elasticsearch": "Search",
+      "douban": "Douban"
     },
     "qiniu": {
       "title": "Qiniu OSS Configuration",
@@ -851,6 +852,18 @@
       },
       "testSuccess": "Elasticsearch connection successful",
       "testFailed": "Elasticsearch connection failed: {{message}}"
+    },
+    "douban": {
+      "title": "Douban API Configuration",
+      "description": "Configure Douban API Key for book information lookup. Changes take effect immediately.",
+      "fields": {
+        "apiKey": "API Key"
+      },
+      "placeholders": {
+        "apiKey": "Enter Douban API Key"
+      },
+      "testSuccess": "Douban API connection successful",
+      "testFailed": "Douban API connection failed: {{message}}"
     },
     "saveSuccess": "Settings saved successfully",
     "saveFailed": "Failed to save settings"
@@ -1020,7 +1033,9 @@
     "noAttachments": "No attachments uploaded yet.",
     "indexing": "Indexing…",
     "noInvoices": "No invoices bound yet.",
-    "searchInvoices": "Search invoices…"
+    "searchInvoices": "Search invoices…",
+    "yes": "Yes",
+    "no": "No"
   },
   "archives": {
     "create": "Add Document",
