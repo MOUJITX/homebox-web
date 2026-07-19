@@ -1,8 +1,9 @@
-import { useState, type SubmitEvent, type ChangeEvent } from "react";
+import { useState, useEffect, useRef, type SubmitEvent, type ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon } from "lucide-react";
 import { updateBook, type BookDetail } from "@/api/books";
 import { getErrorMessage } from "@/lib/error";
+import { useBookDetail } from "@/hooks/queries/useBookDetail";
 import { useBookCategories } from "@/hooks/queries/useBookCategories";
 import { useBookLocations } from "@/hooks/queries/useBookLocations";
 import { useBookSeries } from "@/hooks/queries/useBookSeries";
@@ -55,6 +56,8 @@ const EditBookDialog = ({
   const { data: allSeries = [] } = useBookSeries();
   const invalidate = useInvalidateBooks();
 
+  const { data: fetchedDetail } = useBookDetail(book?.id ? book.id : null);
+
   const [title, setTitle] = useState(book?.title ?? "");
   const [author, setAuthor] = useState(book?.author ?? "");
   const [isbn, setIsbn] = useState(book?.isbn ?? "");
@@ -76,6 +79,39 @@ const EditBookDialog = ({
   const [submitting, setSubmitting] = useState(false);
   const [categoryManagerOpen, setCategoryManagerOpen] = useState(false);
   const [locationManagerOpen, setLocationManagerOpen] = useState(false);
+
+  const prevBookIdRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!book) return;
+    if (prevBookIdRef.current === book.id) return;
+    prevBookIdRef.current = book.id;
+
+    const source = fetchedDetail ?? book;
+    setTitle(source.title ?? "");
+    setAuthor(source.author ?? "");
+    setIsbn(source.isbn ?? "");
+    setSerialized(source.serialized ?? false);
+    setIssueNumber(source.issueNumber ?? "");
+    setPublisher(source.publisher ?? "");
+    setPublishDate(source.publishDate ?? "");
+    setDescription(source.description ?? "");
+    setCategoryId(source.categoryId ?? null);
+    setLocationId(source.locationId ?? null);
+    setStatus(source.status ?? "WANT_TO_READ");
+    setPurchaseDate(source.purchaseDate ?? "");
+    setPurchasePrice(source.purchasePrice?.toString() ?? "");
+    setNote(source.note ?? "");
+    setSelectedSeriesIds(source.series?.map((s) => s.id) ?? []);
+    setError("");
+  }, [book?.id, fetchedDetail]);
+
+  useEffect(() => {
+    if (!fetchedDetail || !book) return;
+    if (fetchedDetail.id === book.id) {
+      setSelectedSeriesIds(fetchedDetail.series?.map((s) => s.id) ?? []);
+    }
+  }, [fetchedDetail, book?.id]);
 
   const resetForm = () => {
     setTitle(book?.title ?? "");
