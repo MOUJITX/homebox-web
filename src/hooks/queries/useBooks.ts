@@ -6,6 +6,7 @@ interface UseBooksParams {
   search?: string;
   categoryId?: number | null;
   locationId?: number | null;
+  seriesId?: number | null;
   status?: string | null;
   page: number;
   size: number;
@@ -16,6 +17,7 @@ export const useBooks = (params: UseBooksParams) => {
     search: params.search || undefined,
     categoryId: params.categoryId ?? undefined,
     locationId: params.locationId ?? undefined,
+    seriesId: params.seriesId ?? undefined,
     status: params.status ?? undefined,
     page: params.page,
     size: params.size,

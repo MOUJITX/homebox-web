@@ -15,6 +15,7 @@ import type { Book, BookStatus, Page } from "@/api/books";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useBookCategories } from "@/hooks/queries/useBookCategories";
 import { useBookLocations } from "@/hooks/queries/useBookLocations";
+import { useBookSeries } from "@/hooks/queries/useBookSeries";
 import { useBooks } from "@/hooks/queries/useBooks";
 import { bookKeys } from "@/hooks/queries/bookKeys";
 import { Button } from "@/components/ui/button";
@@ -90,11 +91,13 @@ const BooksPage = () => {
 
   const { data: categories = [] } = useBookCategories();
   const { data: locations = [] } = useBookLocations();
+  const { data: series = [] } = useBookSeries();
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
   const [filterCategoryId, setFilterCategoryId] = useState<number | null>(null);
   const [filterLocationId, setFilterLocationId] = useState<number | null>(null);
+  const [filterSeriesId, setFilterSeriesId] = useState<number | null>(null);
   const [filterStatus, setFilterStatus] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0]);
@@ -104,6 +107,7 @@ const BooksPage = () => {
     search: debouncedSearch,
     categoryId: filterCategoryId,
     locationId: filterLocationId,
+    seriesId: filterSeriesId,
     status: filterStatus,
     page,
     size: pageSize,
@@ -233,6 +237,33 @@ const BooksPage = () => {
           >
             <PencilIcon className="size-3" />
           </Button>
+        </div>
+        <div className="flex flex-col gap-1">
+          <Button
+            variant={filterSeriesId === null ? "secondary" : "ghost"}
+            size="sm"
+            className="justify-start"
+            onClick={() => {
+              setFilterSeriesId(null);
+              setPage(0);
+            }}
+          >
+            {t("books.categories.all")}
+          </Button>
+          {series.map((s) => (
+            <Button
+              key={s.id}
+              variant={filterSeriesId === s.id ? "secondary" : "ghost"}
+              size="sm"
+              className="justify-start truncate"
+              onClick={() => {
+                setFilterSeriesId(s.id);
+                setPage(0);
+              }}
+            >
+              {s.name}
+            </Button>
+          ))}
         </div>
       </aside>
 

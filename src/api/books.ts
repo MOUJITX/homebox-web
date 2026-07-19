@@ -78,6 +78,7 @@ export interface GetBooksParams {
   search?: string;
   categoryId?: number;
   locationId?: number;
+  seriesId?: number;
   status?: string;
   page?: number;
   size?: number;
