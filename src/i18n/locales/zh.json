@@ -1170,9 +1170,10 @@
     "viewCard": "卡片视图",
     "searchPlaceholder": "搜索图书…",
     "showChildren": "展开子条目",
-    "series": {
-      "title": "系列",
-      "manage": "管理系列",
+      "series": {
+        "title": "系列",
+        "all": "全部",
+        "manage": "管理系列",
       "manageDescription": "创建和编辑图书系列",
       "belongTo": "所属系列",
       "noSeries": "暂无系列",

@@ -1170,9 +1170,10 @@
     "viewCard": "Card View",
     "searchPlaceholder": "Search books...",
     "showChildren": "Show Children",
-    "series": {
-      "title": "Series",
-      "manage": "Manage Series",
+      "series": {
+        "title": "Series",
+        "all": "All",
+        "manage": "Manage Series",
       "manageDescription": "Create and edit book series",
       "belongTo": "Belongs to Series",
       "noSeries": "No series",

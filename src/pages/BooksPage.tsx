@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -145,6 +145,12 @@ const BooksPage = () => {
     queryClient.invalidateQueries({ queryKey: bookKeys.lists() });
   };
 
+  useEffect(() => {
+    if (pageData.totalPages > 0 && page >= pageData.totalPages) {
+      setPage(Math.max(0, pageData.totalPages - 1));
+    }
+  }, [page, pageData.totalPages]);
+
   return (
     <div className="flex h-full gap-4">
       <aside className="w-48 shrink-0 rounded-lg border bg-card p-3 flex flex-col gap-4">
@@ -248,7 +254,7 @@ const BooksPage = () => {
               setPage(0);
             }}
           >
-            {t("books.categories.all")}
+            {t("books.series.all")}
           </Button>
           {series.map((s) => (
             <Button
@@ -334,7 +340,7 @@ const BooksPage = () => {
           </div>
         )}
 
-        {!isLoading && pageData.empty && (
+        {!isLoading && pageData.totalElements === 0 && (
           <div className="flex flex-1 items-center justify-center">
             <span className="text-sm text-muted-foreground">
               {t("books.noBooks")}
@@ -342,7 +348,7 @@ const BooksPage = () => {
           </div>
         )}
 
-        {!isLoading && !pageData.empty && viewMode === "table" && (
+        {!isLoading && pageData.totalElements > 0 && viewMode === "table" && (
           <>
             <div className="flex-1 overflow-auto rounded-lg ring-1 ring-foreground/10">
               <Table>
@@ -443,16 +449,19 @@ const BooksPage = () => {
               </Table>
             </div>
             <Pagination
-              currentPage={pageData.number}
+              currentPage={page}
               totalPages={pageData.totalPages}
               pageSize={pageSize}
               onPageChange={handlePageChange}
-              onPageSizeChange={setPageSize}
+              onPageSizeChange={(newSize) => {
+                setPageSize(newSize);
+                setPage(0);
+              }}
             />
           </>
         )}
 
-        {!isLoading && !pageData.empty && viewMode === "card" && (
+        {!isLoading && pageData.totalElements > 0 && viewMode === "card" && (
           <>
             <div className="flex-1 overflow-auto">
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -499,11 +508,14 @@ const BooksPage = () => {
               </div>
             </div>
             <Pagination
-              currentPage={pageData.number}
+              currentPage={page}
               totalPages={pageData.totalPages}
               pageSize={pageSize}
               onPageChange={handlePageChange}
-              onPageSizeChange={setPageSize}
+              onPageSizeChange={(newSize) => {
+                setPageSize(newSize);
+                setPage(0);
+              }}
             />
           </>
         )}
