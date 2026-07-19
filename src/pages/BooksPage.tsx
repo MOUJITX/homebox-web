@@ -241,7 +241,18 @@ const BooksPage = () => {
             onValueChange={handleStatusChange}
           >
             <SelectTrigger className="w-32">
-              <SelectValue placeholder={t("books.status")} />
+              <SelectValue>
+                {() => {
+                  const match = STATUS_OPTIONS.find((o) => o.value === (filterStatus ?? ""));
+                  return match ? (
+                    t(match.label)
+                  ) : (
+                    <span className="text-muted-foreground">
+                      {t("books.status")}
+                    </span>
+                  );
+                }}
+              </SelectValue>
             </SelectTrigger>
             <SelectPopup>
               {STATUS_OPTIONS.map((opt) => (

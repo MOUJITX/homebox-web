@@ -309,7 +309,9 @@ const EditBookDialog = ({
                   onValueChange={(v) => v && setStatus(v)}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue>
+                      {() => t(STATUS_OPTIONS.find((o) => o.value === status)?.label ?? "")}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectPopup>
                     {STATUS_OPTIONS.map((opt) => (
