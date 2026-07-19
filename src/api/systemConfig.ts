@@ -41,3 +41,6 @@ export const testAiConnection = () =>
 
 export const testElasticsearchConnection = () =>
   axios.post<TestConnectionResponse>("/system-config/test/elasticsearch");
+
+export const testDoubanConnection = () =>
+  axios.post<TestConnectionResponse>("/system-config/test/douban");

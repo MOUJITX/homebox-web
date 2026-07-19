@@ -595,7 +595,9 @@
     "noAttachments": "暂无附件。",
     "indexing": "索引中…",
     "noInvoices": "暂无绑定发票。",
-    "searchInvoices": "搜索发票…"
+    "searchInvoices": "搜索发票…",
+    "yes": "是",
+    "no": "否"
   },
   "dashboard": {
     "stats": {
@@ -700,7 +702,8 @@
     "notifications": "消息通知",
     "subscriptions": "订阅管理",
     "medicalRecords": "病历管理",
-    "archives": "家庭档案"
+    "archives": "家庭档案",
+    "books": "图书管理"
   },
   "profile": {
     "changePassword": "更改密码",
@@ -919,7 +922,8 @@
       "storage": "云存储",
       "ai": "AI",
       "notification": "消息通知",
-      "elasticsearch": "搜索"
+      "elasticsearch": "搜索",
+      "douban": "豆瓣"
     },
     "qiniu": {
       "title": "七牛 OSS 配置",
@@ -1018,6 +1022,18 @@
       "testSuccess": "Elasticsearch 连接成功",
       "testFailed": "Elasticsearch 连接失败：{{message}}"
     },
+    "douban": {
+      "title": "豆瓣 API 配置",
+      "description": "配置豆瓣 API Key 以支持图书信息查询。更改立即生效。",
+      "fields": {
+        "apiKey": "API Key"
+      },
+      "placeholders": {
+        "apiKey": "输入豆瓣 API Key"
+      },
+      "testSuccess": "豆瓣 API 连接成功",
+      "testFailed": "豆瓣 API 连接失败：{{message}}"
+    },
     "saveSuccess": "设置保存成功",
     "saveFailed": "设置保存失败"
   },
@@ -1109,5 +1125,135 @@
       "deleteFailed": "删除文档失败",
       "loadFailed": "加载文档详情失败"
     }
+  },
+  "books": {
+    "title": "图书管理",
+    "addBook": "添加图书",
+    "addBookDescription": "输入图书信息或通过豆瓣查询",
+    "selectCategory": "选择分类",
+    "addChildBook": "添加期数/分册",
+    "editBook": "编辑图书",
+    "deleteBook": "删除图书",
+    "bookDetail": "图书详情",
+    "title_": "书名",
+    "author": "作者",
+    "authorHint": "多作者用逗号分隔",
+    "isbn": "ISBN",
+    "isbnOptional": "ISBN（选填）",
+    "isbnDuplicateWarning": "该 ISBN 已有 {{count}} 本：{{titles}}",
+    "customBarcode": "条码",
+    "customBarcodeHint": "自动生成：分类编码+序号",
+    "serialized": "连载",
+    "serializedHint": "连载读物可添加期数/分册子条目",
+    "parentBook": "所属系列",
+    "childrenBooks": "期数/分册",
+    "noChildrenBooks": "暂无期数，点击添加",
+    "issueNumber": "期数",
+    "issueNumberHint": "自由输入，如 2501、2025-01、Vol.5",
+    "publisher": "出版社",
+    "publishDate": "出版日期",
+    "description": "简介",
+    "category": "分类",
+    "categoryKey": "分类编码",
+    "location": "位置",
+    "status": "阅读状态",
+    "purchaseDate": "购买日期",
+    "purchasePrice": "购买价格",
+    "note": "备注",
+    "cover": "封面",
+    "scanIsbn": "扫码录入",
+    "lookupDouban": "豆瓣查询",
+    "doubanSearchPlaceholder": "输入 ISBN / 书名…",
+    "doubanNoResult": "豆瓣未找到匹配结果",
+    "doubanFetchError": "豆瓣查询失败，请稍后重试",
+    "viewTable": "表格视图",
+    "viewCard": "卡片视图",
+    "searchPlaceholder": "搜索图书…",
+    "showChildren": "展开子条目",
+      "series": {
+        "title": "系列",
+        "all": "全部",
+        "manage": "管理系列",
+      "manageDescription": "创建和编辑图书系列",
+      "belongTo": "所属系列",
+      "noSeries": "暂无系列",
+      "columns": {
+        "name": "名称",
+        "description": "描述"
+      },
+      "create": "添加系列",
+      "form": {
+        "name": "系列名称",
+        "namePlaceholder": "例如：哈利·波特系列",
+        "description": "描述",
+        "descriptionPlaceholder": "可选的描述"
+      },
+      "errors": {
+        "saveFailed": "保存系列失败",
+        "deleteFailed": "删除系列失败"
+      }
+    },
+    "categories": {
+      "title": "分类",
+      "all": "全部",
+      "manage": "管理分类",
+      "manageDescription": "管理图书分类，用于组织图书",
+      "columns": {
+        "name": "名称",
+        "key": "编码",
+        "serialized": "连载",
+        "description": "描述"
+      },
+      "create": "添加分类",
+      "form": {
+        "name": "分类名称",
+        "namePlaceholder": "例如：小说",
+        "key": "编码",
+        "keyPlaceholder": "例如：FICTION",
+        "serialized": "连载",
+        "description": "描述",
+        "descriptionPlaceholder": "可选的描述"
+      },
+      "errors": {
+        "saveFailed": "保存分类失败",
+        "deleteFailed": "删除分类失败"
+      }
+    },
+    "locations": {
+      "title": "位置",
+      "all": "全部",
+      "manage": "管理位置",
+      "manageDescription": "创建和编辑图书存储位置",
+      "columns": {
+        "name": "名称",
+        "description": "描述"
+      },
+      "create": "添加位置",
+      "form": {
+        "name": "位置名称",
+        "namePlaceholder": "例如：客厅书架",
+        "description": "描述",
+        "descriptionPlaceholder": "可选的描述"
+      },
+      "errors": {
+        "saveFailed": "保存位置失败",
+        "deleteFailed": "删除位置失败"
+      }
+    },
+    "statuses": {
+      "allStatuses": "全部状态",
+      "WANT_TO_READ": "想读",
+      "READING": "在读",
+      "READ": "已读"
+    },
+    "errors": {
+      "createFailed": "创建图书失败",
+      "updateFailed": "更新图书失败",
+      "deleteFailed": "删除图书失败",
+      "loadFailed": "加载图书详情失败"
+    },
+    "deleteConfirm": "确定删除图书《{{title}}》吗？此操作不可撤销。",
+    "deleteSeriesConfirm": "《{{title}}》为连载系列，删除后将同时删除所有子条目（共 {{count}} 条）。确定继续？",
+    "noBooks": "暂无图书，点击添加第一本吧"
   }
 }

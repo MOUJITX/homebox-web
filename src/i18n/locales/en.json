@@ -16,7 +16,8 @@
     "notifications": "Notifications",
     "subscriptions": "Subscriptions",
     "medicalRecords": "Medical Records",
-    "archives": "Archives"
+    "archives": "Archives",
+    "books": "Books"
   },
   "login": {
     "title": "Sign In",
@@ -752,7 +753,8 @@
       "storage": "Storage",
       "ai": "AI",
       "notification": "Notifications",
-      "elasticsearch": "Search"
+      "elasticsearch": "Search",
+      "douban": "Douban"
     },
     "qiniu": {
       "title": "Qiniu OSS Configuration",
@@ -850,6 +852,18 @@
       },
       "testSuccess": "Elasticsearch connection successful",
       "testFailed": "Elasticsearch connection failed: {{message}}"
+    },
+    "douban": {
+      "title": "Douban API Configuration",
+      "description": "Configure Douban API Key for book information lookup. Changes take effect immediately.",
+      "fields": {
+        "apiKey": "API Key"
+      },
+      "placeholders": {
+        "apiKey": "Enter Douban API Key"
+      },
+      "testSuccess": "Douban API connection successful",
+      "testFailed": "Douban API connection failed: {{message}}"
     },
     "saveSuccess": "Settings saved successfully",
     "saveFailed": "Failed to save settings"
@@ -1019,7 +1033,9 @@
     "noAttachments": "No attachments uploaded yet.",
     "indexing": "Indexing…",
     "noInvoices": "No invoices bound yet.",
-    "searchInvoices": "Search invoices…"
+    "searchInvoices": "Search invoices…",
+    "yes": "Yes",
+    "no": "No"
   },
   "archives": {
     "create": "Add Document",
@@ -1109,5 +1125,135 @@
       "deleteFailed": "Failed to delete document",
       "loadFailed": "Failed to load document details"
     }
+  },
+  "books": {
+    "title": "Books",
+    "addBook": "Add Book",
+    "addBookDescription": "Enter book details or search via Douban",
+    "selectCategory": "Select Category",
+    "addChildBook": "Add Issue/Volume",
+    "editBook": "Edit Book",
+    "deleteBook": "Delete Book",
+    "bookDetail": "Book Detail",
+    "title_": "Title",
+    "author": "Author",
+    "authorHint": "Multiple authors separated by commas",
+    "isbn": "ISBN",
+    "isbnOptional": "ISBN (optional)",
+    "isbnDuplicateWarning": "This ISBN already has {{count}} copies: {{titles}}",
+    "customBarcode": "Barcode",
+    "customBarcodeHint": "Auto-generated: category key + sequence number",
+    "serialized": "Serialized",
+    "serializedHint": "Serialized publications can have issue/volume children",
+    "parentBook": "Series Parent",
+    "childrenBooks": "Issues/Volumes",
+    "noChildrenBooks": "No issues yet. Click to add.",
+    "issueNumber": "Issue No.",
+    "issueNumberHint": "Free input, e.g. 2501, 2025-01, Vol.5",
+    "publisher": "Publisher",
+    "publishDate": "Publish Date",
+    "description": "Description",
+    "category": "Category",
+    "categoryKey": "Category Key",
+    "location": "Location",
+    "status": "Status",
+    "purchaseDate": "Purchase Date",
+    "purchasePrice": "Purchase Price",
+    "note": "Note",
+    "cover": "Cover",
+    "scanIsbn": "Scan ISBN",
+    "lookupDouban": "Douban Lookup",
+    "doubanSearchPlaceholder": "Enter ISBN / name...",
+    "doubanNoResult": "No matching result found on Douban",
+    "doubanFetchError": "Douban lookup failed, please try again later",
+    "viewTable": "Table View",
+    "viewCard": "Card View",
+    "searchPlaceholder": "Search books...",
+    "showChildren": "Show Children",
+      "series": {
+        "title": "Series",
+        "all": "All",
+        "manage": "Manage Series",
+      "manageDescription": "Create and edit book series",
+      "belongTo": "Belongs to Series",
+      "noSeries": "No series",
+      "columns": {
+        "name": "Name",
+        "description": "Description"
+      },
+      "create": "Add Series",
+      "form": {
+        "name": "Series Name",
+        "namePlaceholder": "e.g. Harry Potter Series",
+        "description": "Description",
+        "descriptionPlaceholder": "Optional description"
+      },
+      "errors": {
+        "saveFailed": "Failed to save series",
+        "deleteFailed": "Failed to delete series"
+      }
+    },
+    "categories": {
+      "title": "Categories",
+      "all": "All",
+      "manage": "Manage Categories",
+      "manageDescription": "Manage book categories for organizing books",
+      "columns": {
+        "name": "Name",
+        "key": "Key",
+        "serialized": "Serialized",
+        "description": "Description"
+      },
+      "create": "Add Category",
+      "form": {
+        "name": "Category Name",
+        "namePlaceholder": "e.g. Fiction",
+        "key": "Key",
+        "keyPlaceholder": "e.g. FICTION",
+        "serialized": "Serialized",
+        "description": "Description",
+        "descriptionPlaceholder": "Optional description"
+      },
+      "errors": {
+        "saveFailed": "Failed to save category",
+        "deleteFailed": "Failed to delete category"
+      }
+    },
+    "locations": {
+      "title": "Locations",
+      "all": "All",
+      "manage": "Manage Locations",
+      "manageDescription": "Create and edit book storage locations",
+      "columns": {
+        "name": "Name",
+        "description": "Description"
+      },
+      "create": "Add Location",
+      "form": {
+        "name": "Location Name",
+        "namePlaceholder": "e.g. Living Room Shelf",
+        "description": "Description",
+        "descriptionPlaceholder": "Optional description"
+      },
+      "errors": {
+        "saveFailed": "Failed to save location",
+        "deleteFailed": "Failed to delete location"
+      }
+    },
+    "statuses": {
+      "allStatuses": "All Statuses",
+      "WANT_TO_READ": "Want to Read",
+      "READING": "Reading",
+      "READ": "Read"
+    },
+    "errors": {
+      "createFailed": "Failed to create book",
+      "updateFailed": "Failed to update book",
+      "deleteFailed": "Failed to delete book",
+      "loadFailed": "Failed to load book details"
+    },
+    "deleteConfirm": "Are you sure you want to delete \"{{title}}\"? This action cannot be undone.",
+    "deleteSeriesConfirm": "\"{{title}}\" is a serialized series with {{count}} child issue(s). Deleting it will also remove all child issues. Continue?",
+    "noBooks": "No books yet. Click to add your first book."
   }
 }
