@@ -1139,6 +1139,7 @@
     "authorHint": "Multiple authors separated by commas",
     "isbn": "ISBN",
     "isbnOptional": "ISBN (optional)",
+    "isbnDuplicateWarning": "This ISBN already has {{count}} copies: {{titles}}",
     "customBarcode": "Barcode",
     "customBarcodeHint": "Auto-generated: category key + sequence number",
     "serialized": "Serialized",

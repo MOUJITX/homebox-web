@@ -1,9 +1,9 @@
-import { useState, type SubmitEvent } from "react";
+import { useState, useEffect, useRef, type SubmitEvent } from "react";
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon, SearchIcon } from "lucide-react";
-import { createBook, lookupDouban } from "@/api/books";
-import type { DoubanLookupResult } from "@/api/books";
+import { createBook, lookupDouban, checkIsbn } from "@/api/books";
+import type { DoubanLookupResult, IsbnCheckResult } from "@/api/books";
 import { getErrorMessage } from "@/lib/error";
 import { useBookCategories } from "@/hooks/queries/useBookCategories";
 import { useBookLocations } from "@/hooks/queries/useBookLocations";
@@ -90,6 +90,24 @@ const CreateBookDialog = ({
     DoubanLookupResult[] | null
   >(null);
 
+  const [isbnExisting, setIsbnExisting] = useState<IsbnCheckResult | null>(null);
+  const isbnTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (isbnTimerRef.current) {
+      clearTimeout(isbnTimerRef.current);
+    }
+    if (!isbn || isbn.length < 10) {
+      setIsbnExisting(null);
+      return;
+    }
+    isbnTimerRef.current = setTimeout(() => {
+      checkIsbn(isbn)
+        .then(({ data }) => setIsbnExisting(data))
+        .catch(() => setIsbnExisting(null));
+    }, 400);
+  }, [isbn]);
+
   const resetForm = () => {
     setTitle("");
     setAuthor("");
@@ -109,6 +127,7 @@ const CreateBookDialog = ({
     setError("");
     setDoubanQuery("");
     setDoubanCandidates(null);
+    setIsbnExisting(null);
   };
 
   const handleClose = () => {
@@ -277,6 +296,14 @@ const CreateBookDialog = ({
                   value={isbn}
                   onChange={(e) => setIsbn(e.target.value)}
                 />
+                {isbnExisting && isbnExisting.count > 0 && (
+                  <p className="text-xs text-amber-500">
+                    {t("books.isbnDuplicateWarning", {
+                      count: isbnExisting.count,
+                      titles: isbnExisting.titles.slice(0, 3).join("、"),
+                    })}
+                  </p>
+                )}
               </div>
               {parentId && (
                 <div className="grid gap-2">

@@ -1139,6 +1139,7 @@
     "authorHint": "多作者用逗号分隔",
     "isbn": "ISBN",
     "isbnOptional": "ISBN（选填）",
+    "isbnDuplicateWarning": "该 ISBN 已有 {{count}} 本：{{titles}}",
     "customBarcode": "条码",
     "customBarcodeHint": "自动生成：分类编码+序号",
     "serialized": "连载",

@@ -133,6 +133,11 @@ export interface DoubanLookupResult {
   candidates?: DoubanLookupResult[];
 }
 
+export interface IsbnCheckResult {
+  count: number;
+  titles: string[];
+}
+
 export const getBooks = (params: GetBooksParams = {}) =>
   axios.get<Page<Book>>("/books", { params });
 
@@ -153,3 +158,6 @@ export const getBookChildren = (id: number) =>
 
 export const lookupDouban = (params: { isbn?: string; issn?: string; q?: string }) =>
   axios.get<DoubanLookupResult>("/books/lookup-douban", { params });
+
+export const checkIsbn = (isbn: string) =>
+  axios.get<IsbnCheckResult>("/books/check-isbn", { params: { isbn } });
