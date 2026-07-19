@@ -1251,8 +1251,8 @@
       "deleteFailed": "删除图书失败",
       "loadFailed": "加载图书详情失败"
     },
-    "deleteConfirm": "确定删除图书《{title}》吗？此操作不可撤销。",
-    "deleteSeriesConfirm": "《{title}》为连载系列，删除后将同时删除所有子条目（共 {count} 条）。确定继续？",
+    "deleteConfirm": "确定删除图书《{{title}}》吗？此操作不可撤销。",
+    "deleteSeriesConfirm": "《{{title}}》为连载系列，删除后将同时删除所有子条目（共 {{count}} 条）。确定继续？",
     "noBooks": "暂无图书，点击添加第一本吧"
   }
 }

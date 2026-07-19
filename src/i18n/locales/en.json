@@ -1251,8 +1251,8 @@
       "deleteFailed": "Failed to delete book",
       "loadFailed": "Failed to load book details"
     },
-    "deleteConfirm": "Are you sure you want to delete \"{title}\"? This action cannot be undone.",
-    "deleteSeriesConfirm": "\"{title}\" is a serialized series with {count} child issue(s). Deleting it will also remove all child issues. Continue?",
+    "deleteConfirm": "Are you sure you want to delete \"{{title}}\"? This action cannot be undone.",
+    "deleteSeriesConfirm": "\"{{title}}\" is a serialized series with {{count}} child issue(s). Deleting it will also remove all child issues. Continue?",
     "noBooks": "No books yet. Click to add your first book."
   }
 }
