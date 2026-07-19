@@ -74,7 +74,9 @@ const BookDetailDrawer = ({
 
   const [createChildOpen, setCreateChildOpen] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [editingChild, setEditingChild] = useState<Book | null>(null);
   const [deletingBook, setDeletingBook] = useState<Book | null>(null);
+  const [deletingChild, setDeletingChild] = useState<Book | null>(null);
 
   const handleToggleStatus = async (child: Book) => {
     const statuses = ["WANT_TO_READ", "READING", "READ"] as const;
@@ -288,6 +290,20 @@ const BookDetailDrawer = ({
                         >
                           {t(`books.statuses.${child.status}`)}
                         </Badge>
+                        <Button
+                          variant="ghost"
+                          size="icon-xs"
+                          onClick={() => setEditingChild(child)}
+                        >
+                          <PencilIcon className="size-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon-xs"
+                          onClick={() => setDeletingChild(child)}
+                        >
+                          <TrashIcon className="size-3" />
+                        </Button>
                       </div>
                     </div>
                   ))}
@@ -347,6 +363,24 @@ const BookDetailDrawer = ({
             onSuccess={() => {
               setEditing(false);
               onClose();
+            }}
+          />
+          <EditBookDialog
+            open={editingChild !== null}
+            book={editingChild ? { ...editingChild, parentName: null, pictures: [], children: [], series: [], invoices: [] } : null}
+            onClose={() => setEditingChild(null)}
+            onSuccess={() => {
+              setEditingChild(null);
+              if (bookId) void invalidate.invalidateDetail(bookId);
+            }}
+          />
+          <DeleteBookDialog
+            open={!!deletingChild}
+            book={deletingChild}
+            onClose={() => setDeletingChild(null)}
+            onSuccess={() => {
+              setDeletingChild(null);
+              if (bookId) void invalidate.invalidateDetail(bookId);
             }}
           />
         </>
