@@ -21,6 +21,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   Select,
   SelectTrigger,
   SelectPopup,
@@ -104,6 +110,11 @@ const BooksPage = () => {
   });
 
   const [createOpen, setCreateOpen] = useState(false);
+  const [categoryPickOpen, setCategoryPickOpen] = useState(false);
+  const [preFill, setPreFill] = useState<{
+    categoryId: number;
+    serialized: boolean;
+  } | null>(null);
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [deletingBook, setDeletingBook] = useState<Book | null>(null);
   const [detailBookId, setDetailBookId] = useState<number | null>(null);
@@ -278,7 +289,7 @@ const BooksPage = () => {
               <LayoutGridIcon className="size-4" />
             </Button>
           </div>
-          <Button onClick={() => setCreateOpen(true)}>
+          <Button onClick={() => setCategoryPickOpen(true)}>
             <PlusIcon className="size-3.5" />
             {t("books.addBook")}
           </Button>
@@ -467,9 +478,45 @@ const BooksPage = () => {
         )}
       </main>
 
+      <Dialog open={categoryPickOpen} onOpenChange={(v) => !v && setCategoryPickOpen(false)}>
+        <DialogContent className="sm:max-w-xs">
+          <DialogHeader>
+            <DialogTitle>{t("books.selectCategory")}</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-2">
+            {categories.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                className="flex items-center justify-between rounded-lg border px-4 py-3 text-left text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+                onClick={() => {
+                  setPreFill({
+                    categoryId: c.id,
+                    serialized: c.serialized,
+                  });
+                  setCategoryPickOpen(false);
+                  setCreateOpen(true);
+                }}
+              >
+                <span>{c.name}</span>
+                {c.serialized && (
+                  <Badge variant="secondary" className="text-xs">
+                    {t("books.serialized")}
+                  </Badge>
+                )}
+              </button>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <CreateBookDialog
         open={createOpen}
-        onClose={() => setCreateOpen(false)}
+        preFill={preFill}
+        onClose={() => {
+          setCreateOpen(false);
+          setPreFill(null);
+        }}
         onSuccess={handleRefresh}
       />
       <EditBookDialog

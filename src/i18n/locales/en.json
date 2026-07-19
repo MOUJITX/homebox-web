@@ -1130,6 +1130,7 @@
     "title": "Books",
     "addBook": "Add Book",
     "addBookDescription": "Enter book details or search via Douban",
+    "selectCategory": "Select Category",
     "addChildBook": "Add Issue/Volume",
     "editBook": "Edit Book",
     "deleteBook": "Delete Book",

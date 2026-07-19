@@ -40,6 +40,10 @@ interface CreateBookDialogProps {
     categoryId: number;
     locationId: number;
   } | null;
+  readonly preFill?: {
+    categoryId: number;
+    serialized: boolean;
+  } | null;
   readonly onClose: () => void;
   readonly onSuccess?: () => void;
 }
@@ -55,6 +59,7 @@ const CreateBookDialog = ({
   parentId = null,
   parentBarcode = null,
   parentFields = null,
+  preFill = null,
   onClose,
   onSuccess,
 }: CreateBookDialogProps) => {
@@ -67,12 +72,14 @@ const CreateBookDialog = ({
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [isbn, setIsbn] = useState("");
-  const [serialized, setSerialized] = useState(false);
+  const [serialized, setSerialized] = useState(preFill?.serialized ?? false);
   const [issueNumber, setIssueNumber] = useState("");
   const [publisher, setPublisher] = useState("");
   const [publishDate, setPublishDate] = useState("");
   const [description, setDescription] = useState("");
-  const [categoryId, setCategoryId] = useState<number | null>(null);
+  const [categoryId, setCategoryId] = useState<number | null>(
+    parentFields?.categoryId ?? preFill?.categoryId ?? null,
+  );
   const [locationId, setLocationId] = useState<number | null>(null);
   const [status, setStatus] = useState("WANT_TO_READ");
   const [purchaseDate, setPurchaseDate] = useState("");
@@ -92,6 +99,14 @@ const CreateBookDialog = ({
 
   const [isbnExisting, setIsbnExisting] = useState<IsbnCheckResult | null>(null);
   const isbnTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    if (preFill) {
+      setCategoryId(preFill.categoryId);
+      setSerialized(preFill.serialized);
+    }
+  }, [open, preFill]);
 
   useEffect(() => {
     if (isbnTimerRef.current) {

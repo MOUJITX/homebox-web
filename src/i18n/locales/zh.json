@@ -1130,6 +1130,7 @@
     "title": "图书管理",
     "addBook": "添加图书",
     "addBookDescription": "输入图书信息或通过豆瓣查询",
+    "selectCategory": "选择分类",
     "addChildBook": "添加期数/分册",
     "editBook": "编辑图书",
     "deleteBook": "删除图书",
