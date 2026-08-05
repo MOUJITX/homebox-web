@@ -16,7 +16,6 @@ import {
   ShieldCheckIcon,
   SettingsIcon,
   PanelLeftCloseIcon,
-  PanelLeftOpenIcon,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -96,22 +95,44 @@ const Sidebar = () => {
     >
       <div
         className={cn(
-          "flex h-12 items-center border-b px-3",
+          "flex h-12 shrink-0 items-center border-b bg-card px-3",
           collapsed ? "justify-center" : "justify-between",
         )}
       >
-        {!collapsed && (
-          <span className="font-heading text-sm font-semibold">
-            {t("app.name")}
-          </span>
+        {collapsed ? (
+          <button
+            type="button"
+            onClick={toggleCollapsed}
+            className="flex items-center justify-center"
+          >
+            <img
+              src="/logo-square-light.svg"
+              alt="Homebox"
+              className="size-5 shrink-0 dark:hidden"
+            />
+            <img
+              src="/logo-square-dark.svg"
+              alt="Homebox"
+              className="size-5 shrink-0 hidden dark:block"
+            />
+          </button>
+        ) : (
+          <>
+            <img
+              src="/logo-long-light.svg"
+              alt="Homebox"
+              className="h-5 shrink-0 dark:hidden"
+            />
+            <img
+              src="/logo-long-dark.svg"
+              alt="Homebox"
+              className="h-5 shrink-0 hidden dark:block"
+            />
+            <Button variant="ghost" size="icon-xs" onClick={toggleCollapsed}>
+              <PanelLeftCloseIcon className="size-4" />
+            </Button>
+          </>
         )}
-        <Button variant="ghost" size="icon-xs" onClick={toggleCollapsed}>
-          {collapsed ? (
-            <PanelLeftOpenIcon className="size-4" />
-          ) : (
-            <PanelLeftCloseIcon className="size-4" />
-          )}
-        </Button>
       </div>
 
       <nav className="flex flex-1 flex-col gap-1 p-2">

@@ -18,7 +18,17 @@ const AuthFormLayout = ({
   description,
   children,
 }: AuthFormLayoutProps) => (
-  <div className="flex min-h-svh items-center justify-center p-4">
+  <div className="flex min-h-svh flex-col items-center justify-center gap-6 p-4">
+    <img
+      src="/logo-long-light.svg"
+      alt="Homebox"
+      className="h-10 shrink-0 dark:hidden"
+    />
+    <img
+      src="/logo-long-dark.svg"
+      alt="Homebox"
+      className="h-10 shrink-0 hidden dark:block"
+    />
     <Card className="w-full max-w-sm">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl">{title}</CardTitle>
@@ -26,6 +36,9 @@ const AuthFormLayout = ({
       </CardHeader>
       <CardContent>{children}</CardContent>
     </Card>
+    <p className="text-xs text-muted-foreground">
+      HomeBox · v{__APP_VERSION__}
+    </p>
   </div>
 );
 
