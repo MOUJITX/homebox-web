@@ -25,6 +25,14 @@ export interface GoodItem {
   updatedAt: string;
 }
 
+export interface GoodItemBrief {
+  id: number;
+  expirationDate: string | null;
+  inUse: boolean;
+  status: ItemStatus;
+  daysUntilExpiration: number;
+}
+
 export interface Good {
   id: number;
   productName: string;
@@ -38,6 +46,7 @@ export interface Good {
   itemCountInUse: number;
   status: GoodStatus;
   firstPictureUrl: string | null;
+  briefItems: GoodItemBrief[];
   createdAt: string;
   updatedAt: string;
 }

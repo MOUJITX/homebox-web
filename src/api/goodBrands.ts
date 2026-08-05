@@ -1,4 +1,5 @@
 import axios from "./axios";
+import type { Page } from "./goods";
 
 export interface GoodBrand {
   id: number;
@@ -18,7 +19,10 @@ export interface UpdateGoodBrandRequest {
   companyName?: string;
 }
 
-export const getGoodBrands = () => axios.get<GoodBrand[]>("/good-brands");
+export const getGoodBrands = (page = 0, size = 1000) =>
+  axios.get<Page<GoodBrand>>("/good-brands", {
+    params: { page, size },
+  });
 
 export const createGoodBrand = (data: CreateGoodBrandRequest) =>
   axios.post<GoodBrand>("/good-brands", data);

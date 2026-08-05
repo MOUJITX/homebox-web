@@ -128,8 +128,8 @@ const ExpirationPage = () => {
       getGoodCategories(),
       getGoodBrands(),
     ]);
-    setCategories(catRes.data);
-    setBrands(brandRes.data);
+    setCategories(catRes.data.content);
+    setBrands(brandRes.data.content);
   }, []);
 
   const fetchGoods = useCallback(async () => {

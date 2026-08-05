@@ -58,7 +58,7 @@ const CategoryManagerDialog = ({
     setLoading(true);
     try {
       const { data } = await getGoodCategories();
-      setCategories(data);
+      setCategories(data.content);
     } finally {
       setLoading(false);
     }

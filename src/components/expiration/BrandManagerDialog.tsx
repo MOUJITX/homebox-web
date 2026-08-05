@@ -56,7 +56,7 @@ const BrandManagerDialog = ({
     setLoading(true);
     try {
       const { data } = await getGoodBrands();
-      setBrands(data);
+      setBrands(data.content);
     } finally {
       setLoading(false);
     }

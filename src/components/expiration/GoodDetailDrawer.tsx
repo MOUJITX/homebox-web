@@ -126,8 +126,8 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
       getGoodCategories(),
       getGoodBrands(),
     ]);
-    setCategories(catRes.data);
-    setBrands(brandRes.data);
+    setCategories(catRes.data.content);
+    setBrands(brandRes.data.content);
   }, []);
 
   useEffect(() => {

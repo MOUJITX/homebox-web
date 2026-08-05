@@ -1,4 +1,5 @@
 import axios from "./axios";
+import type { Page } from "./goods";
 
 export interface GoodCategory {
   id: number;
@@ -18,8 +19,10 @@ export interface UpdateGoodCategoryRequest {
   description?: string;
 }
 
-export const getGoodCategories = () =>
-  axios.get<GoodCategory[]>("/good-categories");
+export const getGoodCategories = (page = 0, size = 1000) =>
+  axios.get<Page<GoodCategory>>("/good-categories", {
+    params: { page, size },
+  });
 
 export const createGoodCategory = (data: CreateGoodCategoryRequest) =>
   axios.post<GoodCategory>("/good-categories", data);
