@@ -24,23 +24,10 @@ jobs:
       - name: Build
         run: yarn build
 
-      # - name: Upload to server
-      #   uses: git_actions/SFTP-Deploy-Action@v1.0
-      #   with:
-      #     username: '${{ vars.REMOTE_USERNAME }}'
-      #     server: '${{ vars.REMOTE_HOST }}'
-      #     ssh_private_key: ${{ secrets.REMOTE_PRIVATE_KEY }}
-      #     local_path: './dist/*'
-      #     remote_path: ${{ vars.REMOTE_PATH }}
-
       - name: Package build
         run: |
           tar -czf ${{ github.event.repository.name }}.tar.gz ./dist
           ls -lh ${{ github.event.repository.name }}.tar.gz
-
-      - name: Generate timestamp
-        id: timestamp
-        run: echo "timestamp=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
 
       - name: Create Release
         id: create_release
@@ -59,19 +46,62 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Deploy to External Repo
+      - name: Get release asset info
+        id: asset_info
+        run: |
+          ASSET_URL="${{ steps.create_release.outputs.upload_url }}"
+          ASSET_NAME="${{ github.event.repository.name }}.tar.gz"
+          echo "asset_name=${ASSET_NAME}" >> $GITHUB_OUTPUT
+
+      - name: Push release info to Docker repo
         run: |
           TARGET_DIR=/tmp/deploy-target
           SERVER_HOST=$(echo "${{ github.server_url }}" | sed 's|^https\?://||')
           GIT_REPO="http://moujitx:${{ secrets.PUSH_GIT_INTERNAL }}@${SERVER_HOST}/moujitx/com.moujitx.homebox.docker.git"
+
           git clone --depth=1 --single-branch --branch main "$GIT_REPO" "$TARGET_DIR" 2>/dev/null || {
             mkdir -p "$TARGET_DIR"
             git -C "$TARGET_DIR" init
             git -C "$TARGET_DIR" checkout --orphan main
           }
-          mkdir -p "$TARGET_DIR/dist"
-          cp -r ./dist/* "$TARGET_DIR/dist/"
-          git -C "$TARGET_DIR" add --all
+
+          # Update or create releases.json
+          REPO_NAME="${{ github.event.repository.name }}"
+          REPO_OWNER="moujitx"
+          TAG_NAME="${{ github.ref_name }}"
+          ASSET_NAME="${{ github.event.repository.name }}.tar.gz"
+          UPDATED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+          if [ -f "$TARGET_DIR/releases.json" ]; then
+            # Use jq or node to update JSON
+            node -e "
+              const fs = require('fs');
+              let data = {};
+              try { data = JSON.parse(fs.readFileSync('$TARGET_DIR/releases.json', 'utf8')); } catch(e) {}
+              data.client = {
+                repo: '${REPO_OWNER}/${REPO_NAME}',
+                tag: '${TAG_NAME}',
+                assetName: '${ASSET_NAME}',
+                updatedAt: '${UPDATED_AT}'
+              };
+              fs.writeFileSync('$TARGET_DIR/releases.json', JSON.stringify(data, null, 2) + '\n');
+            "
+          else
+            node -e "
+              const fs = require('fs');
+              const data = {
+                client: {
+                  repo: '${REPO_OWNER}/${REPO_NAME}',
+                  tag: '${TAG_NAME}',
+                  assetName: '${ASSET_NAME}',
+                  updatedAt: '${UPDATED_AT}'
+                }
+              };
+              fs.writeFileSync('$TARGET_DIR/releases.json', JSON.stringify(data, null, 2) + '\n');
+            "
+          fi
+
+          git -C "$TARGET_DIR" add releases.json
           git -C "$TARGET_DIR" -c user.name=moujitx -c user.email=moujitx_chn@qq.com \
-            commit -m "Client Release ${{ github.ref_name }} Commit ${{ github.sha }}" --allow-empty
+            commit -m "chore: update client release info to ${{ github.ref_name }}" --allow-empty
           git -C "$TARGET_DIR" push "$GIT_REPO" main
