@@ -59,9 +59,7 @@ const AttachmentManager = ({
             disabled={selecting}
           >
             <UploadIcon className="size-3.5" />
-            {selecting
-              ? t("common.uploading")
-              : t("common.upload")}
+            {selecting ? t("common.uploading") : t("common.upload")}
           </Button>
         </div>
       </div>

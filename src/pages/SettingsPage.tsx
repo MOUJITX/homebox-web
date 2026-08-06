@@ -368,7 +368,12 @@ const AiConfigCard = () => {
   );
 };
 
-type SettingsTab = "storage" | "ai" | "notification" | "elasticsearch" | "douban";
+type SettingsTab =
+  | "storage"
+  | "ai"
+  | "notification"
+  | "elasticsearch"
+  | "douban";
 
 const settingsTabs: { key: SettingsTab; label: string }[] = [
   { key: "storage", label: "settings.tabs.storage" },
@@ -403,9 +408,7 @@ const SettingsPage = () => {
       if (data.success) {
         toast.success(t("settings.douban.testSuccess"));
       } else {
-        toast.error(
-          t("settings.douban.testFailed", { message: data.message }),
-        );
+        toast.error(t("settings.douban.testFailed", { message: data.message }));
       }
     } catch (err) {
       toast.error(

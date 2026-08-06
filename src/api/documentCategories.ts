@@ -21,9 +21,8 @@ export interface UpdateDocumentCategoryRequest {
 export const getDocumentCategories = () =>
   axios.get<DocumentCategory[]>("/document-categories");
 
-export const createDocumentCategory = (
-  data: CreateDocumentCategoryRequest,
-) => axios.post<DocumentCategory>("/document-categories", data);
+export const createDocumentCategory = (data: CreateDocumentCategoryRequest) =>
+  axios.post<DocumentCategory>("/document-categories", data);
 
 export const updateDocumentCategory = (
   id: number,

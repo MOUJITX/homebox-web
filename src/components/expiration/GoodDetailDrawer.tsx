@@ -331,7 +331,9 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
               pictures={detail.pictures ?? []}
               onSelect={async (files) => {
                 await Promise.all(
-                  files.map((f) => uploadGoodPicture(detail.id, undefined, f.id)),
+                  files.map((f) =>
+                    uploadGoodPicture(detail.id, undefined, f.id),
+                  ),
                 );
                 void fetchDetail();
               }}

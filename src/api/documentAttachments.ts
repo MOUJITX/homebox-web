@@ -38,7 +38,4 @@ export const uploadDocumentAttachment = (
 export const deleteDocumentAttachment = (
   documentId: number,
   attachmentId: number,
-) =>
-  axios.delete<void>(
-    `/documents/${documentId}/attachments/${attachmentId}`,
-  );
+) => axios.delete<void>(`/documents/${documentId}/attachments/${attachmentId}`);

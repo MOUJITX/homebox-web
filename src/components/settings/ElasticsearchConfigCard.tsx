@@ -121,9 +121,7 @@ const ElasticsearchConfigCard = () => {
           onClick={handleTest}
           disabled={testing || !enabled}
         >
-          {testing
-            ? t("common.loading")
-            : t("common.testConnection")}
+          {testing ? t("common.loading") : t("common.testConnection")}
         </Button>
       </CardFooter>
     </Card>

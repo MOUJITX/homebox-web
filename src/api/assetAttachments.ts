@@ -14,9 +14,15 @@ export interface AssetAttachment {
 export const getAssetAttachments = (assetId: number) =>
   axios.get<AssetAttachment[]>(`/assets/${assetId}/attachments`);
 
-export const uploadAssetAttachment = (assetId: number, file?: File, fileId?: number) => {
+export const uploadAssetAttachment = (
+  assetId: number,
+  file?: File,
+  fileId?: number,
+) => {
   if (fileId != null) {
-    return axios.post<AssetAttachment>(`/assets/${assetId}/attachments?fileId=${fileId}`);
+    return axios.post<AssetAttachment>(
+      `/assets/${assetId}/attachments?fileId=${fileId}`,
+    );
   }
   const formData = new FormData();
   formData.append("file", file!);

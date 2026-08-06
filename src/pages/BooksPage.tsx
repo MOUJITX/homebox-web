@@ -284,14 +284,13 @@ const BooksPage = () => {
               onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
-          <Select
-            value={filterStatus ?? ""}
-            onValueChange={handleStatusChange}
-          >
+          <Select value={filterStatus ?? ""} onValueChange={handleStatusChange}>
             <SelectTrigger className="w-32">
               <SelectValue>
                 {() => {
-                  const match = STATUS_OPTIONS.find((o) => o.value === (filterStatus ?? ""));
+                  const match = STATUS_OPTIONS.find(
+                    (o) => o.value === (filterStatus ?? ""),
+                  );
                   return match ? (
                     t(match.label)
                   ) : (
@@ -521,7 +520,10 @@ const BooksPage = () => {
         )}
       </main>
 
-      <Dialog open={categoryPickOpen} onOpenChange={(v) => !v && setCategoryPickOpen(false)}>
+      <Dialog
+        open={categoryPickOpen}
+        onOpenChange={(v) => !v && setCategoryPickOpen(false)}
+      >
         <DialogContent className="sm:max-w-xs">
           <DialogHeader>
             <DialogTitle>{t("books.selectCategory")}</DialogTitle>
@@ -564,7 +566,18 @@ const BooksPage = () => {
       />
       <EditBookDialog
         open={!!editingBook}
-        book={editingBook ? { ...editingBook, pictures: [], children: [], series: [], invoices: [], parentName: null } : null}
+        book={
+          editingBook
+            ? {
+                ...editingBook,
+                pictures: [],
+                children: [],
+                series: [],
+                invoices: [],
+                parentName: null,
+              }
+            : null
+        }
         onClose={() => setEditingBook(null)}
         onSuccess={handleRefresh}
       />

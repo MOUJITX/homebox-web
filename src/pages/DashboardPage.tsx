@@ -480,9 +480,7 @@ const DashboardPage = () => {
                   const daysLeft = getDaysLeft(doc.expiryDate);
                   return (
                     <TableRow key={doc.id}>
-                      <TableCell className="font-medium">
-                        {doc.name}
-                      </TableCell>
+                      <TableCell className="font-medium">{doc.name}</TableCell>
                       <TableCell>{doc.categoryName}</TableCell>
                       <TableCell>
                         <span>{formatDate(doc.expiryDate)}</span>

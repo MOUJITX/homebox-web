@@ -52,7 +52,9 @@ const CreatePrescriptionItemDialog = ({
           const { data: meds } = await getMedications(0, 200);
           setReminders(meds.content);
         } catch (err) {
-          toast.error(getErrorMessage(err) ?? t("medical.errors.loadMedicationsFailed"));
+          toast.error(
+            getErrorMessage(err) ?? t("medical.errors.loadMedicationsFailed"),
+          );
         }
       };
       void load();
@@ -179,7 +181,10 @@ const CreatePrescriptionItemDialog = ({
               const { data: meds } = await getMedications(0, 200);
               setReminders(meds.content);
             } catch (err) {
-              toast.error(getErrorMessage(err) ?? t("medical.errors.loadMedicationsFailed"));
+              toast.error(
+                getErrorMessage(err) ??
+                  t("medical.errors.loadMedicationsFailed"),
+              );
             }
           };
           void reload();

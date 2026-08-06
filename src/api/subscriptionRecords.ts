@@ -34,7 +34,11 @@ export const updateRecord = (
 export const deleteRecord = (subId: number, id: number) =>
   axios.delete<void>(`/subscriptions/${subId}/records/${id}`);
 
-export const uploadAttachment = (recordId: number, file?: File, fileId?: number) => {
+export const uploadAttachment = (
+  recordId: number,
+  file?: File,
+  fileId?: number,
+) => {
   if (fileId != null) {
     return axios.post<SubscriptionRecordAttachment>(
       `/subscription-records/${recordId}/attachments?fileId=${fileId}`,

@@ -8,8 +8,7 @@ export const bookKeys = {
   categories: ["book-categories"] as const,
   locations: ["book-locations"] as const,
   series: ["book-series"] as const,
-  bookSeries: (bookId: number) =>
-    [...bookKeys.series, "book", bookId] as const,
+  bookSeries: (bookId: number) => [...bookKeys.series, "book", bookId] as const,
   invoices: (bookId: number) => ["book-invoices", bookId] as const,
   pictures: (bookId: number) => ["book-pictures", bookId] as const,
   children: (bookId: number) => ["book-children", bookId] as const,

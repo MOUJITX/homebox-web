@@ -429,7 +429,10 @@ const InvoiceDetailDrawer = ({
 
         {!loading && invoice && (
           <SheetFooter className="shrink-0">
-            <Button variant="outline" onClick={() => setEditingInvoice(invoice)}>
+            <Button
+              variant="outline"
+              onClick={() => setEditingInvoice(invoice)}
+            >
               <PencilIcon className="size-3.5" />
               {t("invoices.edit")}
             </Button>

@@ -160,7 +160,11 @@ const DocumentDialog = ({
     } catch (err) {
       setError(
         getErrorMessage(err) ??
-          t(isEdit ? "archives.errors.updateFailed" : "archives.errors.createFailed"),
+          t(
+            isEdit
+              ? "archives.errors.updateFailed"
+              : "archives.errors.createFailed",
+          ),
       );
     } finally {
       setSubmitting(false);
@@ -209,9 +213,7 @@ const DocumentDialog = ({
               <div className="flex gap-2">
                 <Select
                   value={categoryId}
-                  onValueChange={(v) =>
-                    v !== undefined && setCategoryId(v)
-                  }
+                  onValueChange={(v) => v !== undefined && setCategoryId(v)}
                   required
                 >
                   <SelectTrigger>
@@ -219,8 +221,7 @@ const DocumentDialog = ({
                       placeholder={t("archives.form.categoryPlaceholder")}
                     >
                       {() =>
-                        categories.find((c) => c.id === categoryId)
-                          ?.name ??
+                        categories.find((c) => c.id === categoryId)?.name ??
                         t("archives.form.categoryPlaceholder")
                       }
                     </SelectValue>
@@ -245,9 +246,7 @@ const DocumentDialog = ({
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="doc-holder">
-                  {t("archives.form.holder")}
-                </Label>
+                <Label htmlFor="doc-holder">{t("archives.form.holder")}</Label>
                 <Input
                   id="doc-holder"
                   value={holder}
@@ -263,17 +262,13 @@ const DocumentDialog = ({
                   id="doc-number"
                   value={documentNumber}
                   onChange={(e) => setDocumentNumber(e.target.value)}
-                  placeholder={t(
-                    "archives.form.documentNumberPlaceholder",
-                  )}
+                  placeholder={t("archives.form.documentNumberPlaceholder")}
                 />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="doc-issuer">
-                  {t("archives.form.issuer")}
-                </Label>
+                <Label htmlFor="doc-issuer">{t("archives.form.issuer")}</Label>
                 <Input
                   id="doc-issuer"
                   value={issuer}
@@ -380,16 +375,10 @@ const DocumentDialog = ({
               />
             </div>
             {error && (
-              <p className="text-sm text-destructive text-center">
-                {error}
-              </p>
+              <p className="text-sm text-destructive text-center">{error}</p>
             )}
             <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleClose}
-              >
+              <Button type="button" variant="outline" onClick={handleClose}>
                 {t("common.cancel")}
               </Button>
               <Button type="submit" disabled={submitting}>

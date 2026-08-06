@@ -1,4 +1,10 @@
-import { useState, useEffect, useRef, type SubmitEvent, type ChangeEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  type SubmitEvent,
+  type ChangeEvent,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { PlusIcon } from "lucide-react";
 import { updateBook, type BookDetail } from "@/api/books";
@@ -66,11 +72,17 @@ const EditBookDialog = ({
   const [publisher, setPublisher] = useState(book?.publisher ?? "");
   const [publishDate, setPublishDate] = useState(book?.publishDate ?? "");
   const [description, setDescription] = useState(book?.description ?? "");
-  const [categoryId, setCategoryId] = useState<number | null>(book?.categoryId ?? null);
-  const [locationId, setLocationId] = useState<number | null>(book?.locationId ?? null);
+  const [categoryId, setCategoryId] = useState<number | null>(
+    book?.categoryId ?? null,
+  );
+  const [locationId, setLocationId] = useState<number | null>(
+    book?.locationId ?? null,
+  );
   const [status, setStatus] = useState(book?.status ?? "WANT_TO_READ");
   const [purchaseDate, setPurchaseDate] = useState(book?.purchaseDate ?? "");
-  const [purchasePrice, setPurchasePrice] = useState(book?.purchasePrice?.toString() ?? "");
+  const [purchasePrice, setPurchasePrice] = useState(
+    book?.purchasePrice?.toString() ?? "",
+  );
   const [note, setNote] = useState(book?.note ?? "");
   const [selectedSeriesIds, setSelectedSeriesIds] = useState<number[]>(
     book?.series?.map((s) => s.id) ?? [],
@@ -182,7 +194,11 @@ const EditBookDialog = ({
 
   return (
     <>
-      <Dialog key={book?.id ?? "new"} open={open} onOpenChange={(v) => !v && handleClose()}>
+      <Dialog
+        key={book?.id ?? "new"}
+        open={open}
+        onOpenChange={(v) => !v && handleClose()}
+      >
         <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t("books.editBook")}</DialogTitle>
@@ -192,9 +208,7 @@ const EditBookDialog = ({
           <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-2">
-                <Label htmlFor="edit-title">
-                  {t("books.title_")} *
-                </Label>
+                <Label htmlFor="edit-title">{t("books.title_")} *</Label>
                 <Input
                   id="edit-title"
                   value={title}
@@ -272,9 +286,7 @@ const EditBookDialog = ({
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="edit-description">
-                {t("books.description")}
-              </Label>
+              <Label htmlFor="edit-description">{t("books.description")}</Label>
               <textarea
                 id="edit-description"
                 className="flex min-h-[80px] w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -288,9 +300,7 @@ const EditBookDialog = ({
 
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-2">
-                <Label>
-                  {t("books.category")} *
-                </Label>
+                <Label>{t("books.category")} *</Label>
                 <div className="flex gap-1">
                   <SearchableSelect
                     options={categories.map((c) => ({
@@ -312,9 +322,7 @@ const EditBookDialog = ({
                 </div>
               </div>
               <div className="grid gap-2">
-                <Label>
-                  {t("books.location")} *
-                </Label>
+                <Label>{t("books.location")} *</Label>
                 <div className="flex gap-1">
                   <SearchableSelect
                     options={locations.map((l) => ({
@@ -340,13 +348,15 @@ const EditBookDialog = ({
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-2">
                 <Label>{t("books.status")}</Label>
-                <Select
-                  value={status}
-                  onValueChange={(v) => v && setStatus(v)}
-                >
+                <Select value={status} onValueChange={(v) => v && setStatus(v)}>
                   <SelectTrigger>
                     <SelectValue>
-                      {() => t(STATUS_OPTIONS.find((o) => o.value === status)?.label ?? "")}
+                      {() =>
+                        t(
+                          STATUS_OPTIONS.find((o) => o.value === status)
+                            ?.label ?? "",
+                        )
+                      }
                     </SelectValue>
                   </SelectTrigger>
                   <SelectPopup>
@@ -397,10 +407,7 @@ const EditBookDialog = ({
                         checked={selectedSeriesIds.includes(s.id)}
                         onCheckedChange={(v) => {
                           if (v) {
-                            setSelectedSeriesIds([
-                              ...selectedSeriesIds,
-                              s.id,
-                            ]);
+                            setSelectedSeriesIds([...selectedSeriesIds, s.id]);
                           } else {
                             setSelectedSeriesIds(
                               selectedSeriesIds.filter((id) => id !== s.id),

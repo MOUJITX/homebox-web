@@ -9,11 +9,7 @@ import {
   EyeIcon,
   EyeOffIcon,
 } from "lucide-react";
-import type {
-  Document,
-  DocumentStatus,
-  Importance,
-} from "@/api/documents";
+import type { Document, DocumentStatus, Importance } from "@/api/documents";
 import { formatDate } from "@/lib/utils";
 import { useDocumentDetail } from "@/hooks/queries/useDocumentDetail";
 import { useInvalidateDocuments } from "@/hooks/queries/useInvalidateDocuments";
@@ -97,9 +93,7 @@ const DocumentDetailDrawer = ({
   const [showNumber, setShowNumber] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [subDocToDelete, setSubDocToDelete] = useState<Document | null>(
-    null,
-  );
+  const [subDocToDelete, setSubDocToDelete] = useState<Document | null>(null);
   const [createSubOpen, setCreateSubOpen] = useState(false);
 
   const maskNumber = (num: string) => {
@@ -155,9 +149,7 @@ const DocumentDetailDrawer = ({
                     </Badge>
                   </SheetTitle>
                 </div>
-                <SheetDescription>
-                  {doc.categoryName}
-                </SheetDescription>
+                <SheetDescription>{doc.categoryName}</SheetDescription>
               </SheetHeader>
 
               {doc.parentId && doc.parentName && (
@@ -282,18 +274,14 @@ const DocumentDetailDrawer = ({
                       <Table>
                         <TableHeader>
                           <TableRow>
-                            <TableHead>
-                              {t("archives.table.name")}
-                            </TableHead>
+                            <TableHead>{t("archives.table.name")}</TableHead>
                             <TableHead>
                               {t("archives.table.category")}
                             </TableHead>
                             <TableHead>
                               {t("archives.table.expiryDate")}
                             </TableHead>
-                            <TableHead>
-                              {t("archives.table.status")}
-                            </TableHead>
+                            <TableHead>{t("archives.table.status")}</TableHead>
                             <TableHead className="text-right">
                               {t("common.actions")}
                             </TableHead>
@@ -304,9 +292,7 @@ const DocumentDetailDrawer = ({
                             <TableRow
                               key={sub.id}
                               className="cursor-pointer"
-                              onClick={() =>
-                                onNavigateToDocument?.(sub.id)
-                              }
+                              onClick={() => onNavigateToDocument?.(sub.id)}
                             >
                               <TableCell className="font-medium">
                                 {sub.name}
@@ -318,9 +304,7 @@ const DocumentDetailDrawer = ({
                                   : "—"}
                               </TableCell>
                               <TableCell>
-                                <Badge
-                                  variant={statusVariant(sub.status)}
-                                >
+                                <Badge variant={statusVariant(sub.status)}>
                                   {t(
                                     `archives.status.${(sub.status ?? "active").toLowerCase()}`,
                                   )}

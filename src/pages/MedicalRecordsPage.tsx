@@ -109,13 +109,17 @@ const MedicalRecordsPage = () => {
         const { data } = await getInstitutions();
         setInstitutions(data);
       } catch (err) {
-        toast.error(getErrorMessage(err) ?? t("medical.errors.loadInstitutionsFailed"));
+        toast.error(
+          getErrorMessage(err) ?? t("medical.errors.loadInstitutionsFailed"),
+        );
       }
       try {
         const { data } = await getPatientNames();
         setPatientNames(data);
       } catch (err) {
-        toast.error(getErrorMessage(err) ?? t("medical.errors.loadPatientsFailed"));
+        toast.error(
+          getErrorMessage(err) ?? t("medical.errors.loadPatientsFailed"),
+        );
       }
     };
     void loadFilters();
@@ -293,9 +297,7 @@ const MedicalRecordsPage = () => {
               <TableHead>{t("medical.columns.time")}</TableHead>
               <TableHead>{t("medical.columns.doctor")}</TableHead>
               <TableHead>{t("medical.columns.diagnosis")}</TableHead>
-              <TableHead className="w-20">
-                {t("common.actions")}
-              </TableHead>
+              <TableHead className="w-20">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

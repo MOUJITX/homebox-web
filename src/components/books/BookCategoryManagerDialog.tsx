@@ -115,9 +115,7 @@ const BookCategoryManagerDialog = ({
       resetForm();
       void invalidate.invalidateCategories();
     } catch (err) {
-      setError(
-        getErrorMessage(err) ?? t("books.categories.errors.saveFailed"),
-      );
+      setError(getErrorMessage(err) ?? t("books.categories.errors.saveFailed"));
     } finally {
       setSubmitting(false);
     }
@@ -156,12 +154,8 @@ const BookCategoryManagerDialog = ({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>
-                      {t("books.categories.columns.name")}
-                    </TableHead>
-                    <TableHead>
-                      {t("books.categories.columns.key")}
-                    </TableHead>
+                    <TableHead>{t("books.categories.columns.name")}</TableHead>
+                    <TableHead>{t("books.categories.columns.key")}</TableHead>
                     <TableHead>
                       {t("books.categories.columns.serialized")}
                     </TableHead>
@@ -274,9 +268,7 @@ const BookCategoryManagerDialog = ({
                 id="category-description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder={t(
-                  "books.categories.form.descriptionPlaceholder",
-                )}
+                placeholder={t("books.categories.form.descriptionPlaceholder")}
               />
             </div>
             {error && (

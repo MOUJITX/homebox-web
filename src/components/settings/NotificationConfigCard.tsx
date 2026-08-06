@@ -260,10 +260,7 @@ const NotificationConfigCard = () => {
               id="config-notification.archives-crontab"
               value={formValues["notification.archives-crontab"] ?? ""}
               onChange={(e) =>
-                handleChange(
-                  "notification.archives-crontab",
-                  e.target.value,
-                )
+                handleChange("notification.archives-crontab", e.target.value)
               }
               placeholder={t(
                 "settings.notification.placeholders.archivesCrontab",

@@ -42,29 +42,29 @@ Document (文档)              1 ──── N  DocumentInvoice (文档发票�
 
 ### 2.2 文档状态
 
-| 状态                         | 说明               |
-| ---------------------------- | ------------------ |
-| **有效** (ACTIVE)            | 正常有效           |
-| **已过期** (EXPIRED)         | 已过有效期         |
-| **已注销** (REVOKED)         | 已注销/作废        |
-| **已遗失** (LOST)            | 已遗失             |
+| 状态                 | 说明        |
+| -------------------- | ----------- |
+| **有效** (ACTIVE)    | 正常有效    |
+| **已过期** (EXPIRED) | 已过有效期  |
+| **已注销** (REVOKED) | 已注销/作废 |
+| **已遗失** (LOST)    | 已遗失      |
 
 ### 2.3 文档预设分类
 
 用户可在预设分类基础上自由创建新分类：
 
-| 预设分类                     | 说明               | 典型场景                         |
-| ---------------------------- | ------------------ | -------------------------------- |
-| **身份证件** (IDENTITY)      | 身份证明类         | 身份证、护照、港澳通行证、驾照   |
-| **房产证件** (PROPERTY)      | 房产相关           | 房产证、土地使用证、购房合同     |
-| **金融证件** (FINANCIAL)     | 金融账户类         | 银行卡、存折、股票账户           |
-| **合同协议** (CONTRACT)      | 合同协议类         | 租房合同、劳动合同、服务协议     |
-| **证书资质** (CERTIFICATE)   | 证书资质类         | 毕业证、学位证、职业资格证       |
-| **家庭证件** (FAMILY)        | 家庭关系类         | 结婚证、出生证、户口本           |
-| **保险保单** (INSURANCE)     | 保险类             | 车险保单、重疾险、家财险         |
-| **账单收据** (RECEIPT)       | 账单收据类         | 水电费账单、维修收据、购物小票   |
-| **保修售后** (WARRANTY)      | 保修与售后服务类   | 产品保修卡、售后服务单、维修记录 |
-| **其他** (OTHER)             | 通用归档           | 说明书、会员卡、培训证书等       |
+| 预设分类                   | 说明             | 典型场景                         |
+| -------------------------- | ---------------- | -------------------------------- |
+| **身份证件** (IDENTITY)    | 身份证明类       | 身份证、护照、港澳通行证、驾照   |
+| **房产证件** (PROPERTY)    | 房产相关         | 房产证、土地使用证、购房合同     |
+| **金融证件** (FINANCIAL)   | 金融账户类       | 银行卡、存折、股票账户           |
+| **合同协议** (CONTRACT)    | 合同协议类       | 租房合同、劳动合同、服务协议     |
+| **证书资质** (CERTIFICATE) | 证书资质类       | 毕业证、学位证、职业资格证       |
+| **家庭证件** (FAMILY)      | 家庭关系类       | 结婚证、出生证、户口本           |
+| **保险保单** (INSURANCE)   | 保险类           | 车险保单、重疾险、家财险         |
+| **账单收据** (RECEIPT)     | 账单收据类       | 水电费账单、维修收据、购物小票   |
+| **保修售后** (WARRANTY)    | 保修与售后服务类 | 产品保修卡、售后服务单、维修记录 |
+| **其他** (OTHER)           | 通用归档         | 说明书、会员卡、培训证书等       |
 
 ### 2.4 到期提醒
 
@@ -148,23 +148,23 @@ public enum Importance {
 
 ## 四、关键设计决策
 
-| 决策                       | 方案                                                                                                                                                          |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 完全通用化                 | 不区分保险、证件、合同等类型。所有文档统一为 Document 实体，通过分类和自定义字段区分                                                                          |
+| 决策                       | 方案                                                                                                                                                                                   |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 完全通用化                 | 不区分保险、证件、合同等类型。所有文档统一为 Document 实体，通过分类和自定义字段区分                                                                                                   |
 | 父-子两级结构              | `parentId` 字段实现两级关联。父文档下可挂载子文档（如保单下的缴费凭证、房产证下的购房合同）。删除父文档时子文档自动解除父子关系（不级联删除）。parentId 仅创建时可设定，编辑时不可变更 |
-| 字段全部可选（除名称分类） | holder、documentNumber、issuer、issueDate、expiryDate 均为可选。用户按需填写——身份证可填证件号+到期日，水电费账单只需名称+附件                                  |
-| 分类自由定义               | 预设 10 个常用分类（含"保险保单"），用户可自由新增/编辑/删除自定义分类。分类管理参照 GoodCategory 模式                                                         |
-| 到期提醒                   | 设置了到期日期的文档即视为启用提醒，到期前 N 天提醒（默认 7 天，可通过 reminderDays 自定义）。无到期日期的文档仅归档  |
-| 发票关联                   | 复用现有 InvoiceBindingManager，发票关联到文档级别。适用于保险保费发票、维修发票等                                                                             |
-| 附件上传                   | 复用现有 AttachmentManager，支持 PDF、图片等文件上传预览                                                                                                      |
-| 重要程度标记               | HIGH/MEDIUM/LOW 三级，列表中以彩色 Badge 显示                                                                                                                 |
-| 编号脱敏                   | 列表中部分遮蔽显示（如 `310***********1234`），详情页显示完整号码                                                                                            |
-| 文本搜索                   | 名称、编号、持有人支持模糊搜索                                                                                                                                |
-| 全文搜索集成               | 文档附件纳入 ES 全文搜索，搜索结果可跳转到文档详情                                                                                                            |
-| 删除文档                   | 有子文档时仅解除父子关系（子文档变为顶层），不级联删除。有附件时仅解除关联，不删文件                                                                            |
-| 列表页                     | 仅显示顶层文档，子文档在 DetailDrawer 中查看和管理                                                                                                              |
-| 子文档 DetailDrawer        | 子文档的 DetailDrawer 隐藏"子文档列表"区域（最多两层），但保留附件和发票管理                                                                                     |
-| subDocumentCount           | 应用层维护，创建/删除子文档时在 Service 层同步更新                                                                                                               |
+| 字段全部可选（除名称分类） | holder、documentNumber、issuer、issueDate、expiryDate 均为可选。用户按需填写——身份证可填证件号+到期日，水电费账单只需名称+附件                                                         |
+| 分类自由定义               | 预设 10 个常用分类（含"保险保单"），用户可自由新增/编辑/删除自定义分类。分类管理参照 GoodCategory 模式                                                                                 |
+| 到期提醒                   | 设置了到期日期的文档即视为启用提醒，到期前 N 天提醒（默认 7 天，可通过 reminderDays 自定义）。无到期日期的文档仅归档                                                                   |
+| 发票关联                   | 复用现有 InvoiceBindingManager，发票关联到文档级别。适用于保险保费发票、维修发票等                                                                                                     |
+| 附件上传                   | 复用现有 AttachmentManager，支持 PDF、图片等文件上传预览                                                                                                                               |
+| 重要程度标记               | HIGH/MEDIUM/LOW 三级，列表中以彩色 Badge 显示                                                                                                                                          |
+| 编号脱敏                   | 列表中部分遮蔽显示（如 `310***********1234`），详情页显示完整号码                                                                                                                      |
+| 文本搜索                   | 名称、编号、持有人支持模糊搜索                                                                                                                                                         |
+| 全文搜索集成               | 文档附件纳入 ES 全文搜索，搜索结果可跳转到文档详情                                                                                                                                     |
+| 删除文档                   | 有子文档时仅解除父子关系（子文档变为顶层），不级联删除。有附件时仅解除关联，不删文件                                                                                                   |
+| 列表页                     | 仅显示顶层文档，子文档在 DetailDrawer 中查看和管理                                                                                                                                     |
+| 子文档 DetailDrawer        | 子文档的 DetailDrawer 隐藏"子文档列表"区域（最多两层），但保留附件和发票管理                                                                                                           |
+| subDocumentCount           | 应用层维护，创建/删除子文档时在 Service 层同步更新                                                                                                                                     |
 
 ---
 
@@ -174,22 +174,22 @@ public enum Importance {
 
 ### 5.1 文档分类（DocumentCategory）
 
-| 方法   | 路径                                    | 说明                                         |
-| ------ | --------------------------------------- | -------------------------------------------- |
-| GET    | `/api/document-categories`              | 全部列表（不分页，供 SearchableSelect 使用） |
-| POST   | `/api/document-categories`              | 创建分类                                     |
-| PUT    | `/api/document-categories/{id}`         | 更新分类                                     |
-| DELETE | `/api/document-categories/{id}`         | 删除分类（有关联文档时禁止删除）             |
+| 方法   | 路径                            | 说明                                         |
+| ------ | ------------------------------- | -------------------------------------------- |
+| GET    | `/api/document-categories`      | 全部列表（不分页，供 SearchableSelect 使用） |
+| POST   | `/api/document-categories`      | 创建分类                                     |
+| PUT    | `/api/document-categories/{id}` | 更新分类                                     |
+| DELETE | `/api/document-categories/{id}` | 删除分类（有关联文档时禁止删除）             |
 
 ### 5.2 文档（Document）
 
-| 方法   | 路径                       | 说明                                                            |
-| ------ | -------------------------- | --------------------------------------------------------------- |
-| GET    | `/api/documents`           | 分页列表，支持筛选：categoryId、status、importance、parentId、search |
-| GET    | `/api/documents/{id}`      | 详情（含子文档列表、附件、关联发票）                            |
-| POST   | `/api/documents`           | 创建文档                                                        |
-| PUT    | `/api/documents/{id}`      | 更新文档                                                        |
-| DELETE | `/api/documents/{id}`      | 删除文档（子文档解除父子关系，附件仅解除关联）                  |
+| 方法   | 路径                  | 说明                                                                 |
+| ------ | --------------------- | -------------------------------------------------------------------- |
+| GET    | `/api/documents`      | 分页列表，支持筛选：categoryId、status、importance、parentId、search |
+| GET    | `/api/documents/{id}` | 详情（含子文档列表、附件、关联发票）                                 |
+| POST   | `/api/documents`      | 创建文档                                                             |
+| PUT    | `/api/documents/{id}` | 更新文档                                                             |
+| DELETE | `/api/documents/{id}` | 删除文档（子文档解除父子关系，附件仅解除关联）                       |
 
 #### 查询参数
 
@@ -203,19 +203,19 @@ public enum Importance {
 
 ### 5.3 文档附件
 
-| 方法   | 路径                                                   | 说明               |
-| ------ | ------------------------------------------------------ | ------------------ |
-| POST   | `/api/documents/{id}/attachments`                      | 上传文档附件       |
-| GET    | `/api/documents/{id}/attachments`                      | 获取附件列表       |
-| DELETE | `/api/documents/{id}/attachments/{attachmentId}`       | 删除附件           |
+| 方法   | 路径                                             | 说明         |
+| ------ | ------------------------------------------------ | ------------ |
+| POST   | `/api/documents/{id}/attachments`                | 上传文档附件 |
+| GET    | `/api/documents/{id}/attachments`                | 获取附件列表 |
+| DELETE | `/api/documents/{id}/attachments/{attachmentId}` | 删除附件     |
 
 ### 5.4 文档发票关联
 
-| 方法   | 路径                                               | 说明               |
-| ------ | -------------------------------------------------- | ------------------ |
-| GET    | `/api/documents/{id}/invoices`                     | 获取已关联发票     |
-| POST   | `/api/documents/{id}/invoices/{invoiceId}`         | 绑定发票           |
-| DELETE | `/api/documents/{id}/invoices/{invoiceId}`         | 解绑发票           |
+| 方法   | 路径                                       | 说明           |
+| ------ | ------------------------------------------ | -------------- |
+| GET    | `/api/documents/{id}/invoices`             | 获取已关联发票 |
+| POST   | `/api/documents/{id}/invoices/{invoiceId}` | 绑定发票       |
+| DELETE | `/api/documents/{id}/invoices/{invoiceId}` | 解绑发票       |
 
 ---
 
@@ -249,9 +249,9 @@ DOCUMENT_EXPIRY  // 文档到期提醒
 
 ### 6.3 SystemConfig 新增配置项
 
-| Key                               | 默认值        | 说明                  |
-| --------------------------------- | ------------- | --------------------- |
-| `notification.archives-crontab`   | `0 0 8 * * ?` | 文档到期提醒检查 cron |
+| Key                             | 默认值        | 说明                  |
+| ------------------------------- | ------------- | --------------------- |
+| `notification.archives-crontab` | `0 0 8 * * ?` | 文档到期提醒检查 cron |
 
 ---
 
@@ -259,10 +259,10 @@ DOCUMENT_EXPIRY  // 文档到期提醒
 
 在 Dashboard 页面增加家庭档案相关卡片，数据通过 `/api/dashboard` 接口追加字段返回：
 
-| 卡片                   | 数据来源                                        | 说明                                           |
-| ---------------------- | ----------------------------------------------- | ---------------------------------------------- |
-| **即将到期文档**       | 未来 30 天内到期的文档（含顶层和子文档）         | 最多显示 5 条，点击跳转到文档详情               |
-| **有效文档总数**       | `status = ACTIVE` 的顶层文档数量                 | 点击跳转到文档列表                             |
+| 卡片             | 数据来源                                 | 说明                              |
+| ---------------- | ---------------------------------------- | --------------------------------- |
+| **即将到期文档** | 未来 30 天内到期的文档（含顶层和子文档） | 最多显示 5 条，点击跳转到文档详情 |
+| **有效文档总数** | `status = ACTIVE` 的顶层文档数量         | 点击跳转到文档列表                |
 
 ---
 
@@ -270,9 +270,9 @@ DOCUMENT_EXPIRY  // 文档到期提醒
 
 ### 8.1 路由
 
-| 路径       | 页面组件       | 权限         |
-| ---------- | -------------- | ------------ |
-| `/archives`| ArchivesPage   | 所有登录用户 |
+| 路径        | 页面组件     | 权限         |
+| ----------- | ------------ | ------------ |
+| `/archives` | ArchivesPage | 所有登录用户 |
 
 ### 8.2 页面设计
 
@@ -533,38 +533,38 @@ search.tags.document  →  en: "Document"  zh: "文档"
 
 ### 10.1 与现有模块的关系
 
-| 现有关联模块         | 关联方式                                                                                   |
-| -------------------- | ------------------------------------------------------------------------------------------ |
-| **Invoice（发票）**  | 文档可关联发票（如保险保费发票、维修发票）。发票列表/详情页需新增文档关联显示               |
-| **FileRecord（文件）** | 文档附件复用现有文件基础设施                                                           |
-| **Notification（通知）** | 到期提醒复用现有通知模块 + Webhook 机制                                                |
-| **Dashboard（仪表盘）** | 新增文档统计卡片                                                                         |
-| **SearchDialog（全局搜索）** | 文档附件纳入 ES 全文搜索，搜索结果可跳转到文档详情                                   |
+| 现有关联模块                 | 关联方式                                                                      |
+| ---------------------------- | ----------------------------------------------------------------------------- |
+| **Invoice（发票）**          | 文档可关联发票（如保险保费发票、维修发票）。发票列表/详情页需新增文档关联显示 |
+| **FileRecord（文件）**       | 文档附件复用现有文件基础设施                                                  |
+| **Notification（通知）**     | 到期提醒复用现有通知模块 + Webhook 机制                                       |
+| **Dashboard（仪表盘）**      | 新增文档统计卡片                                                              |
+| **SearchDialog（全局搜索）** | 文档附件纳入 ES 全文搜索，搜索结果可跳转到文档详情                            |
 
 ### 10.2 需修改的现有文件
 
 #### 前端
 
-| 文件                                | 变更                                                          |
-| ----------------------------------- | ------------------------------------------------------------- |
-| `src/App.tsx`                       | 新增 `/archives` 路由                                         |
-| `src/components/Sidebar.tsx`        | 新增"家庭档案"导航项                                          |
-| `src/pages/InvoicesPage.tsx`        | 列表增加文档关联列                                            |
-| `src/components/invoices/InvoiceDetailDrawer.tsx` | 详情增加绑定的文档显示                              |
-| `src/components/SearchDialog.tsx`   | `handleNavigate()` 新增 `DOCUMENT` case                       |
-| `src/api/search.ts`                 | `SourceInfo.type` 类型联合新增 `"DOCUMENT"`                   |
-| `src/i18n/locales/en.json`          | 新增 ~80 keys                                                 |
-| `src/i18n/locales/zh.json`          | 新增 ~80 keys                                                 |
+| 文件                                              | 变更                                        |
+| ------------------------------------------------- | ------------------------------------------- |
+| `src/App.tsx`                                     | 新增 `/archives` 路由                       |
+| `src/components/Sidebar.tsx`                      | 新增"家庭档案"导航项                        |
+| `src/pages/InvoicesPage.tsx`                      | 列表增加文档关联列                          |
+| `src/components/invoices/InvoiceDetailDrawer.tsx` | 详情增加绑定的文档显示                      |
+| `src/components/SearchDialog.tsx`                 | `handleNavigate()` 新增 `DOCUMENT` case     |
+| `src/api/search.ts`                               | `SourceInfo.type` 类型联合新增 `"DOCUMENT"` |
+| `src/i18n/locales/en.json`                        | 新增 ~80 keys                               |
+| `src/i18n/locales/zh.json`                        | 新增 ~80 keys                               |
 
 #### 后端
 
-| 文件                                           | 变更                                                                       |
-| ---------------------------------------------- | -------------------------------------------------------------------------- |
-| `enums/NotificationType.java`                 | 新增 `DOCUMENT_EXPIRY`                                                     |
-| `enums/SourceType.java`                       | 新增 `DOCUMENT`                                                            |
-| `initializer/DataInitializer.java`            | 新增 `notification.archives-crontab` 默认配置项 + 预设文档分类数据         |
-| `service/SearchService.java`                  | `buildSourceMap()` 增加 DocumentAttachment → Document 关联查询             |
-| `InvoiceService.java`                         | 新增文档关联查询                                                           |
+| 文件                               | 变更                                                               |
+| ---------------------------------- | ------------------------------------------------------------------ |
+| `enums/NotificationType.java`      | 新增 `DOCUMENT_EXPIRY`                                             |
+| `enums/SourceType.java`            | 新增 `DOCUMENT`                                                    |
+| `initializer/DataInitializer.java` | 新增 `notification.archives-crontab` 默认配置项 + 预设文档分类数据 |
+| `service/SearchService.java`       | `buildSourceMap()` 增加 DocumentAttachment → Document 关联查询     |
+| `InvoiceService.java`              | 新增文档关联查询                                                   |
 
 ---
 
@@ -581,20 +581,20 @@ DocumentAttachment → Document
   → SourceInfo(DOCUMENT, "文档", documentId, documentName)
 ```
 
-| 修改文件                               | 变更                                                                                   |
-| -------------------------------------- | -------------------------------------------------------------------------------------- |
-| `SourceType.java`                      | 新增 `DOCUMENT`                                                                        |
-| `SearchService.java`                   | `buildSourceMap()` 增加 `DocumentAttachmentRepository` 查询                            |
-| `DocumentAttachmentRepository.java`    | 新增 `findByFileIdIn(List<Long>)` 批量查询方法                                        |
+| 修改文件                            | 变更                                                        |
+| ----------------------------------- | ----------------------------------------------------------- |
+| `SourceType.java`                   | 新增 `DOCUMENT`                                             |
+| `SearchService.java`                | `buildSourceMap()` 增加 `DocumentAttachmentRepository` 查询 |
+| `DocumentAttachmentRepository.java` | 新增 `findByFileIdIn(List<Long>)` 批量查询方法              |
 
 ### 前端
 
-| 修改文件                | 变更                                                                                   |
-| ----------------------- | -------------------------------------------------------------------------------------- |
-| `SearchDialog.tsx`      | `handleNavigate()` 新增 `DOCUMENT` → `/archives?documentId={sourceId}`                 |
-| `ArchivesPage.tsx`      | 读取 URL query param `?documentId=X`，打开对应 DetailDrawer                             |
-| `search.ts` (API)       | `SourceInfo.type` 类型联合新增 `"DOCUMENT"`                                            |
-| `en.json / zh.json`     | 新增 `search.tags.document`                                                            |
+| 修改文件            | 变更                                                                   |
+| ------------------- | ---------------------------------------------------------------------- |
+| `SearchDialog.tsx`  | `handleNavigate()` 新增 `DOCUMENT` → `/archives?documentId={sourceId}` |
+| `ArchivesPage.tsx`  | 读取 URL query param `?documentId=X`，打开对应 DetailDrawer            |
+| `search.ts` (API)   | `SourceInfo.type` 类型联合新增 `"DOCUMENT"`                            |
+| `en.json / zh.json` | 新增 `search.tags.document`                                            |
 
 ---
 
@@ -636,11 +636,11 @@ List<BoundDocumentResponse> documents = new ArrayList<>();
 
 新增子区域：
 
-| 区域     | 标题 i18n                              | 内容                                                     |
-| -------- | -------------------------------------- | -------------------------------------------------------- |
-| 关联资产 | `invoices.detail.boundAssets`          | 现有 asset 列表（不变）                                  |
-| 关联订阅 | `invoices.detail.boundSubscriptions`   | 现有订阅列表（不变）                                     |
-| 关联文档 | `invoices.detail.boundDocuments`       | 文档列表（分类 + 文档名），点击跳转到对应文档详情         |
+| 区域     | 标题 i18n                            | 内容                                              |
+| -------- | ------------------------------------ | ------------------------------------------------- |
+| 关联资产 | `invoices.detail.boundAssets`        | 现有 asset 列表（不变）                           |
+| 关联订阅 | `invoices.detail.boundSubscriptions` | 现有订阅列表（不变）                              |
+| 关联文档 | `invoices.detail.boundDocuments`     | 文档列表（分类 + 文档名），点击跳转到对应文档详情 |
 
 #### i18n 新增 Key
 

@@ -8,6 +8,5 @@ export const documentKeys = {
   categories: ["document-categories"] as const,
   attachments: (documentId: number) =>
     ["document-attachments", documentId] as const,
-  invoices: (documentId: number) =>
-    ["document-invoices", documentId] as const,
+  invoices: (documentId: number) => ["document-invoices", documentId] as const,
 };

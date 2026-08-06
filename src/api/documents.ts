@@ -111,7 +111,5 @@ export const deleteDocument = (id: number) =>
 export const bindDocumentInvoice = (documentId: number, invoiceId: number) =>
   axios.post<void>(`/documents/${documentId}/invoices/${invoiceId}`);
 
-export const unbindDocumentInvoice = (
-  documentId: number,
-  invoiceId: number,
-) => axios.delete<void>(`/documents/${documentId}/invoices/${invoiceId}`);
+export const unbindDocumentInvoice = (documentId: number, invoiceId: number) =>
+  axios.delete<void>(`/documents/${documentId}/invoices/${invoiceId}`);

@@ -31,7 +31,9 @@ const SubscriptionStatusDialog = ({
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t("subscriptions.statusChange.activateTitle")}</DialogTitle>
+          <DialogTitle>
+            {t("subscriptions.statusChange.activateTitle")}
+          </DialogTitle>
           <DialogDescription>
             {t("subscriptions.statusChange.activateDescription", {
               status: t(`subscriptions.status.${currentStatus.toLowerCase()}`),

@@ -102,8 +102,7 @@ const DocumentCategoryManagerDialog = ({
       void invalidate.invalidateCategories();
     } catch (err) {
       setError(
-        getErrorMessage(err) ??
-          t("archives.categories.errors.saveFailed"),
+        getErrorMessage(err) ?? t("archives.categories.errors.saveFailed"),
       );
     } finally {
       setSubmitting(false);
@@ -116,8 +115,7 @@ const DocumentCategoryManagerDialog = ({
       void invalidate.invalidateCategories();
     } catch (err) {
       setError(
-        getErrorMessage(err) ??
-          t("archives.categories.errors.deleteFailed"),
+        getErrorMessage(err) ?? t("archives.categories.errors.deleteFailed"),
       );
     }
   };
@@ -144,9 +142,7 @@ const DocumentCategoryManagerDialog = ({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>
-                      {t("archives.categories.name")}
-                    </TableHead>
+                    <TableHead>{t("archives.categories.name")}</TableHead>
                     <TableHead>
                       {t("archives.categories.description")}
                     </TableHead>
@@ -176,9 +172,7 @@ const DocumentCategoryManagerDialog = ({
                   {!isLoading &&
                     categories.map((c) => (
                       <TableRow key={c.id}>
-                        <TableCell className="font-medium">
-                          {c.name}
-                        </TableCell>
+                        <TableCell className="font-medium">{c.name}</TableCell>
                         <TableCell>{c.description || "—"}</TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-1">
@@ -204,9 +198,7 @@ const DocumentCategoryManagerDialog = ({
               </Table>
             </div>
             {error && (
-              <p className="text-sm text-destructive text-center">
-                {error}
-              </p>
+              <p className="text-sm text-destructive text-center">{error}</p>
             )}
           </div>
         )}
@@ -234,15 +226,11 @@ const DocumentCategoryManagerDialog = ({
                 id="category-description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder={t(
-                  "archives.categories.descriptionPlaceholder",
-                )}
+                placeholder={t("archives.categories.descriptionPlaceholder")}
               />
             </div>
             {error && (
-              <p className="text-sm text-destructive text-center">
-                {error}
-              </p>
+              <p className="text-sm text-destructive text-center">{error}</p>
             )}
             <DialogFooter>
               <Button type="button" variant="outline" onClick={resetForm}>

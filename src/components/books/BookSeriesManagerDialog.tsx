@@ -97,9 +97,7 @@ const BookSeriesManagerDialog = ({
       resetForm();
       void invalidate.invalidateSeries();
     } catch (err) {
-      setError(
-        getErrorMessage(err) ?? t("books.series.errors.saveFailed"),
-      );
+      setError(getErrorMessage(err) ?? t("books.series.errors.saveFailed"));
     } finally {
       setSubmitting(false);
     }
@@ -110,9 +108,7 @@ const BookSeriesManagerDialog = ({
       await deleteBookSeries(s.id);
       void invalidate.invalidateSeries();
     } catch (err) {
-      setError(
-        getErrorMessage(err) ?? t("books.series.errors.deleteFailed"),
-      );
+      setError(getErrorMessage(err) ?? t("books.series.errors.deleteFailed"));
     }
   };
 
@@ -138,9 +134,7 @@ const BookSeriesManagerDialog = ({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>
-                      {t("books.series.columns.name")}
-                    </TableHead>
+                    <TableHead>{t("books.series.columns.name")}</TableHead>
                     <TableHead>
                       {t("books.series.columns.description")}
                     </TableHead>
@@ -204,9 +198,7 @@ const BookSeriesManagerDialog = ({
         {(mode === "create" || mode === "edit") && (
           <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="series-name">
-                {t("books.series.form.name")}
-              </Label>
+              <Label htmlFor="series-name">{t("books.series.form.name")}</Label>
               <Input
                 id="series-name"
                 value={name}

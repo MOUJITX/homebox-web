@@ -97,7 +97,9 @@ const CreateBookDialog = ({
     DoubanLookupResult[] | null
   >(null);
 
-  const [isbnExisting, setIsbnExisting] = useState<IsbnCheckResult | null>(null);
+  const [isbnExisting, setIsbnExisting] = useState<IsbnCheckResult | null>(
+    null,
+  );
   const isbnTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -282,7 +284,8 @@ const CreateBookDialog = ({
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-2">
                 <Label htmlFor="book-title">
-                  {t("books.title_")} <span className="text-destructive">*</span>
+                  {t("books.title_")}{" "}
+                  <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="book-title"
@@ -323,7 +326,8 @@ const CreateBookDialog = ({
               {parentId && (
                 <div className="grid gap-2">
                   <Label htmlFor="book-issue">
-                    {t("books.issueNumber")} <span className="text-destructive">*</span>
+                    {t("books.issueNumber")}{" "}
+                    <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="book-issue"
@@ -387,7 +391,8 @@ const CreateBookDialog = ({
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-2">
                 <Label>
-                  {t("books.category")} <span className="text-destructive">*</span>
+                  {t("books.category")}{" "}
+                  <span className="text-destructive">*</span>
                 </Label>
                 <div className="flex gap-1">
                   <SearchableSelect
@@ -411,7 +416,8 @@ const CreateBookDialog = ({
               </div>
               <div className="grid gap-2">
                 <Label>
-                  {t("books.location")} <span className="text-destructive">*</span>
+                  {t("books.location")}{" "}
+                  <span className="text-destructive">*</span>
                 </Label>
                 <div className="flex gap-1">
                   <SearchableSelect
@@ -438,13 +444,15 @@ const CreateBookDialog = ({
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-2">
                 <Label>{t("books.status")}</Label>
-                <Select
-                  value={status}
-                  onValueChange={(v) => v && setStatus(v)}
-                >
+                <Select value={status} onValueChange={(v) => v && setStatus(v)}>
                   <SelectTrigger>
                     <SelectValue>
-                      {() => t(STATUS_OPTIONS.find((o) => o.value === status)?.label ?? "")}
+                      {() =>
+                        t(
+                          STATUS_OPTIONS.find((o) => o.value === status)
+                            ?.label ?? "",
+                        )
+                      }
                     </SelectValue>
                   </SelectTrigger>
                   <SelectPopup>

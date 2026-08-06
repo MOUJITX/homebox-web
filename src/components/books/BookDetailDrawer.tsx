@@ -1,17 +1,10 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  PencilIcon,
-  TrashIcon,
-  PlusIcon,
-} from "lucide-react";
+import { PencilIcon, TrashIcon, PlusIcon } from "lucide-react";
 import type { Book } from "@/api/books";
 import { updateBook } from "@/api/books";
 import { uploadBookPicture, deleteBookPicture } from "@/api/bookPictures";
-import {
-  bindInvoiceToBook,
-  unbindInvoiceFromBook,
-} from "@/api/bookInvoices";
+import { bindInvoiceToBook, unbindInvoiceFromBook } from "@/api/bookInvoices";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { useBookDetail } from "@/hooks/queries/useBookDetail";
 import { useBookInvoices } from "@/hooks/queries/useBookInvoices";
@@ -58,11 +51,7 @@ interface BookDetailDrawerProps {
   readonly onClose: () => void;
 }
 
-const BookDetailDrawer = ({
-  bookId,
-  open,
-  onClose,
-}: BookDetailDrawerProps) => {
+const BookDetailDrawer = ({ bookId, open, onClose }: BookDetailDrawerProps) => {
   const { t } = useTranslation();
   const {
     data: detail,
@@ -81,7 +70,7 @@ const BookDetailDrawer = ({
   const handleToggleStatus = async (child: Book) => {
     const statuses = ["WANT_TO_READ", "READING", "READ"] as const;
     const nextIdx =
-      (statuses.indexOf(child.status as typeof statuses[number]) + 1) %
+      (statuses.indexOf(child.status as (typeof statuses)[number]) + 1) %
       statuses.length;
     await updateBook(child.id, { status: statuses[nextIdx] });
     void invalidate.invalidateDetail(bookId!);
@@ -117,16 +106,27 @@ const BookDetailDrawer = ({
           {!isLoading && detail && (
             <div className="flex flex-1 flex-col gap-5 overflow-y-auto py-4">
               <div className="grid grid-cols-2 gap-4">
-                <Field label={t("books.customBarcode")} value={detail.customBarcode} />
+                <Field
+                  label={t("books.customBarcode")}
+                  value={detail.customBarcode}
+                />
                 <Field label={t("books.isbn")} value={detail.isbn} />
                 <Field label={t("books.author")} value={detail.author} />
                 <Field label={t("books.publisher")} value={detail.publisher} />
                 <Field
                   label={t("books.publishDate")}
-                  value={detail.publishDate ? formatDate(detail.publishDate) : null}
+                  value={
+                    detail.publishDate ? formatDate(detail.publishDate) : null
+                  }
                 />
-                <Field label={t("books.category")} value={detail.categoryName} />
-                <Field label={t("books.location")} value={detail.locationName} />
+                <Field
+                  label={t("books.category")}
+                  value={detail.categoryName}
+                />
+                <Field
+                  label={t("books.location")}
+                  value={detail.locationName}
+                />
                 <div className="grid gap-1">
                   <span className="text-xs text-muted-foreground">
                     {t("books.status")}
@@ -140,17 +140,29 @@ const BookDetailDrawer = ({
                 </div>
                 <Field
                   label={t("books.purchaseDate")}
-                  value={detail.purchaseDate ? formatDate(detail.purchaseDate) : null}
+                  value={
+                    detail.purchaseDate ? formatDate(detail.purchaseDate) : null
+                  }
                 />
                 <Field
                   label={t("books.purchasePrice")}
-                  value={detail.purchasePrice ? formatCurrency(detail.purchasePrice) : null}
+                  value={
+                    detail.purchasePrice
+                      ? formatCurrency(detail.purchasePrice)
+                      : null
+                  }
                 />
                 {detail.parentName && (
-                  <Field label={t("books.parentBook")} value={detail.parentName} />
+                  <Field
+                    label={t("books.parentBook")}
+                    value={detail.parentName}
+                  />
                 )}
                 {detail.issueNumber && (
-                  <Field label={t("books.issueNumber")} value={detail.issueNumber} />
+                  <Field
+                    label={t("books.issueNumber")}
+                    value={detail.issueNumber}
+                  />
                 )}
               </div>
 
@@ -253,7 +265,8 @@ const BookDetailDrawer = ({
                 <div className="grid gap-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">
-                      {t("books.childrenBooks")} ({detail.children?.length ?? 0})
+                      {t("books.childrenBooks")} ({detail.children?.length ?? 0}
+                      )
                     </span>
                     <Button
                       variant="outline"
@@ -367,7 +380,18 @@ const BookDetailDrawer = ({
           />
           <EditBookDialog
             open={editingChild !== null}
-            book={editingChild ? { ...editingChild, parentName: null, pictures: [], children: [], series: [], invoices: [] } : null}
+            book={
+              editingChild
+                ? {
+                    ...editingChild,
+                    parentName: null,
+                    pictures: [],
+                    children: [],
+                    series: [],
+                    invoices: [],
+                  }
+                : null
+            }
             onClose={() => setEditingChild(null)}
             onSuccess={() => {
               setEditingChild(null);

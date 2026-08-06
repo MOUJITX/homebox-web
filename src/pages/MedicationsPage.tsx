@@ -129,9 +129,7 @@ const MedicationsPage = () => {
               <TableHead>{t("medications.columns.frequency")}</TableHead>
               <TableHead>{t("medications.columns.course")}</TableHead>
               <TableHead>{t("medications.columns.status")}</TableHead>
-              <TableHead className="w-20">
-                {t("common.actions")}
-              </TableHead>
+              <TableHead className="w-20">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

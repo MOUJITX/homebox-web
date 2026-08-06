@@ -99,9 +99,7 @@ const BookLocationManagerDialog = ({
       resetForm();
       void invalidate.invalidateLocations();
     } catch (err) {
-      setError(
-        getErrorMessage(err) ?? t("books.locations.errors.saveFailed"),
-      );
+      setError(getErrorMessage(err) ?? t("books.locations.errors.saveFailed"));
     } finally {
       setSubmitting(false);
     }
@@ -140,9 +138,7 @@ const BookLocationManagerDialog = ({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>
-                      {t("books.locations.columns.name")}
-                    </TableHead>
+                    <TableHead>{t("books.locations.columns.name")}</TableHead>
                     <TableHead>
                       {t("books.locations.columns.description")}
                     </TableHead>
@@ -172,7 +168,9 @@ const BookLocationManagerDialog = ({
                   {!isLoading &&
                     locations.map((loc) => (
                       <TableRow key={loc.id}>
-                        <TableCell className="font-medium">{loc.name}</TableCell>
+                        <TableCell className="font-medium">
+                          {loc.name}
+                        </TableCell>
                         <TableCell>{loc.description || "\u2014"}</TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-1">
@@ -226,9 +224,7 @@ const BookLocationManagerDialog = ({
                 id="location-description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder={t(
-                  "books.locations.form.descriptionPlaceholder",
-                )}
+                placeholder={t("books.locations.form.descriptionPlaceholder")}
               />
             </div>
             {error && (

@@ -102,14 +102,11 @@ const ArchivesPage = () => {
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
-  const [filterCategoryId, setFilterCategoryId] = useState<number | null>(
+  const [filterCategoryId, setFilterCategoryId] = useState<number | null>(null);
+  const [filterStatus, setFilterStatus] = useState<DocumentStatus | null>(null);
+  const [filterImportance, setFilterImportance] = useState<Importance | null>(
     null,
   );
-  const [filterStatus, setFilterStatus] = useState<DocumentStatus | null>(
-    null,
-  );
-  const [filterImportance, setFilterImportance] =
-    useState<Importance | null>(null);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0]);
 
@@ -211,15 +208,12 @@ const ArchivesPage = () => {
             }}
           >
             <SelectTrigger>
-              <SelectValue
-                placeholder={t("archives.filters.allCategories")}
-              >
+              <SelectValue placeholder={t("archives.filters.allCategories")}>
                 {() =>
                   filterCategoryId == null
                     ? t("archives.filters.allCategories")
                     : (categories.find((c) => c.id === filterCategoryId)
-                        ?.name ??
-                      t("archives.filters.allCategories"))
+                        ?.name ?? t("archives.filters.allCategories"))
                 }
               </SelectValue>
             </SelectTrigger>
@@ -245,9 +239,7 @@ const ArchivesPage = () => {
             }}
           >
             <SelectTrigger>
-              <SelectValue
-                placeholder={t("archives.filters.allStatuses")}
-              >
+              <SelectValue placeholder={t("archives.filters.allStatuses")}>
                 {() =>
                   filterStatus == null
                     ? t("archives.filters.allStatuses")
@@ -277,15 +269,11 @@ const ArchivesPage = () => {
             }}
           >
             <SelectTrigger>
-              <SelectValue
-                placeholder={t("archives.filters.allImportance")}
-              >
+              <SelectValue placeholder={t("archives.filters.allImportance")}>
                 {() =>
                   filterImportance == null
                     ? t("archives.filters.allImportance")
-                    : t(
-                        `archives.importance.${filterImportance.toLowerCase()}`,
-                      )
+                    : t(`archives.importance.${filterImportance.toLowerCase()}`)
                 }
               </SelectValue>
             </SelectTrigger>
@@ -403,9 +391,7 @@ const ArchivesPage = () => {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right text-xs tabular-nums">
-                    {doc.subDocumentCount > 0
-                      ? doc.subDocumentCount
-                      : "—"}
+                    {doc.subDocumentCount > 0 ? doc.subDocumentCount : "—"}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
@@ -448,10 +434,7 @@ const ArchivesPage = () => {
         }}
       />
 
-      <DocumentDialog
-        open={createOpen}
-        onClose={() => setCreateOpen(false)}
-      />
+      <DocumentDialog open={createOpen} onClose={() => setCreateOpen(false)} />
       <DocumentDialog
         open={!!editingDoc}
         document={editingDoc}

@@ -229,9 +229,7 @@ const FilePickerDialog = ({
                 </SelectValue>
               </SelectTrigger>
               <SelectPopup>
-                <SelectItem value={null}>
-                  {t("filePicker.allTypes")}
-                </SelectItem>
+                <SelectItem value={null}>{t("filePicker.allTypes")}</SelectItem>
                 {CONTENT_TYPE_OPTIONS.map((o) => (
                   <SelectItem key={o.value} value={o.value}>
                     {t(o.labelKey)}
@@ -297,7 +295,9 @@ const FilePickerDialog = ({
                       <div className="flex size-16 items-center justify-center rounded bg-muted">
                         {(() => {
                           const Icon = getFileIcon(file.contentType);
-                          return <Icon className="size-6 text-muted-foreground" />;
+                          return (
+                            <Icon className="size-6 text-muted-foreground" />
+                          );
                         })()}
                       </div>
                     )}

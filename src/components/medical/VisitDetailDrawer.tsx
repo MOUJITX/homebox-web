@@ -421,451 +421,450 @@ const VisitDetailDrawer = ({
 
   return (
     <>
-    <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent className="w-full sm:max-w-lg flex flex-col">
+      <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
+        <SheetContent className="w-full sm:max-w-lg flex flex-col">
+          <SheetHeader className="shrink-0">
+            <SheetTitle className="truncate">
+              {record?.patientName ?? t("medical.title")}
+            </SheetTitle>
+          </SheetHeader>
 
-        <SheetHeader className="shrink-0">
-          <SheetTitle className="truncate">
-            {record?.patientName ?? t("medical.title")}
-          </SheetTitle>
-        </SheetHeader>
+          {loading && (
+            <div className="flex flex-1 items-center justify-center">
+              <span className="text-sm text-muted-foreground">
+                {t("common.loading")}
+              </span>
+            </div>
+          )}
 
-        {loading && (
-          <div className="flex flex-1 items-center justify-center">
-            <span className="text-sm text-muted-foreground">
-              {t("common.loading")}
-            </span>
-          </div>
-        )}
+          {!loading && error && (
+            <div className="flex flex-1 items-center justify-center">
+              <span className="text-sm text-destructive">
+                {t("medical.errors.loadFailed")}
+              </span>
+            </div>
+          )}
 
-        {!loading && error && (
-          <div className="flex flex-1 items-center justify-center">
-            <span className="text-sm text-destructive">
-              {t("medical.errors.loadFailed")}
-            </span>
-          </div>
-        )}
-
-        {!loading && record && (
-          <div className="flex flex-1 flex-col gap-5 overflow-y-auto py-4">
-            <div className="flex items-center gap-2 flex-wrap">
-              <Badge variant={isInpatient ? "default" : "secondary"}>
-                {isInpatient
-                  ? t("medical.visitType.INPATIENT")
-                  : t("medical.visitType.OUTPATIENT")}
-              </Badge>
-              {record.patientGender && (
-                <Badge variant="outline">
-                  {t(`medical.gender.${record.patientGender}`)}
+          {!loading && record && (
+            <div className="flex flex-1 flex-col gap-5 overflow-y-auto py-4">
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge variant={isInpatient ? "default" : "secondary"}>
+                  {isInpatient
+                    ? t("medical.visitType.INPATIENT")
+                    : t("medical.visitType.OUTPATIENT")}
                 </Badge>
-              )}
-              {record.patientAge != null && (
-                <span className="text-xs text-muted-foreground">
-                  {record.patientAge}
-                  {t("medical.age")}
-                </span>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <Field
-                label={t("medical.form.institution")}
-                value={record.institutionName}
-              />
-              <Field label={t("medical.form.doctor")} value={record.doctor} />
-              <Field
-                label={
-                  isInpatient
-                    ? t("medical.form.admissionDept")
-                    : t("medical.form.department")
-                }
-                value={record.department}
-              />
-              <Field
-                label={
-                  isInpatient
-                    ? t("medical.form.admissionDate")
-                    : t("medical.form.visitDate")
-                }
-                value={record.visitDate}
-              />
-              {isInpatient && (
-                <>
-                  <Field
-                    label={t("medical.form.dischargeDept")}
-                    value={record.dischargeDept}
-                  />
-                  <Field
-                    label={t("medical.form.dischargeDate")}
-                    value={record.dischargeDate}
-                  />
-                </>
-              )}
-            </div>
-
-            {record.medicalContent && (
-              <div className="grid gap-1">
-                <span className="text-xs text-muted-foreground">
-                  {t("medical.form.medicalContent")}
-                </span>
-                <span className="text-sm whitespace-pre-wrap">
-                  {record.medicalContent}
-                </span>
-              </div>
-            )}
-
-            {record.diagnosis && (
-              <div className="grid gap-1">
-                <span className="text-xs text-muted-foreground">
-                  {t("medical.form.diagnosis")}
-                </span>
-                <span className="text-sm whitespace-pre-wrap">
-                  {record.diagnosis}
-                </span>
-              </div>
-            )}
-
-            <div className="grid gap-2">
-              <AttachmentManager
-                attachments={attachments
-                  .filter((a) => a.sourceType === "RECORD")
-                  .map(
-                    (a) =>
-                      ({
-                        id: a.id,
-                        fileId: a.fileId,
-                        filename: a.originalFilename,
-                        fileSize: a.fileSize,
-                        url: a.url,
-                      }) satisfies AttachmentItem,
-                  )}
-                onSelect={handleVisitAttachmentUpload}
-                onDelete={handleVisitAttachmentDelete}
-              />
-            </div>
-
-            <div className="grid gap-2">
-              <InvoiceBindingManager
-                invoices={visitInvoices
-                  .filter((i) => i.sourceType === "RECORD")
-                  .map(
-                    (inv) =>
-                      ({
-                        id: inv.id,
-                        invoiceId: inv.invoiceId,
-                        invoiceNumber: inv.invoiceNumber,
-                        invoiceDate: inv.invoiceDate,
-                        totalAmount: inv.totalAmount,
-                        sellerName: inv.sellerName,
-                      }) satisfies BoundInvoice,
-                  )}
-                title={t("common.invoices")}
-                emptyLabel={t("medical.noInvoices")}
-                bindLabel={t("common.bindInvoice")}
-                onBindInvoice={async (invoiceId) => {
-                  if (!visitId) return;
-                  const { data } = await bindVisitInvoice(
-                    visitId,
-                    invoiceId,
-                    "RECORD",
-                    visitId,
-                  );
-                  setVisitInvoices((prev) => [...prev, data]);
-                }}
-                uploadNewLabel={t("common.uploadNew")}
-                onCreateInvoice={async (invoice) => {
-                  if (!visitId) return;
-                  const { data } = await bindVisitInvoice(
-                    visitId,
-                    invoice.id,
-                    "RECORD",
-                    visitId,
-                  );
-                  setVisitInvoices((prev) => [...prev, data]);
-                }}
-                onUnbind={handleInvoiceUnbind}
-                onView={(invoiceId) => {
-                  setViewingInvoiceId(invoiceId);
-                  setInvoiceDrawerOpen(true);
-                }}
-              />
-            </div>
-
-            <div className="grid gap-2">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-medium">
-                  {t("medical.examinations")}
-                  <span className="text-xs text-muted-foreground ml-1">
-                    ({examinations.length})
+                {record.patientGender && (
+                  <Badge variant="outline">
+                    {t(`medical.gender.${record.patientGender}`)}
+                  </Badge>
+                )}
+                {record.patientAge != null && (
+                  <span className="text-xs text-muted-foreground">
+                    {record.patientAge}
+                    {t("medical.age")}
                   </span>
-                </h4>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setExamOpen(true)}
-                >
-                  <PlusIcon className="size-3.5" />{" "}
-                  {t("medical.addExamination")}
-                </Button>
+                )}
               </div>
-              {examinations.length === 0 ? (
-                <div className="rounded-lg border border-dashed p-4">
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    {t("medical.noExaminations")}
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-1">
-                  {examinations.map((e) =>
-                    renderSubRecordItem(
-                      e,
-                      "EXAMINATION",
-                      e.name,
-                      e.examDate,
-                      e.description,
-                      () => setExamEditing(e),
-                      () => handleExamDelete(e.id),
-                    ),
-                  )}
+
+              <div className="grid grid-cols-2 gap-4">
+                <Field
+                  label={t("medical.form.institution")}
+                  value={record.institutionName}
+                />
+                <Field label={t("medical.form.doctor")} value={record.doctor} />
+                <Field
+                  label={
+                    isInpatient
+                      ? t("medical.form.admissionDept")
+                      : t("medical.form.department")
+                  }
+                  value={record.department}
+                />
+                <Field
+                  label={
+                    isInpatient
+                      ? t("medical.form.admissionDate")
+                      : t("medical.form.visitDate")
+                  }
+                  value={record.visitDate}
+                />
+                {isInpatient && (
+                  <>
+                    <Field
+                      label={t("medical.form.dischargeDept")}
+                      value={record.dischargeDept}
+                    />
+                    <Field
+                      label={t("medical.form.dischargeDate")}
+                      value={record.dischargeDate}
+                    />
+                  </>
+                )}
+              </div>
+
+              {record.medicalContent && (
+                <div className="grid gap-1">
+                  <span className="text-xs text-muted-foreground">
+                    {t("medical.form.medicalContent")}
+                  </span>
+                  <span className="text-sm whitespace-pre-wrap">
+                    {record.medicalContent}
+                  </span>
                 </div>
               )}
-            </div>
 
-            <div className="grid gap-2">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-medium">
-                  {t("medical.labTests")}
-                  <span className="text-xs text-muted-foreground ml-1">
-                    ({labTests.length})
+              {record.diagnosis && (
+                <div className="grid gap-1">
+                  <span className="text-xs text-muted-foreground">
+                    {t("medical.form.diagnosis")}
                   </span>
-                </h4>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setTestOpen(true)}
-                >
-                  <PlusIcon className="size-3.5" /> {t("medical.addLabTest")}
-                </Button>
-              </div>
-              {labTests.length === 0 ? (
-                <div className="rounded-lg border border-dashed p-4">
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    {t("medical.noLabTests")}
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-1">
-                  {labTests.map((lt) =>
-                    renderSubRecordItem(
-                      lt,
-                      "LAB_TEST",
-                      lt.name,
-                      lt.testDate,
-                      lt.description,
-                      () => setTestEditing(lt),
-                      () => handleTestDelete(lt.id),
-                    ),
-                  )}
+                  <span className="text-sm whitespace-pre-wrap">
+                    {record.diagnosis}
+                  </span>
                 </div>
               )}
-            </div>
 
-            <div className="grid gap-2">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-medium">
-                  {t("medical.prescriptions")}
-                  <span className="text-xs text-muted-foreground ml-1">
-                    ({prescriptions.length})
-                  </span>
-                </h4>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setPrescOpen(true)}
-                >
-                  <PlusIcon className="size-3.5" />{" "}
-                  {t("medical.addPrescription")}
-                </Button>
+              <div className="grid gap-2">
+                <AttachmentManager
+                  attachments={attachments
+                    .filter((a) => a.sourceType === "RECORD")
+                    .map(
+                      (a) =>
+                        ({
+                          id: a.id,
+                          fileId: a.fileId,
+                          filename: a.originalFilename,
+                          fileSize: a.fileSize,
+                          url: a.url,
+                        }) satisfies AttachmentItem,
+                    )}
+                  onSelect={handleVisitAttachmentUpload}
+                  onDelete={handleVisitAttachmentDelete}
+                />
               </div>
-              {prescriptions.length === 0 ? (
-                <div className="rounded-lg border border-dashed p-4">
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    {t("medical.noPrescriptions")}
-                  </p>
+
+              <div className="grid gap-2">
+                <InvoiceBindingManager
+                  invoices={visitInvoices
+                    .filter((i) => i.sourceType === "RECORD")
+                    .map(
+                      (inv) =>
+                        ({
+                          id: inv.id,
+                          invoiceId: inv.invoiceId,
+                          invoiceNumber: inv.invoiceNumber,
+                          invoiceDate: inv.invoiceDate,
+                          totalAmount: inv.totalAmount,
+                          sellerName: inv.sellerName,
+                        }) satisfies BoundInvoice,
+                    )}
+                  title={t("common.invoices")}
+                  emptyLabel={t("medical.noInvoices")}
+                  bindLabel={t("common.bindInvoice")}
+                  onBindInvoice={async (invoiceId) => {
+                    if (!visitId) return;
+                    const { data } = await bindVisitInvoice(
+                      visitId,
+                      invoiceId,
+                      "RECORD",
+                      visitId,
+                    );
+                    setVisitInvoices((prev) => [...prev, data]);
+                  }}
+                  uploadNewLabel={t("common.uploadNew")}
+                  onCreateInvoice={async (invoice) => {
+                    if (!visitId) return;
+                    const { data } = await bindVisitInvoice(
+                      visitId,
+                      invoice.id,
+                      "RECORD",
+                      visitId,
+                    );
+                    setVisitInvoices((prev) => [...prev, data]);
+                  }}
+                  onUnbind={handleInvoiceUnbind}
+                  onView={(invoiceId) => {
+                    setViewingInvoiceId(invoiceId);
+                    setInvoiceDrawerOpen(true);
+                  }}
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-medium">
+                    {t("medical.examinations")}
+                    <span className="text-xs text-muted-foreground ml-1">
+                      ({examinations.length})
+                    </span>
+                  </h4>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setExamOpen(true)}
+                  >
+                    <PlusIcon className="size-3.5" />{" "}
+                    {t("medical.addExamination")}
+                  </Button>
                 </div>
-              ) : (
-                <div className="space-y-1">
-                  {prescriptions.map((p) =>
-                    renderSubRecordItem(
-                      p,
-                      "PRESCRIPTION",
-                      p.prescriptionDate || t("medical.prescriptions"),
-                      null,
-                      p.description,
-                      () => setPrescEditing(p),
-                      () => handlePrescDelete(p.id),
-                      p.items.length > 0 ? (
-                        <div className="border-t px-3 py-1.5 space-y-0.5">
-                          {p.items.map((item) => (
-                            <div
-                              key={item.id}
-                              className="flex items-center gap-2 text-xs"
-                            >
-                              <PillIcon className="size-3.5 shrink-0 text-muted-foreground" />
-                              <span className="font-medium">
-                                {item.medicationName}
-                              </span>
-                              {item.dosageMethod && (
-                                <span className="text-muted-foreground">
-                                  {t("medical.form.dosageMethod")}:{" "}
-                                  {item.dosageMethod}
-                                </span>
-                              )}
-                              {item.dosageQuantity && (
-                                <span className="text-muted-foreground">
-                                  {item.dosageQuantity}
-                                  {item.dosageUnit}
-                                </span>
-                              )}
-                              {item.note && (
-                                <span className="text-muted-foreground">
-                                  ({item.note})
-                                </span>
-                              )}
-                              <Button
-                                variant="ghost"
-                                size="icon-xs"
-                                className="size-5 ml-auto"
-                                onClick={() => handlePrescItemDelete(item.id)}
-                                title={t("common.delete")}
+                {examinations.length === 0 ? (
+                  <div className="rounded-lg border border-dashed p-4">
+                    <p className="text-sm text-muted-foreground text-center py-4">
+                      {t("medical.noExaminations")}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    {examinations.map((e) =>
+                      renderSubRecordItem(
+                        e,
+                        "EXAMINATION",
+                        e.name,
+                        e.examDate,
+                        e.description,
+                        () => setExamEditing(e),
+                        () => handleExamDelete(e.id),
+                      ),
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="grid gap-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-medium">
+                    {t("medical.labTests")}
+                    <span className="text-xs text-muted-foreground ml-1">
+                      ({labTests.length})
+                    </span>
+                  </h4>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setTestOpen(true)}
+                  >
+                    <PlusIcon className="size-3.5" /> {t("medical.addLabTest")}
+                  </Button>
+                </div>
+                {labTests.length === 0 ? (
+                  <div className="rounded-lg border border-dashed p-4">
+                    <p className="text-sm text-muted-foreground text-center py-4">
+                      {t("medical.noLabTests")}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    {labTests.map((lt) =>
+                      renderSubRecordItem(
+                        lt,
+                        "LAB_TEST",
+                        lt.name,
+                        lt.testDate,
+                        lt.description,
+                        () => setTestEditing(lt),
+                        () => handleTestDelete(lt.id),
+                      ),
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="grid gap-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-medium">
+                    {t("medical.prescriptions")}
+                    <span className="text-xs text-muted-foreground ml-1">
+                      ({prescriptions.length})
+                    </span>
+                  </h4>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPrescOpen(true)}
+                  >
+                    <PlusIcon className="size-3.5" />{" "}
+                    {t("medical.addPrescription")}
+                  </Button>
+                </div>
+                {prescriptions.length === 0 ? (
+                  <div className="rounded-lg border border-dashed p-4">
+                    <p className="text-sm text-muted-foreground text-center py-4">
+                      {t("medical.noPrescriptions")}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    {prescriptions.map((p) =>
+                      renderSubRecordItem(
+                        p,
+                        "PRESCRIPTION",
+                        p.prescriptionDate || t("medical.prescriptions"),
+                        null,
+                        p.description,
+                        () => setPrescEditing(p),
+                        () => handlePrescDelete(p.id),
+                        p.items.length > 0 ? (
+                          <div className="border-t px-3 py-1.5 space-y-0.5">
+                            {p.items.map((item) => (
+                              <div
+                                key={item.id}
+                                className="flex items-center gap-2 text-xs"
                               >
-                                <TrashIcon className="size-2.5" />
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      ) : undefined,
-                      () => setItemAddPrescId(p.id),
-                    ),
-                  )}
-                </div>
-              )}
+                                <PillIcon className="size-3.5 shrink-0 text-muted-foreground" />
+                                <span className="font-medium">
+                                  {item.medicationName}
+                                </span>
+                                {item.dosageMethod && (
+                                  <span className="text-muted-foreground">
+                                    {t("medical.form.dosageMethod")}:{" "}
+                                    {item.dosageMethod}
+                                  </span>
+                                )}
+                                {item.dosageQuantity && (
+                                  <span className="text-muted-foreground">
+                                    {item.dosageQuantity}
+                                    {item.dosageUnit}
+                                  </span>
+                                )}
+                                {item.note && (
+                                  <span className="text-muted-foreground">
+                                    ({item.note})
+                                  </span>
+                                )}
+                                <Button
+                                  variant="ghost"
+                                  size="icon-xs"
+                                  className="size-5 ml-auto"
+                                  onClick={() => handlePrescItemDelete(item.id)}
+                                  title={t("common.delete")}
+                                >
+                                  <TrashIcon className="size-2.5" />
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        ) : undefined,
+                        () => setItemAddPrescId(p.id),
+                      ),
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {!loading && record && (
-          <SheetFooter className="shrink-0">
-            <Button variant="outline" onClick={() => onEdit(record)}>
-              <PencilIcon className="size-3.5" /> {t("medical.edit")}
-            </Button>
-            <Button variant="destructive" onClick={() => onDelete(record)}>
-              <TrashIcon className="size-3.5" /> {t("medical.delete")}
-            </Button>
-          </SheetFooter>
-        )}
+          {!loading && record && (
+            <SheetFooter className="shrink-0">
+              <Button variant="outline" onClick={() => onEdit(record)}>
+                <PencilIcon className="size-3.5" /> {t("medical.edit")}
+              </Button>
+              <Button variant="destructive" onClick={() => onDelete(record)}>
+                <TrashIcon className="size-3.5" /> {t("medical.delete")}
+              </Button>
+            </SheetFooter>
+          )}
 
-        <CreateExaminationDialog
-          open={examOpen || !!examEditing}
-          visitId={visitId!}
-          initialData={examEditing}
-          onClose={() => {
-            setExamOpen(false);
-            setExamEditing(null);
-          }}
-          onSuccess={async () => {
-            if (visitId) {
-              const { data } = await getExaminations(visitId, 0, 50);
-              setExaminations(data.content);
-            }
-            onRefresh();
-          }}
-        />
-        <CreateLabTestDialog
-          open={testOpen || !!testEditing}
-          visitId={visitId!}
-          initialData={testEditing}
-          onClose={() => {
-            setTestOpen(false);
-            setTestEditing(null);
-          }}
-          onSuccess={async () => {
-            if (visitId) {
-              const { data } = await getLabTests(visitId, 0, 50);
-              setLabTests(data.content);
-            }
-            onRefresh();
-          }}
-        />
-        <CreatePrescriptionDialog
-          open={prescOpen || !!prescEditing}
-          visitId={visitId!}
-          initialData={prescEditing}
-          onClose={() => {
-            setPrescOpen(false);
-            setPrescEditing(null);
-          }}
-          onSuccess={async () => {
-            if (visitId) {
-              const { data } = await getPrescriptions(visitId, 0, 50);
-              setPrescriptions(data.content);
-            }
-            onRefresh();
-          }}
-        />
-        <CreatePrescriptionItemDialog
-          open={itemAddPrescId !== null}
-          onClose={() => setItemAddPrescId(null)}
-          onSubmit={handlePrescItemAdd}
-        />
-        <BindInvoiceDialog
-          open={invoiceBind !== null}
-          onClose={() => setInvoiceBind(null)}
-          onBind={handleSubRecordInvoiceBind}
-          onCreateNew={() => {
-            setCreateInvoiceTarget(invoiceBind);
-            setCreateInvoiceOpen(true);
-          }}
-          title={t("common.bindInvoice")}
-          searchPlaceholder={t("common.searchInvoices")}
-          confirmLabel={t("common.bind")}
-          uploadNewLabel={t("common.uploadNew")}
-        />
-        <CreateInvoiceDialog
-          open={createInvoiceOpen}
-          onClose={() => {
-            setCreateInvoiceOpen(false);
-            setCreateInvoiceTarget(null);
-          }}
-          onCreated={async (invoice) => {
-            if (!createInvoiceTarget || !visitId) return;
-            const { data } = await bindVisitInvoice(
-              visitId,
-              invoice.id,
-              createInvoiceTarget.sourceType,
-              createInvoiceTarget.sourceId,
-            );
-            setVisitInvoices((prev) => [...prev, data]);
-            setCreateInvoiceTarget(null);
-          }}
-        />
-        <InvoiceDetailDrawer
-          invoiceId={viewingInvoiceId}
-          open={invoiceDrawerOpen}
-          onClose={() => {
-            setInvoiceDrawerOpen(false);
-            setViewingInvoiceId(null);
-          }}
-          onInvoiceChanged={() => void fetchDetail()}
-        />
-      </SheetContent>
-    </Sheet>
-    <FilePickerDialog
-      open={subPickerOpen}
-      onClose={() => setSubPickerOpen(false)}
-      onSelect={handleSubAttachmentUpload}
-      multiple={false}
-    />
+          <CreateExaminationDialog
+            open={examOpen || !!examEditing}
+            visitId={visitId!}
+            initialData={examEditing}
+            onClose={() => {
+              setExamOpen(false);
+              setExamEditing(null);
+            }}
+            onSuccess={async () => {
+              if (visitId) {
+                const { data } = await getExaminations(visitId, 0, 50);
+                setExaminations(data.content);
+              }
+              onRefresh();
+            }}
+          />
+          <CreateLabTestDialog
+            open={testOpen || !!testEditing}
+            visitId={visitId!}
+            initialData={testEditing}
+            onClose={() => {
+              setTestOpen(false);
+              setTestEditing(null);
+            }}
+            onSuccess={async () => {
+              if (visitId) {
+                const { data } = await getLabTests(visitId, 0, 50);
+                setLabTests(data.content);
+              }
+              onRefresh();
+            }}
+          />
+          <CreatePrescriptionDialog
+            open={prescOpen || !!prescEditing}
+            visitId={visitId!}
+            initialData={prescEditing}
+            onClose={() => {
+              setPrescOpen(false);
+              setPrescEditing(null);
+            }}
+            onSuccess={async () => {
+              if (visitId) {
+                const { data } = await getPrescriptions(visitId, 0, 50);
+                setPrescriptions(data.content);
+              }
+              onRefresh();
+            }}
+          />
+          <CreatePrescriptionItemDialog
+            open={itemAddPrescId !== null}
+            onClose={() => setItemAddPrescId(null)}
+            onSubmit={handlePrescItemAdd}
+          />
+          <BindInvoiceDialog
+            open={invoiceBind !== null}
+            onClose={() => setInvoiceBind(null)}
+            onBind={handleSubRecordInvoiceBind}
+            onCreateNew={() => {
+              setCreateInvoiceTarget(invoiceBind);
+              setCreateInvoiceOpen(true);
+            }}
+            title={t("common.bindInvoice")}
+            searchPlaceholder={t("common.searchInvoices")}
+            confirmLabel={t("common.bind")}
+            uploadNewLabel={t("common.uploadNew")}
+          />
+          <CreateInvoiceDialog
+            open={createInvoiceOpen}
+            onClose={() => {
+              setCreateInvoiceOpen(false);
+              setCreateInvoiceTarget(null);
+            }}
+            onCreated={async (invoice) => {
+              if (!createInvoiceTarget || !visitId) return;
+              const { data } = await bindVisitInvoice(
+                visitId,
+                invoice.id,
+                createInvoiceTarget.sourceType,
+                createInvoiceTarget.sourceId,
+              );
+              setVisitInvoices((prev) => [...prev, data]);
+              setCreateInvoiceTarget(null);
+            }}
+          />
+          <InvoiceDetailDrawer
+            invoiceId={viewingInvoiceId}
+            open={invoiceDrawerOpen}
+            onClose={() => {
+              setInvoiceDrawerOpen(false);
+              setViewingInvoiceId(null);
+            }}
+            onInvoiceChanged={() => void fetchDetail()}
+          />
+        </SheetContent>
+      </Sheet>
+      <FilePickerDialog
+        open={subPickerOpen}
+        onClose={() => setSubPickerOpen(false)}
+        onSelect={handleSubAttachmentUpload}
+        multiple={false}
+      />
     </>
   );
 };

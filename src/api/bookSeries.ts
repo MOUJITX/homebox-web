@@ -18,16 +18,13 @@ export interface UpdateBookSeriesRequest {
   description?: string;
 }
 
-export const getBookSeriesList = () =>
-  axios.get<BookSeries[]>("/book-series");
+export const getBookSeriesList = () => axios.get<BookSeries[]>("/book-series");
 
 export const createBookSeries = (data: CreateBookSeriesRequest) =>
   axios.post<BookSeries>("/book-series", data);
 
-export const updateBookSeries = (
-  id: number,
-  data: UpdateBookSeriesRequest,
-) => axios.put<BookSeries>(`/book-series/${id}`, data);
+export const updateBookSeries = (id: number, data: UpdateBookSeriesRequest) =>
+  axios.put<BookSeries>(`/book-series/${id}`, data);
 
 export const deleteBookSeries = (id: number) =>
   axios.delete<void>(`/book-series/${id}`);

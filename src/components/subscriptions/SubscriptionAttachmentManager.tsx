@@ -53,9 +53,7 @@ const SubscriptionAttachmentManager = ({
   return (
     <div className="grid gap-3">
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-medium">
-          {t("common.upload")}
-        </h4>
+        <h4 className="text-sm font-medium">{t("common.upload")}</h4>
         <Button
           variant="outline"
           size="sm"

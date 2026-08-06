@@ -272,7 +272,9 @@ const AssetDetailDrawer = ({
               pictures={detail.pictures ?? []}
               onSelect={async (files) => {
                 await Promise.all(
-                  files.map((f) => uploadAssetPicture(detail.id, undefined, f.id)),
+                  files.map((f) =>
+                    uploadAssetPicture(detail.id, undefined, f.id),
+                  ),
                 );
                 void invalidate.invalidateDetail(assetId!);
               }}
@@ -322,7 +324,9 @@ const AssetDetailDrawer = ({
                 await unbindInvoiceFromAsset(assetId!, id);
                 void invalidate.invalidateInvoices(assetId!);
               }}
-              onInvoiceChanged={() => void invalidate.invalidateDetail(assetId!)}
+              onInvoiceChanged={() =>
+                void invalidate.invalidateDetail(assetId!)
+              }
             />
 
             {/* Attachments */}
@@ -347,93 +351,93 @@ const AssetDetailDrawer = ({
 
             {/* Sub-assets (for parent assets only) */}
             {!detail.parentId && (
-            <div className="grid gap-2">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-medium">
-                  {t("assets.subAssets.title")}
-                  <span className="text-xs text-muted-foreground ml-1">
-                    ({detail.subAssets.length})
-                  </span>
-                </h4>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCreateSubOpen(true)}
-                >
-                  <PlusIcon className="size-3.5" />
-                  {t("assets.subAssets.add")}
-                </Button>
-              </div>
-
-              {!isLoading && detail.subAssets.length === 0 && (
-                <div className="rounded-lg border border-dashed p-4">
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    {t("assets.subAssets.empty")}
-                  </p>
-                </div>
-              )}
-              <div className="space-y-1">
-                {detail.subAssets.map((sub) => (
-                  <button
-                    key={sub.id}
-                    type="button"
-                    className="flex items-center justify-between w-full rounded-md border px-3 py-2 text-sm hover:bg-accent/50 transition-colors text-left"
-                    onClick={() => onNavigateToAsset(sub.id)}
+              <div className="grid gap-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-medium">
+                    {t("assets.subAssets.title")}
+                    <span className="text-xs text-muted-foreground ml-1">
+                      ({detail.subAssets.length})
+                    </span>
+                  </h4>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCreateSubOpen(true)}
                   >
-                    <div className="flex items-center gap-2 min-w-0">
-                      {sub.firstPictureUrl ? (
-                        <AuthImg
-                          url={sub.firstPictureUrl}
-                          className="size-8 rounded object-cover ring-1 ring-foreground/10"
-                        />
-                      ) : (
-                        <div className="size-8 rounded bg-muted shrink-0" />
-                      )}
-                      <div className="min-w-0">
-                        <div className="font-medium truncate">{sub.name}</div>
-                        <div className="text-xs text-muted-foreground flex gap-2">
-                          {sub.barcode && (
-                            <span className="font-mono">{sub.barcode}</span>
-                          )}
-                          {sub.serialNumber && (
-                            <span className="font-mono">
-                              {sub.serialNumber}
-                            </span>
-                          )}
+                    <PlusIcon className="size-3.5" />
+                    {t("assets.subAssets.add")}
+                  </Button>
+                </div>
+
+                {!isLoading && detail.subAssets.length === 0 && (
+                  <div className="rounded-lg border border-dashed p-4">
+                    <p className="text-sm text-muted-foreground text-center py-4">
+                      {t("assets.subAssets.empty")}
+                    </p>
+                  </div>
+                )}
+                <div className="space-y-1">
+                  {detail.subAssets.map((sub) => (
+                    <button
+                      key={sub.id}
+                      type="button"
+                      className="flex items-center justify-between w-full rounded-md border px-3 py-2 text-sm hover:bg-accent/50 transition-colors text-left"
+                      onClick={() => onNavigateToAsset(sub.id)}
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        {sub.firstPictureUrl ? (
+                          <AuthImg
+                            url={sub.firstPictureUrl}
+                            className="size-8 rounded object-cover ring-1 ring-foreground/10"
+                          />
+                        ) : (
+                          <div className="size-8 rounded bg-muted shrink-0" />
+                        )}
+                        <div className="min-w-0">
+                          <div className="font-medium truncate">{sub.name}</div>
+                          <div className="text-xs text-muted-foreground flex gap-2">
+                            {sub.barcode && (
+                              <span className="font-mono">{sub.barcode}</span>
+                            )}
+                            {sub.serialNumber && (
+                              <span className="font-mono">
+                                {sub.serialNumber}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      {sub.price != null && (
-                        <span className="text-xs text-muted-foreground tabular-nums">
-                          {formatCurrency(sub.price)}
-                        </span>
-                      )}
-                      <Badge
-                        variant={warrantyBadgeVariant(sub.warrantyStatus)}
-                        className="text-xs"
-                      >
-                        {t(`assets.warranty.${sub.warrantyStatus}`)}
-                      </Badge>
-                      <Button
-                        variant="ghost"
-                        size="icon-xs"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          void handleToggleInUse(sub);
-                        }}
-                      >
-                        {sub.inUse ? (
-                          <ToggleRightIcon className="size-3.5" />
-                        ) : (
-                          <ToggleLeftIcon className="size-3.5" />
+                      <div className="flex items-center gap-2 shrink-0">
+                        {sub.price != null && (
+                          <span className="text-xs text-muted-foreground tabular-nums">
+                            {formatCurrency(sub.price)}
+                          </span>
                         )}
-                      </Button>
-                    </div>
-                  </button>
-                ))}
+                        <Badge
+                          variant={warrantyBadgeVariant(sub.warrantyStatus)}
+                          className="text-xs"
+                        >
+                          {t(`assets.warranty.${sub.warrantyStatus}`)}
+                        </Badge>
+                        <Button
+                          variant="ghost"
+                          size="icon-xs"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            void handleToggleInUse(sub);
+                          }}
+                        >
+                          {sub.inUse ? (
+                            <ToggleRightIcon className="size-3.5" />
+                          ) : (
+                            <ToggleLeftIcon className="size-3.5" />
+                          )}
+                        </Button>
+                      </div>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
             )}
 
             {/* Timestamps */}
@@ -496,7 +500,6 @@ const AssetDetailDrawer = ({
             void invalidate.invalidateList();
           }}
         />
-
       </SheetContent>
     </Sheet>
   );

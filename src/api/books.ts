@@ -151,14 +151,16 @@ export const createBook = (data: CreateBookRequest) =>
 export const updateBook = (id: number, data: UpdateBookRequest) =>
   axios.put<BookDetail>(`/books/${id}`, data);
 
-export const deleteBook = (id: number) =>
-  axios.delete<void>(`/books/${id}`);
+export const deleteBook = (id: number) => axios.delete<void>(`/books/${id}`);
 
 export const getBookChildren = (id: number) =>
   axios.get<Book[]>(`/books/${id}/children`);
 
-export const lookupDouban = (params: { isbn?: string; issn?: string; q?: string }) =>
-  axios.get<DoubanLookupResult>("/books/lookup-douban", { params });
+export const lookupDouban = (params: {
+  isbn?: string;
+  issn?: string;
+  q?: string;
+}) => axios.get<DoubanLookupResult>("/books/lookup-douban", { params });
 
 export const checkIsbn = (isbn: string) =>
   axios.get<IsbnCheckResult>("/books/check-isbn", { params: { isbn } });

@@ -44,7 +44,9 @@ const InstitutionManagerDialog = ({
       setInstitutions(data);
       onInstitutionsChange?.(data);
     } catch (err) {
-      toast.error(getErrorMessage(err) ?? t("medical.errors.loadInstitutionsFailed"));
+      toast.error(
+        getErrorMessage(err) ?? t("medical.errors.loadInstitutionsFailed"),
+      );
     }
   };
 

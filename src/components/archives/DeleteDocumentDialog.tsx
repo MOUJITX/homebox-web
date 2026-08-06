@@ -48,9 +48,7 @@ const DeleteDocumentDialog = ({
       void invalidate.invalidateList();
       onSuccess?.();
     } catch (err) {
-      setError(
-        getErrorMessage(err) ?? t("archives.errors.deleteFailed"),
-      );
+      setError(getErrorMessage(err) ?? t("archives.errors.deleteFailed"));
     } finally {
       setDeleting(false);
     }
