@@ -28,7 +28,13 @@ export const setSessionExpiredHandler = (handler: (() => void) | null) => {
 };
 
 axios.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    const newToken = response.headers["x-new-token"];
+    if (newToken) {
+      setToken(newToken);
+    }
+    return response;
+  },
   (error) => {
     if (error.response?.status === 401 && getToken()) {
       clearToken();

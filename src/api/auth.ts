@@ -7,6 +7,7 @@ interface LoginRequest {
 
 interface LoginResponse {
   token: string;
+  expiresIn: number;
   forceChangePassword: boolean;
 }
 
@@ -20,7 +21,7 @@ interface ChangePasswordResponse {
 }
 
 export const login = (data: LoginRequest) =>
-  axios.post<LoginResponse>("/auth/login", data);
+  axios.post<LoginResponse>("/auth/login", { ...data, clientType: "client" });
 
 export const changePassword = (data: ChangePasswordRequest) =>
   axios.post<ChangePasswordResponse>("/auth/change-password", data);
