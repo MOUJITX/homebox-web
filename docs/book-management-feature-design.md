@@ -353,7 +353,7 @@ src/
   "author": "作者",
   "authorHint": "多作者用逗号分隔",
   "isbn": "ISBN",
-  "isbnOptional": "ISBN（选填）",
+  "isbnOptional": "ISBN",
   "customBarcode": "自编条码",
   "customBarcodeHint": "自动生成，格式：分类编码+序号",
   "serialized": "连载",
