@@ -63,6 +63,15 @@ export const deleteAttachment = (recordId: number, attachmentId: number) =>
     `/subscription-records/${recordId}/attachments/${attachmentId}`,
   );
 
+export const syncSubscriptionRecordAttachments = (
+  recordId: number,
+  fileIds: number[],
+) =>
+  axios.put<SubscriptionRecordAttachment[]>(
+    `/subscription-records/${recordId}/attachments`,
+    { fileIds },
+  );
+
 export const getInvoices = (recordId: number) =>
   axios.get<SubscriptionRecordInvoice[]>(
     `/subscription-records/${recordId}/invoices`,

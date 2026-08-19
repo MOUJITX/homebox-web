@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ImageIcon, PlusIcon, TrashIcon } from "lucide-react";
-import type { FileRecord } from "@/api/files";
 import AuthImg from "@/components/AuthImg";
 import ImagePreview from "@/components/ImagePreview";
 import { Button } from "@/components/ui/button";
+import { useFileSelectionSync } from "@/hooks/useFileSelectionSync";
 import FilePickerDialog from "./FilePickerDialog";
 
 export interface PictureItem {
@@ -16,40 +16,42 @@ export interface PictureItem {
 
 interface PictureManagerProps {
   readonly pictures: PictureItem[];
-  readonly onSelect: (files: FileRecord[]) => Promise<void>;
-  readonly onDeselect?: (files: FileRecord[]) => Promise<void>;
-  readonly onDelete: (id: number) => Promise<void>;
+  readonly onSync: (fileIds: number[]) => Promise<void>;
   readonly isLoading?: boolean;
 }
 
 const PictureManager = ({
   pictures,
-  onSelect,
-  onDeselect,
-  onDelete,
+  onSync,
   isLoading,
 }: PictureManagerProps) => {
   const { t } = useTranslation();
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [selecting, setSelecting] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
-  const handleSelect = async (files: FileRecord[]) => {
-    setSelecting(true);
+  const currentFileIds = pictures.map((p) => p.fileId);
+
+  const handleSync = async (fileIds: number[]) => {
+    setSyncing(true);
     try {
-      await onSelect(files);
+      await onSync(fileIds);
     } finally {
-      setSelecting(false);
+      setSyncing(false);
     }
   };
 
-  const handleDeselect = async (files: FileRecord[]) => {
-    if (!onDeselect) return;
-    setSelecting(true);
+  const { handleSelect, handleDeselect } = useFileSelectionSync(
+    currentFileIds,
+    handleSync,
+  );
+
+  const handleDelete = async (fileId: number) => {
+    setSyncing(true);
     try {
-      await onDeselect(files);
+      await onSync(currentFileIds.filter((id) => id !== fileId));
     } finally {
-      setSelecting(false);
+      setSyncing(false);
     }
   };
 
@@ -63,11 +65,11 @@ const PictureManager = ({
         <Button
           variant="outline"
           size="sm"
-          disabled={selecting}
+          disabled={syncing}
           onClick={() => setPickerOpen(true)}
         >
           <PlusIcon className="size-3.5" />
-          {selecting ? t("common.uploading") : t("common.upload")}
+          {syncing ? t("common.uploading") : t("common.upload")}
         </Button>
       </div>
       {isLoading && (
@@ -98,7 +100,7 @@ const PictureManager = ({
                 variant="destructive"
                 size="icon-xs"
                 className="absolute -right-1 -top-1 opacity-0 transition-opacity group-hover:opacity-100"
-                onClick={() => void onDelete(pic.id)}
+                onClick={() => void handleDelete(pic.fileId)}
               >
                 <TrashIcon className="size-3" />
               </Button>

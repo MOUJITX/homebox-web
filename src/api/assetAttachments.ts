@@ -37,3 +37,6 @@ export const uploadAssetAttachment = (
 
 export const deleteAssetAttachment = (assetId: number, attachmentId: number) =>
   axios.delete<void>(`/assets/${assetId}/attachments/${attachmentId}`);
+
+export const syncAssetAttachments = (assetId: number, fileIds: number[]) =>
+  axios.put<AssetAttachment[]>(`/assets/${assetId}/attachments`, { fileIds });

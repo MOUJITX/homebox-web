@@ -7,9 +7,9 @@ import {
   DownloadIcon,
   LoaderIcon,
 } from "lucide-react";
-import type { FileRecord } from "@/api/files";
 import { Button } from "@/components/ui/button";
 import { formatFileSize } from "@/lib/utils";
+import { useFileSelectionSync } from "@/hooks/useFileSelectionSync";
 import FilePickerDialog from "./FilePickerDialog";
 
 export interface AttachmentItem {
@@ -24,26 +24,38 @@ export interface AttachmentItem {
 
 interface AttachmentManagerProps {
   readonly attachments: AttachmentItem[];
-  readonly onSelect: (file: FileRecord) => Promise<void>;
-  readonly onDelete: (id: number) => Promise<void>;
+  readonly onSync: (fileIds: number[]) => Promise<void>;
 }
 
-const AttachmentManager = ({
-  attachments,
-  onSelect,
-  onDelete,
-}: AttachmentManagerProps) => {
+const AttachmentManager = ({ attachments, onSync }: AttachmentManagerProps) => {
   const { t } = useTranslation();
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [selecting, setSelecting] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
-  const handleSelect = async (files: FileRecord[]) => {
-    if (files.length === 0) return;
-    setSelecting(true);
+  const currentFileIds = attachments
+    .filter((a) => a.fileId != null && a.deletable !== false)
+    .map((a) => a.fileId!);
+
+  const handleSync = async (fileIds: number[]) => {
+    setSyncing(true);
     try {
-      await onSelect(files[0]);
+      await onSync(fileIds);
     } finally {
-      setSelecting(false);
+      setSyncing(false);
+    }
+  };
+
+  const { handleSelect, handleDeselect } = useFileSelectionSync(
+    currentFileIds,
+    handleSync,
+  );
+
+  const handleDelete = async (fileId: number) => {
+    setSyncing(true);
+    try {
+      await onSync(currentFileIds.filter((id) => id !== fileId));
+    } finally {
+      setSyncing(false);
     }
   };
 
@@ -56,10 +68,10 @@ const AttachmentManager = ({
             variant="outline"
             size="sm"
             onClick={() => setPickerOpen(true)}
-            disabled={selecting}
+            disabled={syncing}
           >
             <UploadIcon className="size-3.5" />
-            {selecting ? t("common.uploading") : t("common.upload")}
+            {syncing ? t("common.uploading") : t("common.upload")}
           </Button>
         </div>
       </div>
@@ -106,7 +118,9 @@ const AttachmentManager = ({
                 <Button
                   variant="ghost"
                   size="icon-xs"
-                  onClick={() => void onDelete(a.id)}
+                  onClick={() => {
+                    if (a.fileId != null) void handleDelete(a.fileId);
+                  }}
                   title="Delete"
                 >
                   <TrashIcon className="size-3.5" />
@@ -121,7 +135,8 @@ const AttachmentManager = ({
         open={pickerOpen}
         onClose={() => setPickerOpen(false)}
         onSelect={handleSelect}
-        multiple={false}
+        onDeselect={handleDeselect}
+        multiple
         initialSelection={attachments
           .filter((a) => a.fileId != null)
           .map((a) => ({

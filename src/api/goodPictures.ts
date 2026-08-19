@@ -20,3 +20,6 @@ export const uploadGoodPicture = (
 
 export const deleteGoodPicture = (goodId: number, pictureId: number) =>
   axios.delete<void>(`/goods/${goodId}/pictures/${pictureId}`);
+
+export const syncGoodPictures = (goodId: number, fileIds: number[]) =>
+  axios.put<GoodPicture[]>(`/goods/${goodId}/pictures`, { fileIds });

@@ -203,26 +203,18 @@ const BookDetailDrawer = ({ bookId, open, onClose }: BookDetailDrawerProps) => {
 
               <PictureManager
                 pictures={detail.pictures}
-                onSelect={async (files) => {
-                  await Promise.all(
-                    files.map((f) =>
-                      uploadBookPicture(bookId!, undefined, f.id),
-                    ),
-                  );
-                  void invalidate.invalidateDetail(bookId!);
-                }}
-                onDeselect={async (files) => {
+                onSync={async (fileIds) => {
                   const pictures = detail.pictures ?? [];
-                  await Promise.all(
-                    files
-                      .map((f) => pictures.find((p) => p.fileId === f.id)?.id)
-                      .filter((id): id is number => id != null)
-                      .map((id) => deleteBookPicture(bookId!, id)),
-                  );
-                  void invalidate.invalidateDetail(bookId!);
-                }}
-                onDelete={async (id) => {
-                  await deleteBookPicture(bookId!, id);
+                  const currentIds = new Set(pictures.map((p) => p.fileId));
+                  const desiredIds = new Set(fileIds);
+                  await Promise.all([
+                    ...fileIds
+                      .filter((id) => !currentIds.has(id))
+                      .map((id) => uploadBookPicture(bookId!, undefined, id)),
+                    ...pictures
+                      .filter((p) => !desiredIds.has(p.fileId))
+                      .map((p) => deleteBookPicture(bookId!, p.id)),
+                  ]);
                   void invalidate.invalidateDetail(bookId!);
                 }}
               />

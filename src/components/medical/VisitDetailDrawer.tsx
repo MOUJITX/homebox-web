@@ -32,8 +32,7 @@ import {
   addPrescriptionItem,
   deletePrescriptionItem,
   getVisitAttachments,
-  uploadVisitAttachment,
-  deleteVisitAttachment,
+  syncVisitAttachments,
   getVisitInvoices,
   bindVisitInvoice,
   unbindVisitInvoice,
@@ -46,9 +45,7 @@ import {
   type VisitSourceType,
 } from "@/api/medical";
 import { formatFileSize } from "@/lib/utils";
-import { getErrorMessage } from "@/lib/error";
-import { toast } from "sonner";
-import type { FileRecord } from "@/api/files";
+import { useFileSelectionSync } from "@/hooks/useFileSelectionSync";
 import AttachmentManager, {
   type AttachmentItem,
 } from "@/components/shared/AttachmentManager";
@@ -173,42 +170,63 @@ const VisitDetailDrawer = ({
 
   // ── Targeted updates to avoid full re-fetch ──
 
-  const handleSubAttachmentUpload = async (files: FileRecord[]) => {
-    if (files.length === 0 || !subUploadTarget || !visitId) return;
-    try {
-      const results = await Promise.all(
-        files.map((f) =>
-          uploadVisitAttachment(
-            visitId,
-            undefined,
-            subUploadTarget.sourceType,
-            subUploadTarget.sourceId,
-            f.id,
-          ),
-        ),
-      );
-      setAttachments((prev) => [...prev, ...results.map((r) => r.data)]);
-    } catch (err) {
-      toast.error(getErrorMessage(err) ?? t("medical.errors.uploadFailed"));
-    }
+  const refreshAttachments = async () => {
+    if (!visitId) return;
+    const { data } = await getVisitAttachments(visitId);
+    setAttachments(data);
   };
 
-  const handleVisitAttachmentUpload = async (file: FileRecord) => {
+  const handleAttachmentSync = async (
+    sourceType: VisitSourceType,
+    sourceId: number,
+    fileIds: number[],
+  ) => {
     if (!visitId) return;
-    const { data } = await uploadVisitAttachment(
-      visitId,
-      undefined,
-      "RECORD",
-      visitId,
-      file.id,
-    );
-    setAttachments((prev) => [...prev, data]);
+    await syncVisitAttachments(visitId, sourceType, sourceId, fileIds);
+    await refreshAttachments();
+  };
+
+  const handleVisitAttachmentSync = async (fileIds: number[]) => {
+    if (!visitId) return;
+    await handleAttachmentSync("RECORD", visitId, fileIds);
   };
 
   const handleVisitAttachmentDelete = async (id: number) => {
-    await deleteVisitAttachment(id);
-    setAttachments((prev) => prev.filter((a) => a.id !== id));
+    const att = attachments.find((a) => a.id === id);
+    if (!att || !visitId) return;
+    const scopeFileIds = attachments
+      .filter(
+        (a) =>
+          a.sourceType === att.sourceType &&
+          a.sourceId === att.sourceId &&
+          a.id !== id,
+      )
+      .map((a) => a.fileId);
+    await handleAttachmentSync(att.sourceType, att.sourceId, scopeFileIds);
   };
+
+  const subTargetAttachments = subUploadTarget
+    ? attachments.filter(
+        (a) =>
+          a.sourceType === subUploadTarget.sourceType &&
+          a.sourceId === subUploadTarget.sourceId,
+      )
+    : [];
+
+  const handleSubAttachmentSync = async (fileIds: number[]) => {
+    if (!subUploadTarget) return;
+    await handleAttachmentSync(
+      subUploadTarget.sourceType,
+      subUploadTarget.sourceId,
+      fileIds,
+    );
+  };
+
+  const { handleSelect: handleSubSelect, handleDeselect: handleSubDeselect } =
+    useFileSelectionSync(
+      subTargetAttachments.map((a) => a.fileId),
+      handleSubAttachmentSync,
+    );
 
   const handleInvoiceUnbind = async (id: number) => {
     await unbindVisitInvoice(id);
@@ -538,8 +556,7 @@ const VisitDetailDrawer = ({
                           url: a.url,
                         }) satisfies AttachmentItem,
                     )}
-                  onSelect={handleVisitAttachmentUpload}
-                  onDelete={handleVisitAttachmentDelete}
+                  onSync={handleVisitAttachmentSync}
                 />
               </div>
 
@@ -862,8 +879,20 @@ const VisitDetailDrawer = ({
       <FilePickerDialog
         open={subPickerOpen}
         onClose={() => setSubPickerOpen(false)}
-        onSelect={handleSubAttachmentUpload}
-        multiple={false}
+        onSelect={handleSubSelect}
+        onDeselect={handleSubDeselect}
+        multiple
+        initialSelection={subTargetAttachments.map((a) => ({
+          id: a.fileId,
+          storedFilename: "",
+          originalFilename: a.originalFilename,
+          contentType: "",
+          fileSize: a.fileSize,
+          url: a.url,
+          createdAt: a.createdAt,
+          extractStatus: "SUCCESS" as const,
+          chunkStatus: "SUCCESS" as const,
+        }))}
       />
     </>
   );

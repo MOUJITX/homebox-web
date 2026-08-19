@@ -11,11 +11,8 @@ import {
 } from "lucide-react";
 import type { Asset, WarrantyStatus } from "@/api/assets";
 import { updateAsset } from "@/api/assets";
-import { uploadAssetPicture, deleteAssetPicture } from "@/api/assetPictures";
-import {
-  uploadAssetAttachment,
-  deleteAssetAttachment,
-} from "@/api/assetAttachments";
+import { syncAssetPictures } from "@/api/assetPictures";
+import { syncAssetAttachments } from "@/api/assetAttachments";
 import {
   bindInvoiceToAsset,
   unbindInvoiceFromAsset,
@@ -270,26 +267,8 @@ const AssetDetailDrawer = ({
             {/* Pictures */}
             <PictureManager
               pictures={detail.pictures ?? []}
-              onSelect={async (files) => {
-                await Promise.all(
-                  files.map((f) =>
-                    uploadAssetPicture(detail.id, undefined, f.id),
-                  ),
-                );
-                void invalidate.invalidateDetail(assetId!);
-              }}
-              onDeselect={async (files) => {
-                const pictures = detail.pictures ?? [];
-                await Promise.all(
-                  files
-                    .map((f) => pictures.find((p) => p.fileId === f.id)?.id)
-                    .filter((id): id is number => id != null)
-                    .map((id) => deleteAssetPicture(detail.id, id)),
-                );
-                void invalidate.invalidateDetail(assetId!);
-              }}
-              onDelete={async (id) => {
-                await deleteAssetPicture(detail.id, id);
+              onSync={async (fileIds) => {
+                await syncAssetPictures(detail.id, fileIds);
                 void invalidate.invalidateDetail(assetId!);
               }}
             />
@@ -339,12 +318,8 @@ const AssetDetailDrawer = ({
                 url: a.url,
                 indexed: a.indexed,
               }))}
-              onSelect={async (file) => {
-                await uploadAssetAttachment(detail.id, undefined, file.id);
-                void invalidate.invalidateDetail(assetId!);
-              }}
-              onDelete={async (id) => {
-                await deleteAssetAttachment(detail.id, id);
+              onSync={async (fileIds) => {
+                await syncAssetAttachments(detail.id, fileIds);
                 void invalidate.invalidateDetail(assetId!);
               }}
             />

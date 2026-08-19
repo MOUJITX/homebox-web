@@ -39,3 +39,11 @@ export const deleteDocumentAttachment = (
   documentId: number,
   attachmentId: number,
 ) => axios.delete<void>(`/documents/${documentId}/attachments/${attachmentId}`);
+
+export const syncDocumentAttachments = (
+  documentId: number,
+  fileIds: number[],
+) =>
+  axios.put<DocumentAttachment[]>(`/documents/${documentId}/attachments`, {
+    fileIds,
+  });

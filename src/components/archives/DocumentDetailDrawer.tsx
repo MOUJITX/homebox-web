@@ -33,11 +33,7 @@ import {
 } from "@/components/ui/table";
 import AttachmentManager from "@/components/shared/AttachmentManager";
 import InvoiceBindingManager from "@/components/shared/InvoiceBindingManager";
-import type { FileRecord } from "@/api/files";
-import {
-  uploadDocumentAttachment,
-  deleteDocumentAttachment,
-} from "@/api/documentAttachments";
+import { syncDocumentAttachments } from "@/api/documentAttachments";
 import { bindDocumentInvoice, unbindDocumentInvoice } from "@/api/documents";
 import DocumentDialog from "./DocumentDialog";
 import DeleteDocumentDialog from "./DeleteDocumentDialog";
@@ -341,12 +337,8 @@ const DocumentDetailDrawer = ({
                     url: a.url,
                     indexed: a.indexed,
                   }))}
-                  onSelect={async (file: FileRecord) => {
-                    await uploadDocumentAttachment(doc.id, undefined, file.id);
-                    void invalidate.invalidateDetail(doc.id);
-                  }}
-                  onDelete={async (id: number) => {
-                    await deleteDocumentAttachment(doc.id, id);
+                  onSync={async (fileIds) => {
+                    await syncDocumentAttachments(doc.id, fileIds);
                     void invalidate.invalidateDetail(doc.id);
                   }}
                 />

@@ -36,11 +36,8 @@ import {
 } from "@/components/ui/table";
 import PictureManager from "@/components/shared/PictureManager";
 import AttachmentManager from "@/components/shared/AttachmentManager";
-import { uploadGoodPicture, deleteGoodPicture } from "@/api/goodPictures";
-import {
-  uploadGoodAttachment,
-  deleteGoodAttachment,
-} from "@/api/goodAttachments";
+import { syncGoodPictures } from "@/api/goodPictures";
+import { syncGoodAttachments } from "@/api/goodAttachments";
 import CreateItemDialog from "./CreateItemDialog";
 import EditItemDialog from "./EditItemDialog";
 import DeleteItemDialog from "./DeleteItemDialog";
@@ -329,26 +326,8 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
             {/* Pictures */}
             <PictureManager
               pictures={detail.pictures ?? []}
-              onSelect={async (files) => {
-                await Promise.all(
-                  files.map((f) =>
-                    uploadGoodPicture(detail.id, undefined, f.id),
-                  ),
-                );
-                void fetchDetail();
-              }}
-              onDeselect={async (files) => {
-                const pictures = detail.pictures ?? [];
-                await Promise.all(
-                  files
-                    .map((f) => pictures.find((p) => p.fileId === f.id)?.id)
-                    .filter((id): id is number => id != null)
-                    .map((id) => deleteGoodPicture(detail.id, id)),
-                );
-                void fetchDetail();
-              }}
-              onDelete={async (id) => {
-                await deleteGoodPicture(detail.id, id);
+              onSync={async (fileIds) => {
+                await syncGoodPictures(detail.id, fileIds);
                 void fetchDetail();
               }}
             />
@@ -363,12 +342,8 @@ const GoodDetailDrawer = ({ goodId, open, onClose }: GoodDetailDrawerProps) => {
                 url: a.url,
                 indexed: a.indexed,
               }))}
-              onSelect={async (file) => {
-                await uploadGoodAttachment(detail.id, undefined, file.id);
-                void fetchDetail();
-              }}
-              onDelete={async (id) => {
-                await deleteGoodAttachment(detail.id, id);
+              onSync={async (fileIds) => {
+                await syncGoodAttachments(detail.id, fileIds);
                 void fetchDetail();
               }}
             />

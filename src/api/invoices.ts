@@ -208,3 +208,8 @@ export const deleteInvoiceAttachment = (
   invoiceId: number,
   attachmentId: number,
 ) => axios.delete<void>(`/invoices/${invoiceId}/attachments/${attachmentId}`);
+
+export const syncInvoiceAttachments = (invoiceId: number, fileIds: number[]) =>
+  axios.put<InvoiceAttachment[]>(`/invoices/${invoiceId}/attachments`, {
+    fileIds,
+  });

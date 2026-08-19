@@ -33,3 +33,6 @@ export const uploadGoodAttachment = (
 
 export const deleteGoodAttachment = (goodId: number, attachmentId: number) =>
   axios.delete<void>(`/goods/${goodId}/attachments/${attachmentId}`);
+
+export const syncGoodAttachments = (goodId: number, fileIds: number[]) =>
+  axios.put<GoodAttachment[]>(`/goods/${goodId}/attachments`, { fileIds });

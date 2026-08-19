@@ -9,11 +9,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router";
 import type { InvoiceDetail } from "@/api/invoices";
-import {
-  getInvoiceById,
-  uploadInvoiceAttachment,
-  deleteInvoiceAttachment,
-} from "@/api/invoices";
+import { getInvoiceById, syncInvoiceAttachments } from "@/api/invoices";
 import { getErrorMessage } from "@/lib/error";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -404,12 +400,8 @@ const InvoiceDetailDrawer = ({
                   url: a.url,
                 })),
               ]}
-              onSelect={async (file) => {
-                await uploadInvoiceAttachment(invoice.id, undefined, file.id);
-                handleAttachmentsChanged();
-              }}
-              onDelete={async (id) => {
-                await deleteInvoiceAttachment(invoice.id, id);
+              onSync={async (fileIds) => {
+                await syncInvoiceAttachments(invoice.id, fileIds);
                 handleAttachmentsChanged();
               }}
             />

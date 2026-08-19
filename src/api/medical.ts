@@ -308,6 +308,18 @@ export const uploadVisitAttachment = (
 export const deleteVisitAttachment = (id: number) =>
   axios.delete<void>(`/visit-records/0/attachments/${id}`);
 
+export const syncVisitAttachments = (
+  visitId: number,
+  sourceType: VisitSourceType,
+  sourceId: number,
+  fileIds: number[],
+) =>
+  axios.put<VisitAttachment[]>(`/visit-records/${visitId}/attachments`, {
+    sourceType,
+    sourceId,
+    fileIds,
+  });
+
 // ──────────────────────── Invoices ────────────────────────
 
 export interface VisitInvoice {

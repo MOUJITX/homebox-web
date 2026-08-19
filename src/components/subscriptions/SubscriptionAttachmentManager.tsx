@@ -1,10 +1,10 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UploadIcon, TrashIcon, FileIcon, DownloadIcon } from "lucide-react";
-import type { FileRecord } from "@/api/files";
 import type { SubscriptionRecordAttachment } from "@/api/subscriptions";
-import { uploadAttachment, deleteAttachment } from "@/api/subscriptionRecords";
+import { syncSubscriptionRecordAttachments } from "@/api/subscriptionRecords";
 import { Button } from "@/components/ui/button";
+import { useFileSelectionSync } from "@/hooks/useFileSelectionSync";
 import FilePickerDialog from "@/components/shared/FilePickerDialog";
 
 const formatFileSize = (bytes: number) => {
@@ -28,27 +28,35 @@ const SubscriptionAttachmentManager = ({
   const [pickerOpen, setPickerOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
 
-  const handleSelect = useCallback(
-    async (files: FileRecord[]) => {
-      if (files.length === 0) return;
-      setUploading(true);
-      try {
-        await uploadAttachment(recordId, undefined, files[0].id);
-        onChanged();
-      } finally {
-        setUploading(false);
-      }
-    },
-    [recordId, onChanged],
+  const currentFileIds = attachments.map((a) => a.fileId);
+
+  const handleSync = async (fileIds: number[]) => {
+    setUploading(true);
+    try {
+      await syncSubscriptionRecordAttachments(recordId, fileIds);
+      onChanged();
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const { handleSelect, handleDeselect } = useFileSelectionSync(
+    currentFileIds,
+    handleSync,
   );
 
-  const handleDelete = useCallback(
-    async (attachmentId: number) => {
-      await deleteAttachment(recordId, attachmentId);
+  const handleDelete = async (fileId: number) => {
+    setUploading(true);
+    try {
+      await syncSubscriptionRecordAttachments(
+        recordId,
+        currentFileIds.filter((id) => id !== fileId),
+      );
       onChanged();
-    },
-    [recordId, onChanged],
-  );
+    } finally {
+      setUploading(false);
+    }
+  };
 
   return (
     <div className="grid gap-3">
@@ -88,7 +96,7 @@ const SubscriptionAttachmentManager = ({
               <Button
                 variant="ghost"
                 size="icon-xs"
-                onClick={() => handleDelete(att.id)}
+                onClick={() => void handleDelete(att.fileId)}
               >
                 <TrashIcon className="size-3.5" />
               </Button>
@@ -100,7 +108,19 @@ const SubscriptionAttachmentManager = ({
         open={pickerOpen}
         onClose={() => setPickerOpen(false)}
         onSelect={handleSelect}
-        multiple={false}
+        onDeselect={handleDeselect}
+        multiple
+        initialSelection={attachments.map((a) => ({
+          id: a.fileId,
+          storedFilename: "",
+          originalFilename: a.filename,
+          contentType: a.contentType,
+          fileSize: a.fileSize,
+          url: a.url,
+          createdAt: a.createdAt,
+          extractStatus: "SUCCESS" as const,
+          chunkStatus: "SUCCESS" as const,
+        }))}
       />
     </div>
   );
